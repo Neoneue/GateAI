@@ -4,7 +4,7 @@ Guidance for Claude Code working in this repo.
 
 ## What this project is
 
-A design-system showcase ("Constellation Gateway") translated section-by-section from a Paper file (`app.paper.design/file/01KQ33WPFNCEZAER8FDFPVW5EP`, file name *Brilliant quartz*, artboard `v8 Geist-rounded · Showcase`, 1536×12674px). Each `§ CMP-###` block in Paper becomes one React "artboard" page. The app shell is a fixed left nav + scrollable main pane that swaps the active artboard. There is no router — page switching is `useState` in `src/App.tsx`.
+A design-system showcase ("Constellation Gate AI") translated section-by-section from a Paper file (`app.paper.design/file/01KQ33WPFNCEZAER8FDFPVW5EP`, file name *Brilliant quartz*, artboard `v8 Geist-rounded · Showcase`, 1536×12674px). Each `§ CMP-###` block in Paper becomes one React "artboard" page. The app shell is a fixed left nav + scrollable main pane that swaps the active artboard. There is no router — page switching is `useState` in `src/App.tsx`.
 
 ## Stack
 

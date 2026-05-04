@@ -47,7 +47,7 @@ export interface VendorMeta {
 
 export const VENDOR_META: Record<Vendor, VendorMeta> = {
   anthropic: { color: '#D97757', icon: AnthropicIcon, iconColor: '#FFFFFF', label: 'Anthropic' },
-  xai:       { color: '#1A1A1A', icon: GrokIcon,      iconColor: '#FFFFFF', label: 'xAI' },
+  xai:       { color: '#3D3D3D', icon: GrokIcon,      iconColor: '#FFFFFF', label: 'xAI' },
   google:    { color: '#9B72CB', icon: GeminiIcon,    iconColor: '#FFFFFF', label: 'Google' },
   openai:    { color: '#10A37F', icon: OpenAIIcon,    iconColor: '#FFFFFF', label: 'OpenAI' },
   meta:      { color: '#0064E0', icon: MetaIcon,      iconColor: '#FFFFFF', label: 'Meta' },

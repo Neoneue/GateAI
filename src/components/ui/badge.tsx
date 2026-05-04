@@ -20,7 +20,7 @@ const badgeVariants = cva(
           "hover:bg-muted hover:text-muted-foreground dark:hover:bg-muted/50",
         link: "text-primary underline-offset-4 hover:underline",
 
-        /* ─── Constellation Gateway status variants ────────────── */
+        /* ─── Constellation Gate AI status variants ────────────── */
         success:
           "bg-[#2ECC71]/15 text-[#1E8A4A] [a]:hover:bg-[#2ECC71]/25",
         warning:
