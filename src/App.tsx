@@ -2,44 +2,45 @@ import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Toaster } from '@/components/ui/sonner';
 import { CMP000Typography } from '@/artboards/CMP000Typography';
-import { CMP001Buttons } from '@/artboards/CMP001Buttons';
-import { CMP002BadgesAndTags } from '@/artboards/CMP002BadgesAndTags';
-import { CMP003FormFields } from '@/artboards/CMP003FormFields';
-import { CMP004FilterBar } from '@/artboards/CMP004FilterBar';
-import { CMP005TabsPagination } from '@/artboards/CMP005TabsPagination';
-import { CMP006ModalEmptyState } from '@/artboards/CMP006ModalEmptyState';
-import { CMP007StatCards } from '@/artboards/CMP007StatCards';
-import { CMP007bToast } from '@/artboards/CMP007bToast';
-import { CMP007cCards } from '@/artboards/CMP007cCards';
-import { CMP008Charts } from '@/artboards/CMP008Charts';
-import { CMP009DataTable } from '@/artboards/CMP009DataTable';
-import { CMP011ComposedDashboard } from '@/artboards/CMP011ComposedDashboard';
-import { CMP012CodeCards } from '@/artboards/CMP012CodeCards';
+import { CMP001Colors } from '@/artboards/CMP001Colors';
+import { CMP002Buttons } from '@/artboards/CMP002Buttons';
+import { CMP003BadgesAndTags } from '@/artboards/CMP003BadgesAndTags';
+import { CMP004FormFields } from '@/artboards/CMP004FormFields';
+import { CMP005FilterBar } from '@/artboards/CMP005FilterBar';
+import { CMP006TabsPagination } from '@/artboards/CMP006TabsPagination';
+import { CMP007ModalEmptyState } from '@/artboards/CMP007ModalEmptyState';
+import { CMP008aCards } from '@/artboards/CMP008aCards';
+import { CMP008bStatCards } from '@/artboards/CMP008bStatCards';
+import { CMP008cCodeCards } from '@/artboards/CMP008cCodeCards';
+import { CMP009Toast } from '@/artboards/CMP009Toast';
+import { CMP010Charts } from '@/artboards/CMP010Charts';
+import { CMP011DataTable } from '@/artboards/CMP011DataTable';
+import { CMP012ComposedDashboard } from '@/artboards/CMP012ComposedDashboard';
 
-type PageId = 'cmp-000' | 'cmp-001' | 'cmp-002' | 'cmp-003' | 'cmp-004' | 'cmp-005' | 'cmp-006' | 'cmp-007' | 'cmp-007b' | 'cmp-007c' | 'cmp-008' | 'cmp-009' | 'cmp-011' | 'cmp-012';
+type PageId =
+  | 'cmp-000' | 'cmp-001' | 'cmp-002' | 'cmp-003' | 'cmp-004'
+  | 'cmp-005' | 'cmp-006' | 'cmp-007'
+  | 'cmp-008a' | 'cmp-008b' | 'cmp-008c'
+  | 'cmp-009' | 'cmp-010' | 'cmp-011' | 'cmp-012';
 
-interface Page {
-  id: PageId;
-  code: string;
-  name: string;
-  Component: React.ComponentType;
-}
+type Page = { id: PageId; code: string; name: string; Component: React.ComponentType };
 
 const PAGES: Page[] = [
-  { id: 'cmp-000', code: 'CMP-000', name: 'Typography', Component: CMP000Typography },
-  { id: 'cmp-001', code: 'CMP-001', name: 'Buttons', Component: CMP001Buttons },
-  { id: 'cmp-002', code: 'CMP-002', name: 'Badges & tags', Component: CMP002BadgesAndTags },
-  { id: 'cmp-003', code: 'CMP-003', name: 'Form fields', Component: CMP003FormFields },
-  { id: 'cmp-004', code: 'CMP-004', name: 'Filter bar', Component: CMP004FilterBar },
-  { id: 'cmp-005', code: 'CMP-005', name: 'Tabs · pagination', Component: CMP005TabsPagination },
-  { id: 'cmp-006', code: 'CMP-006', name: 'Modal · empty', Component: CMP006ModalEmptyState },
-  { id: 'cmp-007', code: 'CMP-007', name: 'Stat cards', Component: CMP007StatCards },
-  { id: 'cmp-007b', code: 'CMP-007b', name: 'Toast', Component: CMP007bToast },
-  { id: 'cmp-007c', code: 'CMP-007c', name: 'Cards', Component: CMP007cCards },
-  { id: 'cmp-008', code: 'CMP-008', name: 'Charts', Component: CMP008Charts },
-  { id: 'cmp-009', code: 'CMP-009', name: 'Data table', Component: CMP009DataTable },
-  { id: 'cmp-011', code: 'CMP-011', name: 'Composed · Dashboard', Component: CMP011ComposedDashboard },
-  { id: 'cmp-012', code: 'CMP-012', name: 'Code cards', Component: CMP012CodeCards },
+  { id: 'cmp-000',  code: 'CMP-000',  name: 'Typography',          Component: CMP000Typography },
+  { id: 'cmp-001',  code: 'CMP-001',  name: 'Colors',              Component: CMP001Colors },
+  { id: 'cmp-002',  code: 'CMP-002',  name: 'Buttons',             Component: CMP002Buttons },
+  { id: 'cmp-003',  code: 'CMP-003',  name: 'Badges & tags',       Component: CMP003BadgesAndTags },
+  { id: 'cmp-004',  code: 'CMP-004',  name: 'Form fields',         Component: CMP004FormFields },
+  { id: 'cmp-005',  code: 'CMP-005',  name: 'Filter bar',          Component: CMP005FilterBar },
+  { id: 'cmp-006',  code: 'CMP-006',  name: 'Tabs · pagination',   Component: CMP006TabsPagination },
+  { id: 'cmp-007',  code: 'CMP-007',  name: 'Modal · empty',       Component: CMP007ModalEmptyState },
+  { id: 'cmp-008a', code: 'CMP-008a', name: 'Cards',               Component: CMP008aCards },
+  { id: 'cmp-008b', code: 'CMP-008b', name: 'Stat cards',          Component: CMP008bStatCards },
+  { id: 'cmp-008c', code: 'CMP-008c', name: 'Code cards',          Component: CMP008cCodeCards },
+  { id: 'cmp-009',  code: 'CMP-009',  name: 'Toast',               Component: CMP009Toast },
+  { id: 'cmp-010',  code: 'CMP-010',  name: 'Charts',              Component: CMP010Charts },
+  { id: 'cmp-011',  code: 'CMP-011',  name: 'Data table',          Component: CMP011DataTable },
+  { id: 'cmp-012',  code: 'CMP-012',  name: 'Composed · Dashboard', Component: CMP012ComposedDashboard },
 ];
 
 export default function App() {

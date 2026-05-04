@@ -16,7 +16,7 @@ import { ArtboardHeader, SectionHeader } from './_shared/ArtboardHeader';
 
 const FAKE_SECRET = 'sk-tp-prev_c2d8a4f0e1b97f1';
 
-export function CMP006ModalEmptyState() {
+export function CMP007ModalEmptyState() {
   const [confirmName, setConfirmName] = useState('');
   const [keyName, setKeyName] = useState('');
   const [scope, setScope] = useState('read-write');
@@ -32,17 +32,17 @@ export function CMP006ModalEmptyState() {
     <div className="flex flex-col w-[1440px]">
       <div className="flex flex-col w-full bg-ink-25">
         <ArtboardHeader
-          code="CMP-006"
+          code="CMP-007"
           title="Modal · toast · empty state"
           description="Three states a list view drifts through. Modal anchored mid-screen, toast slides in lower-right, empty state fills the table well."
           parts="3 states"
         />
 
         <div className="flex flex-col gap-7">
-          {/* CMP-006.1 — MODAL */}
+          {/* CMP-007.1 — MODAL */}
           <div className="flex flex-col gap-2.5">
             <SectionHeader
-              code="CMP-006.1 — MODAL"
+              code="CMP-007.1 — MODAL"
               hint="<AlertDialog> · <Dialog> · <Dialog> (payload)"
             />
             <Card className="p-7 gap-7 rounded-sm">
@@ -150,10 +150,10 @@ export function CMP006ModalEmptyState() {
             </Card>
           </div>
 
-          {/* CMP-006.2 — EMPTY STATE */}
+          {/* CMP-007.2 — EMPTY STATE */}
           <div className="flex flex-col gap-2.5">
             <SectionHeader
-              code="CMP-006.2 — EMPTY STATE"
+              code="CMP-007.2 — EMPTY STATE"
               hint="centered icon · heading · subtext · CTA"
             />
             <Card className="p-7 rounded-sm">

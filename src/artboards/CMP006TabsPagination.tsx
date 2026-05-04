@@ -15,7 +15,7 @@ import { cn } from '@/lib/utils';
 import { ArtboardHeader, SectionHeader } from './_shared/ArtboardHeader';
 
 /**
- * CMP-005 · Tabs · pagination
+ * CMP-006 · Tabs · pagination
  *
  * Composes existing/installed primitives:
  *   <Tabs variant="line">         → page-level underline tabs (Overview / API keys / …)
@@ -23,7 +23,7 @@ import { ArtboardHeader, SectionHeader } from './_shared/ArtboardHeader';
  *   <ToggleGroup variant="group"> → bordered group (Newest/Most used/A→Z)
  *   <Pagination>                  → numbered page list with prev/next + ellipsis
  */
-export function CMP005TabsPagination() {
+export function CMP006TabsPagination() {
   const [tab, setTab] = useState('keys');
   const [period, setPeriod] = useState('week');
   const [range, setRange] = useState('7d');
@@ -36,17 +36,17 @@ export function CMP005TabsPagination() {
     <div className="flex flex-col w-[1440px]">
       <div className="flex flex-col w-full bg-ink-25">
         <ArtboardHeader
-          code="CMP-005"
+          code="CMP-006"
           title="Tabs · pagination"
           description="Underline tabs (sticky), segmented tabs (button-group), pagination with page count + jump. Sit cleanly under filter bars and inside cards."
           parts="3 components"
         />
 
         <div className="flex flex-col gap-7">
-          {/* CMP-005.1 — UNDERLINE TABS */}
+          {/* CMP-006.1 — UNDERLINE TABS */}
           <div className="flex flex-col gap-2.5">
             <SectionHeader
-              code="CMP-005.1 — UNDERLINE TABS"
+              code="CMP-006.1 — UNDERLINE TABS"
               hint="page-level navigation"
             />
             <div className="flex flex-col rounded-sm bg-white border border-ink-75">
@@ -77,10 +77,10 @@ export function CMP005TabsPagination() {
             </div>
           </div>
 
-          {/* CMP-005.2 — SEGMENTED · PAGINATION */}
+          {/* CMP-006.2 — SEGMENTED · PAGINATION */}
           <div className="flex flex-col gap-2.5">
             <SectionHeader
-              code="CMP-005.2 — SEGMENTED · PAGINATION"
+              code="CMP-006.2 — SEGMENTED · PAGINATION"
               hint="<SegmentedPill> · <ToggleGroup> · <Pagination>"
             />
             <div className="flex flex-col rounded-sm gap-5 bg-white border border-ink-75 p-7">

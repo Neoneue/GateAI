@@ -57,12 +57,12 @@ const INITIAL_TOASTS: ToastSpec[] = [
   },
 ];
 
-export function CMP007bToast() {
+export function CMP009Toast() {
   return (
     <div className="flex flex-col w-[1440px]">
       <div className="flex flex-col w-full bg-ink-25">
         <ArtboardHeader
-          code="CMP-007b"
+          code="CMP-009"
           title="Toast"
           description="Inverse-surface success toast, neutral surface for warn/error. Stacks bottom-right, auto-dismiss, click-through dismiss icon."
           parts="3 variants"
@@ -71,7 +71,7 @@ export function CMP007bToast() {
         <div className="flex flex-col gap-7">
           <div className="flex flex-col gap-2.5">
             <SectionHeader
-              code="CMP-007b.1 — TOAST DECK"
+              code="CMP-009.1 — TOAST DECK"
               hint="success · warn · error · with action"
             />
             <Card className="p-7 rounded-sm">

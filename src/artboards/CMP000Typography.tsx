@@ -26,6 +26,14 @@ const SCALE: Specimen[] = [
     note: 'Page titles only. One per surface.',
   },
   {
+    label: 'Page title',
+    tag: 'h1 · text-4xl medium',
+    sample: 'Overview',
+    sampleClass: 'font-sans text-4xl/10 font-medium -tracking-[1px] text-ink-800',
+    meta: ['Geist', '36px / 40px · 500', 'tracking -1px'],
+    note: 'Hero h1 on dashboard surfaces. Distinct from Heading (400) — page titles use medium for weight presence.',
+  },
+  {
     label: 'Heading',
     tag: 'H2 · text-4xl',
     sample: 'Request Volume',
@@ -42,12 +50,28 @@ const SCALE: Specimen[] = [
     note: 'Component / card / sheet titles.',
   },
   {
+    label: 'Card title (compact)',
+    tag: 'text-base · medium',
+    sample: 'Top Keys',
+    sampleClass: 'font-sans text-base/5 font-medium -tracking-[0.25px] text-ink-800',
+    meta: ['Geist', '16px / 20px · 500', 'tracking -0.25px'],
+    note: 'In-line card titles (CardTitle) on dashboard panels. Smaller than the 20px H3 card title above.',
+  },
+  {
     label: 'Subtitle 1',
     tag: 'text-lg · prominent meta',
     sample: 'Last 7 days · by cost · grouped by model',
     sampleClass: 'font-sans text-lg/7 -tracking-[0.18px] text-ink-800',
     meta: ['Geist', '18px / 28px · 400', 'tracking -0.18px'],
     note: 'Surface subtitles that carry the page.',
+  },
+  {
+    label: 'Card subtitle',
+    tag: 'CardDescription · ink-400',
+    sample: 'By spend · Last 7d',
+    sampleClass: 'font-sans text-sm/5 -tracking-[0.14px] text-ink-400',
+    meta: ['Geist', '14px / 20px · 400', 'tracking -0.14px'],
+    note: 'Canonical CardDescription — every Card consumer inherits this via the primitive default. Muted ink-400.',
   },
   {
     label: 'Subtitle 2',
@@ -84,12 +108,28 @@ const SCALE: Specimen[] = [
     note: 'All numerics, timestamps, identifiers, payloads.',
   },
   {
+    label: 'KPI hero',
+    tag: 'text-2xl · mono medium',
+    sample: '48,293',
+    sampleClass: 'font-mono text-2xl/8 font-medium tabular-nums -tracking-[0.5px] text-ink-800',
+    meta: ['Geist Mono', '24px / 32px · 500', 'tracking -0.5px'],
+    note: 'CompactKpi value. Per project rule: every KPI numeric is Mono with tabular-nums.',
+  },
+  {
+    label: 'KPI hero (large)',
+    tag: 'text-3xl · mono medium',
+    sample: '$1,147.82',
+    sampleClass: 'font-mono text-3xl/9 font-medium tabular-nums -tracking-[1px] text-ink-800',
+    meta: ['Geist Mono', '30px / 36px · 500', 'tracking -1px'],
+    note: 'TopKeysCard hero metric. The "primary number" of a panel that needs more weight than the compact KPI rail.',
+  },
+  {
     label: 'Metric display',
     tag: 'text-5xl · hero numeric',
     sample: '48,293',
     sampleClass:
-      'font-sans text-[48px] font-light -tracking-[1.44px] leading-none tabular-nums text-ink-800',
-    meta: ['Geist', '48px / 1 · 300', 'tracking -1.44px'],
+      'font-mono text-[48px] font-light -tracking-[1.44px] leading-none tabular-nums text-ink-800',
+    meta: ['Geist Mono', '48px / 1 · 300', 'tracking -1.44px'],
     note: 'One primary number per surface. Weight 300 for air.',
   },
   {
@@ -97,9 +137,17 @@ const SCALE: Specimen[] = [
     tag: 'text-xs · label',
     sample: 'WORKSPACE · LIVE · LAST 7 DAYS',
     sampleClass:
-      'font-sans text-xs/4 font-medium uppercase tracking-[0.72px] text-ink-800',
-    meta: ['Geist', '12px / 16px · 500', 'tracking 0.72px'],
+      'font-mono text-xs font-medium uppercase tracking-[0.1em] text-ink-800',
+    meta: ['Geist Mono', '12px / 16px · 500', 'tracking 0.1em'],
     note: 'Section eyebrows, table column heads, KPI labels.',
+  },
+  {
+    label: 'Breadcrumb',
+    tag: 'text-xs · parent / current',
+    sample: 'All Projects',
+    sampleClass: 'font-sans text-xs text-ink-500',
+    meta: ['Geist', '12px · 400', 'parent: ink-500 · current: ink-900 medium'],
+    note: 'Parent-level segments in muted ink-500. Current page uses font-medium text-ink-900.',
   },
 ];
 
@@ -111,7 +159,7 @@ export function CMP000Typography() {
           code="CMP-000"
           title="Typography"
           description="Geist for the UI, Geist Mono for the machine. ~60% mono / 40% sans on dense operational surfaces. Tailwind-aligned scale — every size has a leading baked in."
-          parts="10 specimens"
+          parts="16 specimens"
         />
 
         {/* CMP-000.1 · SCALE */}

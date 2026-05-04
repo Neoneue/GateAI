@@ -16,17 +16,17 @@
   --font-plex-mono: "IBM Plex Mono", ui-monospace, monospace;
 
   /* Brand blue ramp */
-  --color-blue-50:  oklch(0.974 0.013 264);
-  --color-blue-100: oklch(0.940 0.029 263);
-  --color-blue-200: oklch(0.882 0.061 263);
-  --color-blue-300: oklch(0.802 0.110 263);
-  --color-blue-400: oklch(0.715 0.158 263);
-  --color-blue-500: oklch(0.628 0.205 263);
-  --color-blue-600: oklch(0.575 0.232 268);
-  --color-blue-700: oklch(0.470 0.225 268);
-  --color-blue-800: oklch(0.385 0.181 268);
-  --color-blue-900: oklch(0.305 0.135 268);
-  --color-blue-950: oklch(0.225 0.090 268);
+  --color-blue-50:  #EBF0FF;
+  --color-blue-100: #E1E9FE;
+  --color-blue-200: #C2D3FF;
+  --color-blue-300: #9DB8FF;
+  --color-blue-400: #6A8EFB;
+  --color-blue-500: #4064FF;
+  --color-blue-600: #2942D6;
+  --color-blue-700: #1F31B9;
+  --color-blue-800: #13225F;
+  --color-blue-900: #0C1638;
+  --color-blue-950: #060B1D;
 
   /* Neutrals */
   --color-ink-900: #09090B;

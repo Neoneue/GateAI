@@ -60,13 +60,13 @@ import {
 import { ArtboardHeader, SectionHeader } from './_shared/ArtboardHeader';
 
 /* ─────────────────────────────────────────────────────────────────────────
- * CMP-011 — Composed · Dashboard
+ * CMP-012 — Composed · Dashboard
  *
  * Production-shell surface composed entirely from primitives that already
  * exist elsewhere in the system:
- *   - KPI rail   →  CompactKpi pattern from CMP-007 (Stat cards)
- *   - Bar chart  →  ComposedChart pattern from CMP-008.1 (Spend trend)
- *   - Audit feed →  table treatment from CMP-009.1 (Data table)
+ *   - KPI rail   →  CompactKpi pattern from CMP-008 (Stat cards)
+ *   - Bar chart  →  ComposedChart pattern from CMP-009.1 (Spend trend)
+ *   - Audit feed →  table treatment from CMP-010.1 (Data table)
  *
  * The shell itself (sidebar + screen-head) is bespoke to this surface — the
  * 64px icon sidebar isn't part of the system's reusable primitives, so it
@@ -74,15 +74,15 @@ import { ArtboardHeader, SectionHeader } from './_shared/ArtboardHeader';
  *
  * Color palette: only ink-* / blue-* / semantic vars from index.css.
  * Status pill colors (red/amber for 4xx / 5xx codes) use the destructive
- * and warning semantic vars at low alpha — same approach as CMP-002.
+ * and warning semantic vars at low alpha — same approach as CMP-003.
  * ───────────────────────────────────────────────────────────────────────── */
 
-export function CMP011ComposedDashboard() {
+export function CMP012ComposedDashboard() {
   return (
     <div className="flex flex-col w-[1440px]">
       <div className="flex flex-col w-full bg-ink-25">
         <ArtboardHeader
-          code="CMP-011"
+          code="CMP-012"
           title="Composed · Dashboard"
           description="The Overview surface in production frame. Gray content well, white cards — same pattern as Vercel's AI Gateway. Reuses every primitive: KPI cards, charts, banner, codebox."
           parts="1 surface"
@@ -90,7 +90,7 @@ export function CMP011ComposedDashboard() {
 
         <div className="flex flex-col gap-2.5">
           <SectionHeader
-            code="CMP-011.1 — OVERVIEW SURFACE"
+            code="CMP-012.1 — OVERVIEW SURFACE"
             hint="v-shell · gray well · KPI rail · charts · audit feed"
           />
 
@@ -379,7 +379,7 @@ const VOLUME_DATA = [
 
 /* Chart-series → vendor mapping. Each series renders in its vendor's
  * desaturated `chartColor` (see vendor-meta.tsx) so the bar visually
- * agrees with the provider chip in CMP-009. When a single vendor appears
+ * agrees with the provider chip in CMP-010. When a single vendor appears
  * as more than one series (Anthropic: Sonnet + Haiku), the secondary
  * series opts into VENDOR_CHART_COLOR_SECONDARY for visible separation. */
 type ModelSeries = {
@@ -419,7 +419,7 @@ const RANGE_OPTIONS = [
 /**
  * RequestVolumeCard — chart-card pattern.
  *
- * Exported so CMP-007c (Cards) can import the same instance — single source
+ * Exported so CMP-008c (Cards) can import the same instance — single source
  * of truth, no copy-paste. Built entirely from the shadcn `<Card>` family:
  * header (title + subtitle + range action) → body (legend + bar chart).
  */
@@ -529,7 +529,7 @@ const TOP_KEYS: { label: string; model: string; cost: string; vendor: Vendor }[]
 /**
  * TopKeysCard — metric + list pattern.
  *
- * Exported so CMP-007c (Cards) can import the same instance. Built from the
+ * Exported so CMP-008c (Cards) can import the same instance. Built from the
  * shadcn `<Card>` family: header (title + subtitle + overflow action) →
  * body (metric hero + divider + row list).
  */

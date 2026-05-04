@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 import { ArtboardHeader, SectionHeader } from './_shared/ArtboardHeader';
 
 /**
- * CMP-001 · Buttons
+ * CMP-002 · Buttons
  * Demonstrates every variant × size × state of the shadcn <Button />
  * primitive at src/components/ui/button.tsx.
  *
@@ -16,7 +16,7 @@ import { ArtboardHeader, SectionHeader } from './_shared/ArtboardHeader';
  *
  * Future artboards (Modal, Dashboard, etc.) re-use the same primitive.
  */
-export function CMP001Buttons() {
+export function CMP002Buttons() {
   const [period, setPeriod] = useState<string[]>(['day']);
   const [metric, setMetric] = useState<string>('requests');
 
@@ -24,16 +24,16 @@ export function CMP001Buttons() {
     <div className="flex flex-col w-[1440px]">
       <div className="flex flex-col w-full bg-ink-25">
         <ArtboardHeader
-          code="CMP-001"
+          code="CMP-002"
           title="Buttons"
           description="shadcn <Button /> — default, outline, secondary, ghost, destructive, link. Five sizes. Loading and disabled states. Icon-only and icon-with-label variants."
           parts="6 variants × 5 sizes × 5 states"
         />
 
-        {/* CMP-001.1 · VARIANTS */}
+        {/* CMP-002.1 · VARIANTS */}
         <div className="flex flex-col mb-7 gap-2.5 bg-ink-25">
           <SectionHeader
-            code="CMP-001.1 — VARIANTS"
+            code="CMP-002.1 — VARIANTS"
             hint="<Button variant=… /> · default · outline · secondary · ghost · destructive · link"
           />
           <div className="flex flex-wrap items-center rounded-sm gap-[18px] bg-white border border-ink-75 p-7">
@@ -55,10 +55,10 @@ export function CMP001Buttons() {
           </div>
         </div>
 
-        {/* CMP-001.2 · SIZES */}
+        {/* CMP-002.2 · SIZES */}
         <div className="flex flex-col mb-7 gap-2.5 bg-ink-25">
           <SectionHeader
-            code="CMP-001.2 — SIZES"
+            code="CMP-002.2 — SIZES"
             hint="<Button size=… /> · xs · sm · default · lg"
           />
           <div className="flex flex-wrap items-center rounded-sm gap-[18px] bg-white border border-ink-75 p-7">
@@ -69,12 +69,12 @@ export function CMP001Buttons() {
           </div>
         </div>
 
-        {/* CMP-001.3 · STATES + CMP-001.4 · ICON + CMP-001.5 · GROUP */}
+        {/* CMP-002.3 · STATES + CMP-002.4 · ICON + CMP-002.5 · GROUP */}
         <div className="flex gap-4 bg-ink-25">
           {/* STATES — explicit visual representations (not :hover/:focus) */}
           <div className="flex flex-col grow gap-2.5 basis-0">
             <div className="font-mono uppercase tracking-[0.1em] text-ink-500 text-xs">
-              CMP-001.3 — STATES
+              CMP-002.3 — STATES
             </div>
             <div className="flex flex-col rounded-sm gap-3 bg-white border border-ink-75 p-7">
               <Button className="w-full" tabIndex={-1}>Default</Button>
@@ -96,7 +96,7 @@ export function CMP001Buttons() {
           {/* ICON */}
           <div className="flex flex-col grow gap-2.5 basis-0">
             <div className="font-mono uppercase tracking-[0.1em] text-ink-500 text-xs">
-              CMP-001.4 — ICON
+              CMP-002.4 — ICON
             </div>
             <div className="flex flex-col rounded-sm gap-3 bg-white border border-ink-75 p-7">
               <div className="flex flex-wrap gap-2">
@@ -134,7 +134,7 @@ export function CMP001Buttons() {
           {/* GROUP — real shadcn ToggleGroup, styled to match Paper */}
           <div className="flex flex-col grow gap-2.5 basis-0">
             <div className="font-mono uppercase tracking-[0.1em] text-ink-500 text-xs">
-              CMP-001.5 — GROUP
+              CMP-002.5 — GROUP
             </div>
             <div className="flex flex-col rounded-sm gap-3 bg-white border border-ink-75 p-7 items-start">
               {/* Bordered group: Day · Week · Month · Year */}

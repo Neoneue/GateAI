@@ -26,12 +26,12 @@ import {
 } from '@/components/icons/vendor-meta';
 import { ArtboardHeader, SectionHeader } from './_shared/ArtboardHeader';
 
-export function CMP008Charts() {
+export function CMP010Charts() {
   return (
     <div className="flex flex-col w-[1440px]">
       <div className="flex flex-col w-full bg-ink-25">
         <ArtboardHeader
-          code="CMP-008"
+          code="CMP-010"
           title="Charts"
           description="Line + area for time series, stacked bars for category breakdowns. Both use the same axis treatment, same legend, same tooltip."
           parts="2 chart types"
@@ -40,7 +40,7 @@ export function CMP008Charts() {
         <div className="flex flex-col gap-7">
           <div className="flex flex-col gap-2.5">
             <SectionHeader
-              code="CMP-008.1 — LINE + AREA"
+              code="CMP-010.1 — LINE + AREA"
               hint="Requests · last 14 days"
             />
             <div className="flex justify-center">
@@ -50,7 +50,7 @@ export function CMP008Charts() {
 
           <div className="flex flex-col gap-2.5">
             <SectionHeader
-              code="CMP-008.2 — STACKED BARS"
+              code="CMP-010.2 — STACKED BARS"
               hint="Cost by model · last 7 days"
             />
             <div className="flex justify-center">
@@ -64,7 +64,7 @@ export function CMP008Charts() {
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
- * CMP-008.1 — Spend trend (grouped bars + line trend)
+ * CMP-010.1 — Spend trend (grouped bars + line trend)
  * ───────────────────────────────────────────────────────────────────────── */
 
 type SpendDatum = {
@@ -239,7 +239,7 @@ function LegendDot({ color, label }: { color: string; label: string }) {
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
- * CMP-008.2 — Cost by model (microchart + legend + mini table)
+ * CMP-010.2 — Cost by model (microchart + legend + mini table)
  * ───────────────────────────────────────────────────────────────────────── */
 
 /* Chart-series → vendor mapping. Mirrors CMP-011's MODEL_LEGEND so both

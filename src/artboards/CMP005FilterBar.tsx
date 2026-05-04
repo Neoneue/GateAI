@@ -18,7 +18,7 @@ import { SegmentedPill } from '@/components/ui/segmented-pill';
 import { ArtboardHeader, SectionHeader } from './_shared/ArtboardHeader';
 
 /**
- * CMP-004 · Filter bar
+ * CMP-005 · Filter bar
  *
  * Composes existing primitives:
  *   <Input> + leading icon (search)
@@ -29,7 +29,7 @@ import { ArtboardHeader, SectionHeader } from './_shared/ArtboardHeader';
  *   <Tag onRemove>          → active filter chips with X
  *   <SegmentedPill>         → All / Text / Code / Image / Embed / Rerank
  */
-export function CMP004FilterBar() {
+export function CMP005FilterBar() {
   const [query, setQuery] = useState('prod-');
   const [env, setEnv] = useState('all');
   const [range, setRange] = useState('30d');
@@ -42,16 +42,16 @@ export function CMP004FilterBar() {
     <div className="flex flex-col w-[1440px]">
       <div className="flex flex-col w-full bg-ink-25">
         <ArtboardHeader
-          code="CMP-004"
+          code="CMP-005"
           title="Filter bar"
           description="Search + chip filters + dropdown menus. Used at the top of every list view. Fits inline with table headers."
           parts="3 filter types"
         />
 
-        {/* CMP-004.1 — LIST FILTER BAR */}
+        {/* CMP-005.1 — LIST FILTER BAR */}
         <div className="flex flex-col gap-2.5 bg-ink-25">
           <SectionHeader
-            code="CMP-004.1 — LIST FILTER BAR"
+            code="CMP-005.1 — LIST FILTER BAR"
             hint="<Input> · <Select> · <Tag> · <SegmentedPill>"
           />
           <div className="flex flex-col rounded-sm gap-3 bg-white border border-ink-75 p-7">

@@ -22,12 +22,12 @@ import { ArtboardHeader, SectionHeader } from './_shared/ArtboardHeader';
 
 const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
-export function CMP007StatCards() {
+export function CMP008bStatCards() {
   return (
     <div className="flex flex-col w-[1440px]">
       <div className="flex flex-col w-full bg-ink-25">
         <ArtboardHeader
-          code="CMP-007"
+          code="CMP-008b"
           title="Stat cards"
           description="Single metric, compare (this/last), status (with health dot), all with sparklines. The same KpiCard that powers the dashboard, just lined up."
           parts="3 layouts"
@@ -36,7 +36,7 @@ export function CMP007StatCards() {
         <div className="flex flex-col gap-7">
           <div className="flex flex-col gap-2.5">
             <SectionHeader
-              code="CMP-007.2 — COMPACT + FLAT"
+              code="CMP-008b.2 — COMPACT + FLAT"
               hint=".compact for dense rails · .flat strips card chrome"
             />
             <Card className="p-7 rounded-sm">
@@ -81,7 +81,7 @@ export function CMP007StatCards() {
 
           <div className="flex flex-col gap-2.5">
             <SectionHeader
-              code="CMP-007.3 — STAT ROW"
+              code="CMP-008b.3 — STAT ROW"
               hint="KPIs with sparklines · 4 across"
             />
             <Card className="rounded-md p-0 gap-0">

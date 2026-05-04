@@ -5,31 +5,31 @@ import { StatusDot } from '@/components/ui/status-dot';
 import { ArtboardHeader, SectionHeader } from './_shared/ArtboardHeader';
 
 /**
- * CMP-002 · Badges & tags
+ * CMP-003 · Badges & tags
  *
  * Status badges (active / rotating / revoked / dormant / preview),
  * counters, removable tags, mono uppercase rev marks.
  *
  * Composes shadcn <Badge /> with project status variants + StatusDot + Tag.
  */
-export function CMP002BadgesAndTags() {
+export function CMP003BadgesAndTags() {
   const [tags, setTags] = useState<string[]>(['production', 'error', 'last 7d']);
 
   return (
     <div className="flex flex-col w-[1440px]">
       <div className="flex flex-col w-full bg-ink-25">
         <ArtboardHeader
-          code="CMP-002"
+          code="CMP-003"
           title="Badges & tags"
           description="Status badges (running, ok, warn, danger), counters, tags with close affordance, rev marks. All 20px tall, mono micro-type."
           parts="6 variants"
         />
 
         <div className="flex gap-6 bg-ink-25">
-          {/* CMP-002.1 — STATUS */}
+          {/* CMP-003.1 — STATUS */}
           <div className="flex flex-col grow gap-2.5 basis-0 bg-ink-25">
             <SectionHeader
-              code="CMP-002.1 — STATUS"
+              code="CMP-003.1 — STATUS"
               hint="<Badge variant=… /> + <StatusDot />"
             />
             <div className="flex flex-col rounded-sm gap-3 bg-white border border-ink-75 p-7">
@@ -70,10 +70,10 @@ export function CMP002BadgesAndTags() {
             </div>
           </div>
 
-          {/* CMP-002.2 — COUNTERS & CHIPS */}
+          {/* CMP-003.2 — COUNTERS & CHIPS */}
           <div className="flex flex-col grow gap-2.5 basis-0 bg-ink-25">
             <SectionHeader
-              code="CMP-002.2 — COUNTERS & CHIPS"
+              code="CMP-003.2 — COUNTERS & CHIPS"
               hint="<Badge /> · <Tag onRemove /> · mono marks"
             />
             <div className="flex flex-col rounded-sm gap-3.5 bg-white border border-ink-75 p-7">

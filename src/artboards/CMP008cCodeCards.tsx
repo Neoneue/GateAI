@@ -12,7 +12,7 @@ import {
 import { ArtboardHeader, SectionHeader } from './_shared/ArtboardHeader';
 
 /* ─────────────────────────────────────────────────────────────────────────
- * CMP-012 — Code cards
+ * CMP-008c — Code cards
  *
  * Five layouts × one primitive family. Every visible thing traces back
  * to a primitive in src/components/ui/:
@@ -144,12 +144,12 @@ const RESPONSE_LINES: CodeLine[] = [
 
 /* ─── Page ───────────────────────────────────────────────────────────────── */
 
-export function CMP012CodeCards() {
+export function CMP008cCodeCards() {
   return (
     <div className="flex flex-col w-[1440px]">
       <div className="flex flex-col w-full bg-ink-25">
         <ArtboardHeader
-          code="CMP-012"
+          code="CMP-008c"
           title="Code cards"
           description="Three layouts for showing code in marketing and quickstart contexts. All built from the same .v-codebox primitive — same syntax classes, same tab chrome — only the surrounding shell differs."
           parts="3 layouts · 1 primitive"
@@ -158,7 +158,7 @@ export function CMP012CodeCards() {
         <div className="flex flex-col gap-7">
           <div className="flex flex-col gap-2.5">
             <SectionHeader
-              code="CMP-012.1 — CARD LAYOUTS"
+              code="CMP-008c.1 — CARD LAYOUTS"
               hint="A · marketing hero · C · numbered steps"
             />
 
@@ -168,7 +168,7 @@ export function CMP012CodeCards() {
 
           <div className="flex flex-col gap-2.5">
             <SectionHeader
-              code="CMP-012.2 — COMPACT · THREE FLAVORS"
+              code="CMP-008c.2 — COMPACT · THREE FLAVORS"
               hint="B1 · light tabs · B2 · dark terminal · B3 · request / response"
             />
 
@@ -188,7 +188,7 @@ export function CMP012CodeCards() {
 
 function HeroCard() {
   return (
-    <div className="flex items-center gap-8 pl-6 pr-8 py-6 rounded-lg bg-white border border-ink-75 shadow-[0_1px_2px_rgba(17,20,23,0.04)]">
+    <div className="flex items-center gap-8 p-7 rounded-sm bg-white border border-ink-75">
       <div className="flex flex-col grow shrink basis-0 gap-4">
         <div className="font-mono uppercase tracking-[0.12em] text-blue-700 text-xs/4 font-medium">
           QUICKSTART
@@ -253,7 +253,7 @@ const STEPS: StepItem[] = [
 
 function StepsCard() {
   return (
-    <div className="w-[1037px] flex flex-col rounded-lg py-6 px-5 gap-5 bg-white border border-ink-75 shadow-[0_1px_2px_rgba(17,20,23,0.04)]">
+    <div className="flex flex-col p-7 gap-5 rounded-sm bg-white border border-ink-75">
       {STEPS.map((step) => (
         <div key={step.n} className="flex items-start gap-4">
           <div className="flex items-center justify-center shrink-0 size-6 rounded-full bg-blue-700">

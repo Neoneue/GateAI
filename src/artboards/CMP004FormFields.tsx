@@ -15,14 +15,14 @@ import { Switch } from '@/components/ui/switch';
 import { ArtboardHeader, SectionHeader } from './_shared/ArtboardHeader';
 
 /**
- * CMP-003 · Form fields
+ * CMP-004 · Form fields
  *
  * Composes shadcn primitives (all from @base-ui/react/* under the hood):
  *   Input · Textarea · Label · Select · Checkbox · RadioGroup · Switch
  *
  * Showcases helper / error states + a fully wired form using local state.
  */
-export function CMP003FormFields() {
+export function CMP004FormFields() {
   const [keyName, setKeyName] = useState('prod-backend');
   const [description, setDescription] = useState('Used by mobile-ios + the staging worker.');
   const [env, setEnv] = useState('production');
@@ -46,17 +46,17 @@ export function CMP003FormFields() {
     <div className="flex flex-col w-[1440px]">
       <div className="flex flex-col w-full bg-ink-25">
         <ArtboardHeader
-          code="CMP-003"
+          code="CMP-004"
           title="Form fields"
           description="Text input, textarea, select, checkbox, radio, switch, helper / error states. Same hairline border, same focus ring."
           parts="7 controls"
         />
 
         <div className="flex items-start gap-6 bg-ink-25">
-          {/* CMP-003.1 — TEXT INPUTS */}
+          {/* CMP-004.1 — TEXT INPUTS */}
           <div className="flex flex-col grow gap-2.5 basis-0 bg-ink-25">
             <SectionHeader
-              code="CMP-003.1 — TEXT INPUTS"
+              code="CMP-004.1 — TEXT INPUTS"
               hint="<Input /> · <Textarea /> · <Select />"
             />
             <div className="flex flex-col rounded-sm gap-4 bg-white border border-ink-75 p-7">
@@ -143,10 +143,10 @@ export function CMP003FormFields() {
             </div>
           </div>
 
-          {/* CMP-003.2 — CHECKBOX · RADIO · SWITCH */}
+          {/* CMP-004.2 — CHECKBOX · RADIO · SWITCH */}
           <div className="flex flex-col grow gap-2.5 basis-0 bg-ink-25">
             <SectionHeader
-              code="CMP-003.2 — CHECKBOX · RADIO · SWITCH"
+              code="CMP-004.2 — CHECKBOX · RADIO · SWITCH"
               hint="<Checkbox /> · <RadioGroup /> · <Switch />"
             />
             <div className="flex flex-col rounded-sm gap-[18px] bg-white border border-ink-75 p-7">

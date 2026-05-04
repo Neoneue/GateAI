@@ -180,7 +180,7 @@ const TYPE_OPTIONS = [
   { value: 'rerank', label: 'Rerank' },
 ];
 
-export function CMP009DataTable() {
+export function CMP011DataTable() {
   const [type, setType] = useState('all');
   const [provider, setProvider] = useState<'all' | Vendor>('all');
 
@@ -205,7 +205,7 @@ export function CMP009DataTable() {
     <div className="flex flex-col w-full max-w-[1440px] min-w-0">
       <div className="flex flex-col w-full bg-ink-25 min-w-0">
         <ArtboardHeader
-          code="CMP-009"
+          code="CMP-011"
           title="Data table"
           description="Sortable headers, mono numerics, status pills inline, row hover, selected row, action menu. The body of every list view."
           parts="1 component"
@@ -213,7 +213,7 @@ export function CMP009DataTable() {
 
         <div className="flex flex-col gap-2.5">
           <SectionHeader
-            code="CMP-009.1 — SORTABLE TABLE"
+            code="CMP-011.1 — SORTABLE TABLE"
             hint=".v-tbl · header / row / selected / action"
           />
 
