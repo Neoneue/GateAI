@@ -52,15 +52,59 @@ front-end-developer/            # bundled design-methodology agent — see "Desi
 
 Path alias: `@/*` → `src/*` (configured in `vite.config.ts` and `tsconfig.json`).
 
-## Working rule — orchestrate `front-end-developer`, don't implement UI in the main thread
+## Working rule — agent for craft, main thread for mechanical, no ceremony either way
 
-All UI / design / frontend implementation in this repo goes through the **`front-end-developer`** subagent (installed at `.claude/agents/front-end-developer.md`, project-scoped, Opus). The main thread orchestrates only: scope the task, pick the right skill, dispatch, coordinate, report.
+The `front-end-developer` subagent (installed at `.claude/agents/front-end-developer.md`, project-scoped, Opus) exists to enforce craft on substantive design decisions. It is NOT a manifest pipeline that every diff has to pass through. Use it when there's a real design call to make. Skip it when the answer is already determined.
 
-- **Dispatch every implementation step** via `Agent({ subagent_type: "front-end-developer", ... })`. If a session predates the install and doesn't have it registered, fall back to `general-purpose` with the agent contract prepended into the prompt.
-- **Implementation dispatches use Opus (the agent's default)**, even when they include chrome-devtools verification at the end. Pass NO `model` override on dispatches that write/edit code, design a primitive, refactor, or port a section. **Sonnet is reserved for dispatches whose entire scope is mechanical chrome-devtools verification** — taking screenshots, clicking through nav, comparing to a reference, no code changes. Pass `model: "sonnet"` only on those isolated verification dispatches.
-- **Parallelize independent work:** one tool message with multiple Agent calls (e.g. port CMP-011 and CMP-012 simultaneously, or run a `polish` pass on shipped sections while another agent ports a new one).
-- **Brief like a colleague who hasn't seen this conversation:** include the Paper nodeId, the target file path, the relevant skill to load, the contract chain, and any specific shadcn primitives to reuse from `src/components/ui/`.
-- **Exception** — pure infra/config (Vite config, port management, package.json, dev-server lifecycle) stays in the main thread; the agent's scope is design.
+### Dispatch the agent for these (and only these):
+
+- New primitive design or extraction (e.g. lifting `CompactKpi` out of CMP-007, building a `CodeCard` family)
+- Picking which existing primitive applies to a Paper subtree, or judging whether to extract a new one
+- Color, typography, spacing, motion decisions where the contract chain (`system.md` → `globals.md` → `index.css`) needs to be applied
+- Paper-to-code translation (anything involving `get_jsx`, `get_computed_styles`, vendor-meta mapping)
+- Cross-surface refactors where coherence across multiple artboards matters
+- Visual review (`critique`, `polish`, `rams`) when the user asks for an opinion on what's wrong
+
+### Edit directly in the main thread for these:
+
+- Single-line className tweaks (padding, font, color swap)
+- Removing one entry from an array, deleting one line, dropping one prop
+- File renames with a known target name + corresponding internal updates
+- Copy edits (changing a string, updating a label, re-numbering codes)
+- Adding one row to existing data
+- Reverting a change you just made
+- Fixing a typo or unused import
+
+For these, open the file, edit, confirm in one sentence. No agent. The user is paying time and tokens for ceremony when there's no craft decision to enforce.
+
+### When you do dispatch, brief is tight:
+
+- File path
+- Exact change (paste the before/after className or line, or describe the structural swap in one paragraph)
+- 1–3 hard rules ("don't touch X", "no hardcoded hex")
+- "Verify with tsc + a screenshot, report"
+
+That's the whole brief. ~8–15 lines. Do NOT re-state the agent contract — the agent has it loaded. Do NOT re-explain the project conventions — they're in this file. Do NOT request a multi-section structured deliverable for a single-line fix. Do NOT prepend `Operate as the front-end-developer agent` boilerplate when the agent is registered as `subagent_type: "front-end-developer"` (only needed for `general-purpose` fallback).
+
+### Around the dispatch:
+
+- **No "Got it, dispatching" pre-message.** Just dispatch.
+- **No post-dispatch paraphrase** of the agent's deliverable. One sentence confirming the change is live, then move on. The user reads tool output directly.
+- **No "Option A or Option B" prompts** unless the user has signaled the answer matters. Pick the cleaner option, document it in the brief, ship.
+- **Pre-reads are minimal.** Don't read files to "surface line numbers" the agent can grep on its own. Read only when the answer changes the brief.
+
+### Model:
+
+- Implementation dispatches: NO `model` override (gets the agent's default, Opus). Includes work that ends with chrome-devtools verification.
+- `model: "sonnet"`: ONLY for dispatches whose entire scope is mechanical verification — screenshots, clicks, snapshot reads, no code changes.
+
+### Parallelize independent work:
+
+One tool message with multiple `Agent` calls when slices don't overlap (e.g. file renames in disjoint groups). Skip per-agent verification when the intermediate state would fail it; do one final verification dispatch after all parallel agents land.
+
+### The orchestration test:
+
+Before dispatching, ask: "Is there a design judgment in this change that the agent's craft methodology would catch and I wouldn't?" If no — edit directly. If yes — dispatch lean.
 
 ## Design methodology — the `front-end-developer/` bundle
 
