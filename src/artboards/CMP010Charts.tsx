@@ -38,7 +38,7 @@ export function CMP010Charts() {
         />
 
         <div className="flex flex-col gap-7">
-          <div className="flex flex-col gap-2.5">
+          <div className="flex flex-col gap-3">
             <SectionHeader
               code="CMP-010.1 — LINE + AREA"
               hint="Requests · last 14 days"
@@ -48,7 +48,7 @@ export function CMP010Charts() {
             </div>
           </div>
 
-          <div className="flex flex-col gap-2.5">
+          <div className="flex flex-col gap-3">
             <SectionHeader
               code="CMP-010.2 — STACKED BARS"
               hint="Cost by model · last 7 days"
@@ -342,7 +342,7 @@ function CostByModelCard() {
         </div>
         <button
           type="button"
-          className="flex items-center justify-center h-8 rounded-lg px-3 gap-1.5 bg-white border border-ink-100 text-sm font-medium -tracking-[0.14px] text-ink-900"
+          className="flex items-center justify-center h-8 rounded-lg px-3 gap-2 bg-white border border-ink-100 text-sm font-medium -tracking-[0.14px] text-ink-900"
         >
           Last 7 days
           <ChevronDown
@@ -371,7 +371,7 @@ function CostByModelCard() {
 
       <div className="flex items-center flex-wrap gap-4">
         {MODELS.map((m) => (
-          <div key={m.key} className="flex items-center gap-1.5">
+          <div key={m.key} className="flex items-center gap-2">
             <span
               className="size-2 rounded-full shrink-0"
               style={{ backgroundColor: seriesColor(m) }}

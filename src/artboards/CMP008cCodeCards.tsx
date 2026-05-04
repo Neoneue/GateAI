@@ -156,7 +156,7 @@ export function CMP008cCodeCards() {
         />
 
         <div className="flex flex-col gap-7">
-          <div className="flex flex-col gap-2.5">
+          <div className="flex flex-col gap-3">
             <SectionHeader
               code="CMP-008c.1 — CARD LAYOUTS"
               hint="A · marketing hero · C · numbered steps"
@@ -166,7 +166,7 @@ export function CMP008cCodeCards() {
             <StepsCard />
           </div>
 
-          <div className="flex flex-col gap-2.5">
+          <div className="flex flex-col gap-3">
             <SectionHeader
               code="CMP-008c.2 — COMPACT · THREE FLAVORS"
               hint="B1 · light tabs · B2 · dark terminal · B3 · request / response"
@@ -261,13 +261,13 @@ function StepsCard() {
               {step.n}
             </span>
           </div>
-          <div className="flex flex-col grow shrink basis-0 gap-1.5">
+          <div className="flex flex-col grow shrink basis-0 gap-2">
             <div className="font-sans font-medium text-ink-800 text-sm/5">
               {step.title}
             </div>
             <p className="text-ink-600 text-xs/4 m-0">{step.body}</p>
             {step.snippet && (
-              <div className="mt-1.5 rounded-md bg-ink-50 border border-ink-75">
+              <div className="mt-2 rounded-md bg-ink-50 border border-ink-75">
                 <CodeBlock lines={[step.snippet]} density="inline" />
               </div>
             )}
@@ -308,7 +308,7 @@ function RequestResponseCard() {
   return (
     <CodeCard>
       <div className="flex items-center gap-2 px-4 py-3 bg-ink-50 border-b border-ink-75">
-        <span className="inline-flex items-center h-5 px-1.5 rounded-md bg-ink-800 font-sans font-medium text-white text-xs/4 tracking-[0.06em]">
+        <span className="inline-flex items-center h-5 px-2 rounded-md bg-ink-800 font-sans font-medium text-white text-xs/4 tracking-[0.06em]">
           POST
         </span>
         <span className="font-sans text-ink-800 text-xs/4">/v1/messages</span>

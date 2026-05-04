@@ -44,7 +44,7 @@ export function CMP006TabsPagination() {
 
         <div className="flex flex-col gap-7">
           {/* CMP-006.1 — UNDERLINE TABS */}
-          <div className="flex flex-col gap-2.5">
+          <div className="flex flex-col gap-3">
             <SectionHeader
               code="CMP-006.1 — UNDERLINE TABS"
               hint="page-level navigation"
@@ -78,7 +78,7 @@ export function CMP006TabsPagination() {
           </div>
 
           {/* CMP-006.2 — SEGMENTED · PAGINATION */}
-          <div className="flex flex-col gap-2.5">
+          <div className="flex flex-col gap-3">
             <SectionHeader
               code="CMP-006.2 — SEGMENTED · PAGINATION"
               hint="<SegmentedPill> · <ToggleGroup> · <Pagination>"

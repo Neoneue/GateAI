@@ -43,7 +43,7 @@ export function CMP007ModalEmptyState() {
 
         <div className="flex flex-col gap-7">
           {/* CMP-007.1 — MODAL */}
-          <div className="flex flex-col gap-2.5">
+          <div className="flex flex-col gap-3">
             <SectionHeader
               code="CMP-007.1 — MODAL"
               hint="<AlertDialog> · <Dialog> · <Dialog> (payload)"
@@ -85,7 +85,7 @@ export function CMP007ModalEmptyState() {
                   title="Create API key"
                   onClose={resetCreate}
                 >
-                  <div className="flex flex-col gap-1.5">
+                  <div className="flex flex-col gap-2">
                     <Label htmlFor="cmp006-name" className="text-xs text-ink-600">
                       Name
                     </Label>
@@ -96,8 +96,8 @@ export function CMP007ModalEmptyState() {
                       onChange={(e) => setKeyName(e.target.value)}
                     />
                   </div>
-                  <div className="flex gap-2.5">
-                    <div className="flex flex-col gap-1.5 flex-1">
+                  <div className="flex gap-3">
+                    <div className="flex flex-col gap-2 flex-1">
                       <Label htmlFor="cmp007-scope" className="text-xs text-ink-600">Scope</Label>
                       <Select value={scope} onValueChange={setScope}>
                         <SelectTrigger id="cmp007-scope" className="w-full">
@@ -110,7 +110,7 @@ export function CMP007ModalEmptyState() {
                         </SelectContent>
                       </Select>
                     </div>
-                    <div className="flex flex-col gap-1.5 flex-1">
+                    <div className="flex flex-col gap-2 flex-1">
                       <Label htmlFor="cmp007-expires" className="text-xs text-ink-600">Expires</Label>
                       <Select value={expires} onValueChange={setExpires}>
                         <SelectTrigger id="cmp007-expires" className="w-full">
@@ -155,7 +155,7 @@ export function CMP007ModalEmptyState() {
           </div>
 
           {/* CMP-007.1b — GENERATION DETAILS */}
-          <div className="flex flex-col gap-2.5">
+          <div className="flex flex-col gap-3">
             <SectionHeader
               code="CMP-007.1b — GENERATION DETAILS"
               hint="<Dialog> · payload · spec sheet"
@@ -166,7 +166,7 @@ export function CMP007ModalEmptyState() {
           </div>
 
           {/* CMP-007.2 — EMPTY STATE */}
-          <div className="flex flex-col gap-2.5">
+          <div className="flex flex-col gap-3">
             <SectionHeader
               code="CMP-007.2 — EMPTY STATE"
               hint="centered icon · heading · subtext · CTA"
@@ -225,7 +225,7 @@ function ModalSpecimen({
           <div id={titleId} className="text-base font-medium -tracking-[0.01em] text-ink-900">
             {title}
           </div>
-          {subtitle && <div className="text-xs text-ink-600 mt-0.5">{subtitle}</div>}
+          {subtitle && <div className="text-xs text-ink-600 mt-1">{subtitle}</div>}
         </div>
         <Button
           variant="ghost"
@@ -259,7 +259,7 @@ function GenerationDetailsModal() {
     >
       {/* Header */}
       <div className="flex items-start justify-between gap-3 px-5 pt-4 pb-3 border-b border-ink-100">
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-1">
           <div className="text-base font-medium -tracking-[0.01em] text-ink-900">
             Generation details
           </div>
@@ -369,10 +369,10 @@ function DetailRow({
 }) {
   return (
     <div className="contents group/row">
-      <dt className="px-3 py-2.5 text-sm text-ink-500 border-r border-ink-100 bg-white">
+      <dt className="px-3 py-3 text-sm text-ink-500 border-r border-ink-100 bg-white">
         {label}
       </dt>
-      <dd className="px-3 py-2.5 text-sm text-ink-900 bg-white flex items-center min-w-0">
+      <dd className="px-3 py-3 text-sm text-ink-900 bg-white flex items-center min-w-0">
         {children}
       </dd>
     </div>
@@ -381,7 +381,7 @@ function DetailRow({
 
 function SecretRow({ secret }: { secret: string }) {
   return (
-    <div className="flex items-center h-10 rounded-sm pr-1.5 pl-3 gap-1.5 bg-ink-25 border border-ink-75">
+    <div className="flex items-center h-10 rounded-sm pr-2 pl-3 gap-2 bg-ink-25 border border-ink-75">
       <code className="grow text-xs font-mono tabular-nums -tracking-[0.01em] text-ink-900">
         {secret}
       </code>

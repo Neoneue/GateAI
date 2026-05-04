@@ -33,24 +33,20 @@ export function CMP008aCards() {
         />
 
         <div className="flex flex-col gap-7">
-          <div className="flex flex-col gap-2.5">
+          <div className="flex flex-col gap-3">
             <SectionHeader
               code="CMP-008a.1 — CHART CARD"
               hint=".v-card · header / chart body"
             />
-            <div className="flex">
-              <RequestVolumeCard />
-            </div>
+            <RequestVolumeCard />
           </div>
 
-          <div className="flex flex-col gap-2.5">
+          <div className="flex flex-col gap-3">
             <SectionHeader
               code="CMP-008a.2 — METRIC + LIST CARD"
               hint=".v-card · metric hero / divider / row list"
             />
-            <div className="flex">
-              <TopKeysCard />
-            </div>
+            <TopKeysCard />
           </div>
         </div>
       </div>

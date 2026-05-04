@@ -211,7 +211,7 @@ export function CMP011DataTable() {
           parts="1 component"
         />
 
-        <div className="flex flex-col gap-2.5">
+        <div className="flex flex-col gap-3">
           <SectionHeader
             code="CMP-011.1 — SORTABLE TABLE"
             hint=".v-tbl · header / row / selected / action"
@@ -318,7 +318,7 @@ export function CMP011DataTable() {
                 {filtered.map((row) => (
                   <TableRow key={row.name}>
                     <TableCell>
-                      <div className="flex items-center gap-2.5">
+                      <div className="flex items-center gap-3">
                         <VendorAvatar vendor={row.vendor} />
                         <span className="font-mono text-sm text-ink-900 -tracking-[0.2px]">
                           {row.name.split('/')[1] ?? row.name}

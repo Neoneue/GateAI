@@ -88,7 +88,7 @@ export function CMP012ComposedDashboard() {
           parts="1 surface"
         />
 
-        <div className="flex flex-col gap-2.5">
+        <div className="flex flex-col gap-3">
           <SectionHeader
             code="CMP-012.1 — OVERVIEW SURFACE"
             hint="v-shell · gray well · KPI rail · charts · audit feed"
@@ -120,7 +120,7 @@ function DashboardSurface() {
 function ScreenHead() {
   return (
     <div className="relative flex items-center h-[41px] px-4 bg-ink-25 border-b border-ink-100 shrink-0">
-      <div className="flex items-center gap-1.5">
+      <div className="flex items-center gap-2">
         <span className="size-2.5 rounded-full bg-[#FF5F57]" aria-hidden />
         <span className="size-2.5 rounded-full bg-[#FEBC2E]" aria-hidden />
         <span className="size-2.5 rounded-full bg-[#28C840]" aria-hidden />
@@ -290,7 +290,7 @@ function DashTopBar() {
 function PageHeader() {
   return (
     <div className="flex items-end justify-between gap-6">
-      <div className="flex flex-col gap-1.5">
+      <div className="flex flex-col gap-2">
         <h1 className="font-sans font-medium text-ink-900 text-4xl/10 -tracking-[1px] m-0">
           Overview
         </h1>
@@ -443,9 +443,9 @@ export function RequestVolumeCard() {
       </CardHeader>
 
       <CardContent className="px-5 flex flex-col gap-4 flex-1 min-h-0">
-        <div className="flex items-center flex-wrap gap-x-4 gap-y-1.5">
+        <div className="flex items-center flex-wrap gap-x-4 gap-y-2">
           {MODEL_LEGEND.map((m) => (
-            <div key={m.key} className="flex items-center gap-1.5">
+            <div key={m.key} className="flex items-center gap-2">
               <span
                 className="size-2 rounded-[2px] shrink-0"
                 style={{ backgroundColor: seriesColor(m) }}
@@ -537,7 +537,7 @@ const TOP_KEYS: { label: string; model: string; cost: string; vendor: Vendor }[]
  */
 export function TopKeysCard() {
   return (
-    <Card className="w-[410px] shrink-0 gap-5 py-5">
+    <Card className="w-[410px] shrink-0 gap-4 py-5">
       <CardHeader className="px-5">
         <CardTitle className="font-sans text-base/5 font-medium -tracking-[0.25px] text-ink-900">
           Top Keys
@@ -558,7 +558,7 @@ export function TopKeysCard() {
         </CardAction>
       </CardHeader>
 
-      <CardContent className="px-5 flex flex-col gap-5">
+      <CardContent className="px-5 flex flex-col gap-4">
         <div className="flex items-baseline gap-2">
           <div className="flex-1 font-mono text-3xl/9 font-medium tabular-nums -tracking-[1px] text-ink-900">
             $1,147.82
@@ -568,10 +568,10 @@ export function TopKeysCard() {
           </div>
         </div>
 
-        <div className="flex flex-col gap-4 pt-5 border-t border-ink-100">
+        <div className="flex flex-col gap-4 pt-4 border-t border-ink-100">
           {TOP_KEYS.map((k) => (
             <div key={k.label} className="flex items-center justify-between gap-3">
-              <div className="flex items-center min-w-0 gap-2.5">
+              <div className="flex items-center min-w-0 gap-3">
                 <VendorAvatar vendor={k.vendor} />
                 <span className="font-sans text-sm font-medium -tracking-[0.14px] text-ink-900">
                   {k.label}
@@ -655,7 +655,7 @@ function RecentRequestsCard() {
                   {row.time}
                 </TableCell>
                 <TableCell className="whitespace-nowrap">
-                  <div className="flex items-center gap-2.5">
+                  <div className="flex items-center gap-3">
                     <VendorAvatar vendor={row.vendor} />
                     <span className="font-mono text-sm text-ink-900 -tracking-[0.2px]">
                       {row.model}

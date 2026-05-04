@@ -34,7 +34,7 @@ export function CMP008bStatCards() {
         />
 
         <div className="flex flex-col gap-7">
-          <div className="flex flex-col gap-2.5">
+          <div className="flex flex-col gap-3">
             <SectionHeader
               code="CMP-008b.2 — COMPACT + FLAT"
               hint=".compact for dense rails · .flat strips card chrome"
@@ -79,7 +79,7 @@ export function CMP008bStatCards() {
             </Card>
           </div>
 
-          <div className="flex flex-col gap-2.5">
+          <div className="flex flex-col gap-3">
             <SectionHeader
               code="CMP-008b.3 — STAT ROW"
               hint="KPIs with sparklines · 4 across"

@@ -54,14 +54,14 @@ export function CMP004FormFields() {
 
         <div className="flex items-start gap-6 bg-ink-25">
           {/* CMP-004.1 — TEXT INPUTS */}
-          <div className="flex flex-col grow gap-2.5 basis-0 bg-ink-25">
+          <div className="flex flex-col grow gap-3 basis-0 bg-ink-25">
             <SectionHeader
               code="CMP-004.1 — TEXT INPUTS"
               hint="<Input /> · <Textarea /> · <Select />"
             />
             <div className="flex flex-col rounded-sm gap-4 bg-white border border-ink-75 p-7">
               {/* Key name (required) */}
-              <div className="flex flex-col gap-1.5">
+              <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between">
                   <Label htmlFor="key-name" className="text-ink-600 font-medium text-sm">
                     Key name
@@ -81,7 +81,7 @@ export function CMP004FormFields() {
               </div>
 
               {/* Description (optional, textarea) */}
-              <div className="flex flex-col gap-1.5">
+              <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between">
                   <Label htmlFor="description" className="text-ink-600 font-medium text-sm">
                     Description
@@ -97,7 +97,7 @@ export function CMP004FormFields() {
               </div>
 
               {/* Environment (select) */}
-              <div className="flex flex-col gap-1.5">
+              <div className="flex flex-col gap-2">
                 <Label htmlFor="environment" className="text-ink-600 font-medium text-sm">Environment</Label>
                 <Select value={env} onValueChange={setEnv}>
                   <SelectTrigger id="environment" className="w-full">
@@ -113,7 +113,7 @@ export function CMP004FormFields() {
               </div>
 
               {/* Email (disabled) */}
-              <div className="flex flex-col gap-1.5">
+              <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between">
                   <Label htmlFor="email" className="text-ink-600 font-medium text-sm">
                     Email
@@ -128,7 +128,7 @@ export function CMP004FormFields() {
               </div>
 
               {/* Webhook URL (error state) */}
-              <div className="flex flex-col gap-1.5">
+              <div className="flex flex-col gap-2">
                 <Label htmlFor="webhook" className="text-ink-600 font-medium text-sm">
                   Webhook URL
                 </Label>
@@ -149,7 +149,7 @@ export function CMP004FormFields() {
           </div>
 
           {/* CMP-004.2 — CHECKBOX · RADIO · SWITCH */}
-          <div className="flex flex-col grow gap-2.5 basis-0 bg-ink-25">
+          <div className="flex flex-col grow gap-3 basis-0 bg-ink-25">
             <SectionHeader
               code="CMP-004.2 — CHECKBOX · RADIO · SWITCH"
               hint="<Checkbox /> · <RadioGroup /> · <Switch />"
@@ -163,36 +163,35 @@ export function CMP004FormFields() {
                   { id: 'requests:write', label: 'requests:write', hint: 'Send prompts through the gateway.' },
                   { id: 'audit:read', label: 'audit:read', hint: 'Verify Merkle proofs.' },
                 ].map((s) => (
-                  <div key={s.id} className="flex items-start gap-2.5">
+                  <div key={s.id} className="grid grid-cols-[auto_1fr] gap-x-2 gap-y-1 items-center">
                     <Checkbox
                       id={s.id}
                       checked={scopes[s.id as keyof typeof scopes]}
                       onCheckedChange={(v) =>
                         setScopes((prev) => ({ ...prev, [s.id]: Boolean(v) }))
                       }
-                      className="mt-px size-3.5 rounded-[3px] data-[state=checked]:bg-blue-700 data-[state=checked]:border-blue-700"
+                      className="size-3.5 rounded-[3px] data-[state=checked]:bg-blue-700 data-[state=checked]:border-blue-700"
                     />
-                    <div className="flex flex-col">
-                      <Label htmlFor={s.id} className="text-ink-800 font-medium text-sm">
-                        {s.label}
-                      </Label>
-                      <p className="text-sm text-ink-400">{s.hint}</p>
-                    </div>
+                    <Label htmlFor={s.id} className="text-ink-800 font-medium text-sm">
+                      {s.label}
+                    </Label>
+                    <span aria-hidden />
+                    <p className="text-sm text-ink-400">{s.hint}</p>
                   </div>
                 ))}
               </div>
 
               {/* Rotation cadence — radios */}
-              <div className="flex flex-col gap-2.5">
+              <div className="flex flex-col gap-3">
                 <Label id="rotation-label" className="text-ink-800 font-medium text-sm">Rotation cadence</Label>
-                <RadioGroup value={rotation} onValueChange={setRotation} aria-labelledby="rotation-label" className="flex flex-col gap-2.5">
+                <RadioGroup value={rotation} onValueChange={setRotation} aria-labelledby="rotation-label" className="flex flex-col gap-3">
                   {[
                     { value: '30', label: '30 days' },
                     { value: '60', label: '60 days' },
                     { value: '90', label: '90 days' },
                     { value: 'never', label: 'never (manual)' },
                   ].map((r) => (
-                    <div key={r.value} className="flex items-center gap-2.5">
+                    <div key={r.value} className="flex items-center gap-3">
                       <RadioGroupItem
                         value={r.value}
                         id={`rotation-${r.value}`}

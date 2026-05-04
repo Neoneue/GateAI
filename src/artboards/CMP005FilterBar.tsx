@@ -49,7 +49,7 @@ export function CMP005FilterBar() {
         />
 
         {/* CMP-005.1 — LIST FILTER BAR */}
-        <div className="flex flex-col gap-2.5 bg-ink-25">
+        <div className="flex flex-col gap-3 bg-ink-25">
           <SectionHeader
             code="CMP-005.1 — LIST FILTER BAR"
             hint="<Input> · <Select> · <Tag> · <SegmentedPill>"
@@ -134,7 +134,7 @@ export function CMP005FilterBar() {
             </div>
 
             {/* Row 2 — active filter chips */}
-            <div className="flex flex-wrap items-center gap-1.5">
+            <div className="flex flex-wrap items-center gap-2">
               {chips.map((label) => (
                 <Tag
                   key={label}

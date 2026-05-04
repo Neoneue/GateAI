@@ -69,7 +69,7 @@ export function CMP009Toast() {
         />
 
         <div className="flex flex-col gap-7">
-          <div className="flex flex-col gap-2.5">
+          <div className="flex flex-col gap-3">
             <SectionHeader
               code="CMP-009.1 — TOAST DECK"
               hint="success · warn · error · with action"
@@ -95,7 +95,7 @@ function ToastDeck() {
           Restore deck
         </Button>
       ) : (
-        <div className="flex flex-col w-[420px] gap-1.5 px-3">
+        <div className="flex flex-col w-[420px] gap-2 px-3">
           {toasts.map((t) => (
             <ToastRow key={t.id} spec={t} onDismiss={() => dismiss(t.id)} />
           ))}
@@ -116,12 +116,12 @@ function ToastRow({ spec, onDismiss }: { spec: ToastSpec; onDismiss: () => void 
   const isMultiline = Boolean(spec.detail);
   return (
     <div
-      className={`flex items-center rounded-lg gap-2.5 bg-white border border-ink-75 shadow-[0_8px_24px_-6px_rgba(0,0,0,0.25)] ${isMultiline ? 'py-3 px-4' : 'py-3.5 px-4'}`}
+      className={`flex items-center rounded-lg gap-3 bg-white border border-ink-75 shadow-[0_8px_24px_-6px_rgba(0,0,0,0.25)] ${isMultiline ? 'py-3 px-4' : 'py-4 px-4'}`}
     >
       <div className="shrink-0">
         <ToastIcon tone={spec.tone} />
       </div>
-      <div className="grow flex flex-col gap-0.5">
+      <div className="grow flex flex-col gap-1">
         <div className="flex flex-wrap gap-1">{spec.body}</div>
         {spec.detail && (
           <div className="text-xs tabular-nums text-ink-800">{spec.detail}</div>

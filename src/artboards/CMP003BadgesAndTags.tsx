@@ -27,7 +27,7 @@ export function CMP003BadgesAndTags() {
 
         <div className="flex gap-6 bg-ink-25">
           {/* CMP-003.1 — STATUS */}
-          <div className="flex flex-col grow gap-2.5 basis-0 bg-ink-25">
+          <div className="flex flex-col grow gap-3 basis-0 bg-ink-25">
             <SectionHeader
               code="CMP-003.1 — STATUS"
               hint="<Badge variant=… /> + <StatusDot />"
@@ -71,27 +71,27 @@ export function CMP003BadgesAndTags() {
           </div>
 
           {/* CMP-003.2 — COUNTERS & CHIPS */}
-          <div className="flex flex-col grow gap-2.5 basis-0 bg-ink-25">
+          <div className="flex flex-col grow gap-3 basis-0 bg-ink-25">
             <SectionHeader
               code="CMP-003.2 — COUNTERS & CHIPS"
               hint="<Badge /> · <Tag onRemove /> · mono marks"
             />
-            <div className="flex flex-col rounded-sm gap-3.5 bg-white border border-ink-75 p-7">
+            <div className="flex flex-col rounded-sm gap-4 bg-white border border-ink-75 p-7">
               {/* Counters / version pills / accent labels */}
               <div className="flex flex-wrap items-center gap-3">
-                <Badge variant="secondary" className="rounded-sm h-5 px-1.5 font-mono font-normal">
+                <Badge variant="secondary" className="rounded-sm h-5 px-2 font-mono font-normal">
                   v0.4.1
                 </Badge>
-                <Badge variant="link" className="h-5 px-1.5 rounded-sm font-medium tracking-wide uppercase">
+                <Badge variant="link" className="h-5 px-2 rounded-sm font-medium tracking-wide uppercase">
                   BETA
                 </Badge>
-                <Badge variant="default" className="rounded-sm h-5 px-1.5 font-mono uppercase tracking-wider">
+                <Badge variant="default" className="rounded-sm h-5 px-2 font-mono uppercase tracking-wider">
                   NEW
                 </Badge>
                 <Badge variant="outline" className="rounded-full size-5 p-0 border-destructive text-destructive font-mono tabular-nums">
                   3
                 </Badge>
-                <Badge variant="secondary" className="rounded-full px-1.5 h-5 font-mono tabular-nums text-ink-500">
+                <Badge variant="secondary" className="rounded-full px-2 h-5 font-mono tabular-nums text-ink-500">
                   +12
                 </Badge>
               </div>
@@ -119,13 +119,13 @@ export function CMP003BadgesAndTags() {
 
               {/* Rev marks — mono uppercase, square corner */}
               <div className="flex flex-wrap items-center gap-2">
-                <Badge variant="secondary" className="rounded-none h-5 px-1.5 font-mono uppercase tracking-widest text-ink-400 border border-ink-100">
+                <Badge variant="secondary" className="rounded-none h-5 px-2 font-mono uppercase tracking-widest text-ink-400 border border-ink-100">
                   R.01
                 </Badge>
-                <Badge variant="secondary" className="rounded-none h-5 px-1.5 font-mono uppercase tracking-widest text-ink-400 border border-ink-100">
+                <Badge variant="secondary" className="rounded-none h-5 px-2 font-mono uppercase tracking-widest text-ink-400 border border-ink-100">
                   SHEET 011
                 </Badge>
-                <Badge variant="default" className="rounded-none h-5 px-1.5 font-mono uppercase tracking-widest">
+                <Badge variant="default" className="rounded-none h-5 px-2 font-mono uppercase tracking-widest">
                   INTERNAL
                 </Badge>
               </div>

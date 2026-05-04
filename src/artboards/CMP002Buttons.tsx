@@ -31,7 +31,7 @@ export function CMP002Buttons() {
         />
 
         {/* CMP-002.1 · VARIANTS */}
-        <div className="flex flex-col mb-7 gap-2.5 bg-ink-25">
+        <div className="flex flex-col mb-7 gap-3 bg-ink-25">
           <SectionHeader
             code="CMP-002.1 — VARIANTS"
             hint="<Button variant=… /> · default · outline · secondary · ghost · destructive · link"
@@ -56,7 +56,7 @@ export function CMP002Buttons() {
         </div>
 
         {/* CMP-002.2 · SIZES */}
-        <div className="flex flex-col mb-7 gap-2.5 bg-ink-25">
+        <div className="flex flex-col mb-7 gap-3 bg-ink-25">
           <SectionHeader
             code="CMP-002.2 — SIZES"
             hint="<Button size=… /> · xs · sm · default · lg"
@@ -72,7 +72,7 @@ export function CMP002Buttons() {
         {/* CMP-002.3 · STATES + CMP-002.4 · ICON + CMP-002.5 · GROUP */}
         <div className="flex gap-4 bg-ink-25">
           {/* STATES — explicit visual representations (not :hover/:focus) */}
-          <div className="flex flex-col grow gap-2.5 basis-0">
+          <div className="flex flex-col grow gap-3 basis-0">
             <SectionHeader
               code="CMP-002.3 — STATES"
               hint="default · hover · active · focus · loading · disabled"
@@ -96,7 +96,7 @@ export function CMP002Buttons() {
           </div>
 
           {/* ICON */}
-          <div className="flex flex-col grow gap-2.5 basis-0">
+          <div className="flex flex-col grow gap-3 basis-0">
             <SectionHeader
               code="CMP-002.4 — ICON"
               hint="data-icon=inline-start · icon-only · button-group"
@@ -135,7 +135,7 @@ export function CMP002Buttons() {
           </div>
 
           {/* GROUP — real shadcn ToggleGroup, styled to match Paper */}
-          <div className="flex flex-col grow gap-2.5 basis-0">
+          <div className="flex flex-col grow gap-3 basis-0">
             <SectionHeader
               code="CMP-002.5 — GROUP"
               hint="<ToggleGroup> · <SegmentedPill>"

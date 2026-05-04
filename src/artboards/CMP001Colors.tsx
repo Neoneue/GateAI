@@ -141,7 +141,7 @@ function PaletteCard({
 }) {
   const stepCount = palette.steps.length;
   return (
-    <div className="flex flex-col gap-2.5 bg-ink-25">
+    <div className="flex flex-col gap-3 bg-ink-25">
       <SectionHeader code={palette.code} hint={palette.description} />
       <div
         className="flex flex-col rounded-sm gap-4 bg-white border border-ink-75 p-6 shadow-[0_1px_2px_rgba(17,20,23,0.04)]"
@@ -151,7 +151,7 @@ function PaletteCard({
             <h2 className="font-sans font-medium text-ink-900 text-base m-0">
               {palette.name}
             </h2>
-            <div className="font-sans text-sm text-ink-500 mt-0.5">
+            <div className="font-sans text-sm text-ink-500 mt-1">
               {palette.description}
             </div>
           </div>
@@ -169,7 +169,7 @@ function PaletteCard({
                 className="aspect-square w-full"
                 style={{ background: background(step) }}
               />
-              <div className="flex flex-col gap-0.5 bg-white p-2">
+              <div className="flex flex-col gap-1 bg-white p-2">
                 <div className="font-mono text-xs text-ink-800 font-medium">
                   {step.scale}
                 </div>
@@ -206,13 +206,13 @@ function SingleToneCard({
   void caption; // accepted for future use; kept off-screen for now
   const stepCount = steps.length;
   return (
-    <div className="flex flex-col gap-2.5 bg-ink-25">
+    <div className="flex flex-col gap-3 bg-ink-25">
       <SectionHeader code={code} hint={description} />
       <div className="flex flex-col rounded-sm gap-4 bg-white border border-ink-75 p-6 shadow-[0_1px_2px_rgba(17,20,23,0.04)]">
         <div className="flex items-baseline justify-between">
           <div>
             <h2 className="font-sans font-medium text-ink-900 text-base m-0">{name}</h2>
-            <div className="font-sans text-sm text-ink-500 mt-0.5">{description}</div>
+            <div className="font-sans text-sm text-ink-500 mt-1">{description}</div>
           </div>
           <div className="font-mono text-xs text-ink-500 uppercase tracking-[0.1em]">{meta}</div>
         </div>
@@ -226,7 +226,7 @@ function SingleToneCard({
                 className="aspect-square w-full"
                 style={{ background: background(step) }}
               />
-              <div className="flex flex-col gap-0.5 bg-white p-2">
+              <div className="flex flex-col gap-1 bg-white p-2">
                 <div className="font-mono text-xs text-ink-800 font-medium">
                   {step.scale}
                 </div>
