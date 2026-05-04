@@ -13,8 +13,9 @@ import { CMP007bToast } from '@/artboards/CMP007bToast';
 import { CMP008Charts } from '@/artboards/CMP008Charts';
 import { CMP009DataTable } from '@/artboards/CMP009DataTable';
 import { CMP011ComposedDashboard } from '@/artboards/CMP011ComposedDashboard';
+import { CMP012CodeCards } from '@/artboards/CMP012CodeCards';
 
-type PageId = 'cmp-000' | 'cmp-001' | 'cmp-002' | 'cmp-003' | 'cmp-004' | 'cmp-005' | 'cmp-006' | 'cmp-007' | 'cmp-007b' | 'cmp-008' | 'cmp-009' | 'cmp-011';
+type PageId = 'cmp-000' | 'cmp-001' | 'cmp-002' | 'cmp-003' | 'cmp-004' | 'cmp-005' | 'cmp-006' | 'cmp-007' | 'cmp-007b' | 'cmp-008' | 'cmp-009' | 'cmp-011' | 'cmp-012';
 
 interface Page {
   id: PageId;
@@ -36,6 +37,7 @@ const PAGES: Page[] = [
   { id: 'cmp-008', code: 'CMP-008', name: 'Charts', Component: CMP008Charts },
   { id: 'cmp-009', code: 'CMP-009', name: 'Data table', Component: CMP009DataTable },
   { id: 'cmp-011', code: 'CMP-011', name: 'Composed · Dashboard', Component: CMP011ComposedDashboard },
+  { id: 'cmp-012', code: 'CMP-012', name: 'Code cards', Component: CMP012CodeCards },
 ];
 
 export default function App() {

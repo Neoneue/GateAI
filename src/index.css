@@ -50,6 +50,13 @@
   --color-warning:    #DC8900;
   --color-danger:     oklch(0.577 0.245 27.3);
   --color-danger-2:   #D33A3C;
+
+  /* Syntax tokens (CMP-012 code cards). Named by intent, not by hue —
+     a single CodeBlock primitive paints all variants from these vars. */
+  --color-syntax-keyword:        oklch(0.554 0.197 39.9); /* curl, -H, -d, export — orange-red */
+  --color-syntax-variable:       oklch(0.792 0.171 65.1); /* $KEY interpolations — amber */
+  --color-syntax-property:       #4165FF;                  /* JSON keys / object props — saturated blue */
+  --color-syntax-terminal-blue:  #6A8EFB;                  /* terminal numbers / status — lighter blue */
 }
 
 /* ─── Canvas surface ───────────────────────────────────────── */
