@@ -63,6 +63,7 @@ export function CMP005FilterBar() {
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="Search"
+                  aria-label="Search keys"
                 />
                 <InputGroupAddon>
                   <Search />
@@ -79,7 +80,7 @@ export function CMP005FilterBar() {
                   preview: 'preview',
                 }}
               >
-                <SelectTrigger>
+                <SelectTrigger aria-label="Environment">
                   <SelectValue placeholder="Environment" />
                 </SelectTrigger>
                 <SelectContent>
@@ -100,7 +101,7 @@ export function CMP005FilterBar() {
                   '90d': 'Last 90d',
                 }}
               >
-                <SelectTrigger>
+                <SelectTrigger aria-label="Time range">
                   <SelectValue placeholder="Time range" />
                 </SelectTrigger>
                 <SelectContent>
@@ -156,7 +157,7 @@ export function CMP005FilterBar() {
                 <button
                   type="button"
                   onClick={() => setChips(['env: production', 'status: active'])}
-                  className="ml-1 font-mono text-xs uppercase tracking-[0.08em] text-blue-700 hover:text-blue-800"
+                  className="ml-1 font-sans text-xs text-blue-700 hover:text-blue-800 underline decoration-1 underline-offset-[3px]"
                 >
                   Reset filters
                 </button>
@@ -176,7 +177,7 @@ export function CMP005FilterBar() {
                   meta: 'Meta',
                 }}
               >
-                <SelectTrigger>
+                <SelectTrigger aria-label="Provider">
                   <SelectValue placeholder="All Providers" />
                 </SelectTrigger>
                 <SelectContent>
@@ -212,7 +213,7 @@ export function CMP005FilterBar() {
                   latency: 'Sort: Latency',
                 }}
               >
-                <SelectTrigger>
+                <SelectTrigger aria-label="Sort">
                   <SelectValue placeholder="Sort" />
                 </SelectTrigger>
                 <SelectContent>

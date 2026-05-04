@@ -27,7 +27,7 @@ export function CMP006TabsPagination() {
   const [tab, setTab] = useState('keys');
   const [period, setPeriod] = useState('week');
   const [range, setRange] = useState('7d');
-  const [sort, setSort] = useState<string[]>(['most-used']);
+  const [sort, setSort] = useState('most-used');
   const [page, setPage] = useState(3);
   const totalPages = 12;
   const totalRows = 240;
@@ -87,6 +87,7 @@ export function CMP006TabsPagination() {
               {/* Three segmented groups */}
               <div className="flex items-center flex-wrap gap-4">
                 <SegmentedPill
+                  aria-label="Period"
                   value={period}
                   onValueChange={setPeriod}
                   options={[
@@ -97,6 +98,7 @@ export function CMP006TabsPagination() {
                 />
 
                 <SegmentedPill
+                  aria-label="Time range"
                   value={range}
                   onValueChange={setRange}
                   options={[
@@ -109,8 +111,9 @@ export function CMP006TabsPagination() {
                 />
 
                 <ToggleGroup
-                  value={sort}
-                  onValueChange={(v) => v.length > 0 && setSort(v)}
+                  aria-label="Sort order"
+                  value={[sort]}
+                  onValueChange={(v) => v.length > 0 && setSort(v[v.length - 1])}
                   className="rounded-lg overflow-clip gap-0"
                 >
                   {[
@@ -136,56 +139,63 @@ export function CMP006TabsPagination() {
               </div>
 
               {/* Pagination */}
-              <Pagination className="mx-0 w-fit justify-start">
-                <PaginationContent className="gap-1">
-                  <PaginationItem>
-                    <PaginationPrevious
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setPage((p) => Math.max(1, p - 1));
-                      }}
-                    />
-                  </PaginationItem>
-                  {[1, 2, 3, 4].map((n) => (
-                    <PaginationItem key={n}>
-                      <PaginationLink
-                        isActive={page === n}
+              <div className="flex items-center gap-2">
+                <Pagination className="mx-0 w-fit justify-start">
+                  <PaginationContent className="gap-1">
+                    <PaginationItem>
+                      <PaginationPrevious
                         onClick={(e) => {
                           e.preventDefault();
-                          setPage(n);
+                          setPage((p) => Math.max(1, p - 1));
+                        }}
+                      />
+                    </PaginationItem>
+                    {[1, 2, 3, 4].map((n) => (
+                      <PaginationItem key={n}>
+                        <PaginationLink
+                          isActive={page === n}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setPage(n);
+                          }}
+                        >
+                          {n}
+                        </PaginationLink>
+                      </PaginationItem>
+                    ))}
+                    <PaginationItem>
+                      <PaginationEllipsis />
+                    </PaginationItem>
+                    <PaginationItem>
+                      <PaginationLink
+                        isActive={page === totalPages}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setPage(totalPages);
                         }}
                       >
-                        {n}
+                        {totalPages}
                       </PaginationLink>
                     </PaginationItem>
-                  ))}
-                  <PaginationItem>
-                    <PaginationEllipsis />
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink
-                      isActive={page === totalPages}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setPage(totalPages);
-                      }}
-                    >
-                      {totalPages}
-                    </PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationNext
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setPage((p) => Math.min(totalPages, p + 1));
-                      }}
-                    />
-                  </PaginationItem>
-                  <li className="ml-2 font-sans text-xs text-ink-600 tabular-nums -tracking-[0.01em]">
-                    Page {page} of {totalPages} · {totalRows} rows
-                  </li>
-                </PaginationContent>
-              </Pagination>
+                    <PaginationItem>
+                      <PaginationNext
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setPage((p) => Math.min(totalPages, p + 1));
+                        }}
+                      />
+                    </PaginationItem>
+                  </PaginationContent>
+                </Pagination>
+                <p
+                  role="status"
+                  aria-live="polite"
+                  aria-atomic="true"
+                  className="font-sans text-xs text-ink-600 tabular-nums -tracking-[0.01em]"
+                >
+                  Page {page} of {totalPages} · {totalRows} rows
+                </p>
+              </div>
             </div>
           </div>
         </div>

@@ -72,8 +72,10 @@ export function CMP004FormFields() {
                   id="key-name"
                   value={keyName}
                   onChange={(e) => setKeyName(e.target.value)}
+                  required
+                  aria-describedby="key-name-help"
                 />
-                <p className="text-sm text-ink-400">
+                <p id="key-name-help" className="text-sm text-ink-400">
                   Lowercase, hyphens. Visible to teammates with key:read.
                 </p>
               </div>
@@ -96,9 +98,9 @@ export function CMP004FormFields() {
 
               {/* Environment (select) */}
               <div className="flex flex-col gap-1.5">
-                <Label className="text-ink-600 font-medium text-sm">Environment</Label>
+                <Label htmlFor="environment" className="text-ink-600 font-medium text-sm">Environment</Label>
                 <Select value={env} onValueChange={setEnv}>
-                  <SelectTrigger className="w-full">
+                  <SelectTrigger id="environment" className="w-full">
                     <SelectValue placeholder="Select an environment" />
                   </SelectTrigger>
                   <SelectContent>
@@ -135,9 +137,12 @@ export function CMP004FormFields() {
                   value={webhook}
                   onChange={(e) => setWebhook(e.target.value)}
                   aria-invalid={!webhookValid}
+                  aria-describedby={!webhookValid ? 'webhook-error' : undefined}
                 />
                 {!webhookValid && (
-                  <p className="text-sm text-destructive">Must be a valid https:// URL.</p>
+                  <p id="webhook-error" role="alert" className="text-sm text-destructive">
+                    Must be a valid https:// URL.
+                  </p>
                 )}
               </div>
             </div>
@@ -149,10 +154,10 @@ export function CMP004FormFields() {
               code="CMP-004.2 — CHECKBOX · RADIO · SWITCH"
               hint="<Checkbox /> · <RadioGroup /> · <Switch />"
             />
-            <div className="flex flex-col rounded-sm gap-[18px] bg-white border border-ink-75 p-7">
+            <div className="flex flex-col rounded-sm gap-5 bg-white border border-ink-75 p-7">
               {/* Scopes — checkboxes */}
-              <div className="flex flex-col gap-3">
-                <Label className="text-ink-800 font-medium text-sm">Scopes</Label>
+              <div role="group" aria-labelledby="scopes-label" className="flex flex-col gap-3">
+                <Label id="scopes-label" className="text-ink-800 font-medium text-sm">Scopes</Label>
                 {[
                   { id: 'requests:read', label: 'requests:read', hint: 'View request logs and metrics.' },
                   { id: 'requests:write', label: 'requests:write', hint: 'Send prompts through the gateway.' },
@@ -179,8 +184,8 @@ export function CMP004FormFields() {
 
               {/* Rotation cadence — radios */}
               <div className="flex flex-col gap-2.5">
-                <Label className="text-ink-800 font-medium text-sm">Rotation cadence</Label>
-                <RadioGroup value={rotation} onValueChange={setRotation} className="flex flex-col gap-2.5">
+                <Label id="rotation-label" className="text-ink-800 font-medium text-sm">Rotation cadence</Label>
+                <RadioGroup value={rotation} onValueChange={setRotation} aria-labelledby="rotation-label" className="flex flex-col gap-2.5">
                   {[
                     { value: '30', label: '30 days' },
                     { value: '60', label: '60 days' },
@@ -202,8 +207,8 @@ export function CMP004FormFields() {
               </div>
 
               {/* Notifications — switches */}
-              <div className="flex flex-col gap-3">
-                <Label className="text-ink-800 font-medium text-sm">Notifications</Label>
+              <div role="group" aria-labelledby="notifications-label" className="flex flex-col gap-3">
+                <Label id="notifications-label" className="text-ink-800 font-medium text-sm">Notifications</Label>
                 {[
                   { key: 'autoRotate' as const, label: 'Auto-rotate before expiry' },
                   { key: 'restrictIps' as const, label: 'Restrict to allowlisted IPs' },

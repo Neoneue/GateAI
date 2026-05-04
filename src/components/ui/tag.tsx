@@ -27,7 +27,7 @@ export function Tag({ children, onRemove, className }: TagProps) {
         <button
           type="button"
           onClick={onRemove}
-          aria-label="Remove"
+          aria-label={typeof children === 'string' ? `Remove ${children}` : 'Remove'}
           className="inline-flex items-center justify-center size-3.5 rounded-full text-ink-600 hover:text-ink-900 hover:bg-ink-100"
         >
           <X size={10} strokeWidth={2} />

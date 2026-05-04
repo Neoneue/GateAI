@@ -1,10 +1,10 @@
 import { cn } from '@/lib/utils';
 
 const statusColors = {
-  success: 'bg-[#2ECC71]',
-  warning: 'bg-[#FA983A]',
-  danger: 'bg-[#E64434]',
-  info: 'bg-[#3498DB]',
+  success: 'bg-success',
+  warning: 'bg-warning',
+  danger: 'bg-destructive',
+  info: 'bg-primary',
   neutral: 'bg-ink-400',
 } as const;
 

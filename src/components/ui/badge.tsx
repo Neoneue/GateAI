@@ -5,7 +5,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const badgeVariants = cva(
-  "group/badge inline-flex h-5 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-4xl border border-transparent px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&>svg]:pointer-events-none [&>svg]:size-3!",
+  "group/badge inline-flex h-5 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-full border border-transparent px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&>svg]:pointer-events-none [&>svg]:size-3!",
   {
     variants: {
       variant: {
@@ -22,11 +22,11 @@ const badgeVariants = cva(
 
         /* ─── Constellation Gate AI status variants ────────────── */
         success:
-          "bg-[#2ECC71]/15 text-[#1E8A4A] [a]:hover:bg-[#2ECC71]/25",
+          "bg-success/15 text-success [a]:hover:bg-success/25",
         warning:
-          "bg-[#FA983A]/16 text-[#B86B1A] [a]:hover:bg-[#FA983A]/25",
+          "bg-warning/15 text-warning [a]:hover:bg-warning/25",
         info:
-          "bg-[#3498DB]/14 text-[#1F6FA8] [a]:hover:bg-[#3498DB]/25",
+          "bg-primary/15 text-primary [a]:hover:bg-primary/25",
         neutral:
           "bg-ink-50 text-ink-700 border-ink-100 [a]:hover:bg-ink-100",
       },

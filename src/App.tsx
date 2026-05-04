@@ -33,7 +33,7 @@ const PAGES: Page[] = [
   { id: 'cmp-004',  code: 'CMP-004',  name: 'Form fields',         Component: CMP004FormFields },
   { id: 'cmp-005',  code: 'CMP-005',  name: 'Filter bar',          Component: CMP005FilterBar },
   { id: 'cmp-006',  code: 'CMP-006',  name: 'Tabs · pagination',   Component: CMP006TabsPagination },
-  { id: 'cmp-007',  code: 'CMP-007',  name: 'Modal · empty',       Component: CMP007ModalEmptyState },
+  { id: 'cmp-007',  code: 'CMP-007',  name: 'Modal',               Component: CMP007ModalEmptyState },
   { id: 'cmp-008a', code: 'CMP-008a', name: 'Cards',               Component: CMP008aCards },
   { id: 'cmp-008b', code: 'CMP-008b', name: 'Stat cards',          Component: CMP008bStatCards },
   { id: 'cmp-008c', code: 'CMP-008c', name: 'Code cards',          Component: CMP008cCodeCards },

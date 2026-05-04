@@ -12,6 +12,7 @@ export interface SegmentedPillProps {
   onValueChange?: (value: string) => void;
   options: SegmentedPillOption[];
   className?: string;
+  'aria-label'?: string;
 }
 
 /**
@@ -26,6 +27,7 @@ export function SegmentedPill({
   onValueChange,
   options,
   className,
+  'aria-label': ariaLabel,
 }: SegmentedPillProps) {
   const itemRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const [indicator, setIndicator] = useState<{
@@ -53,6 +55,7 @@ export function SegmentedPill({
       value={[value]}
       onValueChange={(v) => v.length > 0 && onValueChange?.(v[0])}
       spacing={0}
+      aria-label={ariaLabel}
       className={cn(
         // Paper spec WW0-0: h-10 container, py-px px-1, rounded-[8px],
         // bg ink-50 (#F1F4F6), border ink-75 (#E9EBEE).

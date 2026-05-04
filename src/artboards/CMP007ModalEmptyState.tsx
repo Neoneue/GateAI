@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { toast } from 'sonner';
 import { KeyRound, Plus, Copy, X } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -36,9 +36,9 @@ export function CMP007ModalEmptyState() {
       <div className="flex flex-col w-full bg-ink-25">
         <ArtboardHeader
           code="CMP-007"
-          title="Modal · toast · empty state"
-          description="Three states a list view drifts through. Modal anchored mid-screen, toast slides in lower-right, empty state fills the table well."
-          parts="3 states"
+          title="Modal"
+          description="Modal panels for confirm, create, and payload reveal. Anchored mid-screen, white card on a dimmed backdrop. Detail-payload variant uses a bordered key-value grid."
+          parts="4 modal variants"
         />
 
         <div className="flex flex-col gap-7">
@@ -49,7 +49,7 @@ export function CMP007ModalEmptyState() {
               hint="<AlertDialog> · <Dialog> · <Dialog> (payload)"
             />
             <Card className="p-7 gap-7 rounded-sm">
-              <div className="grid grid-cols-2 gap-5">
+              <div className="grid grid-cols-2 gap-5 items-start">
                 <ModalSpecimen
                   title="Revoke prod-backend?"
                   subtitle="This key was last used 2 minutes ago."
@@ -98,9 +98,9 @@ export function CMP007ModalEmptyState() {
                   </div>
                   <div className="flex gap-2.5">
                     <div className="flex flex-col gap-1.5 flex-1">
-                      <Label className="text-xs text-ink-600">Scope</Label>
+                      <Label htmlFor="cmp007-scope" className="text-xs text-ink-600">Scope</Label>
                       <Select value={scope} onValueChange={setScope}>
-                        <SelectTrigger className="w-full">
+                        <SelectTrigger id="cmp007-scope" className="w-full">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -111,9 +111,9 @@ export function CMP007ModalEmptyState() {
                       </Select>
                     </div>
                     <div className="flex flex-col gap-1.5 flex-1">
-                      <Label className="text-xs text-ink-600">Expires</Label>
+                      <Label htmlFor="cmp007-expires" className="text-xs text-ink-600">Expires</Label>
                       <Select value={expires} onValueChange={setExpires}>
-                        <SelectTrigger className="w-full">
+                        <SelectTrigger id="cmp007-expires" className="w-full">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -128,8 +128,9 @@ export function CMP007ModalEmptyState() {
                   <ModalFooter>
                     <Button variant="ghost" onClick={resetCreate}>Cancel</Button>
                     <Button
+                      disabled={!keyName.trim()}
                       onClick={() => {
-                        toast.success('Key created', { description: keyName || 'preview-env' });
+                        toast.success('Key created', { description: keyName });
                         resetCreate();
                       }}
                     >
@@ -176,9 +177,9 @@ export function CMP007ModalEmptyState() {
                   <KeyRound className="size-7 text-ink-900" strokeWidth={1.5} />
                 </div>
                 <div className="flex flex-col items-center gap-1 mt-2">
-                  <h3 className="text-lg font-medium -tracking-[0.01em] text-ink-900">
+                  <h2 className="text-lg font-medium -tracking-[0.01em] text-ink-900">
                     No API keys yet
-                  </h3>
+                  </h2>
                   <p className="max-w-60 text-center text-sm text-ink-600">
                     Create your first key to start sending requests through the gateway.
                   </p>
@@ -209,8 +210,11 @@ function ModalSpecimen({
   className?: string;
   onClose: () => void;
 }) {
+  const titleId = useId();
   return (
     <div
+      role="dialog"
+      aria-labelledby={titleId}
       className={
         'flex flex-col rounded-xl bg-white border border-ink-100 shadow-[0_12px_32px_-8px_rgba(17,20,23,0.18)] overflow-clip ' +
         (className ?? '')
@@ -218,7 +222,7 @@ function ModalSpecimen({
     >
       <div className="flex items-start justify-between pt-4 pr-3 pb-1 pl-5">
         <div className="flex flex-col">
-          <div className="text-base font-medium -tracking-[0.01em] text-ink-900">
+          <div id={titleId} className="text-base font-medium -tracking-[0.01em] text-ink-900">
             {title}
           </div>
           {subtitle && <div className="text-xs text-ink-600 mt-0.5">{subtitle}</div>}
@@ -321,7 +325,7 @@ function GenerationDetailsModal() {
         </DetailGrid>
 
         {/* Eyebrow */}
-        <div className="font-mono uppercase tracking-[0.1em] text-xs text-ink-500 mt-2 mb-0">
+        <div className="font-mono font-medium uppercase tracking-[0.1em] text-xs text-ink-500 mt-2 mb-0">
           Security scan
         </div>
 
@@ -334,14 +338,10 @@ function GenerationDetailsModal() {
             </Badge>
           </DetailRow>
           <DetailRow label="Injection scan">
-            <Badge variant="success" className="bg-success/10 text-success">
-              clean
-            </Badge>
+            <Badge variant="success">clean</Badge>
           </DetailRow>
           <DetailRow label="PII scan">
-            <Badge variant="success" className="bg-success/10 text-success">
-              clean
-            </Badge>
+            <Badge variant="success">clean</Badge>
           </DetailRow>
           <DetailRow label="Policy">
             <span className="text-sm text-ink-900">Default workspace policy</span>
