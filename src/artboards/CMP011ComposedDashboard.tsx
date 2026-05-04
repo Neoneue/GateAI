@@ -1,16 +1,20 @@
 import { useState } from 'react';
 import {
+  AlignJustify,
   Bell,
+  Box,
   ChevronRight,
+  Database,
   Download,
   Home,
   KeyRound,
-  LayoutGrid,
+  LineChart,
   PanelLeftOpen,
+  Play,
   Plus,
-  ScrollText,
   Settings2,
-  ShieldCheck,
+  Shield,
+  TriangleAlert,
 } from 'lucide-react';
 import {
   Bar,
@@ -21,6 +25,14 @@ import {
 } from 'recharts';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { StatusDot } from '@/components/ui/status-dot';
 import {
@@ -125,12 +137,20 @@ function ScreenHead() {
 
 /* ─── Sidebar (64px icon nav) ────────────────────────────────────────────── */
 
-const NAV_ITEMS = [
-  { id: 'overview', icon: LayoutGrid, label: 'Overview', active: true },
-  { id: 'logs', icon: ScrollText, label: 'Logs', active: false },
-  { id: 'keys', icon: KeyRound, label: 'API keys', active: false },
-  { id: 'audit', icon: ShieldCheck, label: 'Audit', active: false },
-  { id: 'settings', icon: Settings2, label: 'Settings', active: false },
+const NAV_ITEMS_PRIMARY = [
+  { id: 'overview',     icon: Home,          label: 'Overview',     active: true  },
+  { id: 'models',       icon: Box,           label: 'Model List',   active: false },
+  { id: 'keys',         icon: KeyRound,      label: 'API Keys',     active: false },
+  { id: 'playground',   icon: Play,          label: 'Playground',   active: false },
+  { id: 'requests',     icon: AlignJustify,  label: 'Requests',     active: false },
+  { id: 'leaderboards', icon: LineChart,     label: 'Leaderboards', active: false },
+  { id: 'audit',        icon: Shield,        label: 'Audit Trail',  active: false },
+] as const;
+
+const NAV_ITEMS_SECONDARY = [
+  { id: 'security',  icon: TriangleAlert, label: 'Security',  active: false },
+  { id: 'templates', icon: Database,      label: 'Templates', active: false },
+  { id: 'settings',  icon: Settings2,     label: 'Settings',  active: false },
 ] as const;
 
 function DashSidebar() {
@@ -164,9 +184,33 @@ function DashSidebar() {
         {/* Separator between expand button and nav items */}
         <Separator className="w-8 mb-1" />
 
-        {/* Nav items */}
+        {/* Primary nav group */}
         <div className="flex flex-col items-center gap-1">
-          {NAV_ITEMS.map((item) => {
+          {NAV_ITEMS_PRIMARY.map((item) => {
+            const Icon = item.icon;
+            return (
+              <button
+                key={item.id}
+                type="button"
+                aria-label={item.label}
+                aria-current={item.active ? 'page' : undefined}
+                className={
+                  item.active
+                    ? 'flex items-center justify-center size-9 rounded-lg bg-blue-50 text-blue-700'
+                    : 'flex items-center justify-center size-9 rounded-lg text-ink-400 hover:text-ink-700 hover:bg-ink-50 transition-colors'
+                }
+              >
+                <Icon className="size-[18px]" strokeWidth={1.5} />
+              </button>
+            );
+          })}
+        </div>
+
+        <Separator className="w-8 my-1" />
+
+        {/* Secondary nav group */}
+        <div className="flex flex-col items-center gap-1">
+          {NAV_ITEMS_SECONDARY.map((item) => {
             const Icon = item.icon;
             return (
               <button
@@ -215,10 +259,11 @@ function DashTopBar() {
   return (
     <div className="flex items-center justify-between h-[49px] px-6 bg-white border-b border-ink-100 shrink-0">
       <div className="flex items-center gap-2">
-        <Home className="size-3.5 text-ink-800" strokeWidth={1.75} />
-        <span className="font-plex text-xs text-ink-600">acme-prod</span>
-        <span className="font-plex text-xs text-ink-300">/</span>
-        <span className="font-plex text-xs text-blue-700">Overview</span>
+        <span className="font-sans text-xs text-ink-500">All Projects</span>
+        <ChevronRight className="size-3 text-ink-300" strokeWidth={1.75} />
+        <span className="font-sans text-xs text-ink-500">Constellation Gate</span>
+        <ChevronRight className="size-3 text-ink-300" strokeWidth={1.75} />
+        <span className="font-sans text-xs font-medium text-ink-900">Overview</span>
       </div>
       <div className="flex items-center gap-1">
         <Button variant="outline" size="sm" className="border-ink-100 bg-white text-ink-900">
@@ -371,96 +416,103 @@ const RANGE_OPTIONS = [
   { value: '60d', label: '60D' },
 ];
 
-function RequestVolumeCard() {
+/**
+ * RequestVolumeCard — chart-card pattern.
+ *
+ * Exported so CMP-007c (Cards) can import the same instance — single source
+ * of truth, no copy-paste. Built entirely from the shadcn `<Card>` family:
+ * header (title + subtitle + range action) → body (legend + bar chart).
+ */
+export function RequestVolumeCard() {
   const [range, setRange] = useState('7d');
   return (
-    <div className="flex flex-col flex-1 min-w-0 rounded-lg gap-4 bg-white border border-ink-100 p-5">
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex flex-col gap-0.5">
-          <div className="font-sans text-base font-medium -tracking-[0.25px] text-ink-900">
-            Request Volume
-          </div>
-          <div className="font-sans text-xs/4 text-ink-400">
-            Grouped by model · Last 7d
-          </div>
-        </div>
-        <SegmentedPill
-          options={RANGE_OPTIONS}
-          value={range}
-          onValueChange={setRange}
-        />
-      </div>
+    <Card className="flex-1 min-w-0 py-5">
+      <CardHeader className="px-5">
+        <CardTitle className="font-sans text-base font-medium -tracking-[0.25px] text-ink-900">
+          Request Volume
+        </CardTitle>
+        <CardDescription>Grouped by model · Last 7d</CardDescription>
+        <CardAction>
+          <SegmentedPill
+            options={RANGE_OPTIONS}
+            value={range}
+            onValueChange={setRange}
+          />
+        </CardAction>
+      </CardHeader>
 
-      <div className="flex items-center flex-wrap gap-4">
-        {MODEL_LEGEND.map((m) => (
-          <div key={m.key} className="flex items-center gap-1.5">
-            <span
-              className="size-2 rounded-[2px] shrink-0"
-              style={{ backgroundColor: seriesColor(m) }}
-            />
-            <span className="font-sans text-xs text-ink-900">{m.label}</span>
-          </div>
-        ))}
-      </div>
-
-      <ChartContainer
-        config={volumeChartConfig}
-        className="aspect-auto h-[200px] w-full"
-      >
-        <BarChart
-          accessibilityLayer
-          data={VOLUME_DATA}
-          margin={{ top: 8, right: 8, left: 0, bottom: 0 }}
-          barCategoryGap="20%"
-          barGap={2}
-        >
-          <CartesianGrid
-            horizontal
-            vertical={false}
-            stroke="var(--color-ink-100)"
-            strokeDasharray="3 3"
-          />
-          <XAxis
-            dataKey="date"
-            tickLine={false}
-            axisLine={false}
-            tickMargin={8}
-            tick={{ fontSize: 11, fill: 'var(--color-ink-400)' }}
-          />
-          <YAxis
-            tickLine={false}
-            axisLine={false}
-            tickMargin={8}
-            domain={[0, 60]}
-            ticks={[0, 30, 60]}
-            tickFormatter={(v) => `${v}K`}
-            tick={{ fontSize: 11, fill: 'var(--color-ink-400)' }}
-            width={36}
-          />
-          <ChartTooltip
-            cursor={{ fill: 'transparent' }}
-            content={
-              <ChartTooltipContent
-                indicator="dot"
-                labelFormatter={(_, payload) =>
-                  payload?.[0]?.payload?.date ?? ''
-                }
-              />
-            }
-          />
+      <CardContent className="px-5 flex flex-col gap-4">
+        <div className="flex items-center flex-wrap gap-4">
           {MODEL_LEGEND.map((m) => (
-            <Bar
-              key={m.key}
-              dataKey={m.key}
-              fill={seriesColor(m)}
-              radius={2}
-              maxBarSize={8}
-              isAnimationActive={false}
-            />
+            <div key={m.key} className="flex items-center gap-1.5">
+              <span
+                className="size-2 rounded-[2px] shrink-0"
+                style={{ backgroundColor: seriesColor(m) }}
+              />
+              <span className="font-sans text-xs text-ink-900">{m.label}</span>
+            </div>
           ))}
-        </BarChart>
-      </ChartContainer>
-    </div>
+        </div>
+
+        <ChartContainer
+          config={volumeChartConfig}
+          className="aspect-auto h-[200px] w-full"
+        >
+          <BarChart
+            accessibilityLayer
+            data={VOLUME_DATA}
+            margin={{ top: 8, right: 8, left: 0, bottom: 0 }}
+            barCategoryGap="20%"
+            barGap={2}
+          >
+            <CartesianGrid
+              horizontal
+              vertical={false}
+              stroke="var(--color-ink-100)"
+              strokeDasharray="3 3"
+            />
+            <XAxis
+              dataKey="date"
+              tickLine={false}
+              axisLine={false}
+              tickMargin={8}
+              tick={{ fontSize: 11, fill: 'var(--color-ink-400)' }}
+            />
+            <YAxis
+              tickLine={false}
+              axisLine={false}
+              tickMargin={8}
+              domain={[0, 60]}
+              ticks={[0, 30, 60]}
+              tickFormatter={(v) => `${v}K`}
+              tick={{ fontSize: 11, fill: 'var(--color-ink-400)' }}
+              width={36}
+            />
+            <ChartTooltip
+              cursor={{ fill: 'transparent' }}
+              content={
+                <ChartTooltipContent
+                  indicator="dot"
+                  labelFormatter={(_, payload) =>
+                    payload?.[0]?.payload?.date ?? ''
+                  }
+                />
+              }
+            />
+            {MODEL_LEGEND.map((m) => (
+              <Bar
+                key={m.key}
+                dataKey={m.key}
+                fill={seriesColor(m)}
+                radius={2}
+                maxBarSize={8}
+                isAnimationActive={false}
+              />
+            ))}
+          </BarChart>
+        </ChartContainer>
+      </CardContent>
+    </Card>
   );
 }
 
@@ -471,61 +523,69 @@ const TOP_KEYS: { label: string; model: string; cost: string; vendor: Vendor }[]
   { label: 'Macro Analyst', model: 'GPT-4o', cost: '$287.14', vendor: 'openai' },
   { label: 'Risk Pipeline', model: 'Llama 3.3', cost: '$198.41', vendor: 'meta' },
   { label: 'Development', model: 'Claude Haiku', cost: '$152.88', vendor: 'anthropic' },
+  { label: 'Eval Harness', model: 'Gemini 3 Pro', cost: '$89.16', vendor: 'google' },
 ];
 
-function TopKeysCard() {
+/**
+ * TopKeysCard — metric + list pattern.
+ *
+ * Exported so CMP-007c (Cards) can import the same instance. Built from the
+ * shadcn `<Card>` family: header (title + subtitle + overflow action) →
+ * body (metric hero + divider + row list).
+ */
+export function TopKeysCard() {
   return (
-    <div className="flex flex-col w-[410px] shrink-0 rounded-lg gap-5 bg-white border border-ink-100 p-5">
-      <div className="flex items-start justify-between">
-        <div className="flex flex-col gap-0.5">
-          <div className="font-sans text-base/5 font-medium -tracking-[0.25px] text-ink-900">
-            Top Keys
-          </div>
-          <div className="font-sans text-sm/5 -tracking-[0.14px] text-ink-400">
-            By spend · Last 7d
-          </div>
-        </div>
-        <button
-          type="button"
-          aria-label="More"
-          className="inline-flex items-center justify-center size-6 rounded-md text-ink-400 hover:text-ink-900 hover:bg-ink-50"
-        >
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
-            <circle cx="3" cy="8" r="1.25" fill="currentColor" />
-            <circle cx="8" cy="8" r="1.25" fill="currentColor" />
-            <circle cx="13" cy="8" r="1.25" fill="currentColor" />
-          </svg>
-        </button>
-      </div>
+    <Card className="w-[410px] shrink-0 gap-5 py-5">
+      <CardHeader className="px-5">
+        <CardTitle className="font-sans text-base/5 font-medium -tracking-[0.25px] text-ink-900">
+          Top Keys
+        </CardTitle>
+        <CardDescription>By spend · Last 7d</CardDescription>
+        <CardAction>
+          <button
+            type="button"
+            aria-label="More"
+            className="inline-flex items-center justify-center size-6 rounded-md text-ink-400 hover:text-ink-900 hover:bg-ink-50"
+          >
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
+              <circle cx="3" cy="8" r="1.25" fill="currentColor" />
+              <circle cx="8" cy="8" r="1.25" fill="currentColor" />
+              <circle cx="13" cy="8" r="1.25" fill="currentColor" />
+            </svg>
+          </button>
+        </CardAction>
+      </CardHeader>
 
-      <div className="flex items-baseline gap-2">
-        <div className="flex-1 font-sans text-4xl/10 font-medium tabular-nums -tracking-[1px] text-ink-900">
-          $1,147.82
+      <CardContent className="px-5 flex flex-col gap-5">
+        <div className="flex items-baseline gap-2">
+          <div className="flex-1 font-mono text-3xl/9 font-medium tabular-nums -tracking-[1px] text-ink-900">
+            $1,147.82
+          </div>
+          <div className="font-sans text-sm -tracking-[0.14px] text-ink-400">
+            5 active keys
+          </div>
         </div>
-        <div className="font-sans text-sm -tracking-[0.14px] text-ink-400">
-          5 active keys
-        </div>
-      </div>
 
-      <div className="flex flex-col gap-4 pt-5 border-t border-ink-100">
-        {TOP_KEYS.map((k) => (
-          <div key={k.label} className="flex items-center justify-between gap-3">
-            <div className="flex items-center min-w-0 gap-2.5">
-              <VendorAvatar vendor={k.vendor} />
-              <span className="font-sans text-sm font-medium -tracking-[0.14px] text-ink-900">
-                {k.label}
-              </span>
-              <span className="font-sans text-xs -tracking-[0.14px] text-ink-400">
-                {k.model}
+        <div className="flex flex-col gap-4 pt-5 border-t border-ink-100">
+          {TOP_KEYS.map((k) => (
+            <div key={k.label} className="flex items-center justify-between gap-3">
+              <div className="flex items-center min-w-0 gap-2.5">
+                <VendorAvatar vendor={k.vendor} />
+                <span className="font-sans text-sm font-medium -tracking-[0.14px] text-ink-900">
+                  {k.label}
+                </span>
+                <span className="font-sans text-xs -tracking-[0.14px] text-ink-400">
+                  {k.model}
+                </span>
+              </div>
+              <span className="font-mono text-sm font-medium tabular-nums -tracking-[0.14px] text-ink-900">
+                {k.cost}
               </span>
             </div>
-            <span className="font-sans text-sm font-medium tabular-nums -tracking-[0.14px] text-ink-900">
-              {k.cost}
-            </span>
-          </div>
-        ))}
-      </div>
-    </div>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
   );
 }
 

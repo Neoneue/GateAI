@@ -19,6 +19,11 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from '@/components/ui/chart';
+import {
+  VENDOR_CHART_COLOR_SECONDARY,
+  VENDOR_META,
+  type Vendor,
+} from '@/components/icons/vendor-meta';
 import { ArtboardHeader, SectionHeader } from './_shared/ArtboardHeader';
 
 export function CMP008Charts() {
@@ -237,11 +242,26 @@ function LegendDot({ color, label }: { color: string; label: string }) {
  * CMP-008.2 — Cost by model (microchart + legend + mini table)
  * ───────────────────────────────────────────────────────────────────────── */
 
-const MODELS = [
+/* Chart-series → vendor mapping. Mirrors CMP-011's MODEL_LEGEND so both
+ * charts render the same 5 vendors in the same desaturated palette from
+ * VENDOR_META.chartColor. Anthropic Haiku opts into the secondary shade so
+ * it separates visibly from Anthropic Sonnet at the same scale. */
+type ModelRow = {
+  key: 'sonnet' | 'gpt4o' | 'haiku' | 'llama' | 'mistral';
+  label: string;
+  vendor: Vendor;
+  /** When true, use the vendor's secondary chart shade instead of the primary. */
+  useSecondaryShade?: boolean;
+  cost: string;
+  delta: string;
+  bars: number;
+};
+
+const MODELS: readonly ModelRow[] = [
   {
     key: 'sonnet',
     label: 'Claude Sonnet 4.5',
-    color: 'oklch(55.4% 0.197 39.9)',
+    vendor: 'anthropic',
     cost: '$487.32',
     delta: '+12.4%',
     bars: 18,
@@ -249,7 +269,7 @@ const MODELS = [
   {
     key: 'gpt4o',
     label: 'GPT-4o',
-    color: 'var(--color-blue-700)',
+    vendor: 'openai',
     cost: '$312.18',
     delta: '+5.2%',
     bars: 12,
@@ -257,7 +277,8 @@ const MODELS = [
   {
     key: 'haiku',
     label: 'Claude Haiku',
-    color: 'oklch(79.2% 0.171 65.1)',
+    vendor: 'anthropic',
+    useSecondaryShade: true,
     cost: '$285.40',
     delta: '-2.1%',
     bars: 10,
@@ -265,7 +286,7 @@ const MODELS = [
   {
     key: 'llama',
     label: 'Llama 3.3',
-    color: 'var(--color-blue-500)',
+    vendor: 'meta',
     cost: '$134.62',
     delta: '+18.6%',
     bars: 7,
@@ -273,12 +294,20 @@ const MODELS = [
   {
     key: 'mistral',
     label: 'Mistral Large',
-    color: 'var(--color-blue-300)',
+    vendor: 'mistral',
     cost: '$28.30',
     delta: '+44.2%',
     bars: 3,
   },
 ] as const;
+
+function seriesColor(model: ModelRow): string {
+  if (model.useSecondaryShade) {
+    const secondary = VENDOR_CHART_COLOR_SECONDARY[model.vendor];
+    if (secondary) return secondary;
+  }
+  return VENDOR_META[model.vendor].chartColor;
+}
 
 const MICRO_BAR_HEIGHTS = [
   54, 52, 56, 50, 53, 51, 49, 48, 47, 46, 44, 45, 43, 42, 41, 40, 39, 38, // sonnet
@@ -298,7 +327,9 @@ function CostByModelCard() {
       consumed = 0;
     }
     const color =
-      modelIdx < MODELS.length ? MODELS[modelIdx].color : 'var(--color-ink-100)';
+      modelIdx < MODELS.length
+        ? seriesColor(MODELS[modelIdx])
+        : 'var(--color-ink-100)';
     consumed += 1;
     return { i, h, color };
   });
@@ -343,7 +374,7 @@ function CostByModelCard() {
           <div key={m.key} className="flex items-center gap-1.5">
             <span
               className="size-2 rounded-full shrink-0"
-              style={{ backgroundColor: m.color }}
+              style={{ backgroundColor: seriesColor(m) }}
             />
             <span className="text-xs text-ink-400">{m.label}</span>
           </div>
@@ -372,7 +403,7 @@ function CostByModelCard() {
             <div className="grow flex items-center gap-2">
               <span
                 className="size-2 rounded-full shrink-0"
-                style={{ backgroundColor: m.color }}
+                style={{ backgroundColor: seriesColor(m) }}
               />
               <span className="text-sm text-ink-900">{m.label}</span>
             </div>

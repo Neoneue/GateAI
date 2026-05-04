@@ -17,7 +17,7 @@ export function DeltaTag({ delta, note }: { delta: string; note?: string }) {
   return (
     <div className="inline-flex items-center gap-0.5">
       <Icon className={`size-3.5 ${color}`} strokeWidth={1.75} />
-      <span className={`text-sm font-medium -tracking-[0.25px] ${color}`}>{delta}</span>
+      <span className={`font-mono tabular-nums text-sm font-medium -tracking-[0.25px] ${color}`}>{delta}</span>
       {note ? (
         <span className="pl-1 text-sm -tracking-[0.25px] text-ink-400">{note}</span>
       ) : null}
@@ -54,7 +54,7 @@ export function CompactKpi({
     <div className={containerCls}>
       <div className="font-mono font-medium uppercase tracking-[0.1em] text-ink-500 text-xs">{title}</div>
       <div className="flex items-baseline gap-2">
-        <div className="text-2xl/8 font-medium tabular-nums -tracking-[0.5px] text-ink-900">
+        <div className="font-mono text-2xl/8 font-medium tabular-nums -tracking-[0.5px] text-ink-900">
           {value}
         </div>
         {delta ? (

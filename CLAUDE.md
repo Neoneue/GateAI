@@ -13,7 +13,7 @@ A design-system showcase ("Constellation Gateway") translated section-by-section
 - **shadcn/ui** registry style `base-nova`, baseColor `neutral`, no prefix (`components.json`)
 - **Base UI** (`@base-ui/react`) underneath shadcn primitives — note `Button` wraps `ButtonPrimitive` from Base UI, not Radix
 - **Recharts**, **Sonner** (toast), **lucide-react** (icons), **next-themes**
-- Fonts: Geist + Geist Mono + IBM Plex Sans/Mono (Google Fonts CDN + `@fontsource-variable/geist` fallback)
+- Fonts: Geist + Geist Mono (Google Fonts CDN + `@fontsource-variable/geist` fallback)
 
 ## Commands
 
@@ -57,7 +57,7 @@ Path alias: `@/*` → `src/*` (configured in `vite.config.ts` and `tsconfig.json
 All UI / design / frontend implementation in this repo goes through the **`front-end-developer`** subagent (installed at `.claude/agents/front-end-developer.md`, project-scoped, Opus). The main thread orchestrates only: scope the task, pick the right skill, dispatch, coordinate, report.
 
 - **Dispatch every implementation step** via `Agent({ subagent_type: "front-end-developer", ... })`. If a session predates the install and doesn't have it registered, fall back to `general-purpose` with the agent contract prepended into the prompt.
-- **Default to `model: "sonnet"`** on every dispatch. The agent's frontmatter sets Opus as the default, but Opus is too expensive for the chrome-devtools verification loop (snapshot → click → screenshot → compare → report) that ends nearly every UI task. Override with `Agent({ subagent_type: "front-end-developer", model: "sonnet", ... })`. Only fall back to Opus (omit the override) for purely architectural tasks — designing a new primitive's API surface, deciding extraction boundaries across multiple files, planning a major refactor — that don't touch chrome-devtools.
+- **Implementation dispatches use Opus (the agent's default)**, even when they include chrome-devtools verification at the end. Pass NO `model` override on dispatches that write/edit code, design a primitive, refactor, or port a section. **Sonnet is reserved for dispatches whose entire scope is mechanical chrome-devtools verification** — taking screenshots, clicking through nav, comparing to a reference, no code changes. Pass `model: "sonnet"` only on those isolated verification dispatches.
 - **Parallelize independent work:** one tool message with multiple Agent calls (e.g. port CMP-011 and CMP-012 simultaneously, or run a `polish` pass on shipped sections while another agent ports a new one).
 - **Brief like a colleague who hasn't seen this conversation:** include the Paper nodeId, the target file path, the relevant skill to load, the contract chain, and any specific shadcn primitives to reuse from `src/components/ui/`.
 - **Exception** — pure infra/config (Vite config, port management, package.json, dev-server lifecycle) stays in the main thread; the agent's scope is design.

@@ -10,12 +10,13 @@ import { CMP005TabsPagination } from '@/artboards/CMP005TabsPagination';
 import { CMP006ModalEmptyState } from '@/artboards/CMP006ModalEmptyState';
 import { CMP007StatCards } from '@/artboards/CMP007StatCards';
 import { CMP007bToast } from '@/artboards/CMP007bToast';
+import { CMP007cCards } from '@/artboards/CMP007cCards';
 import { CMP008Charts } from '@/artboards/CMP008Charts';
 import { CMP009DataTable } from '@/artboards/CMP009DataTable';
 import { CMP011ComposedDashboard } from '@/artboards/CMP011ComposedDashboard';
 import { CMP012CodeCards } from '@/artboards/CMP012CodeCards';
 
-type PageId = 'cmp-000' | 'cmp-001' | 'cmp-002' | 'cmp-003' | 'cmp-004' | 'cmp-005' | 'cmp-006' | 'cmp-007' | 'cmp-007b' | 'cmp-008' | 'cmp-009' | 'cmp-011' | 'cmp-012';
+type PageId = 'cmp-000' | 'cmp-001' | 'cmp-002' | 'cmp-003' | 'cmp-004' | 'cmp-005' | 'cmp-006' | 'cmp-007' | 'cmp-007b' | 'cmp-007c' | 'cmp-008' | 'cmp-009' | 'cmp-011' | 'cmp-012';
 
 interface Page {
   id: PageId;
@@ -34,6 +35,7 @@ const PAGES: Page[] = [
   { id: 'cmp-006', code: 'CMP-006', name: 'Modal · empty', Component: CMP006ModalEmptyState },
   { id: 'cmp-007', code: 'CMP-007', name: 'Stat cards', Component: CMP007StatCards },
   { id: 'cmp-007b', code: 'CMP-007b', name: 'Toast', Component: CMP007bToast },
+  { id: 'cmp-007c', code: 'CMP-007c', name: 'Cards', Component: CMP007cCards },
   { id: 'cmp-008', code: 'CMP-008', name: 'Charts', Component: CMP008Charts },
   { id: 'cmp-009', code: 'CMP-009', name: 'Data table', Component: CMP009DataTable },
   { id: 'cmp-011', code: 'CMP-011', name: 'Composed · Dashboard', Component: CMP011ComposedDashboard },
