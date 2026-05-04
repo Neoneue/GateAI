@@ -378,10 +378,10 @@ const VOLUME_DATA = [
 ];
 
 /* Chart-series → vendor mapping. Each series renders in its vendor's
- * desaturated `chartColor` (see vendor-meta.tsx) so the bar visually
- * agrees with the provider chip in CMP-010. When a single vendor appears
- * as more than one series (Anthropic: Sonnet + Haiku), the secondary
- * series opts into VENDOR_CHART_COLOR_SECONDARY for visible separation. */
+ * brand `color` from VENDOR_META so the bar visually matches the provider
+ * chip elsewhere in the app. When a single vendor appears as more than one
+ * series (Anthropic: Sonnet + Haiku), the secondary series opts into
+ * VENDOR_CHART_COLOR_SECONDARY for visible separation. */
 type ModelSeries = {
   key: 'sonnet' | 'gpt' | 'haiku' | 'llama' | 'mistral';
   label: string;
@@ -403,7 +403,7 @@ function seriesColor(series: ModelSeries): string {
     const secondary = VENDOR_CHART_COLOR_SECONDARY[series.vendor];
     if (secondary) return secondary;
   }
-  return VENDOR_META[series.vendor].chartColor;
+  return VENDOR_META[series.vendor].color;
 }
 
 const volumeChartConfig: ChartConfig = Object.fromEntries(
@@ -441,8 +441,8 @@ export function RequestVolumeCard() {
         </CardAction>
       </CardHeader>
 
-      <CardContent className="px-5 flex flex-col gap-4">
-        <div className="flex items-center flex-wrap gap-4">
+      <CardContent className="px-5 flex flex-col gap-4 flex-1 min-h-0">
+        <div className="flex items-center flex-wrap gap-x-4 gap-y-1.5">
           {MODEL_LEGEND.map((m) => (
             <div key={m.key} className="flex items-center gap-1.5">
               <span
@@ -456,13 +456,13 @@ export function RequestVolumeCard() {
 
         <ChartContainer
           config={volumeChartConfig}
-          className="aspect-auto h-[200px] w-full"
+          className="aspect-auto h-[176px] w-full mt-auto"
         >
           <BarChart
             accessibilityLayer
             data={VOLUME_DATA}
             margin={{ top: 8, right: 8, left: 0, bottom: 0 }}
-            barCategoryGap="20%"
+            barCategoryGap="12%"
             barGap={2}
           >
             <CartesianGrid
@@ -476,6 +476,7 @@ export function RequestVolumeCard() {
               tickLine={false}
               axisLine={false}
               tickMargin={8}
+              height={28}
               tick={{ fontSize: 11, fill: 'var(--color-ink-400)' }}
             />
             <YAxis

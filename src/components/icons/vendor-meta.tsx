@@ -12,20 +12,18 @@ import {
 
 /* ─────────────────────────────────────────────────────────────────────────
  * Vendor meta — canonical mapping of model providers to brand color, icon,
- * icon color, and label. Shared across surfaces that show provider badges.
+ * icon color, and label. Shared across surfaces that show provider badges
+ * AND across charts where vendors render as data series.
  *
  * Brand hex literals are intentional: they represent external brand colors
- * (Anthropic Sonnet orange, OpenAI black, Mistral orange, etc.) and are not
- * design-system colors. Same exception CMP-009 makes — every other color in
- * the app traces to ink-* / blue-* / semantic vars in src/index.css.
+ * (Anthropic Sonnet orange, OpenAI ChatGPT green, Mistral orange, etc.) and
+ * are not design-system colors. Same exception CMP-009 makes — every other
+ * color in the app traces to ink-* / blue-* / semantic vars in src/index.css.
  *
- * `chartColor` is a desaturated, OKLCH-formed sibling of `color`, used when
- * the brand identity needs to render as one of N data-encoding series in a
- * chart (bars, lines, legend swatches). Chips on white cards can use the
- * full-strength brand `color`; multi-series charts need the softer variant
- * so 5 vendors side-by-side don't fight each other for attention.
- * Hue is preserved from the brand value — chroma is reduced ~0.04–0.07,
- * lightness raised slightly to read well at small fill widths.
+ * The single `color` field is used for both chips (avatars, swatches, badges)
+ * and chart series (bars, lines, legends). Twin-hue pairs (Meta + DeepSeek
+ * both blue; Anthropic + Mistral both orange) are accepted as the design —
+ * each brand shows up in charts as its own brand color, full strength.
  * ───────────────────────────────────────────────────────────────────────── */
 
 type IconType = ComponentType<SVGProps<SVGSVGElement>>;
@@ -42,21 +40,20 @@ export type Vendor =
 
 export interface VendorMeta {
   color: string;
-  chartColor: string;
   icon: IconType;
   iconColor: string;
   label: string;
 }
 
 export const VENDOR_META: Record<Vendor, VendorMeta> = {
-  anthropic: { color: '#D97757', chartColor: 'oklch(0.680 0.105 41)',  icon: AnthropicIcon, iconColor: '#FFFFFF', label: 'Anthropic' },
-  xai:       { color: '#000000', chartColor: 'oklch(0.380 0.020 264)', icon: GrokIcon,      iconColor: '#FFFFFF', label: 'xAI' },
-  google:    { color: '#FFFFFF', chartColor: 'oklch(0.628 0.150 257)', icon: GeminiIcon,    iconColor: '#1A73E8', label: 'Google' },
-  openai:    { color: '#000000', chartColor: 'oklch(0.380 0.020 264)', icon: OpenAIIcon,    iconColor: '#FFFFFF', label: 'OpenAI' },
-  meta:      { color: '#0467DF', chartColor: 'oklch(0.628 0.150 257)', icon: MetaIcon,      iconColor: '#FFFFFF', label: 'Meta' },
-  mistral:   { color: '#FA520F', chartColor: 'oklch(0.700 0.155 38)',  icon: MistralIcon,   iconColor: '#FFFFFF', label: 'Mistral' },
-  deepseek:  { color: '#4D6BFE', chartColor: 'oklch(0.640 0.155 270)', icon: DeepSeekIcon,  iconColor: '#FFFFFF', label: 'DeepSeek' },
-  cohere:    { color: '#39594D', chartColor: 'oklch(0.500 0.060 165)', icon: CohereIcon,    iconColor: '#FF7759', label: 'Cohere' },
+  anthropic: { color: '#D97757', icon: AnthropicIcon, iconColor: '#FFFFFF', label: 'Anthropic' },
+  xai:       { color: '#1A1A1A', icon: GrokIcon,      iconColor: '#FFFFFF', label: 'xAI' },
+  google:    { color: '#9B72CB', icon: GeminiIcon,    iconColor: '#FFFFFF', label: 'Google' },
+  openai:    { color: '#10A37F', icon: OpenAIIcon,    iconColor: '#FFFFFF', label: 'OpenAI' },
+  meta:      { color: '#0064E0', icon: MetaIcon,      iconColor: '#FFFFFF', label: 'Meta' },
+  mistral:   { color: '#FA520F', icon: MistralIcon,   iconColor: '#FFFFFF', label: 'Mistral' },
+  deepseek:  { color: '#4D6BFE', icon: DeepSeekIcon,  iconColor: '#FFFFFF', label: 'DeepSeek' },
+  cohere:    { color: '#FF7759', icon: CohereIcon,    iconColor: '#FFFFFF', label: 'Cohere' },
 };
 
 /**

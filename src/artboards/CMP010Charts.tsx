@@ -243,9 +243,9 @@ function LegendDot({ color, label }: { color: string; label: string }) {
  * ───────────────────────────────────────────────────────────────────────── */
 
 /* Chart-series → vendor mapping. Mirrors CMP-011's MODEL_LEGEND so both
- * charts render the same 5 vendors in the same desaturated palette from
- * VENDOR_META.chartColor. Anthropic Haiku opts into the secondary shade so
- * it separates visibly from Anthropic Sonnet at the same scale. */
+ * charts render the same 5 vendors in their brand colors from VENDOR_META.
+ * Anthropic Haiku opts into the secondary shade so it separates visibly
+ * from Anthropic Sonnet at the same scale. */
 type ModelRow = {
   key: 'sonnet' | 'gpt4o' | 'haiku' | 'llama' | 'mistral';
   label: string;
@@ -306,7 +306,7 @@ function seriesColor(model: ModelRow): string {
     const secondary = VENDOR_CHART_COLOR_SECONDARY[model.vendor];
     if (secondary) return secondary;
   }
-  return VENDOR_META[model.vendor].chartColor;
+  return VENDOR_META[model.vendor].color;
 }
 
 const MICRO_BAR_HEIGHTS = [
