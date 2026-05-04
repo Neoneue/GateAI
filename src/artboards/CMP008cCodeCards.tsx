@@ -194,7 +194,7 @@ function HeroCard() {
           QUICKSTART
         </div>
         <div className="flex flex-col gap-2">
-          <h3 className="font-sans font-medium text-ink-800 text-[32px]/9 -tracking-[0.6px] m-0">
+          <h3 className="font-sans font-medium text-ink-800 text-3xl/9 -tracking-[0.6px] m-0">
             Send your first request
             <br />
             in one shot.

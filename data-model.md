@@ -1,6 +1,6 @@
-# Data Model — Constellation Gateway Design System
+# Data Model — Constellation Gate AI Design System
 
-> **Scope:** architecture map for this repo (`mvp` / *Constellation Gateway* / GitHub `Neoneue/GateAI`). Six Mermaid diagrams: stack, app shell, artboard pattern, contract chain, primitive reuse graph, Paper-to-code flow. Update when the project's structure or contract chain changes.
+> **Scope:** architecture map for this repo (`mvp` / *Constellation Gate AI* / GitHub `Neoneue/GateAI`). Six Mermaid diagrams: stack, app shell, artboard pattern, contract chain, primitive reuse graph, Paper-to-code flow. Update when the project's structure or contract chain changes.
 
 > **Ship boundary:** `src/` is the product. `front-end-developer/` is a vendored design-methodology agent (gitignored) — it ships nothing into the build. `.claude/agents/front-end-developer.md` is the registered subagent that enforces design craft on dispatches.
 
@@ -10,13 +10,13 @@
 
 A design-system showcase translated section-by-section from a Paper file (*Brilliant quartz*, artboard `v8 Geist-rounded · Showcase`, 1536×12674px). Each `§ CMP-###` block in Paper becomes one React **artboard** page that demonstrates one or more reusable primitives. The build is the catalog *and* the live primitive library — every visible thing on every artboard must trace back to a primitive in `src/components/ui/` or `src/components/icons/`.
 
-Single source of truth for: chart cards, metric cards, KPI tiles, sparklines, status pills, segmented controls, model provider chips, code cards, tables, dashboard composition. Each primitive lives once; artboards consume by import; the dashboard surface (CMP-011) imports from the same primitives the catalog artboards demonstrate.
+Single source of truth for: chart cards, metric cards, KPI tiles, sparklines, status pills, segmented controls, model provider chips, code cards, tables, dashboard composition. Each primitive lives once; artboards consume by import; the dashboard surface (CMP-012) imports from the same primitives the catalog artboards demonstrate.
 
 ### Three core principles
 
 1. **Reuse before extract before invent.** If a primitive exists in `src/components/ui/`, use it. If a pattern recurs across 2+ surfaces, extract it. Inline reimplementation is the failure mode.
-2. **Tokens, never hex.** Every color/spacing/radius/type choice traces to `src/index.css` `@theme` (or `vendor-meta.tsx` brand colors for external vendors). No raw hex, no orphan `oklch(...)` literals in artboard JSX.
-3. **Composed surfaces are arrange-and-wire only.** CMP-011 (Composed Dashboard) ships zero new visual primitives; it imports `RequestVolumeCard`, `TopKeysCard`, `CompactKpi`, `Table`, `Button`, `VendorAvatar`, `Card`, `Tag`, `StatusDot` and arranges them.
+2. **Tokens, never hex.** Every color/spacing/radius/type choice traces to `src/index.css` `@theme` (or `vendor-meta.tsx` brand colors for external vendors). No raw hex, no orphan `oklch(...)` literals in artboard JSX. Type sizes only from Tailwind's named scale (`text-xs`/`sm`/`base`/…/`6xl`); never `text-[Npx]`.
+3. **Composed surfaces are arrange-and-wire only.** CMP-012 (Composed Dashboard) ships zero new visual primitives; it imports `RequestVolumeCard`, `TopKeysCard`, `CompactKpi`, `Table`, `Button`, `VendorAvatar`, `Card`, `Tag`, `StatusDot` and arranges them.
 
 ---
 
@@ -54,20 +54,21 @@ The app has **no router**. Page switching is `useState` over a flat `NAV` array.
 graph TB
     MAIN["main.tsx<br/>StrictMode + createRoot"]
     APP["App.tsx<br/>useState&lt;PageId&gt;"]
-    NAV[("NAV: NavItem[]<br/>14 page entries<br/>(group label opt)")]
+    NAV[("NAV: NavItem[]<br/>15 page entries<br/>(group label opt)")]
     LEFT["Left nav (w-60)<br/>NAV.map → button per page<br/>active state via useState"]
     MAINPANE["Main pane<br/>flex justify-center py-10 px-10<br/>renders &lt;ActivePage /&gt;"]
 
     PAGE000["CMP000 Typography"]
-    PAGE001["CMP001 Buttons"]
-    PAGEDOTS["CMP002–006<br/>(Badges, Form fields, Filter bar,<br/>Tabs, Modal/empty)"]
-    PAGE007a["CMP007a Cards"]
-    PAGE007b["CMP007b Stat cards"]
-    PAGE007c["CMP007c Code cards"]
-    PAGE008["CMP008 Toast"]
-    PAGE009["CMP009 Charts"]
-    PAGE010["CMP010 Data table"]
-    PAGE011["CMP011 Composed · Dashboard"]
+    PAGE001["CMP001 Colors"]
+    PAGE002["CMP002 Buttons"]
+    PAGEDOTS["CMP003–007<br/>(Badges, Form fields, Filter bar,<br/>Tabs, Modal/empty)"]
+    PAGE008a["CMP008a Cards"]
+    PAGE008b["CMP008b Stat cards"]
+    PAGE008c["CMP008c Code cards"]
+    PAGE009["CMP009 Toast"]
+    PAGE010["CMP010 Charts"]
+    PAGE011["CMP011 Data table"]
+    PAGE012["CMP012 Composed · Dashboard"]
 
     MAIN --> APP
     APP --> NAV
@@ -75,17 +76,18 @@ graph TB
     NAV --> MAINPANE
     MAINPANE -.->|active| PAGE000
     MAINPANE -.->|active| PAGE001
+    MAINPANE -.->|active| PAGE002
     MAINPANE -.->|active| PAGEDOTS
-    MAINPANE -.->|active| PAGE007a
-    MAINPANE -.->|active| PAGE007b
-    MAINPANE -.->|active| PAGE007c
-    MAINPANE -.->|active| PAGE008
+    MAINPANE -.->|active| PAGE008a
+    MAINPANE -.->|active| PAGE008b
+    MAINPANE -.->|active| PAGE008c
     MAINPANE -.->|active| PAGE009
     MAINPANE -.->|active| PAGE010
     MAINPANE -.->|active| PAGE011
+    MAINPANE -.->|active| PAGE012
 ```
 
-`PageId` is a string union of `'cmp-000' | 'cmp-001' | ... | 'cmp-011'`. `NavItem` is a discriminated union supporting `{ kind: 'page', id, code, name, Component }` and (optional) `{ kind: 'group', label }` separators. The NAV-rendering branches on `kind`; group entries render as a non-clickable eyebrow label.
+`PageId` is a string union of `'cmp-000' | 'cmp-001' | ... | 'cmp-008a' | 'cmp-008b' | 'cmp-008c' | 'cmp-009' | ... | 'cmp-012'`. `NavItem` is a discriminated union supporting `{ kind: 'page', id, code, name, Component }` and (optional) `{ kind: 'group', label }` separators. The NAV-rendering branches on `kind`; group entries render as a non-clickable eyebrow label.
 
 ---
 
@@ -120,20 +122,21 @@ Section list (current build):
 
 | Code | File | Purpose |
 |---|---|---|
-| CMP-000 | `CMP000Typography.tsx` | Type scale + mono-vs-sans |
-| CMP-001 | `CMP001Buttons.tsx` | Button variants × sizes × states |
-| CMP-002 | `CMP002BadgesAndTags.tsx` | Status pills, counters, chips |
-| CMP-003 | `CMP003FormFields.tsx` | Input, textarea, select, check, radio, switch |
-| CMP-004 | `CMP004FilterBar.tsx` | Search + chip filters + dropdowns |
-| CMP-005 | `CMP005TabsPagination.tsx` | Underline tabs, segmented, pagination |
-| CMP-006 | `CMP006ModalEmptyState.tsx` | Modal + empty state |
-| CMP-007a | `CMP007aCards.tsx` | Card chrome (chart card + metric/list card) |
-| CMP-007b | `CMP007bStatCards.tsx` | Stat cards (compact, flat, stat row, compare, status) |
-| CMP-007c | `CMP007cCodeCards.tsx` | Code cards (5 layouts: hero / tabs / terminal / req-resp / steps) |
-| CMP-008 | `CMP008Toast.tsx` | Sonner toast deck |
-| CMP-009 | `CMP009Charts.tsx` | Spend trend (line+area), Cost by model (stacked) |
-| CMP-010 | `CMP010DataTable.tsx` | Sortable table, mono numerics, vendor chips |
-| CMP-011 | `CMP011ComposedDashboard.tsx` | Production-shell Overview surface |
+| CMP-000 | `CMP000Typography.tsx` | Type scale (15 specimens) + mono-vs-sans |
+| CMP-001 | `CMP001Colors.tsx` | Palette spec sheet — ink + blue ramps, semantic tokens, syntax tokens, vendor brand exception |
+| CMP-002 | `CMP002Buttons.tsx` | Button variants × sizes × states |
+| CMP-003 | `CMP003BadgesAndTags.tsx` | Status pills, counters, chips |
+| CMP-004 | `CMP004FormFields.tsx` | Input, textarea, select, check, radio, switch |
+| CMP-005 | `CMP005FilterBar.tsx` | Search + chip filters + dropdowns |
+| CMP-006 | `CMP006TabsPagination.tsx` | Underline tabs, segmented, pagination |
+| CMP-007 | `CMP007ModalEmptyState.tsx` | Modal (incl. CMP-007.1b Generation details) + empty state |
+| CMP-008a | `CMP008aCards.tsx` | Card chrome (chart card + metric/list card) |
+| CMP-008b | `CMP008bStatCards.tsx` | Stat cards (compact, flat, stat row, compare, status) |
+| CMP-008c | `CMP008cCodeCards.tsx` | Code cards (5 layouts: hero / tabs / terminal / req-resp / steps) |
+| CMP-009 | `CMP009Toast.tsx` | Sonner toast deck |
+| CMP-010 | `CMP010Charts.tsx` | Spend trend (line+area), Cost by model (stacked) |
+| CMP-011 | `CMP011DataTable.tsx` | Sortable table, mono numerics, vendor chips |
+| CMP-012 | `CMP012ComposedDashboard.tsx` | Production-shell Overview surface |
 
 ---
 
@@ -147,7 +150,7 @@ graph LR
     TWUTILS["Tailwind utilities<br/>bg-ink-* text-ink-* bg-blue-*<br/>text-primary bg-card<br/>rounded-lg etc."]
     PRIMS["src/components/ui/*<br/>className strings<br/>(no hex literals here)"]
     ARTS["src/artboards/CMP*<br/>className strings<br/>(no hex literals here)"]
-    VENDOR[("src/components/icons/<br/>vendor-meta.tsx<br/>VENDOR_META.color (brand)<br/>VENDOR_META.chartColor (muted)<br/>VENDOR_CHART_COLOR_SECONDARY")]
+    VENDOR[("src/components/icons/<br/>vendor-meta.tsx<br/>VENDOR_META.color (brand)<br/>VENDOR_CHART_COLOR_SECONDARY<br/>(only for one-vendor multi-series)")]
 
     INDEX --> CSSVARS
     INDEX --> THEMEINLINE
@@ -155,13 +158,14 @@ graph LR
     CSSVARS --> THEMEINLINE
     TWUTILS --> PRIMS
     TWUTILS --> ARTS
-    VENDOR -.->|brand-hex exception| ARTS
-    VENDOR -.->|chart series| ARTS
+    VENDOR -.->|brand-hex exception<br/>(chips AND chart series)| ARTS
 ```
 
 **Authority:** `system.md` (host-level Theme + Project) > `front-end-developer/contract/globals.md` (Layer 1) > `src/index.css` (this repo's globals). Currently `system.md` does not exist; `index.css` is the operative token source. `vendor-meta.tsx` is the only place raw brand hex literals live (intentional — they represent external brand identities, not contract colors).
 
 **Hard rule:** no `#xxxxxx` or `oklch(...)` literals appear in `src/components/ui/*` or `src/artboards/*`. Every color reference resolves through Tailwind utilities or `var(--color-*)` references.
+
+**Vendor color model:** the `VENDOR_META[vendor].color` field is single-source — chips/avatars/badges and chart series both pull from it. There is no separate `chartColor` tier. Twin-hue pairs (Meta + DeepSeek both blue; Anthropic + Mistral both orange) are accepted as the design — each vendor renders in its own brand color, full strength. `VENDOR_CHART_COLOR_SECONDARY` exists only for the case where one vendor is two series in the same chart (e.g. Anthropic Sonnet + Haiku).
 
 ---
 
@@ -204,12 +208,12 @@ graph LR
     end
 
     subgraph ARTS["Artboards"]
-        A009["CMP010 Data table"]
-        A011["CMP011 Composed Dashboard"]
-        A007a["CMP007a Cards"]
-        A007b["CMP007b Stat cards"]
-        A007c["CMP007c Code cards"]
-        A008c["CMP009 Charts"]
+        A011["CMP011 Data table"]
+        A012["CMP012 Composed Dashboard"]
+        A008a["CMP008a Cards"]
+        A008b["CMP008b Stat cards"]
+        A008c["CMP008c Code cards"]
+        A010["CMP010 Charts"]
     end
 
     IDX --> PRIM
@@ -218,35 +222,36 @@ graph LR
     UTL --> PRIM
     UTL --> ARTS
 
-    CKPI --> A007b
-    CKPI --> A011
-    CCARD --> A007c
-    CARD --> A011
-    CARD --> A007a
-    TBL --> A009
+    CKPI --> A008b
+    CKPI --> A012
+    CCARD --> A008c
+    CARD --> A012
+    CARD --> A008a
     TBL --> A011
-    VM --> A009
+    TBL --> A012
     VM --> A011
-    VM --> A008c
+    VM --> A012
+    VM --> A010
     BTN --> ARTS
-    BADGE --> A011
-    TAG --> A011
-    SDOT --> A011
-    SEG --> A011
-    CHT --> A008c
-    CHT --> A011
-    SEP --> A011
+    BADGE --> A012
+    TAG --> A012
+    SDOT --> A012
+    SEG --> A012
+    CHT --> A010
+    CHT --> A012
+    SEP --> A012
 
-    A011 -.->|re-exports<br/>RequestVolumeCard, TopKeysCard| A007a
+    A012 -.->|re-exports<br/>RequestVolumeCard, TopKeysCard| A008a
 ```
 
 **Key reuse loops to call out:**
 
-- **`CompactKpi`** lives in `src/components/ui/compact-kpi.tsx`. Consumed by `CMP007b` (Stat cards) AND `CMP011` KPI rail. Title style (`font-mono font-medium uppercase tracking-[0.1em] text-xs text-ink-500`) is canonical eyebrow.
-- **`Card` family** lives in `src/components/ui/card.tsx`. `RequestVolumeCard` and `TopKeysCard` (defined in `CMP011ComposedDashboard.tsx`, **exported** for reuse) are the two card examples in `CMP007a`. Single source of truth — CMP-007a re-imports from CMP-011, no duplication.
-- **`VendorAvatar` + `VENDOR_META`** lives in `src/components/icons/vendor-meta.tsx`. Consumed by CMP-009 (model column chips), CMP-010 (Recent requests model column), CMP-011 (Top Keys panel + Recent requests). `VENDOR_META.chartColor` (muted, vendor-derived) feeds the chart series in CMP-008 and CMP-011's Request Volume.
+- **`CompactKpi`** lives in `src/components/ui/compact-kpi.tsx`. Consumed by `CMP008b` (Stat cards) AND `CMP012` KPI rail. Title style (`font-mono font-medium uppercase tracking-[0.1em] text-xs text-ink-500`) is canonical eyebrow.
+- **`Card` family** lives in `src/components/ui/card.tsx`. `RequestVolumeCard` and `TopKeysCard` (defined in `CMP012ComposedDashboard.tsx`, **exported** for reuse) are the two card examples in `CMP008a`. Single source of truth — CMP-008a re-imports from CMP-012, no duplication.
+- **`VendorAvatar` + `VENDOR_META`** lives in `src/components/icons/vendor-meta.tsx`. Consumed by CMP-010 (chart legend chips), CMP-011 (Recent requests model column), CMP-012 (Top Keys panel + Recent requests + Request Volume chart). The `color` field is single-source — chips and chart series both pull from it.
 - **`Table` primitive** has Geist Mono uppercase column header treatment baked in — every `<TableHead>` consumer inherits.
-- **Code card primitives** (`CodeCard`, `TerminalCard`, `CodeBlock`) live in `code-card.tsx`. CMP-007c is the only consumer today, but the family is structured for reuse on any future code-rendering surface (docs, API references, blog).
+- **Code card primitives** (`CodeCard`, `TerminalCard`, `CodeBlock`) live in `code-card.tsx`. CMP-008c is the only consumer today, but the family is structured for reuse on any future code-rendering surface (docs, API references, blog).
+- **`ArtboardHeader` h1** is `text-4xl/10 font-medium` (Page title spec), the largest size used across the app — propagates to all 15 artboards via the shared header in `_shared/ArtboardHeader.tsx`.
 
 ---
 
@@ -339,24 +344,25 @@ mvp/
     ├── artboards/
     │   ├── _shared/ArtboardHeader.tsx
     │   ├── CMP000Typography.tsx
-    │   ├── CMP001Buttons.tsx
-    │   ├── CMP002BadgesAndTags.tsx
-    │   ├── CMP003FormFields.tsx
-    │   ├── CMP004FilterBar.tsx
-    │   ├── CMP005TabsPagination.tsx
-    │   ├── CMP006ModalEmptyState.tsx
-    │   ├── CMP007aCards.tsx
-    │   ├── CMP007bStatCards.tsx
-    │   ├── CMP007cCodeCards.tsx
-    │   ├── CMP008Toast.tsx
-    │   ├── CMP009Charts.tsx
-    │   ├── CMP010DataTable.tsx
-    │   └── CMP011ComposedDashboard.tsx
+    │   ├── CMP001Colors.tsx
+    │   ├── CMP002Buttons.tsx
+    │   ├── CMP003BadgesAndTags.tsx
+    │   ├── CMP004FormFields.tsx
+    │   ├── CMP005FilterBar.tsx
+    │   ├── CMP006TabsPagination.tsx
+    │   ├── CMP007ModalEmptyState.tsx
+    │   ├── CMP008aCards.tsx
+    │   ├── CMP008bStatCards.tsx
+    │   ├── CMP008cCodeCards.tsx
+    │   ├── CMP009Toast.tsx
+    │   ├── CMP010Charts.tsx
+    │   ├── CMP011DataTable.tsx
+    │   └── CMP012ComposedDashboard.tsx
     ├── components/
     │   ├── canvas/Artboard.tsx     ← absolute-positioned wrapper (zoomable canvas mode; not used by current shell)
     │   ├── icons/
     │   │   ├── model-providers.tsx ← Anthropic/OpenAI/Gemini/Grok/Meta/Mistral/DeepSeek/Cohere SVGs
-    │   │   └── vendor-meta.tsx     ← Vendor type + VENDOR_META + VendorAvatar + chartColor maps
+    │   │   └── vendor-meta.tsx     ← Vendor type + VENDOR_META (single `color` field) + VendorAvatar + VENDOR_CHART_COLOR_SECONDARY
     │   └── ui/                     ← 28 shadcn/Base UI primitives
     ├── lib/
     │   ├── utils.ts                ← cn() helper

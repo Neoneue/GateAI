@@ -15,7 +15,7 @@ export interface ArtboardProps {
 export function Artboard({ id, name, top, left, children }: ArtboardProps) {
   return (
     <div className="absolute" style={{ top, left, width: 1440 }}>
-      <div className="font-mono text-[11px] uppercase tracking-[0.08em] text-ink-500 pb-2.5 pl-1">
+      <div className="font-mono text-xs uppercase tracking-[0.08em] text-ink-500 pb-2.5 pl-1">
         {id} · {name}
       </div>
       <div

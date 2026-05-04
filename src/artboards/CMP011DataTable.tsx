@@ -390,7 +390,7 @@ function ProviderAvatar({ vendor }: { vendor: Vendor }) {
 function CapabilityPill({ letter }: { letter: Capability }) {
   const display = letter === 'f' ? 'ƒ' : letter;
   return (
-    <span className="inline-flex items-center justify-center size-5 rounded-[4px] border border-ink-100 font-mono text-[10px] font-medium text-ink-700">
+    <span className="inline-flex items-center justify-center size-5 rounded-[4px] border border-ink-100 font-mono text-xs font-medium text-ink-700">
       {display}
     </span>
   );

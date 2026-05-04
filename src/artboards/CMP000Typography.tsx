@@ -18,20 +18,12 @@ interface Specimen {
 
 const SCALE: Specimen[] = [
   {
-    label: 'Display',
-    tag: 'H1 · text-6xl',
-    sample: 'Dashboard',
-    sampleClass: "font-sans text-[60px] font-normal -tracking-[1.8px] leading-none text-ink-800",
-    meta: ['Geist', '60px / 1 · 400', 'tracking -1.8px'],
-    note: 'Page titles only. One per surface.',
-  },
-  {
     label: 'Page title',
     tag: 'h1 · text-4xl medium',
     sample: 'Overview',
     sampleClass: 'font-sans text-4xl/10 font-medium -tracking-[1px] text-ink-800',
     meta: ['Geist', '36px / 40px · 500', 'tracking -1px'],
-    note: 'Hero h1 on dashboard surfaces. Distinct from Heading (400) — page titles use medium for weight presence.',
+    note: 'Hero h1 on dashboard surfaces. The largest size in actual use — one per surface.',
   },
   {
     label: 'Heading',
@@ -128,7 +120,7 @@ const SCALE: Specimen[] = [
     tag: 'text-5xl · hero numeric',
     sample: '48,293',
     sampleClass:
-      'font-mono text-[48px] font-light -tracking-[1.44px] leading-none tabular-nums text-ink-800',
+      'font-mono text-5xl font-light -tracking-[1.44px] leading-none tabular-nums text-ink-800',
     meta: ['Geist Mono', '48px / 1 · 300', 'tracking -1.44px'],
     note: 'One primary number per surface. Weight 300 for air.',
   },
@@ -159,7 +151,7 @@ export function CMP000Typography() {
           code="CMP-000"
           title="Typography"
           description="Geist for the UI, Geist Mono for the machine. ~60% mono / 40% sans on dense operational surfaces. Tailwind-aligned scale — every size has a leading baked in."
-          parts="16 specimens"
+          parts="15 specimens"
         />
 
         {/* CMP-000.1 · SCALE */}
@@ -177,11 +169,11 @@ export function CMP000Typography() {
                 }`}
               >
                 <div className="flex flex-col w-[140px] shrink-0 gap-1.5">
-                  <div className="font-sans font-medium text-ink-800 text-[11px]/3.5">
+                  <div className="font-sans font-medium text-ink-800 text-xs/4">
                     {row.label}
                   </div>
                   <div className="inline-flex self-start rounded-[3px] py-0.5 px-1.5 bg-ink-50">
-                    <span className="font-sans text-ink-600 text-[9px]/3 tracking-[0.04em]">
+                    <span className="font-sans text-ink-600 text-xs/4 tracking-[0.04em]">
                       {row.tag}
                     </span>
                   </div>
@@ -191,12 +183,12 @@ export function CMP000Typography() {
                   {row.meta.map((line) => (
                     <div
                       key={line}
-                      className="font-sans text-ink-600 text-[10px]/3.5 tabular-nums"
+                      className="font-sans text-ink-600 text-xs/4 tabular-nums"
                     >
                       {line}
                     </div>
                   ))}
-                  <div className="mt-2 font-sans text-ink-300 text-[10px]/3.5">
+                  <div className="mt-2 font-sans text-ink-500 text-xs/4">
                     {row.note}
                   </div>
                 </div>

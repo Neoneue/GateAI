@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { KeyRound, Plus, Copy, X } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -12,6 +13,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { StatusDot } from '@/components/ui/status-dot';
+import { VendorAvatar } from '@/components/icons/vendor-meta';
 import { ArtboardHeader, SectionHeader } from './_shared/ArtboardHeader';
 
 const FAKE_SECRET = 'sk-tp-prev_c2d8a4f0e1b97f1';
@@ -150,6 +153,17 @@ export function CMP007ModalEmptyState() {
             </Card>
           </div>
 
+          {/* CMP-007.1b — GENERATION DETAILS */}
+          <div className="flex flex-col gap-2.5">
+            <SectionHeader
+              code="CMP-007.1b — GENERATION DETAILS"
+              hint="<Dialog> · payload · spec sheet"
+            />
+            <Card className="p-7 rounded-sm items-center">
+              <GenerationDetailsModal />
+            </Card>
+          </div>
+
           {/* CMP-007.2 — EMPTY STATE */}
           <div className="flex flex-col gap-2.5">
             <SectionHeader
@@ -228,6 +242,139 @@ function ModalFooter({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex items-center justify-end gap-2 pt-1 -mx-5 -mb-4 pb-4 px-5">
       {children}
+    </div>
+  );
+}
+
+function GenerationDetailsModal() {
+  return (
+    <div
+      role="dialog"
+      aria-label="Generation details"
+      className="flex flex-col w-[640px] rounded-xl bg-white border border-ink-100 shadow-[0_12px_32px_-8px_rgba(17,20,23,0.18)] overflow-clip"
+    >
+      {/* Header */}
+      <div className="flex items-start justify-between gap-3 px-5 pt-4 pb-3 border-b border-ink-100">
+        <div className="flex flex-col gap-0.5">
+          <div className="text-base font-medium -tracking-[0.01em] text-ink-900">
+            Generation details
+          </div>
+          <div className="font-mono tabular-nums text-xs text-ink-400">
+            Apr 22, 2026 14:28:04 UTC
+          </div>
+        </div>
+        <Button
+          variant="ghost"
+          size="icon-xs"
+          aria-label="Close"
+          onClick={() => toast('Closed generation details')}
+          className="text-ink-400 hover:text-ink-700"
+        >
+          <X />
+        </Button>
+      </div>
+
+      {/* Body */}
+      <div className="flex flex-col px-5 py-5 gap-4">
+        {/* Primary metadata */}
+        <DetailGrid>
+          <DetailRow label="Model">
+            <span className="inline-flex items-center gap-2">
+              <VendorAvatar vendor="anthropic" />
+              <span className="font-mono text-sm text-ink-900 -tracking-[0.2px]">
+                anthropic/claude-sonnet-4.8
+              </span>
+            </span>
+          </DetailRow>
+          <DetailRow label="Provider">
+            <span className="text-sm text-ink-900">AWS Bedrock (us-east-1)</span>
+          </DetailRow>
+          <DetailRow label="Status">
+            <Badge variant="success">
+              <StatusDot kind="success" />
+              <span className="font-mono tabular-nums">200 OK</span>
+            </Badge>
+          </DetailRow>
+          <DetailRow label="First token latency">
+            <span className="font-mono tabular-nums text-sm text-ink-900">0.42 s</span>
+          </DetailRow>
+          <DetailRow label="Throughput">
+            <span className="font-mono tabular-nums text-sm text-ink-900">
+              87.3 tokens/sec
+            </span>
+          </DetailRow>
+          <DetailRow label="Tokens">
+            <span className="font-mono tabular-nums text-sm text-ink-900">
+              2,847 prompt
+              <span className="text-ink-400"> · </span>
+              1,204 completion
+            </span>
+          </DetailRow>
+          <DetailRow label="Cost">
+            <span className="font-mono tabular-nums text-sm text-ink-900">$0.0284</span>
+          </DetailRow>
+          <DetailRow label="Request ID">
+            <span className="font-mono tabular-nums text-sm text-ink-900">
+              req-7f3a9c2b4e1d
+            </span>
+          </DetailRow>
+        </DetailGrid>
+
+        {/* Eyebrow */}
+        <div className="font-mono uppercase tracking-[0.1em] text-xs text-ink-500 mt-2 mb-0">
+          Security scan
+        </div>
+
+        {/* Security scan */}
+        <DetailGrid>
+          <DetailRow label="Overall">
+            <Badge variant="success">
+              <StatusDot kind="success" />
+              pass
+            </Badge>
+          </DetailRow>
+          <DetailRow label="Injection scan">
+            <Badge variant="success" className="bg-success/10 text-success">
+              clean
+            </Badge>
+          </DetailRow>
+          <DetailRow label="PII scan">
+            <Badge variant="success" className="bg-success/10 text-success">
+              clean
+            </Badge>
+          </DetailRow>
+          <DetailRow label="Policy">
+            <span className="text-sm text-ink-900">Default workspace policy</span>
+          </DetailRow>
+        </DetailGrid>
+      </div>
+    </div>
+  );
+}
+
+function DetailGrid({ children }: { children: React.ReactNode }) {
+  return (
+    <dl className="grid grid-cols-[36%_1fr] rounded-sm border border-ink-100 overflow-clip divide-y divide-ink-100">
+      {children}
+    </dl>
+  );
+}
+
+function DetailRow({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="contents group/row">
+      <dt className="px-3 py-2.5 text-sm text-ink-500 border-r border-ink-100 bg-white">
+        {label}
+      </dt>
+      <dd className="px-3 py-2.5 text-sm text-ink-900 bg-white flex items-center min-w-0">
+        {children}
+      </dd>
     </div>
   );
 }

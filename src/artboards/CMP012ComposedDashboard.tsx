@@ -171,18 +171,11 @@ function DashSidebar() {
           </svg>
         </div>
 
-        {/* Expand sidebar button */}
-        <Button
-          variant="ghost"
-          size="icon-sm"
-          aria-label="Expand sidebar"
-          className="text-ink-400 hover:text-ink-700"
-        >
-          <PanelLeftOpen className="size-4" strokeWidth={1.75} />
-        </Button>
-
-        {/* Separator between expand button and nav items */}
-        <Separator className="w-8 mb-1" />
+        {/* Separator between brand mark and nav items.
+            my-2 compensates for full-bleed brand box and active-state
+            highlight on the first nav item; without it, sep1 reads
+            tighter than sep2 (which sits between two inset icons). */}
+        <Separator className="w-8 my-2" />
 
         {/* Primary nav group */}
         <div className="flex flex-col items-center gap-1">
@@ -196,7 +189,7 @@ function DashSidebar() {
                 aria-current={item.active ? 'page' : undefined}
                 className={
                   item.active
-                    ? 'flex items-center justify-center size-9 rounded-lg bg-blue-50 text-blue-700'
+                    ? 'flex items-center justify-center size-9 rounded-lg bg-ink-100 text-ink-900'
                     : 'flex items-center justify-center size-9 rounded-lg text-ink-400 hover:text-ink-700 hover:bg-ink-50 transition-colors'
                 }
               >
@@ -206,7 +199,7 @@ function DashSidebar() {
           })}
         </div>
 
-        <Separator className="w-8 my-1" />
+        <Separator className="w-8" />
 
         {/* Secondary nav group */}
         <div className="flex flex-col items-center gap-1">
@@ -220,7 +213,7 @@ function DashSidebar() {
                 aria-current={item.active ? 'page' : undefined}
                 className={
                   item.active
-                    ? 'flex items-center justify-center size-9 rounded-lg bg-blue-50 text-blue-700'
+                    ? 'flex items-center justify-center size-9 rounded-lg bg-ink-100 text-ink-900'
                     : 'flex items-center justify-center size-9 rounded-lg text-ink-400 hover:text-ink-700 hover:bg-ink-50 transition-colors'
                 }
               >
@@ -232,7 +225,7 @@ function DashSidebar() {
       </div>
 
       {/* Avatar pinned to bottom */}
-      <div className="flex items-center justify-center size-6 rounded-full bg-blue-700 text-white font-mono text-[10px] font-medium">
+      <div className="flex items-center justify-center size-6 rounded-full bg-blue-700 text-white font-mono text-xs font-medium">
         CP
       </div>
     </div>
@@ -259,6 +252,14 @@ function DashTopBar() {
   return (
     <div className="flex items-center justify-between h-[49px] px-6 bg-white border-b border-ink-100 shrink-0">
       <div className="flex items-center gap-2">
+        <Button
+          variant="ghost"
+          size="icon-sm"
+          aria-label="Expand sidebar"
+          className="text-ink-400 hover:text-ink-700"
+        >
+          <PanelLeftOpen className="size-4" strokeWidth={1.75} />
+        </Button>
         <span className="font-sans text-xs text-ink-500">All Projects</span>
         <ChevronRight className="size-3 text-ink-300" strokeWidth={1.75} />
         <span className="font-sans text-xs text-ink-500">Constellation Gate</span>
@@ -276,7 +277,7 @@ function DashTopBar() {
         >
           <Bell className="size-4" strokeWidth={1.75} />
         </button>
-        <span className="inline-flex items-center justify-center size-6 ml-2 rounded-full bg-blue-700 text-white font-sans text-[10px] font-medium">
+        <span className="inline-flex items-center justify-center size-6 ml-2 rounded-full bg-blue-700 text-white font-sans text-xs font-medium">
           CP
         </span>
       </div>

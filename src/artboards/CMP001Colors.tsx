@@ -148,9 +148,9 @@ function PaletteCard({
       >
         <div className="flex items-baseline justify-between">
           <div>
-            <div className="font-sans font-medium text-ink-900 text-base">
+            <h2 className="font-sans font-medium text-ink-900 text-base m-0">
               {palette.name}
-            </div>
+            </h2>
             <div className="font-sans text-sm text-ink-500 mt-0.5">
               {palette.description}
             </div>
@@ -173,7 +173,7 @@ function PaletteCard({
                 <div className="font-mono text-xs text-ink-800 font-medium">
                   {step.scale}
                 </div>
-                <div className="font-mono text-[10px]/3 text-ink-500 tabular-nums whitespace-pre-line">
+                <div className="font-mono text-xs/4 text-ink-500 tabular-nums whitespace-pre-line">
                   {step.value}
                 </div>
               </div>
@@ -211,7 +211,7 @@ function SingleToneCard({
       <div className="flex flex-col rounded-sm gap-4 bg-white border border-ink-75 p-6 shadow-[0_1px_2px_rgba(17,20,23,0.04)]">
         <div className="flex items-baseline justify-between">
           <div>
-            <div className="font-sans font-medium text-ink-900 text-base">{name}</div>
+            <h2 className="font-sans font-medium text-ink-900 text-base m-0">{name}</h2>
             <div className="font-sans text-sm text-ink-500 mt-0.5">{description}</div>
           </div>
           <div className="font-mono text-xs text-ink-500 uppercase tracking-[0.1em]">{meta}</div>
@@ -230,7 +230,7 @@ function SingleToneCard({
                 <div className="font-mono text-xs text-ink-800 font-medium">
                   {step.scale}
                 </div>
-                <div className="font-mono text-[10px]/3 text-ink-500 tabular-nums whitespace-pre-line">
+                <div className="font-mono text-xs/4 text-ink-500 tabular-nums whitespace-pre-line">
                   {step.value}
                 </div>
               </div>

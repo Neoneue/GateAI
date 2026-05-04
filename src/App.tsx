@@ -52,8 +52,8 @@ export default function App() {
       {/* Left nav */}
       <nav className="w-60 shrink-0 h-full border-r border-ink-100 bg-ink-25 flex flex-col">
         <div className="px-5 py-5 border-b border-ink-100">
-          <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-ink-500 mb-1">
-            Constellation Gateway
+          <div className="font-mono text-xs uppercase tracking-[0.12em] text-ink-500 mb-1">
+            Constellation Gate AI
           </div>
           <div className="font-sans text-base font-medium text-ink-800 -tracking-[0.2px]">
             Design system
@@ -74,7 +74,7 @@ export default function App() {
               )}
             >
               <span>{p.name}</span>
-              <span className="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-400">
+              <span className="font-mono text-xs uppercase tracking-[0.08em] text-ink-400">
                 {p.code}
               </span>
             </button>

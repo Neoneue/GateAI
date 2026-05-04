@@ -30,9 +30,9 @@ export function ArtboardHeader({
         </div>
       </div>
       <div className="flex flex-col grow gap-1.5">
-        <h2 className="font-sans font-medium text-ink-800 text-xl/7 -tracking-[0.3px] m-0">
+        <h1 className="font-sans font-medium text-ink-800 text-4xl/10 -tracking-[1px] m-0">
           {title}
-        </h2>
+        </h1>
         <p className="font-mono text-ink-600 text-xs/[18.6px] max-w-[620px] m-0">
           {description}
         </p>

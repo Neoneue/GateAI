@@ -48,8 +48,8 @@ export function CompactKpi({
   flat?: boolean;
 }) {
   const containerCls = flat
-    ? 'flex flex-col gap-3 bg-white p-5'
-    : 'flex flex-col rounded-lg gap-3 bg-white border border-ink-100 p-5';
+    ? 'flex flex-col gap-2 bg-white p-5'
+    : 'flex flex-col rounded-lg gap-2 bg-white border border-ink-100 p-5';
   return (
     <div className={containerCls}>
       <div className="font-mono font-medium uppercase tracking-[0.1em] text-ink-500 text-xs">{title}</div>
@@ -63,7 +63,7 @@ export function CompactKpi({
           <span className="text-sm -tracking-[0.25px] text-ink-400">{noteLine}</span>
         )}
       </div>
-      {spark}
+      <div className="mt-1">{spark}</div>
     </div>
   );
 }
