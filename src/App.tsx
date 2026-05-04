@@ -1,21 +1,22 @@
-import { useState } from 'react';
+import { lazy, Suspense, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Toaster } from '@/components/ui/sonner';
-import { CMP000Typography } from '@/artboards/CMP000Typography';
-import { CMP001Colors } from '@/artboards/CMP001Colors';
-import { CMP002Buttons } from '@/artboards/CMP002Buttons';
-import { CMP003BadgesAndTags } from '@/artboards/CMP003BadgesAndTags';
-import { CMP004FormFields } from '@/artboards/CMP004FormFields';
-import { CMP005FilterBar } from '@/artboards/CMP005FilterBar';
-import { CMP006TabsPagination } from '@/artboards/CMP006TabsPagination';
-import { CMP007ModalEmptyState } from '@/artboards/CMP007ModalEmptyState';
-import { CMP008aCards } from '@/artboards/CMP008aCards';
-import { CMP008bStatCards } from '@/artboards/CMP008bStatCards';
-import { CMP008cCodeCards } from '@/artboards/CMP008cCodeCards';
-import { CMP009Toast } from '@/artboards/CMP009Toast';
-import { CMP010Charts } from '@/artboards/CMP010Charts';
-import { CMP011DataTable } from '@/artboards/CMP011DataTable';
-import { CMP012ComposedDashboard } from '@/artboards/CMP012ComposedDashboard';
+
+const CMP000Typography        = lazy(() => import('@/artboards/CMP000Typography').then(m => ({ default: m.CMP000Typography })));
+const CMP001Colors            = lazy(() => import('@/artboards/CMP001Colors').then(m => ({ default: m.CMP001Colors })));
+const CMP002Buttons           = lazy(() => import('@/artboards/CMP002Buttons').then(m => ({ default: m.CMP002Buttons })));
+const CMP003BadgesAndTags     = lazy(() => import('@/artboards/CMP003BadgesAndTags').then(m => ({ default: m.CMP003BadgesAndTags })));
+const CMP004FormFields        = lazy(() => import('@/artboards/CMP004FormFields').then(m => ({ default: m.CMP004FormFields })));
+const CMP005FilterBar         = lazy(() => import('@/artboards/CMP005FilterBar').then(m => ({ default: m.CMP005FilterBar })));
+const CMP006TabsPagination    = lazy(() => import('@/artboards/CMP006TabsPagination').then(m => ({ default: m.CMP006TabsPagination })));
+const CMP007ModalEmptyState   = lazy(() => import('@/artboards/CMP007ModalEmptyState').then(m => ({ default: m.CMP007ModalEmptyState })));
+const CMP008aCards            = lazy(() => import('@/artboards/CMP008aCards').then(m => ({ default: m.CMP008aCards })));
+const CMP008bStatCards        = lazy(() => import('@/artboards/CMP008bStatCards').then(m => ({ default: m.CMP008bStatCards })));
+const CMP008cCodeCards        = lazy(() => import('@/artboards/CMP008cCodeCards').then(m => ({ default: m.CMP008cCodeCards })));
+const CMP009Toast             = lazy(() => import('@/artboards/CMP009Toast').then(m => ({ default: m.CMP009Toast })));
+const CMP010Charts            = lazy(() => import('@/artboards/CMP010Charts').then(m => ({ default: m.CMP010Charts })));
+const CMP011DataTable         = lazy(() => import('@/artboards/CMP011DataTable').then(m => ({ default: m.CMP011DataTable })));
+const CMP012ComposedDashboard = lazy(() => import('@/artboards/CMP012ComposedDashboard').then(m => ({ default: m.CMP012ComposedDashboard })));
 
 type PageId =
   | 'cmp-000' | 'cmp-001' | 'cmp-002' | 'cmp-003' | 'cmp-004'
@@ -85,7 +86,9 @@ export default function App() {
       {/* Main scrollable content */}
       <main className="flex-1 h-full overflow-auto bg-ink-25">
         <div className="flex justify-center py-10 px-10">
-          <Page />
+          <Suspense fallback={<div className="w-[1440px] min-h-screen" aria-busy />}>
+            <Page />
+          </Suspense>
         </div>
       </main>
       <Toaster position="bottom-right" />
