@@ -42,7 +42,7 @@ export function CMP007StatCards() {
             <Card className="p-7 rounded-sm">
               <div className="grid grid-cols-3 gap-3">
                 <CompactKpi
-                  title="Total Requests · 7d"
+                  title="Total Requests"
                   value="48,293"
                   delta="+8.2%"
                   spark={
@@ -53,7 +53,7 @@ export function CMP007StatCards() {
                   }
                 />
                 <CompactKpi
-                  title="Total Cost · 7d"
+                  title="Total Cost"
                   value="$1,247.82"
                   delta="+12.6%"
                   spark={
@@ -64,12 +64,13 @@ export function CMP007StatCards() {
                   }
                 />
                 <CompactKpi
-                  title="Block Rate · 7d"
-                  value="0.24%"
+                  title="Avg Latency"
+                  value="1.24 s"
+                  delta="-3.2%"
                   spark={
                     <CompactSpark
-                      colorVar="#FFA01F"
-                      data={[22, 18, 24, 20, 16, 22, 18, 14, 16]}
+                      colorVar="var(--color-success-2)"
+                      data={[18, 16, 17, 15, 14, 13, 12, 11, 10]}
                       endDot
                     />
                   }

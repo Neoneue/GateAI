@@ -6,7 +6,7 @@ import {
   Home,
   KeyRound,
   LayoutGrid,
-  PanelLeft,
+  PanelLeftOpen,
   Plus,
   ScrollText,
   Settings2,
@@ -21,6 +21,7 @@ import {
 } from 'recharts';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
 import { StatusDot } from '@/components/ui/status-dot';
 import {
   ChartContainer,
@@ -135,9 +136,9 @@ const NAV_ITEMS = [
 function DashSidebar() {
   return (
     <div className="flex flex-col items-center justify-between w-16 py-5 bg-white border-r border-ink-100 shrink-0">
-      <div className="flex flex-col items-center gap-5">
+      <div className="flex flex-col items-center gap-2">
         {/* Brand mark */}
-        <div className="flex items-center justify-center size-8 rounded-lg bg-blue-700 mb-4">
+        <div className="flex items-center justify-center size-8 rounded-lg bg-blue-700">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
             <path
               d="M8 1L14.5 4.5V11.5L8 15L1.5 11.5V4.5L8 1Z"
@@ -149,6 +150,19 @@ function DashSidebar() {
             <circle cx="8" cy="8" r="2" fill="#FFFFFF" />
           </svg>
         </div>
+
+        {/* Expand sidebar button */}
+        <Button
+          variant="ghost"
+          size="icon-sm"
+          aria-label="Expand sidebar"
+          className="text-ink-400 hover:text-ink-700"
+        >
+          <PanelLeftOpen className="size-4" strokeWidth={1.75} />
+        </Button>
+
+        {/* Separator between expand button and nav items */}
+        <Separator className="w-8 mb-1" />
 
         {/* Nav items */}
         <div className="flex flex-col items-center gap-1">
@@ -201,13 +215,10 @@ function DashTopBar() {
   return (
     <div className="flex items-center justify-between h-[49px] px-6 bg-white border-b border-ink-100 shrink-0">
       <div className="flex items-center gap-2">
-        <PanelLeft className="size-4 text-ink-600" strokeWidth={1.75} />
-        <div className="flex items-center gap-2 ml-[120px]">
-          <Home className="size-3.5 text-ink-800" strokeWidth={1.75} />
-          <span className="font-plex text-xs text-ink-600">acme-prod</span>
-          <span className="font-plex text-xs text-ink-300">/</span>
-          <span className="font-plex text-xs text-blue-700">Overview</span>
-        </div>
+        <Home className="size-3.5 text-ink-800" strokeWidth={1.75} />
+        <span className="font-plex text-xs text-ink-600">acme-prod</span>
+        <span className="font-plex text-xs text-ink-300">/</span>
+        <span className="font-plex text-xs text-blue-700">Overview</span>
       </div>
       <div className="flex items-center gap-1">
         <Button variant="outline" size="sm" className="border-ink-100 bg-white text-ink-900">
@@ -238,7 +249,7 @@ function PageHeader() {
           Overview
         </h1>
         <p className="font-sans text-ink-400 text-lg/7 -tracking-[0.5px] m-0">
-          Real-time overview of your gateway operations.
+          Traffic, spend and latency across every model on the gateway.
         </p>
       </div>
       <div className="flex items-center gap-3">
@@ -261,7 +272,7 @@ function KpiRail() {
   return (
     <div className="grid grid-cols-3 gap-3">
       <CompactKpi
-        title="Total Requests · 7d"
+        title="Total Requests"
         value="48,293"
         delta="+8.2%"
         spark={
@@ -272,7 +283,7 @@ function KpiRail() {
         }
       />
       <CompactKpi
-        title="Total Cost · 7d"
+        title="Total Cost"
         value="$1,247.82"
         delta="+12.6%"
         spark={
@@ -283,12 +294,13 @@ function KpiRail() {
         }
       />
       <CompactKpi
-        title="Block Rate · 7d"
-        value="0.24%"
+        title="Avg Latency"
+        value="1.24 s"
+        delta="-3.2%"
         spark={
           <CompactSpark
-            colorVar="#FFA01F"
-            data={[22, 18, 24, 20, 16, 22, 18, 14, 16]}
+            colorVar="var(--color-success-2)"
+            data={[18, 16, 17, 15, 14, 13, 12, 11, 10]}
             endDot
           />
         }

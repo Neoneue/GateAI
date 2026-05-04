@@ -52,7 +52,7 @@ export function CompactKpi({
     : 'flex flex-col rounded-lg gap-3 bg-white border border-ink-100 p-5';
   return (
     <div className={containerCls}>
-      <div className="text-sm font-medium -tracking-[0.14px] text-ink-900">{title}</div>
+      <div className="font-mono font-medium uppercase tracking-[0.1em] text-ink-500 text-xs">{title}</div>
       <div className="flex items-baseline gap-2">
         <div className="text-2xl/8 font-medium tabular-nums -tracking-[0.5px] text-ink-900">
           {value}
