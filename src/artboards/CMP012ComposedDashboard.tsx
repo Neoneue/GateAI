@@ -261,10 +261,10 @@ function DashTopBar() {
           <PanelLeftOpen className="size-4" strokeWidth={1.75} />
         </Button>
         <span className="font-sans text-xs text-ink-500">All Projects</span>
-        <ChevronRight className="size-3 text-ink-300" strokeWidth={1.75} />
-        <span className="font-sans text-xs text-ink-500">Constellation Gate</span>
-        <ChevronRight className="size-3 text-ink-300" strokeWidth={1.75} />
-        <span className="font-sans text-xs font-medium text-ink-900">Overview</span>
+        <ChevronRight className="size-3 text-ink-300" strokeWidth={1.75} aria-hidden />
+        <span className="font-sans text-xs text-ink-500">Constellation Gate AI</span>
+        <ChevronRight className="size-3 text-ink-300" strokeWidth={1.75} aria-hidden />
+        <span aria-current="page" className="font-sans text-xs font-medium text-ink-900">Overview</span>
       </div>
       <div className="flex items-center gap-1">
         <Button variant="outline" size="sm" className="border-ink-100 bg-white text-ink-900">
@@ -626,9 +626,9 @@ function RecentRequestsCard() {
   return (
     <div className="flex flex-col w-full rounded-lg overflow-hidden bg-white border border-ink-100">
       <div className="flex items-center justify-between py-4 px-5">
-        <div className="font-sans text-base/5 font-medium -tracking-[0.25px] text-ink-900">
-          Recent requests
-        </div>
+        <h3 className="font-sans text-base/5 font-medium -tracking-[0.25px] text-ink-900 m-0">
+          Recent Requests
+        </h3>
         <Button variant="outline" size="sm">
           View all
           <ChevronRight data-icon="inline-end" />
