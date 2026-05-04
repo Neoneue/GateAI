@@ -32,13 +32,13 @@ function SelectValue({ className, ...props }: SelectPrimitive.Value.Props) {
 
 const selectTriggerVariants = cva(
   // Surface mirrors <Input /> so triggers and inputs share a row.
-  "flex w-fit items-center justify-between rounded-lg border border-ink-100 bg-ink-25 text-ink-800 whitespace-nowrap transition-colors outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 data-placeholder:text-ink-300 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-1.5 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  "flex w-fit items-center justify-between rounded-lg border border-ink-100 bg-ink-25 text-ink-800 whitespace-nowrap transition-colors outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 data-placeholder:text-ink-300 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       size: {
-        xs: "h-7 gap-1.5 px-2.5 text-xs",
-        sm: "h-8 gap-1.5 px-3 text-xs",
-        default: "h-9 gap-2 px-3.5 text-sm",
+        xs: "h-7 gap-2 px-3 text-xs",
+        sm: "h-8 gap-2 px-3 text-xs",
+        default: "h-9 gap-2 px-4 text-sm",
         lg: "h-10 gap-2 px-4 text-sm",
       },
     },
@@ -122,7 +122,7 @@ function SelectLabel({
   return (
     <SelectPrimitive.GroupLabel
       data-slot="select-label"
-      className={cn("px-1.5 py-1 text-xs text-muted-foreground", className)}
+      className={cn("px-2 py-1 text-xs text-muted-foreground", className)}
       {...props}
     />
   )
@@ -137,7 +137,7 @@ function SelectItem({
     <SelectPrimitive.Item
       data-slot="select-item"
       className={cn(
-        "relative flex w-full cursor-pointer items-center gap-1.5 rounded-md h-8 py-0 pr-8 pl-2.5 text-sm outline-hidden select-none data-[highlighted]:bg-ink-50 focus:bg-ink-50 data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        "relative flex w-full cursor-pointer items-center gap-2 rounded-md h-8 py-0 pr-8 pl-3 text-sm outline-hidden select-none data-[highlighted]:bg-ink-50 focus:bg-ink-50 data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         className
       )}
       {...props}

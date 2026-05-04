@@ -189,12 +189,12 @@ function ChartTooltipContent({
   return (
     <div
       className={cn(
-        "grid min-w-32 items-start gap-1.5 rounded-lg border border-ink-100 bg-white px-2.5 py-1.5 text-xs text-ink-900 shadow-[0_8px_24px_-6px_rgba(17,20,23,0.12)]",
+        "grid min-w-32 items-start gap-2 rounded-lg border border-ink-100 bg-white px-3 py-2 text-xs text-ink-900 shadow-[0_8px_24px_-6px_rgba(17,20,23,0.12)]",
         className
       )}
     >
       {!nestLabel ? tooltipLabel : null}
-      <div className="grid gap-1.5">
+      <div className="grid gap-2">
         {payload
           .filter((item) => item.type !== "none")
           .map((item, index) => {
@@ -226,7 +226,7 @@ function ChartTooltipContent({
                               "w-1": indicator === "line",
                               "w-0 border-[1.5px] border-dashed bg-transparent":
                                 indicator === "dashed",
-                              "my-0.5": nestLabel && indicator === "dashed",
+                              "my-1": nestLabel && indicator === "dashed",
                             }
                           )}
                           style={
@@ -244,7 +244,7 @@ function ChartTooltipContent({
                         nestLabel ? "items-end" : "items-center"
                       )}
                     >
-                      <div className="grid gap-1.5">
+                      <div className="grid gap-2">
                         {nestLabel ? tooltipLabel : null}
                         <span className="text-ink-600">
                           {itemConfig?.label ?? item.name}
@@ -304,7 +304,7 @@ function ChartLegendContent({
             <div
               key={index}
               className={cn(
-                "flex items-center gap-1.5 [&>svg]:h-3 [&>svg]:w-3 [&>svg]:text-ink-400"
+                "flex items-center gap-2 [&>svg]:h-3 [&>svg]:w-3 [&>svg]:text-ink-400"
               )}
             >
               {itemConfig?.icon && !hideIcon ? (

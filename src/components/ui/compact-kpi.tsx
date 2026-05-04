@@ -15,7 +15,7 @@ export function DeltaTag({ delta, note }: { delta: string; note?: string }) {
   const Icon = negative ? ArrowDownRight : ArrowUpRight;
   const color = negative ? 'text-danger-2' : 'text-success-2';
   return (
-    <div className="inline-flex items-center gap-0.5">
+    <div className="inline-flex items-center gap-1">
       <Icon className={`size-3.5 ${color}`} strokeWidth={1.75} />
       <span className={`font-mono tabular-nums text-sm font-medium -tracking-[0.25px] ${color}`}>{delta}</span>
       {note ? (

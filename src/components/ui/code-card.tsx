@@ -136,7 +136,7 @@ export function CodeCardTabs({
       {items.map((item) => {
         const isActive = item === active;
         const sharedClass = cn(
-          'inline-flex items-center h-6 rounded-md px-2.5 font-sans text-sm transition-colors',
+          'inline-flex items-center h-6 rounded-md px-3 font-sans text-sm transition-colors',
           isActive
             ? 'bg-white text-ink-900 font-medium border border-ink-100 shadow-[0_1px_2px_rgba(0,0,0,0.04)]'
             : 'text-ink-600 font-medium border border-transparent',
@@ -214,7 +214,7 @@ export function CodeBlock({
   const toneMap = tone === 'dark' ? TONE_CLASS_DARK : TONE_CLASS_LIGHT;
   const density_cls =
     density === 'inline'
-      ? 'px-3.5 py-2.5'
+      ? 'px-4 py-3'
       : density === 'compact'
       ? 'px-4 py-3'
       : 'px-5 py-4';
@@ -267,7 +267,7 @@ export function TerminalCard({
         className,
       )}
     >
-      <div className="flex items-center gap-2 px-3.5 py-2 bg-ink-700 border-b border-ink-900/60">
+      <div className="flex items-center gap-2 px-4 py-2 bg-ink-700 border-b border-ink-900/60">
         <div className="flex gap-1" aria-hidden="true">
           <span className="size-2 rounded-full bg-danger-2" />
           <span className="size-2 rounded-full bg-warning" />

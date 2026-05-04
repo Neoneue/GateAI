@@ -5,7 +5,8 @@ export interface SegmentedProps {
   value: string;
   onChange?: (value: string) => void;
   variant?: 'pill' | 'group';
-  size?: 'sm' | 'md';
+  /** Mirrors button conventions — `sm` for inline header chrome, `default` for standalone use. */
+  size?: 'sm' | 'default';
   className?: string;
 }
 
@@ -14,7 +15,7 @@ export interface SegmentedProps {
  *  - "pill": gray container, selected gets white pill (e.g. Requests / Cost / Tokens)
  *  - "group": adjacent borders, selected gets ink-900 fill (e.g. Day / Week / Month / Year)
  */
-export function Segmented({ options, value, onChange, variant = 'pill', size = 'md', className }: SegmentedProps) {
+export function Segmented({ options, value, onChange, variant = 'pill', size = 'default', className }: SegmentedProps) {
   if (variant === 'group') {
     return (
       <div className={cn('inline-flex self-start rounded-lg overflow-clip', className)}>
@@ -27,7 +28,7 @@ export function Segmented({ options, value, onChange, variant = 'pill', size = '
               onClick={() => onChange?.(opt.value)}
               className={cn(
                 'inline-flex items-center justify-center px-3 font-sans font-medium text-xs',
-                size === 'md' ? 'h-6' : 'h-7',
+                size === 'sm' ? 'h-7' : 'h-8',
                 selected
                   ? 'bg-ink-900 text-white border border-ink-900'
                   : 'bg-white text-ink-900 border-t border-b border-r border-ink-100',
@@ -45,7 +46,7 @@ export function Segmented({ options, value, onChange, variant = 'pill', size = '
   return (
     <div
       className={cn(
-        'inline-flex self-start rounded-lg p-0.5 bg-ink-50 border border-ink-100',
+        'inline-flex self-start rounded-lg p-1 bg-ink-50 border border-ink-100',
         className,
       )}
     >
@@ -57,7 +58,8 @@ export function Segmented({ options, value, onChange, variant = 'pill', size = '
             type="button"
             onClick={() => onChange?.(opt.value)}
             className={cn(
-              'inline-flex items-center justify-center rounded-md py-1.5 px-3.5 font-sans font-medium text-xs',
+              'inline-flex items-center justify-center rounded-md font-sans font-medium text-xs',
+              size === 'sm' ? 'py-1 px-3' : 'py-2 px-4',
               selected
                 ? 'bg-white text-ink-900 shadow-[0_1px_2px_rgba(17,20,23,0.08)]'
                 : 'text-ink-600 hover:text-ink-900',

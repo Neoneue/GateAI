@@ -10,9 +10,9 @@ const inputVariants = cva(
     variants: {
       size: {
         // Paper CMP-001.2 spec — heights and L/R padding step together.
-        xs: "h-7 px-2.5 text-xs",
+        xs: "h-7 px-3 text-xs",
         sm: "h-8 px-3 text-xs",
-        default: "h-9 px-3.5 text-sm",
+        default: "h-9 px-4 text-sm",
         lg: "h-10 px-4 text-sm",
       },
     },
