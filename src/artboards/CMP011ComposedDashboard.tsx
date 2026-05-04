@@ -576,12 +576,12 @@ function RecentRequestsCard() {
       <Table>
         <TableHeader>
           <TableRow className="hover:bg-transparent">
-            <TableHead className="w-[110px]">Time</TableHead>
-            <TableHead className="w-[260px]">Model</TableHead>
-            <TableHead className="w-[120px]">Status</TableHead>
-            <TableHead className="text-right">Tokens</TableHead>
-            <TableHead className="text-right">Latency</TableHead>
-            <TableHead className="text-right">Cost</TableHead>
+            <TableHead className="whitespace-nowrap">Time</TableHead>
+            <TableHead className="whitespace-nowrap">Model</TableHead>
+            <TableHead className="whitespace-nowrap">Status</TableHead>
+            <TableHead className="text-right whitespace-nowrap">Tokens</TableHead>
+            <TableHead className="text-right whitespace-nowrap">Latency</TableHead>
+            <TableHead className="text-right whitespace-nowrap">Cost</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -589,10 +589,10 @@ function RecentRequestsCard() {
             const badge = STATUS_BADGE[row.status];
             return (
               <TableRow key={`${row.time}-${i}`} className="hover:bg-transparent">
-                <TableCell className="font-mono tabular-nums -tracking-[0.14px] text-ink-500">
+                <TableCell className="whitespace-nowrap font-mono tabular-nums -tracking-[0.14px] text-ink-500">
                   {row.time}
                 </TableCell>
-                <TableCell>
+                <TableCell className="whitespace-nowrap">
                   <div className="flex items-center gap-2.5">
                     <VendorAvatar vendor={row.vendor} />
                     <span className="font-mono text-sm text-ink-900 -tracking-[0.2px]">
@@ -600,19 +600,19 @@ function RecentRequestsCard() {
                     </span>
                   </div>
                 </TableCell>
-                <TableCell>
+                <TableCell className="whitespace-nowrap">
                   <Badge variant={badge.variant}>
                     <StatusDot kind={badge.dot} />
                     {row.code}
                   </Badge>
                 </TableCell>
-                <TableCell className="text-right font-mono tabular-nums text-ink-900">
+                <TableCell className="text-right whitespace-nowrap font-mono tabular-nums text-ink-900">
                   {row.tokens}
                 </TableCell>
-                <TableCell className="text-right font-mono tabular-nums text-ink-900">
+                <TableCell className="text-right whitespace-nowrap font-mono tabular-nums text-ink-900">
                   {row.latency}
                 </TableCell>
-                <TableCell className="text-right font-mono tabular-nums text-ink-900">
+                <TableCell className="text-right whitespace-nowrap font-mono tabular-nums text-ink-900">
                   {row.cost}
                 </TableCell>
               </TableRow>
