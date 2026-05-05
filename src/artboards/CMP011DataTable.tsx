@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { ChevronDown, Search } from 'lucide-react';
+import { ChevronDown, ChevronRight, Search } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Segmented } from '@/components/ui/segmented';
@@ -8,7 +9,9 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
+  SelectValue,
 } from '@/components/ui/select';
+import { StatusDot } from '@/components/ui/status-dot';
 import {
   Table,
   TableBody,
@@ -23,6 +26,7 @@ import {
   VendorAvatar,
   type Vendor,
 } from '@/components/icons/vendor-meta';
+import { RecentRequestsCard } from './CMP012ComposedDashboard';
 import { ArtboardHeader, SectionHeader } from './_shared/ArtboardHeader';
 
 type Capability = 'T' | '{}' | 'V' | 'f' | 'I' | 'R' | 'E';
@@ -207,19 +211,20 @@ export function CMP011DataTable() {
         <ArtboardHeader
           code="CMP-011"
           title="Data table"
-          description="Sortable headers, mono numerics, status pills inline, row hover, selected row, action menu. The body of every list view."
-          parts="1 component"
+          description="Three table treatments — sortable list view with full toolbar, compact activity feed, and a scored drill-down panel. All share the same Table primitive, mono numerics, status pills, and row chrome."
+          parts="3 layouts"
         />
 
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-7">
+          <div className="flex flex-col gap-3">
           <SectionHeader
             code="CMP-011.1 — SORTABLE TABLE"
             hint=".v-tbl · header / row / selected / action"
           />
 
-          <div className="flex flex-col rounded-md overflow-hidden bg-white border border-ink-100">
+          <div className="flex flex-col rounded-md overflow-hidden bg-white border border-ink-100 shadow-xs">
             {/* Toolbar */}
-            <div className="flex items-center justify-between gap-3 p-4">
+            <div className="flex items-center justify-between gap-3 py-4 px-5">
               <div className="flex items-center gap-2">
                 <div className="relative w-60">
                   <Search
@@ -319,7 +324,7 @@ export function CMP011DataTable() {
                   <TableRow key={row.name}>
                     <TableCell>
                       <div className="flex items-center gap-3">
-                        <VendorAvatar vendor={row.vendor} />
+                        <VendorAvatar vendor={row.vendor} tone="neutral" />
                         <span className="font-mono text-sm text-ink-900 -tracking-[0.2px]">
                           {row.name.split('/')[1] ?? row.name}
                         </span>
@@ -363,8 +368,140 @@ export function CMP011DataTable() {
               </TableBody>
             </Table>
           </div>
+          </div>
+
+          <div className="flex flex-col gap-3">
+            <SectionHeader
+              code="CMP-011.2 — ACTIVITY FEED"
+              hint="card-wrapped · header + 'view all' · imported from CMP-012"
+            />
+            <RecentRequestsCard />
+          </div>
+
+          <div className="flex flex-col gap-3">
+            <SectionHeader
+              code="CMP-011.3 — DRILL-DOWN PANEL"
+              hint="title + subtitle · status pills · severity scores · chevron rows"
+            />
+            <RiskScoresCard />
+          </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+/* ─── CMP-011.3 — Drill-down panel (scored list) ───────────────────────────
+ * Embedded panel pattern. Title + subtitle in the card header, single
+ * scope dropdown (no full toolbar), severity badges driving both the pill
+ * and the score color, severity-tinted sparklines, and a chevron column
+ * marking each row as a drill target. Reuses Table, Badge, StatusDot, and
+ * the local Sparkline. Status colors trace back to the semantic tokens
+ * (--color-destructive / --color-warning / --color-primary). */
+type RiskLevel = 'critical' | 'elevated' | 'normal';
+
+const RISK_LEVELS: Record<
+  RiskLevel,
+  {
+    label: string;
+    variant: 'destructive' | 'warning' | 'info';
+    dot: 'danger' | 'warning' | 'info';
+    scoreClass: string;
+  }
+> = {
+  critical: { label: 'Critical', variant: 'destructive', dot: 'danger',  scoreClass: 'text-destructive' },
+  elevated: { label: 'Elevated', variant: 'warning',     dot: 'warning', scoreClass: 'text-warning' },
+  normal:   { label: 'Normal',   variant: 'info',        dot: 'info',    scoreClass: 'text-ink-900' },
+};
+
+const RISK_ROWS: {
+  key: string;
+  risk: RiskLevel;
+  score: number;
+  events: number;
+  trend: number[];
+}[] = [
+  { key: 'sk-cg-…7a3', risk: 'critical', score: 62, events: 14, trend: [3, 4, 6, 9, 14, 22, 30, 38, 46] },
+  { key: 'sk-cg-…2f8', risk: 'elevated', score: 12, events: 8,  trend: [2, 3, 4, 6, 7, 8, 10, 11, 12] },
+  { key: 'sk-cg-…9c1', risk: 'normal',   score: 3,  events: 2,  trend: [3, 1, 4, 1, 5, 2, 5, 3, 4] },
+  { key: 'sk-cg-…1d4', risk: 'normal',   score: 1,  events: 1,  trend: [1, 0, 2, 0, 3, 0, 2, 0, 1] },
+  { key: 'sk-cg-…5b2', risk: 'normal',   score: 0,  events: 0,  trend: [0, 0, 0, 0, 0, 0, 0, 0, 0] },
+];
+
+function RiskScoresCard() {
+  const [scope, setScope] = useState('all');
+  return (
+    <div className="flex flex-col rounded-md overflow-hidden bg-white border border-ink-100 shadow-xs">
+      {/* Header — title + subtitle on the left, scope dropdown on the right */}
+      <div className="flex items-start justify-between gap-3 py-4 px-5">
+        <div className="flex flex-col gap-1">
+          <h3 className="font-sans text-base/5 font-medium -tracking-[0.25px] text-ink-900 m-0">
+            API key risk scores
+          </h3>
+          <p className="font-sans text-sm -tracking-[0.14px] text-ink-400 m-0">
+            Decays on 1h half-life · elevated keys get enhanced scanning
+          </p>
+        </div>
+        <Select value={scope} onValueChange={setScope}>
+          <SelectTrigger
+            size="sm"
+            aria-label="Scope"
+            className="border-ink-100 bg-white text-ink-900 font-normal"
+          >
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All keys</SelectItem>
+            <SelectItem value="elevated">Elevated +</SelectItem>
+            <SelectItem value="critical">Critical only</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <Table className="w-full table-fixed">
+        <TableHeader>
+          <TableRow className="hover:bg-transparent">
+            <TableHead className="whitespace-nowrap">Key</TableHead>
+            <TableHead className="whitespace-nowrap">Risk</TableHead>
+            <TableHead className="whitespace-nowrap">Score</TableHead>
+            <TableHead className="whitespace-nowrap">Events</TableHead>
+            <TableHead className="whitespace-nowrap">Trend</TableHead>
+            <TableHead className="w-12" aria-hidden />
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {RISK_ROWS.map((row) => {
+            const meta = RISK_LEVELS[row.risk];
+            return (
+              <TableRow key={row.key} className="cursor-pointer">
+                <TableCell className="whitespace-nowrap font-mono text-sm tabular-nums -tracking-[0.14px] text-ink-900">
+                  {row.key}
+                </TableCell>
+                <TableCell className="whitespace-nowrap">
+                  <Badge variant={meta.variant}>
+                    <StatusDot kind={meta.dot} />
+                    {meta.label}
+                  </Badge>
+                </TableCell>
+                <TableCell
+                  className={`whitespace-nowrap font-mono tabular-nums ${meta.scoreClass}`}
+                >
+                  {row.score}
+                </TableCell>
+                <TableCell className="whitespace-nowrap font-mono tabular-nums text-ink-900">
+                  {row.events}
+                </TableCell>
+                <TableCell>
+                  <Sparkline points={row.trend} tone={row.risk} />
+                </TableCell>
+                <TableCell className="text-right text-ink-300">
+                  <ChevronRight className="size-4" aria-hidden />
+                </TableCell>
+              </TableRow>
+            );
+          })}
+        </TableBody>
+      </Table>
     </div>
   );
 }
@@ -396,9 +533,21 @@ function CapabilityPill({ letter }: { letter: Capability }) {
   );
 }
 
-function Sparkline({ points }: { points: number[] }) {
-  const w = 80;
-  const h = 24;
+type SparklineTone = 'critical' | 'elevated' | 'normal';
+
+function Sparkline({
+  points,
+  tone,
+  width = 80,
+  height = 24,
+}: {
+  points: number[];
+  tone?: SparklineTone;
+  width?: number;
+  height?: number;
+}) {
+  const w = width;
+  const h = height;
   const padY = 2;
   const max = Math.max(...points);
   const min = Math.min(...points);
@@ -416,17 +565,37 @@ function Sparkline({ points }: { points: number[] }) {
     `M ${coords[0].x.toFixed(1)},${h} ` +
     coords.map((c) => `L ${c.x.toFixed(1)},${c.y.toFixed(1)}`).join(' ') +
     ` L ${last.x.toFixed(1)},${h} Z`;
-  const isUp = points[points.length - 1] >= points[0];
-  const stroke = isUp ? 'var(--color-blue-700)' : 'var(--color-ink-700)';
-  const fill = isUp ? 'var(--color-blue-100)' : 'var(--color-ink-100)';
+
+  let stroke: string;
+  let fill: string;
+  let fillOpacity = 0.6;
+  if (tone === 'critical') {
+    stroke = 'var(--color-destructive)';
+    fill = 'var(--color-destructive)';
+    fillOpacity = 0.12;
+  } else if (tone === 'elevated') {
+    stroke = 'var(--color-warning)';
+    fill = 'var(--color-warning)';
+    fillOpacity = 0.12;
+  } else if (tone === 'normal') {
+    stroke = 'var(--color-ink-500)';
+    fill = 'var(--color-ink-200)';
+    fillOpacity = 0.6;
+  } else {
+    const isUp = points[points.length - 1] >= points[0];
+    stroke = isUp ? 'var(--color-blue-700)' : 'var(--color-ink-700)';
+    fill = isUp ? 'var(--color-blue-100)' : 'var(--color-ink-100)';
+  }
+
   return (
     <svg
       width={w}
       height={h}
       viewBox={`0 0 ${w} ${h}`}
       xmlns="http://www.w3.org/2000/svg"
+      aria-hidden
     >
-      <path d={areaPath} fill={fill} fillOpacity={0.6} />
+      <path d={areaPath} fill={fill} fillOpacity={fillOpacity} />
       <path
         d={linePath}
         fill="none"
