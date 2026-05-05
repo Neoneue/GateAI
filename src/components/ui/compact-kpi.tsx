@@ -17,9 +17,9 @@ export function DeltaTag({ delta, note }: { delta: string; note?: string }) {
   return (
     <div className="inline-flex items-center gap-1">
       <Icon className={`size-3.5 ${color}`} strokeWidth={1.75} />
-      <span className={`font-mono tabular-nums text-sm font-medium -tracking-[0.25px] ${color}`}>{delta}</span>
+      <span className={`font-mono tabular-nums text-sm font-medium tracking-tight ${color}`}>{delta}</span>
       {note ? (
-        <span className="pl-1 text-sm -tracking-[0.25px] text-ink-400">{note}</span>
+        <span className="pl-1 text-sm tracking-tight text-ink-400">{note}</span>
       ) : null}
     </div>
   );
@@ -49,18 +49,18 @@ export function CompactKpi({
 }) {
   const containerCls = flat
     ? 'flex flex-col gap-2 bg-white p-5'
-    : 'flex flex-col rounded-lg gap-2 bg-white border border-ink-100 p-5';
+    : 'flex flex-col rounded-md gap-2 bg-white border border-ink-100 shadow-xs p-5';
   return (
     <div className={containerCls}>
       <div className="font-mono font-medium uppercase tracking-[0.1em] text-ink-500 text-xs">{title}</div>
       <div className="flex items-baseline gap-2">
-        <div className="font-mono text-2xl/8 font-medium tabular-nums -tracking-[0.5px] text-ink-900">
+        <div className="font-mono text-2xl/8 font-medium tabular-nums tracking-tight text-ink-900">
           {value}
         </div>
         {delta ? (
           <DeltaTag delta={delta} note={deltaNote} />
         ) : (
-          <span className="text-sm -tracking-[0.25px] text-ink-400">{noteLine}</span>
+          <span className="text-sm tracking-tight text-ink-400">{noteLine}</span>
         )}
       </div>
       <div className="mt-1">{spark}</div>

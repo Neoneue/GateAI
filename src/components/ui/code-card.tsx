@@ -90,8 +90,11 @@ export function CodeCard({
     <div
       data-slot="code-card"
       className={cn(
-        'flex flex-col overflow-hidden rounded-md bg-white border border-ink-75',
-        elevation === 'raised' && 'shadow-[0_2px_12px_rgba(0,0,0,0.08)]',
+        // Skill: surfaces.md — flat default uses the hairline `shadow-xs`;
+        // raised promotes to the popup elevation token so all floating
+        // surfaces (cards, selects, dialogs, tooltips) read as one family.
+        'flex flex-col overflow-hidden rounded-md bg-white border border-ink-75 shadow-xs',
+        elevation === 'raised' && 'shadow-(--shadow-popup)',
         className,
       )}
       {...props}
@@ -136,9 +139,12 @@ export function CodeCardTabs({
       {items.map((item) => {
         const isActive = item === active;
         const sharedClass = cn(
-          'inline-flex items-center h-6 rounded-md px-3 font-sans text-sm transition-colors',
+          // Skill: emil-design-eng — explicit `transition-colors duration-150
+          // ease-out`; the active pill uses `shadow-xs` to match the segmented
+          // family's lift instead of inlining its own rgba shadow.
+          'inline-flex items-center h-6 rounded-md px-3 font-sans text-sm transition-colors duration-150 ease-out',
           isActive
-            ? 'bg-white text-ink-900 font-medium border border-ink-100 shadow-[0_1px_2px_rgba(0,0,0,0.04)]'
+            ? 'bg-white text-ink-900 font-medium border border-ink-100 shadow-xs'
             : 'text-ink-600 font-medium border border-transparent',
           interactive && !isActive && 'hover:text-ink-900 hover:bg-white/60',
         );
@@ -268,10 +274,13 @@ export function TerminalCard({
       )}
     >
       <div className="flex items-center gap-2 px-4 py-2 bg-ink-700 border-b border-ink-900/60">
+        {/* macOS traffic-light affordances live in their own token family
+            (--color-traffic-red/amber/green) so we don't reuse the semantic
+            danger/warning/success ramps for chrome decoration. */}
         <div className="flex gap-1" aria-hidden="true">
-          <span className="size-2 rounded-full bg-danger-2" />
-          <span className="size-2 rounded-full bg-warning" />
-          <span className="size-2 rounded-full bg-success" />
+          <span className="size-2 rounded-full bg-traffic-red" />
+          <span className="size-2 rounded-full bg-traffic-amber" />
+          <span className="size-2 rounded-full bg-traffic-green" />
         </div>
         <span className="ml-auto font-mono text-xs/4 text-ink-300">
           {title}

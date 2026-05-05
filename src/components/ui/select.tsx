@@ -8,7 +8,35 @@ import { cn } from "@/lib/utils"
 import { usePortalTarget } from "@/lib/portal-target"
 import { ChevronDownIcon, CheckIcon, ChevronUpIcon } from "lucide-react"
 
-const Select = SelectPrimitive.Root
+// Base UI's Select.Value renders the raw value, not the selected item's label.
+// We mirror Radix's behavior by collecting (value → children) from any nested
+// SelectItem at render time and exposing them via context for SelectValue.
+const SelectLabelContext = React.createContext<Map<string, React.ReactNode> | null>(null)
+
+function collectItemLabels(nodes: React.ReactNode, into: Map<string, React.ReactNode>) {
+  React.Children.forEach(nodes, (node) => {
+    if (!React.isValidElement<{ value?: unknown; children?: React.ReactNode }>(node)) return
+    if (node.type === SelectItem && node.props.value !== undefined) {
+      into.set(String(node.props.value), node.props.children)
+    }
+    if (node.props.children !== undefined) {
+      collectItemLabels(node.props.children, into)
+    }
+  })
+}
+
+function Select({ children, ...props }: SelectPrimitive.Root.Props) {
+  const labels = React.useMemo(() => {
+    const map = new Map<string, React.ReactNode>()
+    collectItemLabels(children, map)
+    return map
+  }, [children])
+  return (
+    <SelectLabelContext.Provider value={labels}>
+      <SelectPrimitive.Root {...props}>{children}</SelectPrimitive.Root>
+    </SelectLabelContext.Provider>
+  )
+}
 
 function SelectGroup({ className, ...props }: SelectPrimitive.Group.Props) {
   return (
@@ -20,19 +48,23 @@ function SelectGroup({ className, ...props }: SelectPrimitive.Group.Props) {
   )
 }
 
-function SelectValue({ className, ...props }: SelectPrimitive.Value.Props) {
+function SelectValue({ className, children, ...props }: SelectPrimitive.Value.Props) {
+  const labels = React.useContext(SelectLabelContext)
   return (
     <SelectPrimitive.Value
       data-slot="select-value"
       className={cn("flex flex-1 text-left", className)}
       {...props}
-    />
+    >
+      {children ?? ((value) => labels?.get(String(value)) ?? (value as React.ReactNode))}
+    </SelectPrimitive.Value>
   )
 }
 
 const selectTriggerVariants = cva(
   // Surface mirrors <Input /> so triggers and inputs share a row.
-  "flex w-fit items-center justify-between rounded-lg border border-ink-100 bg-ink-25 text-ink-800 whitespace-nowrap transition-colors outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 data-placeholder:text-ink-300 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  // Skill: performance.md — only colors + focus-ring shadow animate; never `transition-all`.
+  "flex w-fit items-center justify-between rounded-lg border border-ink-100 bg-ink-25 text-ink-800 whitespace-nowrap transition-[colors,box-shadow] duration-150 ease-out outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 data-placeholder:text-ink-300 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       size: {
@@ -101,7 +133,7 @@ function SelectContent({
           data-slot="select-content"
           data-align-trigger={alignItemWithTrigger}
           className={cn(
-            "relative isolate z-50 max-h-(--available-height) w-(--anchor-width) min-w-36 origin-(--transform-origin) overflow-x-hidden overflow-y-auto rounded-lg bg-white text-popover-foreground border border-ink-100 shadow-[0_8px_24px_-6px_rgba(17,20,23,0.12)] py-1 duration-100 data-[align-trigger=true]:animate-none data-[side=bottom]:slide-in-from-top-2 data-[side=top]:slide-in-from-bottom-2 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 motion-reduce:animate-none motion-reduce:duration-0",
+            "relative isolate z-50 max-h-(--available-height) w-(--anchor-width) min-w-36 origin-(--transform-origin) overflow-x-hidden overflow-y-auto rounded-lg bg-white text-popover-foreground border border-ink-100 shadow-(--shadow-popup) py-1 duration-150 ease-out data-[align-trigger=true]:animate-none data-[side=bottom]:slide-in-from-top-2 data-[side=top]:slide-in-from-bottom-2 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 motion-reduce:animate-none motion-reduce:duration-0",
             className,
           )}
           {...props}

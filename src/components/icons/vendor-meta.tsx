@@ -80,10 +80,28 @@ export const PROVIDER_ORDER: Vendor[] = [
 /**
  * Small colored chip with the white provider icon centered inside.
  * Canonical model-cell badge — same dimensions as CMP-009's data table.
+ *
+ * `tone="brand"` (default) — vendor brand color background; used wherever
+ * the avatar is a standalone signal (KPI cards, modals, top-key lists).
+ * `tone="neutral"` — uniform `ink-600` background; used inside data tables
+ * where the colored chips would create rainbow noise across many rows.
  */
-export function VendorAvatar({ vendor }: { vendor: Vendor }) {
+export function VendorAvatar({
+  vendor,
+  tone = 'brand',
+}: {
+  vendor: Vendor;
+  tone?: 'brand' | 'neutral';
+}) {
   const meta = VENDOR_META[vendor];
   const Icon = meta.icon;
+  if (tone === 'neutral') {
+    return (
+      <span className="inline-flex items-center justify-center size-5 rounded-[5px] shrink-0 bg-ink-600 text-white">
+        <Icon className="size-3" />
+      </span>
+    );
+  }
   const isLight = meta.color === '#FFFFFF';
   return (
     <span

@@ -15,7 +15,9 @@ const Toaster = ({ ...props }: ToasterProps) => {
       }}
       style={
         {
-          "--normal-bg": "#ffffff",
+          // Skill: emil-design-eng — no hardcoded hex; route through the
+          // theme background var so the toast surface tracks light/dark.
+          "--normal-bg": "var(--background)",
           "--normal-text": "var(--color-ink-900)",
           "--normal-border": "var(--color-ink-100)",
           "--border-radius": "0.5rem",

@@ -27,7 +27,8 @@ export function Segmented({ options, value, onChange, variant = 'pill', size = '
               type="button"
               onClick={() => onChange?.(opt.value)}
               className={cn(
-                'inline-flex items-center justify-center px-3 font-sans font-medium text-xs',
+                // Skill: emil-design-eng — color/border-only transition (never `transition-all`).
+                'inline-flex items-center justify-center px-3 font-sans font-medium text-xs transition-colors duration-150 ease-out',
                 size === 'sm' ? 'h-7' : 'h-8',
                 selected
                   ? 'bg-ink-900 text-white border border-ink-900'
@@ -58,10 +59,12 @@ export function Segmented({ options, value, onChange, variant = 'pill', size = '
             type="button"
             onClick={() => onChange?.(opt.value)}
             className={cn(
-              'inline-flex items-center justify-center rounded-md font-sans font-medium text-xs',
+              // Skill: emil-design-eng — animate colors only; the white pill
+              // and ink-600 → ink-900 hover both ride the same curve.
+              'inline-flex items-center justify-center rounded-md font-sans font-medium text-xs transition-colors duration-150 ease-out',
               size === 'sm' ? 'py-1 px-3' : 'py-2 px-4',
               selected
-                ? 'bg-white text-ink-900 shadow-[0_1px_2px_rgba(17,20,23,0.08)]'
+                ? 'bg-white text-ink-900 shadow-xs'
                 : 'text-ink-600 hover:text-ink-900',
             )}
           >

@@ -149,7 +149,7 @@ export function CMP008bStatCards() {
 
 function KpiCardShell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex flex-col rounded-lg gap-4 bg-white border border-ink-100 p-5">
+    <div className="flex flex-col rounded-md gap-4 bg-white border border-ink-100 shadow-xs p-5">
       {children}
     </div>
   );

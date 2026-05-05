@@ -57,6 +57,36 @@
   --color-syntax-variable:       oklch(0.792 0.171 65.1); /* $KEY interpolations — amber */
   --color-syntax-property:       #4165FF;                  /* JSON keys / object props — saturated blue */
   --color-syntax-terminal-blue:  #6A8EFB;                  /* terminal numbers / status — lighter blue */
+
+  /* macOS window-control "traffic light" tokens. These are platform
+     affordances (CMP-012 dashboard chrome strip), not part of the
+     semantic palette — keep them isolated so we can re-skin without
+     touching the danger/warning/success ramps. */
+  --color-traffic-red:    #FF5F57;
+  --color-traffic-amber:  #FEBC2E;
+  --color-traffic-green:  #28C840;
+
+  /* Shadow-as-border tokens (skill: surfaces.md — prefer layered shadows
+     over solid borders for depth). Three-layer light-mode shadow:
+     1px ring + subtle lift + ambient depth. */
+  --shadow-border:
+    0 0 0 1px rgba(17, 20, 23, 0.06),
+    0 1px 2px -1px rgba(17, 20, 23, 0.06),
+    0 2px 4px 0 rgba(17, 20, 23, 0.04);
+  --shadow-border-hover:
+    0 0 0 1px rgba(17, 20, 23, 0.08),
+    0 1px 2px -1px rgba(17, 20, 23, 0.08),
+    0 2px 4px 0 rgba(17, 20, 23, 0.06);
+
+  /* Floating-surface elevation (popovers, selects, dialogs, tooltips).
+     One token so every overlay reads as the same lift; previously each
+     primitive inlined its own rgba shadow which drifted over time. */
+  --shadow-popup:
+    0 8px 24px -6px rgba(17, 20, 23, 0.12),
+    0 2px 6px -2px rgba(17, 20, 23, 0.08);
+  --shadow-modal:
+    0 12px 32px -8px rgba(17, 20, 23, 0.18),
+    0 4px 8px -4px rgba(17, 20, 23, 0.10);
 }
 
 /* ─── Canvas surface ───────────────────────────────────────── */
@@ -207,8 +237,16 @@ body {
       linear-gradient(90deg, var(--canvas-grid) 1px, transparent 1px);
     background-size: 40px 40px;
     overflow: auto;
+    /* Skill: typography.md — pretty wrapping prevents orphaned words on
+       short-to-medium text. Inherited by paragraphs / list items / captions. */
+    text-wrap: pretty;
   }
   html {
     @apply font-sans;
+  }
+  /* Skill: typography.md — balance distributes headings across lines
+     evenly. Browsers cap at ~6 lines so it's a no-op on long headings. */
+  h1, h2, h3, h4, h5, h6 {
+    text-wrap: balance;
   }
 }

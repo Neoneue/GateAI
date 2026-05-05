@@ -24,11 +24,15 @@ export function Tag({ children, onRemove, className }: TagProps) {
     >
       <span>{children}</span>
       {onRemove && (
+        // Skill: surfaces.md — visible target is 14px but pointers need
+        // ~40px. Pseudo-element extends the hit area inwardly so
+        // adjacent tags don't collide. `transition-colors` is explicit
+        // (skill: performance.md — never `transition: all`).
         <button
           type="button"
           onClick={onRemove}
           aria-label={typeof children === 'string' ? `Remove ${children}` : 'Remove'}
-          className="inline-flex items-center justify-center size-3.5 rounded-full text-ink-600 hover:text-ink-900 hover:bg-ink-100"
+          className="relative inline-flex items-center justify-center size-3.5 rounded-full text-ink-600 transition-colors duration-150 ease-out hover:text-ink-900 hover:bg-ink-100 after:absolute after:-inset-2 after:content-['']"
         >
           <X size={10} strokeWidth={2} />
         </button>

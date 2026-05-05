@@ -27,7 +27,7 @@ const tabsListVariants = cva(
     variants: {
       variant: {
         default:
-          "w-fit justify-center rounded-lg p-[3px] group-data-horizontal/tabs:h-8 bg-muted",
+          "w-fit justify-center rounded-lg p-1 group-data-horizontal/tabs:h-8 bg-muted",
         line: "w-full justify-start gap-0 px-5 bg-transparent border-b border-ink-75",
       },
     },
@@ -57,7 +57,10 @@ function TabsTrigger({ className, ...props }: TabsPrimitive.Tab.Props) {
     <TabsPrimitive.Tab
       data-slot="tabs-trigger"
       className={cn(
-        "relative inline-flex h-[calc(100%-1px)] items-center justify-center gap-2 rounded-md border border-transparent text-sm whitespace-nowrap transition-all group-data-vertical/tabs:w-full group-data-vertical/tabs:justify-start focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-50 has-data-[icon=inline-end]:pr-1 has-data-[icon=inline-start]:pl-1 aria-disabled:pointer-events-none aria-disabled:opacity-50 group-data-[variant=default]/tabs-list:data-active:shadow-sm group-data-[variant=line]/tabs-list:data-active:shadow-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        // Skill: performance.md — `transition-all` would also animate
+        // padding / sizing; we only want color + the active-state shadow
+        // and the underline opacity.
+        "relative inline-flex h-[calc(100%-1px)] items-center justify-center gap-2 rounded-md border border-transparent text-sm whitespace-nowrap transition-[colors,box-shadow] duration-150 ease-out group-data-vertical/tabs:w-full group-data-vertical/tabs:justify-start focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-50 has-data-[icon=inline-end]:pr-1 has-data-[icon=inline-start]:pl-1 aria-disabled:pointer-events-none aria-disabled:opacity-50 group-data-[variant=default]/tabs-list:data-active:shadow-sm group-data-[variant=line]/tabs-list:data-active:shadow-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         "group-data-[variant=default]/tabs-list:flex-1 group-data-[variant=default]/tabs-list:px-2 group-data-[variant=default]/tabs-list:py-1 group-data-[variant=default]/tabs-list:font-medium group-data-[variant=default]/tabs-list:text-foreground/60 group-data-[variant=default]/tabs-list:hover:text-foreground dark:group-data-[variant=default]/tabs-list:text-muted-foreground dark:group-data-[variant=default]/tabs-list:hover:text-foreground",
         "group-data-[variant=default]/tabs-list:data-active:bg-background group-data-[variant=default]/tabs-list:data-active:text-foreground dark:group-data-[variant=default]/tabs-list:data-active:border-input dark:group-data-[variant=default]/tabs-list:data-active:bg-input/30 dark:group-data-[variant=default]/tabs-list:data-active:text-foreground",
         "group-data-[variant=line]/tabs-list:px-4 group-data-[variant=line]/tabs-list:pt-4 group-data-[variant=line]/tabs-list:pb-3 group-data-[variant=line]/tabs-list:rounded-none group-data-[variant=line]/tabs-list:bg-transparent group-data-[variant=line]/tabs-list:text-ink-600 group-data-[variant=line]/tabs-list:hover:text-ink-900 group-data-[variant=line]/tabs-list:data-active:bg-transparent group-data-[variant=line]/tabs-list:data-active:text-blue-700 group-data-[variant=line]/tabs-list:data-active:font-medium",

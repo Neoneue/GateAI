@@ -19,11 +19,11 @@ interface Specimen {
 const SCALE: Specimen[] = [
   {
     label: 'Page title',
-    tag: 'h1 · text-4xl medium',
+    tag: 'h1 · text-3xl medium',
     sample: 'Overview',
-    sampleClass: 'font-sans text-4xl/10 font-medium -tracking-[1px] text-ink-800',
-    meta: ['Geist', '36px / 40px · 500', 'tracking -1px'],
-    note: 'Hero h1 on dashboard surfaces. The largest size in actual use — one per surface.',
+    sampleClass: 'font-sans text-3xl/9 font-medium -tracking-[1px] text-ink-800',
+    meta: ['Geist', '30px / 36px · 500', 'tracking -1px'],
+    note: 'Hero h1 on dashboard surfaces. Yields to KPI numerals so data anchors the view.',
   },
   {
     label: 'Heading',
@@ -51,10 +51,10 @@ const SCALE: Specimen[] = [
   },
   {
     label: 'Subtitle 1',
-    tag: 'text-lg · prominent meta',
+    tag: 'text-base · page subtitle',
     sample: 'Last 7 days · by cost · grouped by model',
-    sampleClass: 'font-sans text-lg/7 -tracking-[0.18px] text-ink-800',
-    meta: ['Geist', '18px / 28px · 400', 'tracking -0.18px'],
+    sampleClass: 'font-sans text-base tracking-tight text-ink-800',
+    meta: ['Geist', '16px / 24px · 400', 'tracking tight'],
     note: 'Surface subtitles that carry the page.',
   },
   {
@@ -113,7 +113,7 @@ const SCALE: Specimen[] = [
     sample: '$1,147.82',
     sampleClass: 'font-mono text-3xl/9 font-medium tabular-nums -tracking-[1px] text-ink-800',
     meta: ['Geist Mono', '30px / 36px · 500', 'tracking -1px'],
-    note: 'TopKeysCard hero metric. The "primary number" of a panel that needs more weight than the compact KPI rail.',
+    note: 'Reserved for full-width or wider-than-KPI panels where one number anchors the surface. Inside a KPI-cell-width card, drop to text-2xl to match the rail.',
   },
   {
     label: 'Metric display',
