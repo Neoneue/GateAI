@@ -105,7 +105,7 @@ export function CMP012ComposedDashboard() {
 
 function DashboardSurface() {
   return (
-    <div className="flex flex-col w-full overflow-hidden rounded-md border border-ink-100 bg-white">
+    <div className="flex flex-col w-full overflow-hidden rounded-md border border-ink-100 bg-white shadow-xs">
       <ScreenHead />
       <div className="flex flex-row min-h-0">
         <DashSidebar />
@@ -121,9 +121,11 @@ function ScreenHead() {
   return (
     <div className="relative flex items-center h-[41px] px-4 bg-ink-25 border-b border-ink-100 shrink-0">
       <div className="flex items-center gap-2">
-        <span className="size-2.5 rounded-full bg-[#FF5F57]" aria-hidden />
-        <span className="size-2.5 rounded-full bg-[#FEBC2E]" aria-hidden />
-        <span className="size-2.5 rounded-full bg-[#28C840]" aria-hidden />
+        {/* macOS traffic-lights — tokens live in src/index.css so the
+            chrome strip never inlines hex literals. */}
+        <span className="size-2.5 rounded-full bg-[var(--color-traffic-red)]" aria-hidden />
+        <span className="size-2.5 rounded-full bg-[var(--color-traffic-amber)]" aria-hidden />
+        <span className="size-2.5 rounded-full bg-[var(--color-traffic-green)]" aria-hidden />
       </div>
       <div className="absolute left-1/2 -translate-x-1/2 font-mono text-xs text-ink-600 tabular-nums">
         acme-prod.constellation.io / overview
@@ -188,9 +190,15 @@ function DashSidebar() {
                 aria-label={item.label}
                 aria-current={item.active ? 'page' : undefined}
                 className={
+                  // Skill: surfaces.md — keeping 36px visible since the
+                  // 4px gap-1 between buttons would force any pseudo-
+                  // element extension to overlap a neighbour (skill rule:
+                  // never overlap two hit areas). Skill: performance.md —
+                  // make the transition explicit (`transition-colors`
+                  // covers both color + bg-color).
                   item.active
                     ? 'flex items-center justify-center size-9 rounded-lg bg-ink-100 text-ink-900'
-                    : 'flex items-center justify-center size-9 rounded-lg text-ink-400 hover:text-ink-700 hover:bg-ink-50 transition-colors'
+                    : 'flex items-center justify-center size-9 rounded-lg text-ink-400 transition-colors duration-150 ease-out hover:text-ink-700 hover:bg-ink-50'
                 }
               >
                 <Icon className="size-[18px]" strokeWidth={1.5} />
@@ -212,9 +220,15 @@ function DashSidebar() {
                 aria-label={item.label}
                 aria-current={item.active ? 'page' : undefined}
                 className={
+                  // Skill: surfaces.md — keeping 36px visible since the
+                  // 4px gap-1 between buttons would force any pseudo-
+                  // element extension to overlap a neighbour (skill rule:
+                  // never overlap two hit areas). Skill: performance.md —
+                  // make the transition explicit (`transition-colors`
+                  // covers both color + bg-color).
                   item.active
                     ? 'flex items-center justify-center size-9 rounded-lg bg-ink-100 text-ink-900'
-                    : 'flex items-center justify-center size-9 rounded-lg text-ink-400 hover:text-ink-700 hover:bg-ink-50 transition-colors'
+                    : 'flex items-center justify-center size-9 rounded-lg text-ink-400 transition-colors duration-150 ease-out hover:text-ink-700 hover:bg-ink-50'
                 }
               >
                 <Icon className="size-[18px]" strokeWidth={1.5} />
@@ -256,7 +270,7 @@ function DashTopBar() {
           variant="ghost"
           size="icon-sm"
           aria-label="Expand sidebar"
-          className="text-ink-400 hover:text-ink-700"
+          className="-ml-2 text-ink-400 hover:text-ink-700"
         >
           <PanelLeftOpen className="size-4" strokeWidth={1.75} />
         </Button>
@@ -270,13 +284,17 @@ function DashTopBar() {
         <Button variant="outline" size="sm" className="border-ink-100 bg-white text-ink-900">
           Docs
         </Button>
-        <button
-          type="button"
+        {/* Skill: surfaces.md — promote to Button `icon-sm` so the hit
+            target jumps from 24px to 32px without colliding with the
+            adjacent Docs button (gap-1 = 4px) or the avatar span. */}
+        <Button
+          variant="ghost"
+          size="icon-sm"
           aria-label="Notifications"
-          className="inline-flex items-center justify-center size-6 text-ink-500 hover:text-ink-900"
+          className="text-ink-500 hover:text-ink-900"
         >
           <Bell className="size-4" strokeWidth={1.75} />
-        </button>
+        </Button>
         <span className="inline-flex items-center justify-center size-6 ml-2 rounded-full bg-blue-700 text-white font-sans text-xs font-medium">
           CP
         </span>
@@ -291,10 +309,10 @@ function PageHeader() {
   return (
     <div className="flex items-end justify-between gap-6">
       <div className="flex flex-col gap-2">
-        <h1 className="font-sans font-medium text-ink-900 text-4xl/10 -tracking-[1px] m-0">
+        <h1 className="font-sans font-medium text-ink-900 text-3xl/9 -tracking-[1px] m-0">
           Overview
         </h1>
-        <p className="font-sans text-ink-400 text-lg/7 -tracking-[0.5px] m-0">
+        <p className="font-sans text-ink-400 text-base tracking-tight m-0">
           Traffic, spend and latency across every model on the gateway.
         </p>
       </div>
@@ -359,7 +377,7 @@ function KpiRail() {
 
 function MiddleRow() {
   return (
-    <div className="flex gap-3">
+    <div className="grid grid-cols-3 gap-3">
       <RequestVolumeCard />
       <TopKeysCard />
     </div>
@@ -427,7 +445,7 @@ const RANGE_OPTIONS = [
 export function RequestVolumeCard() {
   const [range, setRange] = useState('7d');
   return (
-    <Card className="flex-1 min-w-0 py-5">
+    <Card className="col-span-2 min-w-0 py-5">
       <CardHeader className="px-5">
         <CardTitle className="font-sans text-base font-medium -tracking-[0.25px] text-ink-900">
           Request Volume
@@ -537,17 +555,19 @@ const TOP_KEYS: { label: string; model: string; cost: string; vendor: Vendor }[]
  */
 export function TopKeysCard() {
   return (
-    <Card className="w-[410px] shrink-0 gap-4 py-5">
+    <Card className="min-w-0 gap-2 py-5">
       <CardHeader className="px-5">
         <CardTitle className="font-sans text-base/5 font-medium -tracking-[0.25px] text-ink-900">
           Top Keys
         </CardTitle>
         <CardDescription>By spend · Last 7d</CardDescription>
         <CardAction>
+          {/* Skill: surfaces.md — pseudo-element extends 24px button to a
+              proper hit area; skill: performance.md — explicit transition. */}
           <button
             type="button"
             aria-label="More"
-            className="inline-flex items-center justify-center size-6 rounded-md text-ink-400 hover:text-ink-900 hover:bg-ink-50"
+            className="relative inline-flex items-center justify-center size-6 rounded-md text-ink-400 transition-colors duration-150 ease-out hover:text-ink-900 hover:bg-ink-50 after:absolute after:-inset-2 after:content-['']"
           >
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
               <circle cx="3" cy="8" r="1.25" fill="currentColor" />
@@ -558,29 +578,21 @@ export function TopKeysCard() {
         </CardAction>
       </CardHeader>
 
-      <CardContent className="px-5 flex flex-col gap-4">
-        <div className="flex items-baseline gap-2">
-          <div className="flex-1 font-mono text-3xl/9 font-medium tabular-nums -tracking-[1px] text-ink-900">
-            $1,147.82
-          </div>
-          <div className="font-sans text-sm -tracking-[0.14px] text-ink-400">
-            5 active keys
-          </div>
+      <CardContent className="px-5 flex flex-col gap-3">
+        <div className="font-mono text-2xl/8 font-medium tabular-nums -tracking-[0.5px] text-ink-900">
+          $1,147.82
         </div>
 
-        <div className="flex flex-col gap-4 pt-4 border-t border-ink-100">
+        <div className="flex flex-col gap-4 pt-3 border-t border-ink-100">
           {TOP_KEYS.map((k) => (
             <div key={k.label} className="flex items-center justify-between gap-3">
-              <div className="flex items-center min-w-0 gap-3">
-                <VendorAvatar vendor={k.vendor} />
+              <div className="flex items-center min-w-0 gap-2">
+                <VendorAvatar vendor={k.vendor} tone="neutral" />
                 <span className="font-sans text-sm font-medium -tracking-[0.14px] text-ink-900">
                   {k.label}
                 </span>
-                <span className="font-sans text-xs -tracking-[0.14px] text-ink-400">
-                  {k.model}
-                </span>
               </div>
-              <span className="font-mono text-sm font-medium tabular-nums -tracking-[0.14px] text-ink-900">
+              <span className="font-mono text-sm tabular-nums -tracking-[0.14px] text-ink-900">
                 {k.cost}
               </span>
             </div>
@@ -622,14 +634,18 @@ const STATUS_BADGE: Record<RequestStatus, {
   danger:  { variant: 'destructive', dot: 'danger'  },
 };
 
-function RecentRequestsCard() {
+// Skill: surfaces.md — RecentRequestsCard is hand-rolled (the table needs
+// no card padding so we don't use <Card>) but it should still wear the
+// hairline shadow + border that the Card primitive now ships with so the
+// dashboard's two surfaces read as the same depth tier.
+export function RecentRequestsCard() {
   return (
-    <div className="flex flex-col w-full rounded-lg overflow-hidden bg-white border border-ink-100">
+    <div className="flex flex-col w-full rounded-md overflow-hidden bg-white border border-ink-100 shadow-xs">
       <div className="flex items-center justify-between py-4 px-5">
         <h3 className="font-sans text-base/5 font-medium -tracking-[0.25px] text-ink-900 m-0">
           Recent Requests
         </h3>
-        <Button variant="outline" size="sm">
+        <Button variant="ghost" size="sm" className="text-ink-500 hover:text-ink-900 -mr-2">
           View all
           <ChevronRight data-icon="inline-end" />
         </Button>
@@ -656,7 +672,7 @@ function RecentRequestsCard() {
                 </TableCell>
                 <TableCell className="whitespace-nowrap">
                   <div className="flex items-center gap-3">
-                    <VendorAvatar vendor={row.vendor} />
+                    <VendorAvatar vendor={row.vendor} tone="neutral" />
                     <span className="font-mono text-sm text-ink-900 -tracking-[0.2px]">
                       {row.model}
                     </span>
