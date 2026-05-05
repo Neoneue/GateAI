@@ -17,12 +17,13 @@ const CMP009Toast             = lazy(() => import('@/artboards/CMP009Toast').the
 const CMP010Charts            = lazy(() => import('@/artboards/CMP010Charts').then(m => ({ default: m.CMP010Charts })));
 const CMP011DataTable         = lazy(() => import('@/artboards/CMP011DataTable').then(m => ({ default: m.CMP011DataTable })));
 const CMP012ComposedDashboard = lazy(() => import('@/artboards/CMP012ComposedDashboard').then(m => ({ default: m.CMP012ComposedDashboard })));
+const CMP013Requests          = lazy(() => import('@/artboards/CMP013Requests').then(m => ({ default: m.CMP013Requests })));
 
 type PageId =
   | 'cmp-000' | 'cmp-001' | 'cmp-002' | 'cmp-003' | 'cmp-004'
   | 'cmp-005' | 'cmp-006' | 'cmp-007'
   | 'cmp-008a' | 'cmp-008b' | 'cmp-008c'
-  | 'cmp-009' | 'cmp-010' | 'cmp-011' | 'cmp-012';
+  | 'cmp-009' | 'cmp-010' | 'cmp-011' | 'cmp-012' | 'cmp-013';
 
 type Page = { id: PageId; code: string; name: string; Component: React.ComponentType };
 
@@ -42,6 +43,7 @@ const PAGES: Page[] = [
   { id: 'cmp-010',  code: 'CMP-010',  name: 'Charts',              Component: CMP010Charts },
   { id: 'cmp-011',  code: 'CMP-011',  name: 'Data table',          Component: CMP011DataTable },
   { id: 'cmp-012',  code: 'CMP-012',  name: 'Composed · Dashboard', Component: CMP012ComposedDashboard },
+  { id: 'cmp-013',  code: 'CMP-013',  name: 'Requests',             Component: CMP013Requests },
 ];
 
 export default function App() {
@@ -70,7 +72,7 @@ export default function App() {
                 'flex items-center justify-between px-3 py-2 rounded-md text-left transition-colors',
                 'font-sans text-sm',
                 active === p.id
-                  ? 'bg-white text-ink-900 font-medium shadow-[0_1px_2px_rgba(17,20,23,0.06)] border border-ink-100'
+                  ? 'bg-white text-ink-900 font-medium shadow-xs border border-ink-100'
                   : 'text-ink-600 hover:text-ink-900 hover:bg-white/60 border border-transparent',
               )}
             >
