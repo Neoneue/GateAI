@@ -10,11 +10,11 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-} from '@/components/ui/dialog';
+  Sheet,
+  SheetContent,
+  SheetFooter,
+  SheetHeader,
+} from '@/components/ui/sheet';
 import { Input } from '@/components/ui/input';
 import {
   Pagination,
@@ -670,7 +670,7 @@ function RequestsTableSection() {
         </Pagination>
       </div>
     </div>
-    <RequestDetailDialog
+    <RequestDetailSheet
       row={selectedRow}
       onOpenChange={(open) => {
         if (!open) setSelectedRow(null);
@@ -680,19 +680,19 @@ function RequestsTableSection() {
   );
 }
 
-/* ─── Request detail dialog ────────────────────────────────────────────────
- * Drill-in modal opened from a row click. Mirrors the table's per-row data
+/* ─── Request detail sheet ─────────────────────────────────────────────────
+ * Drill-in panel opened from a row click. Mirrors the table's per-row data
  * (model, vendor, key, latency, cost, tokens) and adds context the row
  * doesn't carry (provider name, endpoint, cache status).
  * Tabs scaffold for future depth (Messages / Security / Audit) — only
  * Summary is wired today.
  *
- * Layout uses the project's Dialog primitive verbatim and overrides the
- * default `sm:max-w-sm` width to `sm:max-w-2xl` (672px) so the KPI rail
- * has room to breathe.
+ * Layout uses the project's Sheet primitive — right-docked drawer at
+ * sm:max-w-2xl (640px). Sheet owns its own width and gap, so this wrapper
+ * doesn't pass either through.
  * ────────────────────────────────────────────────────────────────────── */
 
-function RequestDetailDialog({
+function RequestDetailSheet({
   row,
   onOpenChange,
 }: {
@@ -700,11 +700,11 @@ function RequestDetailDialog({
   onOpenChange: (open: boolean) => void;
 }) {
   return (
-    <Dialog open={!!row} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-2xl gap-4">
+    <Sheet open={!!row} onOpenChange={onOpenChange}>
+      <SheetContent>
         {row ? <RequestDetailBody row={row} /> : null}
-      </DialogContent>
-    </Dialog>
+      </SheetContent>
+    </Sheet>
   );
 }
 
@@ -712,13 +712,14 @@ function RequestDetailBody({ row }: { row: RequestRow }) {
   const badge = STATUS_BADGE[row.status];
   const requestId = `req_${row.conversation.replace('cnv_', '').slice(0, 8)}${row.code}`;
   const provider = VENDOR_META[row.vendor].label;
-  // Tabs is controlled so the footer can swap actions per tab
-  // (Audit gets Copy proof / View on DE; everyone else gets the
-  // request-action set Copy ID / Open conversation).
-  const [activeTab, setActiveTab] = useState('summary');
+  // Tabs is controlled so the panel footer can swap actions per active
+  // tab (Audit gets Copy Proof / View on DE; everyone else gets Copy ID /
+  // Open Conversation). Defaults to "messages" so the prompt/response is
+  // visible on first open.
+  const [activeTab, setActiveTab] = useState('messages');
   return (
     <>
-      <DialogHeader className="gap-1">
+      <SheetHeader>
         <span className="font-mono text-sm uppercase tracking-[0.1em] font-medium text-ink-500">
           REQUEST
         </span>
@@ -740,73 +741,101 @@ function RequestDetailBody({ row }: { row: RequestRow }) {
             {row.conversation}
           </button>
         </p>
-      </DialogHeader>
+      </SheetHeader>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="gap-4">
-        <TabsList>
-          <TabsTrigger value="summary">Summary</TabsTrigger>
-          <TabsTrigger value="messages">Messages</TabsTrigger>
-          <TabsTrigger value="security">Security</TabsTrigger>
-          <TabsTrigger value="audit">Audit</TabsTrigger>
-        </TabsList>
+      {/* Persistent KPI rail — promoted out of the (former) Summary tab so
+          the most-referenced facts (latency/cost/tokens) stay visible
+          regardless of which tab is active. Single bordered container
+          with `before:` pseudo-element hairlines between tiles, same
+          pattern as CMP-012's main KPI rail. */}
+      <KpiRail row={row} />
 
-        <TabsContent value="summary" className="flex flex-col gap-4">
-          <div className="grid grid-cols-4 gap-3">
-            <KpiTile label="Latency" value={row.latency} />
-            <KpiTile label="Cost" value={row.cost} />
-            <KpiTile label="Tokens In" value={row.inTokens} />
-            <KpiTile label="Tokens Out" value={row.outTokens} />
-          </div>
+      {/* Hairline divider — separates the persistent rail from the tabbed
+          inspection area. -mx-4 bleeds the rule past SheetContent's p-4 so
+          it spans the full panel width. */}
+      <div className="-mx-4 border-t border-ink-200" aria-hidden />
 
-          <div className="rounded-sm border border-ink-200 overflow-hidden">
-            <DetailRow
-              label="Model"
-              value={
-                <div className="flex items-center gap-2">
-                  <VendorAvatar vendor={row.vendor} />
-                  <span className="font-mono text-sm text-ink-900 -tracking-[0.2px]">
-                    {row.model}
+      {/* Scrollable tabbed body. `flex-1 min-h-0` grows to fill available
+          space between the persistent header (above) and the SheetFooter
+          (below); `overflow-y-auto` enables scroll when content exceeds
+          available height (e.g., audit tab with 5 guardrail checks + 6
+          anchor-proof rows). `-mx-4 px-4` lets the scrollbar appear at the
+          panel edge while content stays at the content-box width. */}
+      <div className="flex-1 min-h-0 overflow-y-auto -mx-4 px-4">
+        {/* Tabs default to Messages so the prompt/response — the load-bearing
+            content of any request inspection — is visible on first open. */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="gap-4">
+          <TabsList>
+            <TabsTrigger value="messages">Messages</TabsTrigger>
+            <TabsTrigger value="details">Details</TabsTrigger>
+            <TabsTrigger value="audit">Audit</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="messages">
+            <MessagesPanel />
+          </TabsContent>
+
+          <TabsContent value="details">
+            <div className="rounded-sm border border-ink-200 overflow-hidden">
+              <DetailRow
+                label="Model"
+                value={
+                  <div className="flex items-center gap-2">
+                    <VendorAvatar vendor={row.vendor} />
+                    <span className="font-mono text-sm text-ink-900 -tracking-[0.2px]">
+                      {row.model}
+                    </span>
+                  </div>
+                }
+              />
+              <DetailRow label="Provider" value={<span className="font-sans text-sm text-ink-900">{provider}</span>} />
+              <DetailRow
+                label="API Key"
+                value={<span className="font-mono text-sm text-ink-900 -tracking-[0.14px]">{row.keyId}</span>}
+              />
+              <DetailRow
+                label="Endpoint"
+                value={
+                  <span className="font-mono text-sm text-ink-900 -tracking-[0.14px]">
+                    <span className="text-ink-500">POST</span> /v1/messages
                   </span>
-                </div>
-              }
-            />
-            <DetailRow label="Provider" value={<span className="font-sans text-sm text-ink-900">{provider}</span>} />
-            <DetailRow
-              label="API Key"
-              value={<span className="font-mono text-sm text-ink-900 -tracking-[0.14px]">{row.keyId}</span>}
-            />
-            <DetailRow
-              label="Endpoint"
-              value={
-                <span className="font-mono text-sm text-ink-900 -tracking-[0.14px]">
-                  <span className="text-ink-500">POST</span> /v1/messages
-                </span>
-              }
-            />
-            <DetailRow
-              label="Cache"
-              value={
-                <Badge variant="info">
-                  <StatusDot kind="info" />
-                  miss
-                </Badge>
-              }
-            />
-          </div>
-        </TabsContent>
+                }
+              />
+              <DetailRow
+                label="Cache"
+                value={
+                  <Badge variant="info">
+                    <StatusDot kind="info" />
+                    miss
+                  </Badge>
+                }
+              />
+            </div>
+          </TabsContent>
 
-        <TabsContent value="messages">
-          <MessagesPanel />
-        </TabsContent>
-        <TabsContent value="security">
-          <SecurityPanel row={row} />
-        </TabsContent>
-        <TabsContent value="audit">
-          <AuditPanel />
-        </TabsContent>
-      </Tabs>
+          {/* Audit tab folds in security checks + anchor proof. Both are
+              compliance-flavored — Security = runtime guardrail checks
+              (did this request pass policy at runtime?); Audit = cryptographic
+              proof (can we prove it happened immutably?). Section eyebrows
+              distinguish the two halves. */}
+          <TabsContent value="audit" className="flex flex-col gap-6">
+            <section className="flex flex-col gap-2">
+              <h3 className="font-mono text-xs uppercase tracking-[0.1em] font-medium text-ink-500 m-0">
+                Guardrail checks
+              </h3>
+              <SecurityPanel row={row} />
+            </section>
+            <section className="flex flex-col gap-2">
+              <h3 className="font-mono text-xs uppercase tracking-[0.1em] font-medium text-ink-500 m-0">
+                Anchor proof
+              </h3>
+              <AuditPanel />
+            </section>
+          </TabsContent>
+        </Tabs>
+      </div>
 
-      <DialogFooter className="-mx-4 -mb-4 px-4 py-3 border-t border-ink-200 sm:justify-end">
+      <SheetFooter className="sm:justify-end">
         {activeTab === 'audit' ? (
           <>
             <Button variant="outline" size="sm">
@@ -830,14 +859,37 @@ function RequestDetailBody({ row }: { row: RequestRow }) {
             </Button>
           </>
         )}
-      </DialogFooter>
+      </SheetFooter>
     </>
   );
 }
 
-function KpiTile({ label, value }: { label: string; value: string }) {
+function KpiRail({ row }: { row: RequestRow }) {
+  // Inset divider — hairline doesn't reach top/bottom edges, reads
+  // lighter than a `divide-x`. Matches CMP-012's main KPI rail.
+  const dividerCls =
+    'relative before:absolute before:left-0 before:inset-y-4 before:w-px before:bg-ink-200';
   return (
-    <div className="flex flex-col gap-1 rounded-sm bg-white border border-ink-200 px-3 py-3">
+    <div className="grid grid-cols-4 rounded-sm bg-white shadow-(--shadow-border) overflow-hidden">
+      <KpiTile label="Latency" value={row.latency} />
+      <div className={dividerCls}>
+        <KpiTile label="Cost" value={row.cost} />
+      </div>
+      <div className={dividerCls}>
+        <KpiTile label="Tokens In" value={row.inTokens} />
+      </div>
+      <div className={dividerCls}>
+        <KpiTile label="Tokens Out" value={row.outTokens} />
+      </div>
+    </div>
+  );
+}
+
+function KpiTile({ label, value }: { label: string; value: string }) {
+  // Tile chrome (border, radius, bg) lives on the parent rail container;
+  // each tile is just label + value at consistent padding.
+  return (
+    <div className="flex flex-col gap-1 px-3 py-3">
       <span className="font-mono text-xs uppercase tracking-[0.1em] font-medium text-ink-500">
         {label}
       </span>
@@ -923,13 +975,11 @@ function MessageBlock({
   tool?: string;
   body: React.ReactNode;
 }) {
-  // Assistant turns lift onto the brand surface so the model's reply is
-  // distinguishable from prompt / tool noise; everything else uses the
-  // neutral ink-100 well.
-  const bubbleSurface =
-    role === 'assistant'
-      ? 'bg-blue-50 border-blue-100'
-      : 'bg-ink-100 border-ink-200';
+  // Bubble border only — fills (bg-ink-100 / bg-blue-50) were too heavy
+  // and read as a chat-app aesthetic. Outline keeps the per-message
+  // container shape without the visual weight.
+  const bubbleBorder =
+    role === 'assistant' ? 'border-blue-100' : 'border-ink-200';
   return (
     <div className="flex flex-col gap-2">
       {/* Voice split: role is a sans Title Case label (message metadata,
@@ -945,7 +995,7 @@ function MessageBlock({
           </>
         ) : null}
       </div>
-      <div className={`rounded-sm border px-3 py-2 text-sm text-ink-900 text-pretty ${bubbleSurface}`}>
+      <div className={`rounded-sm border px-3 py-2 text-sm text-ink-900 text-pretty ${bubbleBorder}`}>
         {body}
       </div>
     </div>
