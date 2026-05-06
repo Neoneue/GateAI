@@ -19,7 +19,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
           // theme background var so the toast surface tracks light/dark.
           "--normal-bg": "var(--background)",
           "--normal-text": "var(--color-ink-900)",
-          "--normal-border": "var(--color-ink-100)",
+          "--normal-border": "var(--color-ink-200)",
           "--border-radius": "0.5rem",
         } as React.CSSProperties
       }

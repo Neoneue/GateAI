@@ -60,7 +60,7 @@ const INITIAL_TOASTS: ToastSpec[] = [
 export function CMP009Toast() {
   return (
     <div className="flex flex-col w-[1440px]">
-      <div className="flex flex-col w-full bg-ink-25">
+      <div className="flex flex-col w-full bg-ink-50">
         <ArtboardHeader
           code="CMP-009"
           title="Toast"
@@ -89,7 +89,7 @@ function ToastDeck() {
   const dismiss = (id: string) => setToasts((cur) => cur.filter((t) => t.id !== id));
   const reset = () => setToasts(INITIAL_TOASTS);
   return (
-    <div className="flex items-center justify-center min-h-80 rounded-md bg-ink-50 border border-ink-75">
+    <div className="flex items-center justify-center min-h-80 rounded-sm bg-ink-100 border border-ink-100">
       {toasts.length === 0 ? (
         <Button variant="outline" onClick={reset}>
           Restore deck
@@ -106,9 +106,9 @@ function ToastDeck() {
 }
 
 function ToastIcon({ tone }: { tone: ToastSpec['tone'] }) {
-  if (tone === 'success') return <Check className="size-4 text-success" strokeWidth={2.2} />;
-  if (tone === 'warn') return <Bell className="size-4 text-warning" strokeWidth={1.8} />;
-  if (tone === 'error') return <X className="size-4 text-danger-2" strokeWidth={1.8} />;
+  if (tone === 'success') return <Check className="size-4 text-success-700" strokeWidth={2.2} />;
+  if (tone === 'warn') return <Bell className="size-4 text-warning-700" strokeWidth={1.8} />;
+  if (tone === 'error') return <X className="size-4 text-danger-500" strokeWidth={1.8} />;
   return <Info className="size-4 text-blue-700" strokeWidth={2.2} />;
 }
 
@@ -116,7 +116,7 @@ function ToastRow({ spec, onDismiss }: { spec: ToastSpec; onDismiss: () => void 
   const isMultiline = Boolean(spec.detail);
   return (
     <div
-      className={`flex items-center rounded-lg gap-3 bg-white border border-ink-75 shadow-[0_8px_24px_-6px_rgba(0,0,0,0.25)] ${isMultiline ? 'py-3 px-4' : 'py-4 px-4'}`}
+      className={`flex items-center rounded-sm gap-3 bg-white border border-ink-100 shadow-[0_8px_24px_-6px_rgba(0,0,0,0.25)] ${isMultiline ? 'py-3 px-4' : 'py-4 px-4'}`}
     >
       <div className="shrink-0">
         <ToastIcon tone={spec.tone} />
@@ -132,7 +132,7 @@ function ToastRow({ spec, onDismiss }: { spec: ToastSpec; onDismiss: () => void 
         size="icon-xs"
         aria-label="Dismiss"
         onClick={onDismiss}
-        className="text-ink-300 hover:text-ink-600"
+        className="text-ink-400 hover:text-ink-600"
       >
         <X />
       </Button>

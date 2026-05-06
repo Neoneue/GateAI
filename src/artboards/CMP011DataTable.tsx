@@ -207,7 +207,7 @@ export function CMP011DataTable() {
 
   return (
     <div className="flex flex-col w-full max-w-[1440px] min-w-0">
-      <div className="flex flex-col w-full bg-ink-25 min-w-0">
+      <div className="flex flex-col w-full bg-ink-50 min-w-0">
         <ArtboardHeader
           code="CMP-011"
           title="Data table"
@@ -222,7 +222,7 @@ export function CMP011DataTable() {
             hint=".v-tbl · header / row / selected / action"
           />
 
-          <div className="flex flex-col rounded-md overflow-hidden bg-white border border-ink-100 shadow-xs">
+          <div className="flex flex-col rounded-sm overflow-hidden bg-white border border-ink-200 shadow-xs">
             {/* Toolbar */}
             <div className="flex items-center justify-between gap-3 p-4">
               <div className="flex items-center gap-2">
@@ -252,7 +252,7 @@ export function CMP011DataTable() {
                 >
                   <SelectTrigger
                     size="sm"
-                    className="border-ink-100 bg-white text-ink-900 font-normal"
+                    className="border-ink-200 bg-white text-ink-900 font-normal"
                   >
                     {provider === 'all'
                       ? 'All Providers'
@@ -271,7 +271,7 @@ export function CMP011DataTable() {
                             style={{
                               backgroundColor: meta.color,
                               color: meta.iconColor,
-                              border: isLight ? '1px solid var(--color-ink-100)' : 'none',
+                              border: isLight ? '1px solid var(--color-ink-200)' : 'none',
                             }}
                           >
                             <Icon className="size-2.5" />
@@ -285,7 +285,7 @@ export function CMP011DataTable() {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="border-ink-100 bg-white text-ink-900 font-normal"
+                  className="border-ink-200 bg-white text-ink-900 font-normal"
                 >
                   <span className="text-ink-500">Sort:</span>
                   Release Date
@@ -324,7 +324,7 @@ export function CMP011DataTable() {
                   <TableRow key={row.name}>
                     <TableCell>
                       <div className="flex items-center gap-2">
-                        <VendorAvatar vendor={row.vendor} tone="neutral" />
+                        <VendorAvatar vendor={row.vendor} />
                         <span className="font-mono text-sm text-ink-900 -tracking-[0.2px]">
                           {row.name.split('/')[1] ?? row.name}
                         </span>
@@ -341,11 +341,11 @@ export function CMP011DataTable() {
                     </TableCell>
                     <TableCell className="text-right font-mono tabular-nums text-ink-900">
                       <span>{row.input}</span>
-                      <span className="text-ink-400">/M</span>
+                      <span className="text-ink-500">/M</span>
                     </TableCell>
                     <TableCell className="text-right font-mono tabular-nums text-ink-900">
                       <span>{row.output}</span>
-                      <span className="text-ink-400">/M</span>
+                      <span className="text-ink-500">/M</span>
                     </TableCell>
                     <TableCell className="text-right font-mono tabular-nums text-ink-900">
                       {row.cache}
@@ -360,7 +360,7 @@ export function CMP011DataTable() {
                         ))}
                       </div>
                     </TableCell>
-                    <TableCell className="text-center text-ink-400 font-mono">
+                    <TableCell className="text-center text-ink-500 font-mono">
                       {row.zdr}
                     </TableCell>
                   </TableRow>
@@ -397,7 +397,7 @@ export function CMP011DataTable() {
  * and the score color, severity-tinted sparklines, and a chevron column
  * marking each row as a drill target. Reuses Table, Badge, StatusDot, and
  * the local Sparkline. Status colors trace back to the semantic tokens
- * (--color-destructive / --color-warning / --color-primary). */
+ * (--color-destructive / --color-warning-700 / --color-primary). */
 type RiskLevel = 'critical' | 'elevated' | 'normal';
 
 const RISK_LEVELS: Record<
@@ -410,7 +410,7 @@ const RISK_LEVELS: Record<
   }
 > = {
   critical: { label: 'Critical', variant: 'destructive', dot: 'danger',  scoreClass: 'text-destructive' },
-  elevated: { label: 'Elevated', variant: 'warning',     dot: 'warning', scoreClass: 'text-warning' },
+  elevated: { label: 'Elevated', variant: 'warning',     dot: 'warning', scoreClass: 'text-warning-700' },
   normal:   { label: 'Normal',   variant: 'info',        dot: 'info',    scoreClass: 'text-ink-900' },
 };
 
@@ -431,14 +431,14 @@ const RISK_ROWS: {
 function RiskScoresCard() {
   const [scope, setScope] = useState('all');
   return (
-    <div className="flex flex-col rounded-md overflow-hidden bg-white border border-ink-100 shadow-xs">
+    <div className="flex flex-col rounded-sm overflow-hidden bg-white border border-ink-200 shadow-xs">
       {/* Header — title + subtitle on the left, scope dropdown on the right */}
       <div className="flex items-start justify-between gap-3 p-4">
         <div className="flex flex-col gap-1">
           <h3 className="font-sans text-base/5 font-medium -tracking-[0.25px] text-ink-900 m-0">
             API key risk scores
           </h3>
-          <p className="font-sans text-sm -tracking-[0.14px] text-ink-400 m-0">
+          <p className="font-sans text-sm -tracking-[0.14px] text-ink-500 m-0">
             Decays on 1h half-life · elevated keys get enhanced scanning
           </p>
         </div>
@@ -446,7 +446,7 @@ function RiskScoresCard() {
           <SelectTrigger
             size="sm"
             aria-label="Scope"
-            className="border-ink-100 bg-white text-ink-900 font-normal"
+            className="border-ink-200 bg-white text-ink-900 font-normal"
           >
             <SelectValue />
           </SelectTrigger>
@@ -494,7 +494,7 @@ function RiskScoresCard() {
                 <TableCell>
                   <Sparkline points={row.trend} tone={row.risk} />
                 </TableCell>
-                <TableCell className="text-right text-ink-300">
+                <TableCell className="text-right text-ink-400">
                   <ChevronRight className="size-4" aria-hidden />
                 </TableCell>
               </TableRow>
@@ -516,7 +516,7 @@ function ProviderAvatar({ vendor }: { vendor: Vendor }) {
       style={{
         backgroundColor: meta.color,
         color: meta.iconColor,
-        border: isLight ? '1px solid var(--color-ink-100)' : 'none',
+        border: isLight ? '1px solid var(--color-ink-200)' : 'none',
       }}
     >
       <Icon className="size-2.5" />
@@ -527,7 +527,7 @@ function ProviderAvatar({ vendor }: { vendor: Vendor }) {
 function CapabilityPill({ letter }: { letter: Capability }) {
   const display = letter === 'f' ? 'ƒ' : letter;
   return (
-    <span className="inline-flex items-center justify-center size-5 rounded-[4px] border border-ink-100 font-mono text-xs font-medium text-ink-700">
+    <span className="inline-flex items-center justify-center size-5 rounded-[4px] border border-ink-200 font-mono text-xs font-medium text-ink-700">
       {display}
     </span>
   );
@@ -574,17 +574,17 @@ function Sparkline({
     fill = 'var(--color-destructive)';
     fillOpacity = 0.12;
   } else if (tone === 'elevated') {
-    stroke = 'var(--color-warning)';
-    fill = 'var(--color-warning)';
+    stroke = 'var(--color-warning-700)';
+    fill = 'var(--color-warning-700)';
     fillOpacity = 0.12;
   } else if (tone === 'normal') {
     stroke = 'var(--color-ink-500)';
-    fill = 'var(--color-ink-200)';
+    fill = 'var(--color-ink-300)';
     fillOpacity = 0.6;
   } else {
     const isUp = points[points.length - 1] >= points[0];
     stroke = isUp ? 'var(--color-blue-700)' : 'var(--color-ink-700)';
-    fill = isUp ? 'var(--color-blue-100)' : 'var(--color-ink-100)';
+    fill = isUp ? 'var(--color-blue-100)' : 'var(--color-ink-200)';
   }
 
   return (

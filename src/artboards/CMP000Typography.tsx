@@ -22,16 +22,8 @@ const SCALE: Specimen[] = [
     tag: 'h1 · text-3xl medium',
     sample: 'Overview',
     sampleClass: 'font-sans text-3xl/9 font-medium -tracking-[1px] text-ink-800',
-    meta: ['Geist', '30px / 36px · 500', 'tracking -1px'],
+    meta: ['Geist', '32px / 36px · 500', 'tracking -1px'],
     note: 'Hero h1 on dashboard surfaces. Yields to KPI numerals so data anchors the view.',
-  },
-  {
-    label: 'Heading',
-    tag: 'H2 · text-4xl',
-    sample: 'Request Volume',
-    sampleClass: 'font-sans text-4xl/10 -tracking-[0.9px] text-ink-800',
-    meta: ['Geist', '36px / 40px · 400', 'tracking -0.9px'],
-    note: 'Section heads in documentation or hero moments.',
   },
   {
     label: 'Card title',
@@ -59,11 +51,11 @@ const SCALE: Specimen[] = [
   },
   {
     label: 'Card subtitle',
-    tag: 'CardDescription · ink-400',
+    tag: 'CardDescription · ink-500',
     sample: 'By spend · Last 7d',
-    sampleClass: 'font-sans text-sm/5 -tracking-[0.14px] text-ink-400',
+    sampleClass: 'font-sans text-sm/5 -tracking-[0.14px] text-ink-500',
     meta: ['Geist', '14px / 20px · 400', 'tracking -0.14px'],
-    note: 'Canonical CardDescription — every Card consumer inherits this via the primitive default. Muted ink-400.',
+    note: 'Canonical CardDescription — every Card consumer inherits this via the primitive default. Muted ink-500.',
   },
   {
     label: 'Subtitle 2',
@@ -112,7 +104,7 @@ const SCALE: Specimen[] = [
     tag: 'text-3xl · mono medium',
     sample: '$1,147.82',
     sampleClass: 'font-mono text-3xl/9 font-medium tabular-nums -tracking-[1px] text-ink-800',
-    meta: ['Geist Mono', '30px / 36px · 500', 'tracking -1px'],
+    meta: ['Geist Mono', '32px / 36px · 500', 'tracking -1px'],
     note: 'Reserved for full-width or wider-than-KPI panels where one number anchors the surface. Inside a KPI-cell-width card, drop to text-2xl to match the rail.',
   },
   {
@@ -163,33 +155,33 @@ const SCALE: Specimen[] = [
 export function CMP000Typography() {
   return (
     <div className="flex flex-col w-[1440px]">
-      <div className="flex flex-col w-full bg-ink-25 pt-14">
+      <div className="flex flex-col w-full bg-ink-50 pt-14">
         <ArtboardHeader
           code="CMP-000"
           title="Typography"
-          description="Geist for the UI, Geist Mono for the machine. ~60% mono / 40% sans on dense operational surfaces. Tailwind-aligned scale — every size has a leading baked in."
-          parts="15 specimens"
+          description="Geist for the UI, Geist Mono for the machine. ~60% mono / 40% sans on dense operational surfaces. Tailwind class names with Geist-aligned values — text-3xl is the page-title top of scale at 32px; text-4xl/6xl remain in @theme as escape hatches but are not part of the active hierarchy."
+          parts="14 specimens"
         />
 
         {/* CMP-000.1 · SCALE */}
-        <div className="flex flex-col mb-7 gap-3 bg-ink-25">
+        <div className="flex flex-col mb-7 gap-3 bg-ink-50">
           <SectionHeader
             code="CMP-000.1 — SCALE"
-            hint="tailwind-aligned · 14/20 · 16/24 · 18/28 · 24/32 · 36/40 · 48 · 60"
+            hint="Tailwind class names · Geist-aligned values · 14/20 · 16/24 · 18/28 · 24/32 · 32/40 · 48"
           />
-          <div className="flex flex-col rounded-sm py-1 px-6 bg-white border border-ink-75 shadow-[0_1px_2px_rgba(17,20,23,0.04)]">
+          <div className="flex flex-col rounded-sm py-1 px-6 bg-white border border-ink-100 shadow-[0_1px_2px_rgba(17,20,23,0.04)]">
             {SCALE.map((row, i) => (
               <div
                 key={row.label}
                 className={`flex items-center py-4 gap-8 ${
-                  i < SCALE.length - 1 ? 'border-b border-ink-75' : ''
+                  i < SCALE.length - 1 ? 'border-b border-ink-100' : ''
                 }`}
               >
                 <div className="flex flex-col w-[140px] shrink-0 gap-2">
                   <div className="font-sans font-medium text-ink-800 text-xs/4">
                     {row.label}
                   </div>
-                  <div className="inline-flex self-start rounded-[3px] p-1 bg-ink-50">
+                  <div className="inline-flex self-start rounded-[3px] p-1 bg-ink-100">
                     <span className="font-sans text-ink-600 text-xs/4 tracking-[0.04em]">
                       {row.tag}
                     </span>
@@ -215,12 +207,12 @@ export function CMP000Typography() {
         </div>
 
         {/* CMP-000.2 · MONO VS SANS */}
-        <div className="flex flex-col gap-3 mb-7 bg-ink-25">
+        <div className="flex flex-col gap-3 mb-7 bg-ink-50">
           <SectionHeader
             code="CMP-000.2 — MONO VS SANS"
             hint="semantic split · machine voice / human voice"
           />
-          <div className="flex rounded-sm gap-4 bg-white border border-ink-75 shadow-[0_1px_2px_rgba(17,20,23,0.04)] p-6">
+          <div className="flex rounded-sm gap-4 bg-white border border-ink-100 shadow-[0_1px_2px_rgba(17,20,23,0.04)] p-6">
             <div className="flex flex-col grow gap-2">
               <div className="font-mono text-ink-500 uppercase tracking-[0.08em] text-xs/4">
                 Mono — machine voice

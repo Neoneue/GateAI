@@ -24,7 +24,7 @@ import { ArtboardHeader, SectionHeader } from './_shared/ArtboardHeader';
 export function CMP008aCards() {
   return (
     <div className="flex flex-col w-[1440px]">
-      <div className="flex flex-col w-full bg-ink-25">
+      <div className="flex flex-col w-full bg-ink-50">
         <ArtboardHeader
           code="CMP-008a"
           title="Cards"

@@ -5,15 +5,14 @@ import { VENDOR_META, PROVIDER_ORDER } from '@/components/icons/vendor-meta';
  * CMP-001 · Colors
  *
  * The palette spec sheet. Every color in the design system traces back to a
- * token defined in src/index.css's @theme block. This artboard surfaces each
- * ramp + each single-tone semantic token + the syntax tokens used by code
- * cards. Vendor brand colors get their own section as the documented
- * exception — they are external identities, not surface design.
+ * token defined in src/index.css's @theme block. Five ramps (ink, blue,
+ * success, warning, danger) all 11-step (50–950) OKLCH. Syntax tokens for
+ * code surfaces; vendor brands sit outside the contract.
  *
- * Values are read directly from src/index.css. Ink is hex by intent (hard
- * pinned neutrals). Blue is OKLCH (perceptually uniform brand ramp).
- * Semantic + syntax mix the two depending on whether the token is anchored
- * to the blue ramp or pinned to a brand-spec hex.
+ * Step roles (Geist/Radix-inspired): 50–100 subtle backgrounds, 200 borders,
+ * 300 strong borders / ghost-bg-hover, 400 placeholder, 500 secondary text /
+ * chart strokes, 600 saturated mid (default solid), 700 saturated dark /
+ * primary text on tinted bg, 800–900 high-contrast text, 950 deepest.
  */
 
 interface Step {
@@ -36,43 +35,105 @@ interface Palette {
 const INK: Palette = {
   code: 'CMP-001.1 — INK',
   name: 'Ink',
-  description: 'Surfaces & text. Hard-pinned neutrals — the spine of every layout.',
-  meta: '12 steps · --color-ink-*',
+  description: 'Neutral surfaces & text. Pure-neutral OKLCH ramp; ink-900 anchored near #09090B for primary-button identity.',
+  meta: '11 steps · --color-ink-*',
   tokenPrefix: 'ink',
   steps: [
-    { scale: '25',  value: '#F8F9FB' },
-    { scale: '50',  value: '#F1F4F6' },
-    { scale: '75',  value: '#E9EBEE' },
-    { scale: '100', value: '#E4E4E7' },
-    { scale: '200', value: '#D1D5D9' },
-    { scale: '300', value: '#9FA5AC' },
-    { scale: '400', value: '#71717B' },
-    { scale: '500', value: '#6E757D' },
-    { scale: '600', value: '#50565D' },
-    { scale: '700', value: '#1F2328' },
-    { scale: '800', value: '#111417' },
-    { scale: '900', value: '#09090B' },
+    { scale: '50',  value: 'oklch(0.985 0 0)' },
+    { scale: '100', value: 'oklch(0.960 0 0)' },
+    { scale: '200', value: 'oklch(0.910 0 0)' },
+    { scale: '300', value: 'oklch(0.820 0 0)' },
+    { scale: '400', value: 'oklch(0.680 0 0)' },
+    { scale: '500', value: 'oklch(0.530 0 0)' },
+    { scale: '600', value: 'oklch(0.380 0 0)' },
+    { scale: '700', value: 'oklch(0.260 0 0)' },
+    { scale: '800', value: 'oklch(0.165 0 0)' },
+    { scale: '900', value: 'oklch(0.090 0 0)' },
+    { scale: '950', value: 'oklch(0.045 0 0)' },
   ],
 };
 
 const BLUE: Palette = {
   code: 'CMP-001.2 — BLUE',
   name: 'Blue',
-  description: 'Brand accent. Saturated blue ramp from pale tints down to near-black.',
+  description: 'Brand accent. Anchored to the brand mark (#1F2FCE) at blue-700; ramp derived around it.',
   meta: '11 steps · --color-blue-*',
   tokenPrefix: 'blue',
   steps: [
-    { scale: '50',  value: '#EBF0FF' },
-    { scale: '100', value: '#E1E9FE' },
-    { scale: '200', value: '#C2D3FF' },
-    { scale: '300', value: '#9DB8FF' },
-    { scale: '400', value: '#6A8EFB' },
-    { scale: '500', value: '#4064FF' },
-    { scale: '600', value: '#2942D6' },
-    { scale: '700', value: '#1F2FCE' },
-    { scale: '800', value: '#13225F' },
-    { scale: '900', value: '#0C1638' },
-    { scale: '950', value: '#060B1D' },
+    { scale: '50',  value: 'oklch(0.970 0.020 268.85)' },
+    { scale: '100', value: 'oklch(0.940 0.040 268.85)' },
+    { scale: '200', value: 'oklch(0.890 0.075 268.85)' },
+    { scale: '300', value: 'oklch(0.810 0.130 268.85)' },
+    { scale: '400', value: 'oklch(0.700 0.180 268.85)' },
+    { scale: '500', value: 'oklch(0.580 0.215 268.85)' },
+    { scale: '600', value: 'oklch(0.470 0.232 268.85)' },
+    { scale: '700', value: 'oklch(0.345 0.224 268.85)' },
+    { scale: '800', value: 'oklch(0.275 0.175 268.85)' },
+    { scale: '900', value: 'oklch(0.215 0.130 268.85)' },
+    { scale: '950', value: 'oklch(0.145 0.085 268.85)' },
+  ],
+};
+
+const SUCCESS: Palette = {
+  code: 'CMP-001.3 — SUCCESS',
+  name: 'Success',
+  description: 'Positive status. Tailwind v4 green ramp OKLCH.',
+  meta: '11 steps · --color-success-*',
+  tokenPrefix: 'success',
+  steps: [
+    { scale: '50',  value: 'oklch(0.982 0.018 155.83)' },
+    { scale: '100', value: 'oklch(0.962 0.044 156.74)' },
+    { scale: '200', value: 'oklch(0.925 0.084 155.99)' },
+    { scale: '300', value: 'oklch(0.871 0.150 154.45)' },
+    { scale: '400', value: 'oklch(0.792 0.209 151.71)' },
+    { scale: '500', value: 'oklch(0.723 0.219 149.58)' },
+    { scale: '600', value: 'oklch(0.627 0.194 149.21)' },
+    { scale: '700', value: 'oklch(0.527 0.154 150.07)' },
+    { scale: '800', value: 'oklch(0.448 0.119 151.33)' },
+    { scale: '900', value: 'oklch(0.393 0.095 152.54)' },
+    { scale: '950', value: 'oklch(0.266 0.065 152.93)' },
+  ],
+};
+
+const WARNING: Palette = {
+  code: 'CMP-001.4 — WARNING',
+  name: 'Warning',
+  description: 'Caution / elevated state. Tailwind v4 amber ramp OKLCH.',
+  meta: '11 steps · --color-warning-*',
+  tokenPrefix: 'warning',
+  steps: [
+    { scale: '50',  value: 'oklch(0.987 0.022 95.28)' },
+    { scale: '100', value: 'oklch(0.962 0.059 95.62)' },
+    { scale: '200', value: 'oklch(0.924 0.120 95.75)' },
+    { scale: '300', value: 'oklch(0.879 0.169 91.61)' },
+    { scale: '400', value: 'oklch(0.828 0.189 84.43)' },
+    { scale: '500', value: 'oklch(0.769 0.188 70.08)' },
+    { scale: '600', value: 'oklch(0.666 0.179 58.32)' },
+    { scale: '700', value: 'oklch(0.555 0.163 49.00)' },
+    { scale: '800', value: 'oklch(0.473 0.137 46.20)' },
+    { scale: '900', value: 'oklch(0.414 0.112 45.90)' },
+    { scale: '950', value: 'oklch(0.279 0.077 45.64)' },
+  ],
+};
+
+const DANGER: Palette = {
+  code: 'CMP-001.5 — DANGER',
+  name: 'Danger',
+  description: 'Destructive / failure. Tailwind v4 red ramp OKLCH. Aliased by --destructive at danger-600.',
+  meta: '11 steps · --color-danger-*',
+  tokenPrefix: 'danger',
+  steps: [
+    { scale: '50',  value: 'oklch(0.971 0.013 17.38)' },
+    { scale: '100', value: 'oklch(0.936 0.032 17.72)' },
+    { scale: '200', value: 'oklch(0.885 0.062 18.33)' },
+    { scale: '300', value: 'oklch(0.808 0.114 19.57)' },
+    { scale: '400', value: 'oklch(0.704 0.191 22.22)' },
+    { scale: '500', value: 'oklch(0.637 0.237 25.33)' },
+    { scale: '600', value: 'oklch(0.577 0.245 27.33)' },
+    { scale: '700', value: 'oklch(0.505 0.213 27.52)' },
+    { scale: '800', value: 'oklch(0.444 0.177 26.90)' },
+    { scale: '900', value: 'oklch(0.396 0.141 25.72)' },
+    { scale: '950', value: 'oklch(0.258 0.092 26.04)' },
   ],
 };
 
@@ -84,23 +145,8 @@ interface SingleTone {
   value: string;
 }
 
-const SEMANTIC: { code: string; name: string; description: string; meta: string; steps: SingleTone[] } = {
-  code: 'CMP-001.3 — SEMANTIC',
-  name: 'Semantic',
-  description: 'Status colors. Single tones, no ramp — each token names an intent.',
-  meta: '5 tokens · --color-{primary,success,warning,danger}',
-  steps: [
-    { scale: 'primary',    token: 'primary',    value: 'var(--color-blue-700)' },
-    { scale: 'success',    token: 'success',    value: '#16A34A' },
-    { scale: 'success-2',  token: 'success-2',  value: '#22C55E' },
-    { scale: 'warning',    token: 'warning',    value: '#B45309' },
-    { scale: 'warning-2',  token: 'warning-2',  value: '#F97316' },
-    { scale: 'danger',     token: 'danger',     value: 'oklch(0.577\n0.245 27.3)' },
-  ],
-};
-
 const SYNTAX: { code: string; name: string; description: string; meta: string; steps: SingleTone[] } = {
-  code: 'CMP-001.4 — SYNTAX',
+  code: 'CMP-001.6 — SYNTAX',
   name: 'Syntax',
   description: 'Code highlight tokens. Named by intent, not hue — one CodeBlock paints all variants.',
   meta: '4 tokens · --color-syntax-*',
@@ -119,7 +165,7 @@ interface VendorTone {
 }
 
 const VENDORS: { code: string; name: string; description: string; meta: string; steps: VendorTone[] } = {
-  code: 'CMP-001.5 — VENDOR',
+  code: 'CMP-001.7 — VENDOR',
   name: 'Vendor brand',
   description: 'External brand colors. Outside the contract — these represent vendor identity, not surface design.',
   meta: '8 brands · inline hex (no token)',
@@ -142,10 +188,10 @@ function PaletteCard({
 }) {
   const stepCount = palette.steps.length;
   return (
-    <div className="flex flex-col gap-3 bg-ink-25">
+    <div className="flex flex-col gap-3 bg-ink-50">
       <SectionHeader code={palette.code} hint={palette.description} />
       <div
-        className="flex flex-col rounded-sm gap-4 bg-white border border-ink-75 p-6 shadow-[0_1px_2px_rgba(17,20,23,0.04)]"
+        className="flex flex-col rounded-sm gap-4 bg-white border border-ink-100 p-6 shadow-[0_1px_2px_rgba(17,20,23,0.04)]"
       >
         <div className="flex items-baseline justify-between">
           <div>
@@ -161,7 +207,7 @@ function PaletteCard({
           </div>
         </div>
         <div
-          className="grid gap-px rounded-sm overflow-hidden border border-ink-100"
+          className="grid gap-px rounded-sm overflow-hidden border border-ink-200"
           style={{ gridTemplateColumns: `repeat(${stepCount}, minmax(0, 1fr))` }}
         >
           {palette.steps.map((step) => (
@@ -207,9 +253,9 @@ function SingleToneCard({
   void caption; // accepted for future use; kept off-screen for now
   const stepCount = steps.length;
   return (
-    <div className="flex flex-col gap-3 bg-ink-25">
+    <div className="flex flex-col gap-3 bg-ink-50">
       <SectionHeader code={code} hint={description} />
-      <div className="flex flex-col rounded-sm gap-4 bg-white border border-ink-75 p-6 shadow-[0_1px_2px_rgba(17,20,23,0.04)]">
+      <div className="flex flex-col rounded-sm gap-4 bg-white border border-ink-100 p-6 shadow-[0_1px_2px_rgba(17,20,23,0.04)]">
         <div className="flex items-baseline justify-between">
           <div>
             <h2 className="font-sans font-medium text-ink-900 text-base m-0">{name}</h2>
@@ -218,7 +264,7 @@ function SingleToneCard({
           <div className="font-mono text-xs font-medium text-ink-500 uppercase tracking-[0.1em]">{meta}</div>
         </div>
         <div
-          className="grid gap-px rounded-sm overflow-hidden border border-ink-100"
+          className="grid gap-px rounded-sm overflow-hidden border border-ink-200"
           style={{ gridTemplateColumns: `repeat(${stepCount}, minmax(0, 1fr))` }}
         >
           {steps.map((step) => (
@@ -248,12 +294,12 @@ function SingleToneCard({
 export function CMP001Colors() {
   return (
     <div className="flex flex-col w-[1440px]">
-      <div className="flex flex-col w-full bg-ink-25 pt-14">
+      <div className="flex flex-col w-full bg-ink-50 pt-14">
         <ArtboardHeader
           code="CMP-001"
           title="Colors"
-          description="OKLCH-based ramps. Geist's mineral-cool palette: ink for surface + text, blue for the brand accent. Semantic single-tones for status. Syntax tokens for code surfaces. Vendor brands sit outside the contract — they exist to identify external providers."
-          parts="5 palettes · 40 swatches"
+          description="OKLCH ramps, 11-step (50–950) Tailwind-aligned naming. Five ramps: ink (neutrals), blue (brand, anchored to the brand mark at blue-700), success/warning/danger (Tailwind v4 green/amber/red OKLCH). Syntax tokens for code surfaces; vendor brands sit outside the contract."
+          parts="5 ramps + syntax + vendor"
         />
 
         <div className="flex flex-col gap-7">
@@ -269,17 +315,25 @@ export function CMP001Colors() {
             background={(step) => step.value.replace(/\n/g, ' ')}
           />
 
-          {/* CMP-001.3 — SEMANTIC */}
-          <SingleToneCard
-            code={SEMANTIC.code}
-            name={SEMANTIC.name}
-            description={SEMANTIC.description}
-            meta={SEMANTIC.meta}
-            steps={SEMANTIC.steps}
-            background={(step) => `var(--color-${(step as SingleTone).token})`}
+          {/* CMP-001.3 — SUCCESS */}
+          <PaletteCard
+            palette={SUCCESS}
+            background={(step) => step.value.replace(/\n/g, ' ')}
           />
 
-          {/* CMP-001.4 — SYNTAX */}
+          {/* CMP-001.4 — WARNING */}
+          <PaletteCard
+            palette={WARNING}
+            background={(step) => step.value.replace(/\n/g, ' ')}
+          />
+
+          {/* CMP-001.5 — DANGER */}
+          <PaletteCard
+            palette={DANGER}
+            background={(step) => step.value.replace(/\n/g, ' ')}
+          />
+
+          {/* CMP-001.6 — SYNTAX */}
           <SingleToneCard
             code={SYNTAX.code}
             name={SYNTAX.name}
@@ -289,7 +343,7 @@ export function CMP001Colors() {
             background={(step) => `var(--color-${(step as SingleTone).token})`}
           />
 
-          {/* CMP-001.5 — VENDOR */}
+          {/* CMP-001.7 — VENDOR */}
           <SingleToneCard
             code={VENDORS.code}
             name={VENDORS.name}

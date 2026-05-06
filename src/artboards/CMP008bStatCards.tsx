@@ -25,7 +25,7 @@ const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 export function CMP008bStatCards() {
   return (
     <div className="flex flex-col w-[1440px]">
-      <div className="flex flex-col w-full bg-ink-25">
+      <div className="flex flex-col w-full bg-ink-50">
         <ArtboardHeader
           code="CMP-008b"
           title="Stat cards"
@@ -69,7 +69,7 @@ export function CMP008bStatCards() {
                   delta="-3.2%"
                   spark={
                     <CompactSpark
-                      colorVar="var(--color-success-2)"
+                      colorVar="var(--color-success-500)"
                       data={[18, 16, 17, 15, 14, 13, 12, 11, 10]}
                       endDot
                     />
@@ -84,8 +84,8 @@ export function CMP008bStatCards() {
               code="CMP-008b.3 — STAT ROW"
               hint="KPIs with sparklines · 4 across"
             />
-            <Card className="rounded-md p-0 gap-0">
-              <div className="grid grid-cols-4 divide-x divide-ink-100">
+            <Card className="rounded-sm p-0 gap-0">
+              <div className="grid grid-cols-4 divide-x divide-ink-200">
                 <CompactKpi
                   flat
                   title="Requests"
@@ -119,7 +119,7 @@ export function CMP008bStatCards() {
                   delta="-3.2%"
                   spark={
                     <CompactSpark
-                      colorVar="var(--color-success-2)"
+                      colorVar="var(--color-success-500)"
                       data={[18, 16, 17, 15, 14, 13, 12, 11, 10]}
                       endDot
                     />
@@ -149,7 +149,7 @@ export function CMP008bStatCards() {
 
 function KpiCardShell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex flex-col rounded-md gap-4 bg-white border border-ink-100 shadow-xs p-4">
+    <div className="flex flex-col rounded-sm gap-4 bg-white border border-ink-200 shadow-xs p-4">
       {children}
     </div>
   );
@@ -252,7 +252,7 @@ function KpiCompareLine({
       </ChartContainer>
       <div className="grid grid-cols-7">
         {WEEKDAYS.map((d) => (
-          <div key={d} className="text-sm -tracking-[0.25px] text-ink-400 text-left first:text-left">
+          <div key={d} className="text-sm -tracking-[0.25px] text-ink-500 text-left first:text-left">
             {d}
           </div>
         ))}
@@ -297,11 +297,11 @@ function KpiStatus() {
         <div className="text-3xl/9 font-medium tabular-nums -tracking-[0.9px] text-ink-900">
           0.24%
         </div>
-        <div className="text-sm -tracking-[0.25px] text-ink-400">+0.06pp · 116 blocked</div>
+        <div className="text-sm -tracking-[0.25px] text-ink-500">+0.06pp · 116 blocked</div>
       </div>
       <ChartContainer
         config={statusChartConfig}
-        className="aspect-auto h-3 w-full overflow-clip rounded-md"
+        className="aspect-auto h-3 w-full overflow-clip rounded-sm"
       >
         <BarChart
           accessibilityLayer
@@ -341,7 +341,7 @@ function KpiStatus() {
               <span className="size-2 rounded-full shrink-0" style={{ backgroundColor: row.color }} />
               <span className="text-sm -tracking-[0.25px] text-ink-900">{row.label}</span>
             </div>
-            <span className="text-sm tabular-nums -tracking-[0.25px] text-ink-400">{row.pct}</span>
+            <span className="text-sm tabular-nums -tracking-[0.25px] text-ink-500">{row.pct}</span>
           </div>
         ))}
       </div>
@@ -393,7 +393,7 @@ function HighlightLabel({ viewBox }: { viewBox?: CartesianViewBox }) {
         rx={6}
         ry={6}
         fill="var(--color-white)"
-        stroke="var(--color-ink-100)"
+        stroke="var(--color-ink-200)"
       />
       <text
         x={cx}
@@ -462,7 +462,7 @@ function KpiCompareBars({
                 <Cell
                   key={entry.day}
                   fill={
-                    entry.highlight ? 'url(#cmp007-bar-highlight)' : 'var(--color-ink-100)'
+                    entry.highlight ? 'url(#cmp007-bar-highlight)' : 'var(--color-ink-200)'
                   }
                 />
               ))}
@@ -472,7 +472,7 @@ function KpiCompareBars({
         </ChartContainer>
         <div className="grid grid-cols-7">
           {WEEKDAYS.map((d) => (
-            <div key={d} className="text-sm -tracking-[0.25px] text-ink-400 text-center">
+            <div key={d} className="text-sm -tracking-[0.25px] text-ink-500 text-center">
               {d}
             </div>
           ))}

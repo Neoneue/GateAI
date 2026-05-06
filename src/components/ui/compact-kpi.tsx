@@ -1,4 +1,4 @@
-import { DeltaArrowDown, DeltaArrowUp } from '@/components/icons/delta-arrow';
+import { ArrowDownLeft, ArrowUpRight } from 'lucide-react';
 import { Area, AreaChart, CartesianGrid, Line, XAxis } from 'recharts';
 import {
   ChartContainer,
@@ -12,29 +12,21 @@ import {
 
 export function DeltaTag({ delta, note }: { delta: string; note?: string }) {
   const negative = delta.trim().startsWith('-');
-  const Icon = negative ? DeltaArrowDown : DeltaArrowUp;
-  // Pill colors mirror Badge variants — bg at 15% opacity wash, full
-  // saturation text. The disc icon inherits text color via currentColor;
-  // its evenodd-knockout arrow shows the pill wash through, giving a
-  // 3-tier color stack (wash → disc → pale arrow).
-  const pillCls = negative
-    ? 'bg-destructive/15 text-destructive'
-    : 'bg-success/15 text-success';
-  // Strip the leading +/- since the disc icon and pill color already
-  // carry direction; redundant signs add visual noise to the value.
+  const Icon = negative ? ArrowDownLeft : ArrowUpRight;
+  const toneCls = negative ? 'text-destructive' : 'text-success-700';
+  // Strip the leading +/- since the directional arrow already carries
+  // sign; redundant prefix adds visual noise to the value.
   const display = delta.replace(/^[+-]/, '').trim();
   return (
-    <div className="inline-flex items-center gap-2">
-      <span
-        className={`inline-flex h-5 items-center gap-1 rounded-full pl-1 pr-2 ${pillCls}`}
-      >
+    <div className="inline-flex items-center gap-1.5">
+      <span className={`inline-flex items-center gap-0 ${toneCls}`}>
         <Icon className="size-3.5" />
         <span className="font-mono text-xs/4 font-medium tabular-nums tracking-tight">
           {display}
         </span>
       </span>
       {note ? (
-        <span className="text-xs tracking-tight text-ink-400">{note}</span>
+        <span className="text-xs tracking-tight text-ink-500">{note}</span>
       ) : null}
     </div>
   );
@@ -64,7 +56,7 @@ export function CompactKpi({
 }) {
   const containerCls = flat
     ? 'flex flex-col gap-2 bg-white p-4'
-    : 'flex flex-col rounded-md gap-2 bg-white border border-ink-100 shadow-xs p-4';
+    : 'flex flex-col rounded-sm gap-2 bg-white border border-ink-200 shadow-xs p-4';
   return (
     <div className={containerCls}>
       <div className="font-mono font-medium uppercase tracking-[0.1em] text-ink-500 text-xs">{title}</div>
@@ -75,7 +67,7 @@ export function CompactKpi({
         {delta ? (
           <DeltaTag delta={delta} note={deltaNote} />
         ) : (
-          <span className="text-sm tracking-tight text-ink-400">{noteLine}</span>
+          <span className="text-sm tracking-tight text-ink-500">{noteLine}</span>
         )}
       </div>
       <div className="mt-1">{spark}</div>
@@ -97,7 +89,7 @@ const compactSparkConfig: ChartConfig = {
 export function CompactSpark({
   colorVar,
   data,
-  endDot = false,
+  endDot = true,
   noGrid = false,
 }: {
   colorVar: string;
@@ -128,7 +120,7 @@ export function CompactSpark({
           <CartesianGrid
             horizontal
             vertical={false}
-            stroke="var(--color-ink-100)"
+            stroke="var(--color-ink-200)"
             strokeDasharray="2 3"
           />
         )}

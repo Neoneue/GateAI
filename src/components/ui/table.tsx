@@ -25,7 +25,7 @@ function TableHeader({
     <thead
       data-slot="table-header"
       className={cn(
-        "bg-ink-25 [&_tr]:border-t [&_tr]:border-ink-100",
+        "bg-ink-50 [&_tr]:border-t [&_tr]:border-ink-200",
         className,
       )}
       {...props}
@@ -51,7 +51,7 @@ function TableFooter({
     <tfoot
       data-slot="table-footer"
       className={cn(
-        "border-t border-ink-100 bg-ink-25 font-medium [&>tr]:last:border-b-0",
+        "border-t border-ink-200 bg-ink-50 font-medium [&>tr]:last:border-b-0",
         className,
       )}
       {...props}
@@ -64,7 +64,7 @@ function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
     <tr
       data-slot="table-row"
       className={cn(
-        "border-b border-ink-100 transition-colors hover:bg-ink-25 data-[state=selected]:bg-ink-25",
+        "border-b border-ink-200 transition-colors hover:bg-ink-50 data-[state=selected]:bg-ink-50",
         className,
       )}
       {...props}
@@ -110,7 +110,7 @@ function TableCaption({
   return (
     <caption
       data-slot="table-caption"
-      className={cn("mt-4 text-sm text-ink-400", className)}
+      className={cn("mt-4 text-sm text-ink-500", className)}
       {...props}
     />
   )

@@ -37,8 +37,8 @@ import { cn } from '@/lib/utils';
 /* ── Token model ─────────────────────────────────────────────────────────── */
 
 export type CodeTone =
-  | 'default'   // ink-900 light · ink-50 (faint white) on dark
-  | 'muted'     // ink-400 light · ink-300 on dark — comments, slashes, dividers
+  | 'default'   // ink-900 light · ink-100 (faint white) on dark
+  | 'muted'     // ink-500 light · ink-400 on dark — comments, slashes, dividers
   | 'keyword'   // syntax-keyword — curl, -H, -d, export, npm
   | 'string'    // success-2 — quoted strings
   | 'variable'  // syntax-variable — $KEY, interpolated values
@@ -55,24 +55,24 @@ export type CodeLine = CodeToken[];
 
 const TONE_CLASS_LIGHT: Record<CodeTone, string> = {
   default:  'text-ink-900',
-  muted:    'text-ink-400',
+  muted:    'text-ink-500',
   keyword:  'text-[var(--color-syntax-keyword)]',
-  string:   'text-success-2',
+  string:   'text-success-500',
   variable: 'text-[var(--color-syntax-variable)]',
   property: 'text-[var(--color-syntax-property)]',
   number:   'text-[var(--color-syntax-terminal-blue)]',
-  success:  'text-success',
+  success:  'text-success-700',
 };
 
 const TONE_CLASS_DARK: Record<CodeTone, string> = {
-  default:  'text-ink-50',
-  muted:    'text-ink-300',
+  default:  'text-ink-100',
+  muted:    'text-ink-400',
   keyword:  'text-[var(--color-syntax-variable)]', // dark terminal: keywords render as amber, matches Paper
-  string:   'text-success-2',
+  string:   'text-success-500',
   variable: 'text-[var(--color-syntax-variable)]',
   property: 'text-[var(--color-syntax-terminal-blue)]',
   number:   'text-[var(--color-syntax-terminal-blue)]',
-  success:  'text-success-2',
+  success:  'text-success-500',
 };
 
 /* ── Outer card shells ───────────────────────────────────────────────────── */
@@ -93,7 +93,7 @@ export function CodeCard({
         // Skill: surfaces.md — flat default uses the hairline `shadow-xs`;
         // raised promotes to the popup elevation token so all floating
         // surfaces (cards, selects, dialogs, tooltips) read as one family.
-        'flex flex-col overflow-hidden rounded-md bg-white border border-ink-75 shadow-xs',
+        'flex flex-col overflow-hidden rounded-sm bg-white border border-ink-100 shadow-xs',
         elevation === 'raised' && 'shadow-(--shadow-popup)',
         className,
       )}
@@ -110,7 +110,7 @@ export function CodeCardHeader({
     <div
       data-slot="code-card-header"
       className={cn(
-        'flex items-center justify-between gap-3 px-4 py-2 bg-ink-50 border-b border-ink-75',
+        'flex items-center justify-between gap-3 px-4 py-2 bg-ink-100 border-b border-ink-100',
         className,
       )}
       {...props}
@@ -142,9 +142,9 @@ export function CodeCardTabs({
           // Skill: emil-design-eng — explicit `transition-colors duration-150
           // ease-out`; the active pill uses `shadow-xs` to match the segmented
           // family's lift instead of inlining its own rgba shadow.
-          'inline-flex items-center h-6 rounded-md px-3 font-sans text-sm transition-colors duration-150 ease-out',
+          'inline-flex items-center h-6 rounded-xs px-3 font-sans text-sm transition-colors duration-150 ease-out',
           isActive
-            ? 'bg-white text-ink-900 font-medium border border-ink-100 shadow-xs'
+            ? 'bg-white text-ink-900 font-medium border border-ink-200 shadow-xs'
             : 'text-ink-600 font-medium border border-transparent',
           interactive && !isActive && 'hover:text-ink-900 hover:bg-white/60',
         );
@@ -269,7 +269,7 @@ export function TerminalCard({
     <div
       data-slot="terminal-card"
       className={cn(
-        'flex flex-col overflow-hidden rounded-md bg-ink-800',
+        'flex flex-col overflow-hidden rounded-sm bg-ink-800',
         className,
       )}
     >
@@ -282,7 +282,7 @@ export function TerminalCard({
           <span className="size-2 rounded-full bg-traffic-amber" />
           <span className="size-2 rounded-full bg-traffic-green" />
         </div>
-        <span className="ml-auto font-mono text-xs/4 text-ink-300">
+        <span className="ml-auto font-mono text-xs/4 text-ink-400">
           {title}
         </span>
       </div>

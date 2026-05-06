@@ -44,7 +44,7 @@ export function CMP004FormFields() {
 
   return (
     <div className="flex flex-col w-[1440px]">
-      <div className="flex flex-col w-full bg-ink-25">
+      <div className="flex flex-col w-full bg-ink-50">
         <ArtboardHeader
           code="CMP-004"
           title="Form fields"
@@ -52,21 +52,21 @@ export function CMP004FormFields() {
           parts="7 controls"
         />
 
-        <div className="flex items-start gap-6 bg-ink-25">
+        <div className="flex items-start gap-6 bg-ink-50">
           {/* CMP-004.1 — TEXT INPUTS */}
-          <div className="flex flex-col grow gap-3 basis-0 bg-ink-25">
+          <div className="flex flex-col grow gap-3 basis-0 bg-ink-50">
             <SectionHeader
               code="CMP-004.1 — TEXT INPUTS"
               hint="<Input /> · <Textarea /> · <Select />"
             />
-            <div className="flex flex-col rounded-sm gap-4 bg-white border border-ink-75 p-7">
+            <div className="flex flex-col rounded-sm gap-4 bg-white border border-ink-100 p-7">
               {/* Key name (required) */}
               <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between">
                   <Label htmlFor="key-name" className="text-ink-600 font-medium text-sm">
                     Key name
                   </Label>
-                  <span className="font-mono text-xs text-ink-400 tracking-[0.04em]">required</span>
+                  <span className="font-mono text-xs text-ink-500 tracking-[0.04em]">required</span>
                 </div>
                 <Input
                   id="key-name"
@@ -75,7 +75,7 @@ export function CMP004FormFields() {
                   required
                   aria-describedby="key-name-help"
                 />
-                <p id="key-name-help" className="text-sm text-ink-400">
+                <p id="key-name-help" className="text-sm text-ink-500">
                   Lowercase, hyphens. Visible to teammates with key:read.
                 </p>
               </div>
@@ -86,7 +86,7 @@ export function CMP004FormFields() {
                   <Label htmlFor="description" className="text-ink-600 font-medium text-sm">
                     Description
                   </Label>
-                  <span className="font-mono text-xs text-ink-400 tracking-[0.04em]">optional</span>
+                  <span className="font-mono text-xs text-ink-500 tracking-[0.04em]">optional</span>
                 </div>
                 <Textarea
                   id="description"
@@ -118,7 +118,7 @@ export function CMP004FormFields() {
                   <Label htmlFor="email" className="text-ink-600 font-medium text-sm">
                     Email
                   </Label>
-                  <span className="font-mono text-xs text-ink-400 tracking-[0.04em]">disabled</span>
+                  <span className="font-mono text-xs text-ink-500 tracking-[0.04em]">disabled</span>
                 </div>
                 <Input
                   id="email"
@@ -149,12 +149,12 @@ export function CMP004FormFields() {
           </div>
 
           {/* CMP-004.2 — CHECKBOX · RADIO · SWITCH */}
-          <div className="flex flex-col grow gap-3 basis-0 bg-ink-25">
+          <div className="flex flex-col grow gap-3 basis-0 bg-ink-50">
             <SectionHeader
               code="CMP-004.2 — CHECKBOX · RADIO · SWITCH"
               hint="<Checkbox /> · <RadioGroup /> · <Switch />"
             />
-            <div className="flex flex-col rounded-sm gap-5 bg-white border border-ink-75 p-7">
+            <div className="flex flex-col rounded-sm gap-5 bg-white border border-ink-100 p-7">
               {/* Scopes — checkboxes */}
               <div role="group" aria-labelledby="scopes-label" className="flex flex-col gap-3">
                 <Label id="scopes-label" className="text-ink-800 font-medium text-sm">Scopes</Label>
@@ -176,7 +176,7 @@ export function CMP004FormFields() {
                       {s.label}
                     </Label>
                     <span aria-hidden />
-                    <p className="text-sm text-ink-400">{s.hint}</p>
+                    <p className="text-sm text-ink-500">{s.hint}</p>
                   </div>
                 ))}
               </div>

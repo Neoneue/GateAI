@@ -33,7 +33,7 @@ export function CMP007ModalEmptyState() {
 
   return (
     <div className="flex flex-col w-[1440px]">
-      <div className="flex flex-col w-full bg-ink-25">
+      <div className="flex flex-col w-full bg-ink-50">
         <ArtboardHeader
           code="CMP-007"
           title="Modal"
@@ -172,8 +172,8 @@ export function CMP007ModalEmptyState() {
               hint="centered icon · heading · subtext · CTA"
             />
             <Card className="p-7 rounded-sm">
-              <div className="flex flex-col items-center justify-center h-80 rounded-lg gap-3 bg-white border border-ink-75 p-5">
-                <div className="flex items-center justify-center rounded-xl bg-ink-25 border border-ink-100 size-14">
+              <div className="flex flex-col items-center justify-center h-80 rounded-sm gap-3 bg-white border border-ink-100 p-5">
+                <div className="flex items-center justify-center rounded-xl bg-ink-50 border border-ink-200 size-14">
                   <KeyRound className="size-7 text-ink-900" strokeWidth={1.5} />
                 </div>
                 <div className="flex flex-col items-center gap-1 mt-2">
@@ -216,7 +216,7 @@ function ModalSpecimen({
       role="dialog"
       aria-labelledby={titleId}
       className={
-        'flex flex-col rounded-xl bg-white border border-ink-100 shadow-[0_12px_32px_-8px_rgba(17,20,23,0.18)] overflow-clip ' +
+        'flex flex-col rounded-xl bg-white border border-ink-200 shadow-[0_12px_32px_-8px_rgba(17,20,23,0.18)] overflow-clip ' +
         (className ?? '')
       }
     >
@@ -232,7 +232,7 @@ function ModalSpecimen({
           size="icon-xs"
           aria-label="Close"
           onClick={onClose}
-          className="text-ink-300 hover:text-ink-600"
+          className="text-ink-400 hover:text-ink-600"
         >
           <X />
         </Button>
@@ -255,15 +255,15 @@ function GenerationDetailsModal() {
     <div
       role="dialog"
       aria-label="Generation details"
-      className="flex flex-col w-[640px] rounded-xl bg-white border border-ink-100 shadow-[0_12px_32px_-8px_rgba(17,20,23,0.18)] overflow-clip"
+      className="flex flex-col w-[640px] rounded-xl bg-white border border-ink-200 shadow-[0_12px_32px_-8px_rgba(17,20,23,0.18)] overflow-clip"
     >
       {/* Header */}
-      <div className="flex items-start justify-between gap-3 px-5 pt-4 pb-3 border-b border-ink-100">
+      <div className="flex items-start justify-between gap-3 px-5 pt-4 pb-3 border-b border-ink-200">
         <div className="flex flex-col gap-1">
           <div className="text-base font-medium -tracking-[0.01em] text-ink-900">
             Generation details
           </div>
-          <div className="font-mono tabular-nums text-xs text-ink-400">
+          <div className="font-mono tabular-nums text-xs text-ink-500">
             Apr 22, 2026 14:28:04 UTC
           </div>
         </div>
@@ -272,7 +272,7 @@ function GenerationDetailsModal() {
           size="icon-xs"
           aria-label="Close"
           onClick={() => toast('Closed generation details')}
-          className="text-ink-400 hover:text-ink-700"
+          className="text-ink-500 hover:text-ink-700"
         >
           <X />
         </Button>
@@ -310,7 +310,7 @@ function GenerationDetailsModal() {
           <DetailRow label="Tokens">
             <span className="font-mono tabular-nums text-sm text-ink-900">
               2,847 prompt
-              <span className="text-ink-400"> · </span>
+              <span className="text-ink-500"> · </span>
               1,204 completion
             </span>
           </DetailRow>
@@ -354,7 +354,7 @@ function GenerationDetailsModal() {
 
 function DetailGrid({ children }: { children: React.ReactNode }) {
   return (
-    <dl className="grid grid-cols-[36%_1fr] rounded-sm border border-ink-100 overflow-clip divide-y divide-ink-100">
+    <dl className="grid grid-cols-[36%_1fr] rounded-sm border border-ink-200 overflow-clip divide-y divide-ink-200">
       {children}
     </dl>
   );
@@ -369,7 +369,7 @@ function DetailRow({
 }) {
   return (
     <div className="contents group/row">
-      <dt className="px-3 py-3 text-sm text-ink-500 border-r border-ink-100 bg-white">
+      <dt className="px-3 py-3 text-sm text-ink-500 border-r border-ink-200 bg-white">
         {label}
       </dt>
       <dd className="px-3 py-3 text-sm text-ink-900 bg-white flex items-center min-w-0">
@@ -381,7 +381,7 @@ function DetailRow({
 
 function SecretRow({ secret }: { secret: string }) {
   return (
-    <div className="flex items-center h-10 rounded-sm pr-2 pl-3 gap-2 bg-ink-25 border border-ink-75">
+    <div className="flex items-center h-10 rounded-sm pr-2 pl-3 gap-2 bg-ink-50 border border-ink-100">
       <code className="grow text-xs font-mono tabular-nums -tracking-[0.01em] text-ink-900">
         {secret}
       </code>

@@ -100,7 +100,7 @@ export function CMP012ComposedDashboard({
 } = {}) {
   return (
     <div className="flex flex-col w-[1440px]">
-      <div className="flex flex-col w-full bg-ink-25">
+      <div className="flex flex-col w-full bg-ink-50">
         <ArtboardHeader
           code="CMP-012"
           title="Composed · Dashboard"
@@ -137,7 +137,7 @@ function DashboardSurface({
   onToggleSidebar: () => void;
 }) {
   return (
-    <div className="flex flex-col w-full overflow-hidden rounded-md border border-ink-100 bg-white shadow-xs">
+    <div className="flex flex-col w-full overflow-hidden rounded-sm bg-white shadow-(--shadow-border)">
       <ScreenHead />
       <div className="flex flex-row min-h-0">
         <SidebarShell expanded={sidebarExpanded} onNavigate={onNavigate} />
@@ -173,7 +173,7 @@ function SidebarShell({
       aria-label="Primary navigation"
       style={{ transitionTimingFunction: 'cubic-bezier(0.32, 0.72, 0, 1)' }}
       className={cn(
-        'relative shrink-0 overflow-hidden bg-white border-r border-ink-100 transition-[width] duration-300 motion-reduce:transition-none',
+        'relative shrink-0 overflow-hidden bg-white border-r border-ink-200 transition-[width] duration-300 motion-reduce:transition-none',
         expanded ? 'w-60' : 'w-16',
       )}
     >
@@ -207,7 +207,7 @@ function SidebarShell({
 
 function ScreenHead() {
   return (
-    <div className="relative flex items-center h-[41px] px-4 bg-ink-25 border-b border-ink-100 shrink-0">
+    <div className="relative flex items-center h-[41px] px-4 bg-ink-50 border-b border-ink-200 shrink-0">
       <div className="flex items-center gap-2">
         {/* macOS traffic-lights — tokens live in src/index.css so the
             chrome strip never inlines hex literals. */}
@@ -249,8 +249,8 @@ function DashSidebar({ onNavigate }: { onNavigate?: (pageId: string) => void }) 
                   onClick={item.pageId ? () => onNavigate?.(item.pageId!) : undefined}
                   className={
                     item.active
-                      ? 'flex items-center justify-center size-9 rounded-lg bg-ink-100 text-ink-900'
-                      : 'flex items-center justify-center size-9 rounded-lg text-ink-400 transition-colors duration-150 ease-out hover:text-ink-700 hover:bg-ink-50'
+                      ? 'flex items-center justify-center size-9 rounded-sm bg-ink-200 text-ink-900'
+                      : 'flex items-center justify-center size-9 rounded-sm text-ink-500 transition-colors duration-150 ease-out hover:text-ink-700 hover:bg-ink-100'
                   }
                 >
                   <Icon className="size-[18px]" strokeWidth={1.5} />
@@ -271,7 +271,7 @@ function DashSidebar({ onNavigate }: { onNavigate?: (pageId: string) => void }) 
  * Sibling of <DashSidebar /> (the 64px icon rail). Toggled via the
  * panel-left button in DashTopBar. Sections use mono-uppercase eyebrow
  * group labels (Eyebrow / sm spec from CMP-000); active item uses the
- * project's white-pill convention (`bg-white border-ink-100 shadow-xs`).
+ * project's white-pill convention (`bg-white border-ink-200 shadow-xs`).
  * No left-edge indicator line — the active pill carries the signal. */
 
 type SidebarItem = {
@@ -333,7 +333,7 @@ function DashSidebarExpanded({ onNavigate }: { onNavigate?: (pageId: string) => 
     <div className="flex flex-col w-60 h-full shrink-0">
       {/* Brand area — logomark + stacked wordmark (Constellation eyebrow,
           Gate AI title with "AI" in brand-blue). */}
-      <div className="flex items-center gap-3 px-4 py-4 border-b border-ink-100 shrink-0">
+      <div className="flex items-center gap-3 px-4 py-4 border-b border-ink-200 shrink-0">
         <BrandMark className="size-8 shrink-0 text-blue-700" />
         <div className="flex flex-col leading-tight min-w-0">
           <span className="font-mono text-xs uppercase tracking-[0.1em] font-medium text-ink-500">
@@ -346,10 +346,10 @@ function DashSidebarExpanded({ onNavigate }: { onNavigate?: (pageId: string) => 
       </div>
 
       {/* Workspace switcher */}
-      <div className="px-3 py-3 border-b border-ink-100 shrink-0">
+      <div className="px-3 py-3 border-b border-ink-200 shrink-0">
         <button
           type="button"
-          className="flex items-center justify-between gap-2 w-full p-2 rounded-md border border-ink-100 bg-white hover:bg-ink-25 transition-colors duration-150 ease-out"
+          className="flex items-center justify-between gap-2 w-full p-2 rounded-sm border border-ink-200 bg-white hover:bg-ink-50 transition-colors duration-150 ease-out"
         >
           <span className="font-sans text-sm font-medium text-ink-900 truncate min-w-0">
             Chad's project
@@ -358,7 +358,7 @@ function DashSidebarExpanded({ onNavigate }: { onNavigate?: (pageId: string) => 
             <span className="inline-flex items-center h-5 px-2 rounded-full bg-blue-50 text-blue-700 font-sans text-xs font-medium">
               Pro
             </span>
-            <ChevronsUpDown className="size-4 text-ink-400" strokeWidth={1.75} aria-hidden />
+            <ChevronsUpDown className="size-4 text-ink-500" strokeWidth={1.75} aria-hidden />
           </div>
         </button>
       </div>
@@ -382,8 +382,8 @@ function DashSidebarExpanded({ onNavigate }: { onNavigate?: (pageId: string) => 
                   onClick={item.pageId ? () => onNavigate?.(item.pageId!) : undefined}
                   className={
                     item.active
-                      ? 'flex items-center gap-3 px-2 py-2 rounded-md border border-ink-100 bg-ink-50 text-ink-900 font-medium shadow-xs'
-                      : 'flex items-center gap-3 px-2 py-2 rounded-md border border-transparent text-ink-700 hover:text-ink-900 hover:bg-ink-25 transition-colors duration-150 ease-out'
+                      ? 'flex items-center gap-3 px-2 py-2 rounded-sm border border-ink-200 bg-ink-100 text-ink-900 font-medium shadow-xs'
+                      : 'flex items-center gap-3 px-2 py-2 rounded-sm border border-transparent text-ink-700 hover:text-ink-900 hover:bg-ink-50 transition-colors duration-150 ease-out'
                   }
                 >
                   <Icon className="size-4 shrink-0" strokeWidth={1.75} />
@@ -396,7 +396,7 @@ function DashSidebarExpanded({ onNavigate }: { onNavigate?: (pageId: string) => 
       </nav>
 
       {/* Bottom user area */}
-      <div className="flex items-center justify-between gap-2 px-3 py-3 border-t border-ink-100 shrink-0">
+      <div className="flex items-center justify-between gap-2 px-3 py-3 border-t border-ink-200 shrink-0">
         <div className="flex items-center gap-2 min-w-0">
           <span className="size-7 shrink-0 rounded-full bg-blue-700" aria-hidden />
           <span className="font-sans text-sm font-medium text-ink-900 truncate">
@@ -406,7 +406,7 @@ function DashSidebarExpanded({ onNavigate }: { onNavigate?: (pageId: string) => 
         <button
           type="button"
           aria-label="User menu"
-          className="shrink-0 size-7 inline-flex items-center justify-center rounded-md text-ink-500 hover:text-ink-900 hover:bg-ink-50 transition-colors duration-150 ease-out"
+          className="shrink-0 size-7 inline-flex items-center justify-center rounded-sm text-ink-500 hover:text-ink-900 hover:bg-ink-100 transition-colors duration-150 ease-out"
         >
           <MoreHorizontal className="size-4" strokeWidth={1.75} />
         </button>
@@ -425,7 +425,7 @@ function DashMain({
   onToggleSidebar: () => void;
 }) {
   return (
-    <div className="flex flex-col flex-1 min-w-0 bg-ink-25">
+    <div className="flex flex-col flex-1 min-w-0 bg-ink-50">
       <DashTopBar
         sidebarExpanded={sidebarExpanded}
         onToggleSidebar={onToggleSidebar}
@@ -449,7 +449,7 @@ function DashTopBar({
   onToggleSidebar: () => void;
 }) {
   return (
-    <div className="flex items-center justify-between h-[49px] px-6 bg-white border-b border-ink-100 shrink-0">
+    <div className="flex items-center justify-between h-[49px] px-6 bg-white border-b border-ink-200 shrink-0">
       <div className="flex items-center gap-2">
         <Button
           variant="ghost"
@@ -457,22 +457,42 @@ function DashTopBar({
           aria-label={sidebarExpanded ? 'Collapse sidebar' : 'Expand sidebar'}
           aria-expanded={sidebarExpanded}
           onClick={onToggleSidebar}
-          className="-ml-2 text-ink-400 hover:text-ink-700 aria-expanded:bg-transparent aria-expanded:text-ink-400 hover:aria-expanded:text-ink-700"
+          className="-ml-2 text-ink-500 hover:text-ink-700 aria-expanded:bg-transparent aria-expanded:text-ink-500 hover:aria-expanded:text-ink-700"
         >
-          {sidebarExpanded ? (
-            <PanelLeftClose className="size-4" strokeWidth={1.75} />
-          ) : (
-            <PanelLeftOpen className="size-4" strokeWidth={1.75} />
-          )}
+          {/* Skill: animations.md — contextual icon cross-fade. Both icons stay
+              in DOM, absolute-positioned over each other; toggle scale/opacity/blur
+              with the skill's exact values (0.25→1, 0→1, 4px→0). */}
+          <span className="relative inline-flex size-4 items-center justify-center">
+            <PanelLeftClose
+              aria-hidden
+              strokeWidth={1.75}
+              className={cn(
+                'absolute size-4 transition-[opacity,transform,filter] duration-300 [transition-timing-function:cubic-bezier(0.2,0,0,1)] motion-reduce:transition-none',
+                sidebarExpanded
+                  ? 'opacity-100 scale-100 blur-0'
+                  : 'opacity-0 scale-[0.25] blur-[4px]',
+              )}
+            />
+            <PanelLeftOpen
+              aria-hidden
+              strokeWidth={1.75}
+              className={cn(
+                'absolute size-4 transition-[opacity,transform,filter] duration-300 [transition-timing-function:cubic-bezier(0.2,0,0,1)] motion-reduce:transition-none',
+                sidebarExpanded
+                  ? 'opacity-0 scale-[0.25] blur-[4px]'
+                  : 'opacity-100 scale-100 blur-0',
+              )}
+            />
+          </span>
         </Button>
         <span className="font-sans text-xs text-ink-500">All Projects</span>
-        <ChevronRight className="size-3 text-ink-300" strokeWidth={1.75} aria-hidden />
+        <ChevronRight className="size-3 text-ink-400" strokeWidth={1.75} aria-hidden />
         <span className="font-sans text-xs text-ink-500">Constellation Gate AI</span>
-        <ChevronRight className="size-3 text-ink-300" strokeWidth={1.75} aria-hidden />
+        <ChevronRight className="size-3 text-ink-400" strokeWidth={1.75} aria-hidden />
         <span aria-current="page" className="font-sans text-xs font-medium text-ink-900">Overview</span>
       </div>
       <div className="flex items-center gap-1">
-        <Button variant="outline" size="sm" className="border-ink-100 bg-white text-ink-900">
+        <Button variant="outline" size="sm" className="border-ink-200 bg-white text-ink-900">
           Docs
         </Button>
         {/* Skill: surfaces.md — promote to Button `icon-sm` so the hit
@@ -499,11 +519,11 @@ function DashTopBar({
 function PageHeader() {
   return (
     <div className="flex items-end justify-between gap-6">
-      <div className="flex flex-col gap-2">
-        <h1 className="font-sans font-medium text-ink-900 text-3xl/9 -tracking-[1px] m-0">
+      <div className="flex flex-col gap-2 max-w-1/2">
+        <h1 className="font-sans font-medium text-ink-900 text-3xl/9 -tracking-[1px] text-balance m-0">
           Overview
         </h1>
-        <p className="font-sans text-ink-400 text-base tracking-tight m-0">
+        <p className="font-sans text-ink-500 text-base tracking-tight text-pretty m-0">
           Traffic, spend and latency across every model on the gateway.
         </p>
       </div>
@@ -530,9 +550,9 @@ function KpiRail() {
   // full-height `divide-x` and signals "section break inside one container"
   // instead of "spreadsheet column."
   const dividerCls =
-    'relative before:absolute before:left-0 before:inset-y-4 before:w-px before:bg-ink-100';
+    'relative before:absolute before:left-0 before:inset-y-4 before:w-px before:bg-ink-200';
   return (
-    <div className="grid grid-cols-4 rounded-md bg-white border border-ink-100 shadow-xs overflow-hidden">
+    <div className="grid grid-cols-4 rounded-sm bg-white shadow-(--shadow-border) overflow-hidden">
       <CompactKpi
         flat
         title="Total Requests"
@@ -540,7 +560,7 @@ function KpiRail() {
         delta="+8.2%"
         spark={
           <CompactSpark
-            colorVar="var(--color-ink-400)"
+            colorVar="var(--color-ink-500)"
             data={[6, 12, 10, 16, 20, 18, 26, 24, 28]}
           />
         }
@@ -567,7 +587,7 @@ function KpiRail() {
           delta="-3.2%"
           spark={
             <CompactSpark
-              colorVar="var(--color-warning-2)"
+              colorVar="var(--color-warning-500)"
               data={[18, 16, 17, 15, 14, 13, 12, 11, 10]}
               endDot
             />
@@ -582,7 +602,7 @@ function KpiRail() {
           delta="+8.7%"
           spark={
             <CompactSpark
-              colorVar="var(--color-success-2)"
+              colorVar="var(--color-success-500)"
               data={[10, 11, 13, 14, 16, 15, 17, 18, 18]}
             />
           }
@@ -627,14 +647,14 @@ type ModelSeries = {
   /** When true, use the vendor's secondary chart shade instead of the primary. */
   useSecondaryShade?: boolean;
   /** When set, overrides the vendor brand color entirely. Use a token
-   *  (`var(--color-ink-400)`) when a series should sit outside the vendor
+   *  (`var(--color-ink-500)`) when a series should sit outside the vendor
    *  palette — e.g., to keep the chart from reading too rainbow. */
   colorOverride?: string;
 };
 
 const MODEL_LEGEND: readonly ModelSeries[] = [
   { key: 'sonnet',  label: 'Claude Sonnet 4.5', vendor: 'anthropic' },
-  { key: 'gpt',     label: 'GPT-4o',            vendor: 'openai',    colorOverride: 'var(--color-ink-400)' },
+  { key: 'gpt',     label: 'GPT-4o',            vendor: 'openai',    colorOverride: 'var(--color-ink-500)' },
   { key: 'haiku',   label: 'Claude Haiku',      vendor: 'anthropic', useSecondaryShade: true },
   { key: 'llama',   label: 'Llama 3.3',         vendor: 'meta' },
   { key: 'mistral', label: 'Mistral Large',     vendor: 'mistral' },
@@ -711,7 +731,7 @@ export function RequestVolumeCard() {
             <CartesianGrid
               horizontal
               vertical={false}
-              stroke="var(--color-ink-100)"
+              stroke="var(--color-ink-200)"
               strokeDasharray="3 3"
             />
             <XAxis
@@ -720,7 +740,7 @@ export function RequestVolumeCard() {
               axisLine={false}
               tickMargin={8}
               height={28}
-              tick={{ fontSize: 11, fill: 'var(--color-ink-400)' }}
+              tick={{ fontSize: 11, fill: 'var(--color-ink-500)' }}
             />
             <YAxis
               tickLine={false}
@@ -729,7 +749,7 @@ export function RequestVolumeCard() {
               domain={[0, 60]}
               ticks={[0, 30, 60]}
               tickFormatter={(v) => `${v}K`}
-              tick={{ fontSize: 11, fill: 'var(--color-ink-400)' }}
+              tick={{ fontSize: 11, fill: 'var(--color-ink-500)' }}
               width={36}
             />
             <ChartTooltip
@@ -791,7 +811,7 @@ export function TopKeysCard() {
           <button
             type="button"
             aria-label="More"
-            className="relative inline-flex items-center justify-center size-6 rounded-md text-ink-400 transition-colors duration-150 ease-out hover:text-ink-900 hover:bg-ink-50 after:absolute after:-inset-2 after:content-['']"
+            className="relative inline-flex items-center justify-center size-6 rounded-xs text-ink-500 transition-colors duration-150 ease-out hover:text-ink-900 hover:bg-ink-100 after:absolute after:-inset-2 after:content-['']"
           >
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
               <circle cx="3" cy="8" r="1.25" fill="currentColor" />
@@ -807,11 +827,11 @@ export function TopKeysCard() {
           $1,147.82
         </div>
 
-        <div className="flex flex-col gap-4 pt-3 border-t border-ink-100">
+        <div className="flex flex-col gap-4 pt-3 border-t border-ink-200">
           {TOP_KEYS.map((k) => (
             <div key={k.label} className="flex items-center justify-between gap-3">
               <div className="flex items-center min-w-0 gap-2">
-                <VendorAvatar vendor={k.vendor} tone="neutral" />
+                <VendorAvatar vendor={k.vendor} />
                 <span className="font-sans text-sm font-medium -tracking-[0.14px] text-ink-900">
                   {k.label}
                 </span>
@@ -864,7 +884,7 @@ const STATUS_BADGE: Record<RequestStatus, {
 // dashboard's two surfaces read as the same depth tier.
 export function RecentRequestsCard() {
   return (
-    <div className="flex flex-col w-full rounded-md overflow-hidden bg-white border border-ink-100 shadow-xs">
+    <div className="flex flex-col w-full rounded-sm overflow-hidden bg-white shadow-(--shadow-border)">
       <div className="flex items-center justify-between py-3 px-4">
         <h3 className="font-sans text-base/5 font-medium -tracking-[0.25px] text-ink-900 m-0">
           Recent Requests
@@ -896,7 +916,7 @@ export function RecentRequestsCard() {
                 </TableCell>
                 <TableCell className="whitespace-nowrap">
                   <div className="flex items-center gap-2">
-                    <VendorAvatar vendor={row.vendor} tone="neutral" />
+                    <VendorAvatar vendor={row.vendor} />
                     <span className="font-mono text-sm text-ink-900 -tracking-[0.2px]">
                       {row.model}
                     </span>
@@ -953,10 +973,10 @@ function QuickActionsRow() {
   // Inset divider — hairline doesn't reach top/bottom edges; reads
   // lighter than a `divide-x`. Matches the KPI rail treatment.
   const dividerCls =
-    'relative before:absolute before:left-0 before:inset-y-4 before:w-px before:bg-ink-100';
+    'relative before:absolute before:left-0 before:inset-y-4 before:w-px before:bg-ink-200';
   return (
-    <div className="rounded-md border border-ink-100 bg-white shadow-xs overflow-hidden">
-      <div className="flex items-center py-3 px-4 border-b border-ink-100">
+    <div className="rounded-sm bg-white shadow-(--shadow-border) overflow-hidden">
+      <div className="flex items-center py-3 px-4 border-b border-ink-200">
         <h3 className="font-sans text-base/5 font-medium -tracking-[0.25px] text-ink-900 m-0">
           Quick Actions
         </h3>
@@ -980,17 +1000,17 @@ function QuickActionsRow() {
 function QuickActionItem({ icon: Icon, title, subtitle, accent }: QuickAction) {
   const sectionCls = accent
     ? 'bg-blue-50 hover:bg-blue-100/70'
-    : 'bg-white hover:bg-ink-25';
+    : 'bg-white hover:bg-ink-50';
   const chipCls = accent
     ? 'bg-blue-100 text-blue-700'
-    : 'bg-ink-50 text-ink-700';
+    : 'bg-ink-100 text-ink-700';
   return (
     <button
       type="button"
       className={`w-full flex items-center gap-3 p-4 text-left transition-colors duration-150 ease-out ${sectionCls}`}
     >
       <span
-        className={`shrink-0 size-8 inline-flex items-center justify-center rounded-md ${chipCls}`}
+        className={`shrink-0 size-8 inline-flex items-center justify-center rounded-xs ${chipCls}`}
       >
         <Icon className="size-4" strokeWidth={1.75} />
       </span>
@@ -1002,7 +1022,7 @@ function QuickActionItem({ icon: Icon, title, subtitle, accent }: QuickAction) {
           {subtitle}
         </span>
       </div>
-      <ChevronRight className="shrink-0 size-4 text-ink-400" strokeWidth={1.75} />
+      <ChevronRight className="shrink-0 size-4 text-ink-500" strokeWidth={1.75} />
     </button>
   );
 }

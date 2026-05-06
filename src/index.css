@@ -13,48 +13,93 @@
   --font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "Geist Mono", ui-monospace, "SFMono-Regular", monospace;
 
-  /* Brand blue ramp */
-  --color-blue-50:  #EBF0FF;
-  --color-blue-100: #E1E9FE;
-  --color-blue-200: #C2D3FF;
-  --color-blue-300: #9DB8FF;
-  --color-blue-400: #6A8EFB;
-  --color-blue-500: #4064FF;
-  --color-blue-600: #2942D6;
-  --color-blue-700: #1F2FCE; /* Brand mark color — logomark.svg is the source of truth. Blue ramp aligns to the logo. */
-  --color-blue-800: #13225F;
-  --color-blue-900: #0C1638;
-  --color-blue-950: #060B1D;
+  /* ─── Color ramps — all OKLCH, all 11-step (50–950), Tailwind-aligned naming.
+     Five ramps total: ink (neutrals), blue (brand), success (green), warning
+     (amber), danger (red). Info aliases to the blue ramp via the semantic
+     layer below — no separate ramp.
+     Step structure (Geist/Radix-inspired role conventions):
+       50–100   subtle backgrounds (washes, hover-bg)
+       200      borders, dividers
+       300      strong borders, ghost-button hover-bg
+       400      placeholder text, low-contrast accents
+       500      secondary text, chart strokes (medium contrast)
+       600      saturated mid (default solid surfaces, primary action color)
+       700      saturated dark (hover state for solids, primary text on tinted bg)
+       800–900  text on white (high-contrast)
+       950      deepest (rare — extreme contrast, dark-mode anchors) */
 
-  /* Neutrals */
-  --color-ink-900: #09090B;
-  --color-ink-800: #111417;
-  --color-ink-700: #1F2328;
-  --color-ink-600: #50565D;
-  --color-ink-500: #6E757D;
-  --color-ink-400: #71717B;
-  --color-ink-300: #9FA5AC;
-  --color-ink-200: #D1D5D9;
-  --color-ink-100: #E4E4E7;
-  --color-ink-75:  #E9EBEE;
-  --color-ink-50:  #F1F4F6;
-  --color-ink-25:  #F8F9FB;
+  /* Ink (neutral) — pure neutral chroma. ink-900 anchored near current
+     #09090B for primary-button identity. Perceptually uniform between. */
+  --color-ink-50:  oklch(0.985 0 0);
+  --color-ink-100: oklch(0.960 0 0);
+  --color-ink-200: oklch(0.910 0 0);
+  --color-ink-300: oklch(0.820 0 0);
+  --color-ink-400: oklch(0.680 0 0);
+  --color-ink-500: oklch(0.530 0 0);
+  --color-ink-600: oklch(0.380 0 0);
+  --color-ink-700: oklch(0.260 0 0);
+  --color-ink-800: oklch(0.165 0 0);
+  --color-ink-900: oklch(0.090 0 0);
+  --color-ink-950: oklch(0.045 0 0);
+
+  /* Blue (brand) — anchored to brand mark at blue-700. logomark.svg is the
+     source of truth; the rest of the ramp is derived around it. */
+  --color-blue-50:  oklch(0.970 0.020 268.85);
+  --color-blue-100: oklch(0.940 0.040 268.85);
+  --color-blue-200: oklch(0.890 0.075 268.85);
+  --color-blue-300: oklch(0.810 0.130 268.85);
+  --color-blue-400: oklch(0.700 0.180 268.85);
+  --color-blue-500: oklch(0.580 0.215 268.85);
+  --color-blue-600: oklch(0.470 0.232 268.85);
+  --color-blue-700: oklch(0.345 0.224 268.85); /* Brand mark — #1F2FCE */
+  --color-blue-800: oklch(0.275 0.175 268.85);
+  --color-blue-900: oklch(0.215 0.130 268.85);
+  --color-blue-950: oklch(0.145 0.085 268.85);
+
+  /* Success (green) — Tailwind v4 green ramp OKLCH. */
+  --color-success-50:  oklch(0.982 0.018 155.826);
+  --color-success-100: oklch(0.962 0.044 156.743);
+  --color-success-200: oklch(0.925 0.084 155.995);
+  --color-success-300: oklch(0.871 0.150 154.449);
+  --color-success-400: oklch(0.792 0.209 151.711);
+  --color-success-500: oklch(0.723 0.219 149.579);
+  --color-success-600: oklch(0.627 0.194 149.214);
+  --color-success-700: oklch(0.527 0.154 150.069);
+  --color-success-800: oklch(0.448 0.119 151.328);
+  --color-success-900: oklch(0.393 0.095 152.535);
+  --color-success-950: oklch(0.266 0.065 152.934);
+
+  /* Warning (amber) — Tailwind v4 amber ramp OKLCH. */
+  --color-warning-50:  oklch(0.987 0.022 95.277);
+  --color-warning-100: oklch(0.962 0.059 95.617);
+  --color-warning-200: oklch(0.924 0.120 95.746);
+  --color-warning-300: oklch(0.879 0.169 91.605);
+  --color-warning-400: oklch(0.828 0.189 84.429);
+  --color-warning-500: oklch(0.769 0.188 70.080);
+  --color-warning-600: oklch(0.666 0.179 58.318);
+  --color-warning-700: oklch(0.555 0.163 48.998);
+  --color-warning-800: oklch(0.473 0.137 46.201);
+  --color-warning-900: oklch(0.414 0.112 45.904);
+  --color-warning-950: oklch(0.279 0.077 45.635);
+
+  /* Danger (red) — Tailwind v4 red ramp OKLCH. */
+  --color-danger-50:  oklch(0.971 0.013 17.380);
+  --color-danger-100: oklch(0.936 0.032 17.717);
+  --color-danger-200: oklch(0.885 0.062 18.334);
+  --color-danger-300: oklch(0.808 0.114 19.571);
+  --color-danger-400: oklch(0.704 0.191 22.216);
+  --color-danger-500: oklch(0.637 0.237 25.331);
+  --color-danger-600: oklch(0.577 0.245 27.325);
+  --color-danger-700: oklch(0.505 0.213 27.518);
+  --color-danger-800: oklch(0.444 0.177 26.899);
+  --color-danger-900: oklch(0.396 0.141 25.723);
+  --color-danger-950: oklch(0.258 0.092 26.042);
 
   /* Atomic surfaces — pure white and the warm-paper canvas behind the app.
      Defined as palette atoms so semantic tokens (`--background`, `--card`,
      `--canvas-bg`) can reference them via var() instead of inlining hex. */
   --color-white:  #FFFFFF;
   --color-canvas: #ECECE7;
-
-  /* Semantic / status palette. All hex — palette atoms are the only place
-     raw color literals live; semantic tokens reference these via var(). */
-  --color-primary:    var(--color-ink-900);
-  --color-success:    #16A34A;
-  --color-success-2:  #22C55E;
-  --color-warning:    #B45309;
-  --color-warning-2:  #F97316; /* Brighter orange for chart strokes / spark lines — Tailwind orange-500 */
-  --color-danger:     #DC2626;
-  --color-danger-2:   #D33A3C;
 
   /* Syntax tokens (CMP-012 code cards). Named by intent, not by hue —
      a single CodeBlock primitive paints all variants from these vars. */
@@ -85,15 +130,31 @@
     0 1px 2px -1px color-mix(in oklch, var(--color-ink-800) 8%, transparent),
     0 2px 4px 0 color-mix(in oklch, var(--color-ink-800) 6%, transparent);
 
-  /* Floating-surface elevation (popovers, selects, dialogs, tooltips).
-     One token so every overlay reads as the same lift; previously each
-     primitive inlined its own rgba shadow which drifted over time. */
+  /* Floating-surface elevation — two-tier ladder aligned to Vercel Geist's
+     material system (menu tier sits close to the page; modal tier separates).
+     Each tier pairs lift + 1px ring; both colors mixed from --color-ink-800
+     so the shadow family tracks the ink ramp.
+       Menu (selects, popovers)    → 6px radius (rounded-sm) + --shadow-popup
+       Modal (dialogs, drill-ins)  → 12px radius (rounded-xl) + --shadow-modal */
   --shadow-popup:
-    0 8px 24px -6px color-mix(in oklch, var(--color-ink-800) 12%, transparent),
-    0 2px 6px -2px color-mix(in oklch, var(--color-ink-800) 8%, transparent);
+    0 4px 12px -2px color-mix(in oklch, var(--color-ink-800) 8%, transparent),
+    0 0 0 1px color-mix(in oklch, var(--color-ink-800) 4%, transparent);
   --shadow-modal:
-    0 12px 32px -8px color-mix(in oklch, var(--color-ink-800) 18%, transparent),
-    0 4px 8px -4px color-mix(in oklch, var(--color-ink-800) 10%, transparent);
+    0 16px 32px -4px color-mix(in oklch, var(--color-ink-800) 12%, transparent),
+    0 0 0 1px color-mix(in oklch, var(--color-ink-800) 6%, transparent);
+
+  /* Typescale overrides — align Tailwind's named sizes to Vercel Geist's
+     heading scale (even-numbered, larger increments at the top). Sizes not
+     listed (xs/sm/base/lg/xl/2xl/5xl/7xl) already match Geist values.
+       text-3xl: 30 → 32   (Geist heading-32)
+       text-4xl: 36 → 40   (Geist heading-40)
+       text-6xl: 60 → 64   (Geist heading-64) */
+  --text-3xl: 2rem;
+  --text-3xl--line-height: 2.5rem;
+  --text-4xl: 2.5rem;
+  --text-4xl--line-height: 3rem;
+  --text-6xl: 4rem;
+  --text-6xl--line-height: 1;
 }
 
 /* ─── Semantic token layer ──────────────────────────────────────────────
@@ -114,21 +175,22 @@
   --primary-foreground: var(--color-white);
   /* Gray-spectrum semantic tokens trace to the ink palette so `bg-muted`,
      `bg-secondary`, `bg-accent`, `border-border`, etc. cascade onto one
-     gray family. */
-  --secondary: var(--color-ink-50);
+     gray family. Step numbers shifted up one position vs. the legacy
+     hex ramp — ink-100 (was) ≈ ink-200 (now), ink-50 (was) ≈ ink-100 (now). */
+  --secondary: var(--color-ink-100);
   --secondary-foreground: var(--color-ink-900);
-  --muted: var(--color-ink-50);
+  --muted: var(--color-ink-100);
   --muted-foreground: var(--color-ink-500);
-  --accent: var(--color-ink-50);
+  --accent: var(--color-ink-100);
   --accent-foreground: var(--color-ink-900);
-  --destructive: var(--color-danger);
-  --border: var(--color-ink-100);
-  --input: var(--color-ink-100);
-  --ring: var(--color-ink-300);
+  --destructive: var(--color-danger-600);
+  --border: var(--color-ink-200);
+  --input: var(--color-ink-200);
+  --ring: var(--color-ink-400);
   /* Chart series fall back to a 5-step ink ramp (mostly unused — specific
      charts pick blue/danger/etc. directly). */
-  --chart-1: var(--color-ink-100);
-  --chart-2: var(--color-ink-300);
+  --chart-1: var(--color-ink-200);
+  --chart-2: var(--color-ink-400);
   --chart-3: var(--color-ink-500);
   --chart-4: var(--color-ink-700);
   --chart-5: var(--color-ink-800);
@@ -137,10 +199,10 @@
   --sidebar-foreground: var(--color-ink-900);
   --sidebar-primary: var(--color-ink-900);
   --sidebar-primary-foreground: var(--color-white);
-  --sidebar-accent: var(--color-ink-50);
+  --sidebar-accent: var(--color-ink-100);
   --sidebar-accent-foreground: var(--color-ink-900);
-  --sidebar-border: var(--color-ink-100);
-  --sidebar-ring: var(--color-ink-300);
+  --sidebar-border: var(--color-ink-200);
+  --sidebar-ring: var(--color-ink-400);
 }
 
 /* App shell: left nav + scrollable main area. */
@@ -200,7 +262,10 @@ body {
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
+  /* Geist material tiers — modal radius locked to 12px regardless of base
+     scaling. Everyday surfaces use rounded-sm (6px); modal/dialog uses
+     rounded-xl (12px). Keeping the full scale below for escape hatches. */
+  --radius-xl: 0.75rem;
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);

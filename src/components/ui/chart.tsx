@@ -63,7 +63,7 @@ function ChartContainer({
         data-slot="chart"
         data-chart={chartId}
         className={cn(
-          "flex justify-center text-xs [&_.recharts-cartesian-axis-tick_text]:fill-ink-400 [&_.recharts-cartesian-grid_line[stroke='#ccc']]:stroke-ink-100 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-ink-300 [&_.recharts-dot[stroke='#fff']]:stroke-transparent [&_.recharts-layer]:outline-hidden [&_.recharts-polar-grid_[stroke='#ccc']]:stroke-ink-100 [&_.recharts-radial-bar-background-sector]:fill-ink-50 [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-ink-50 [&_.recharts-reference-line_[stroke='#ccc']]:stroke-ink-100 [&_.recharts-sector]:outline-hidden [&_.recharts-sector[stroke='#fff']]:stroke-transparent [&_.recharts-surface]:outline-hidden",
+          "flex justify-center text-xs [&_.recharts-cartesian-axis-tick_text]:fill-ink-500 [&_.recharts-cartesian-grid_line[stroke='#ccc']]:stroke-ink-200 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-ink-400 [&_.recharts-dot[stroke='#fff']]:stroke-transparent [&_.recharts-layer]:outline-hidden [&_.recharts-polar-grid_[stroke='#ccc']]:stroke-ink-200 [&_.recharts-radial-bar-background-sector]:fill-ink-100 [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-ink-100 [&_.recharts-reference-line_[stroke='#ccc']]:stroke-ink-200 [&_.recharts-sector]:outline-hidden [&_.recharts-sector[stroke='#fff']]:stroke-transparent [&_.recharts-surface]:outline-hidden",
           className
         )}
         {...props}
@@ -189,7 +189,7 @@ function ChartTooltipContent({
   return (
     <div
       className={cn(
-        "grid min-w-32 items-start gap-2 rounded-lg border border-ink-100 bg-white px-3 py-2 text-xs text-ink-900 shadow-(--shadow-popup)",
+        "grid min-w-32 items-start gap-2 rounded-sm border border-ink-200 bg-white px-3 py-2 text-xs text-ink-900 shadow-(--shadow-popup)",
         className
       )}
     >
@@ -206,7 +206,7 @@ function ChartTooltipContent({
               <div
                 key={index}
                 className={cn(
-                  "flex w-full flex-wrap items-stretch gap-2 [&>svg]:h-2.5 [&>svg]:w-2.5 [&>svg]:text-ink-400",
+                  "flex w-full flex-wrap items-stretch gap-2 [&>svg]:h-2.5 [&>svg]:w-2.5 [&>svg]:text-ink-500",
                   indicator === "dot" && "items-center"
                 )}
               >
@@ -304,7 +304,7 @@ function ChartLegendContent({
             <div
               key={index}
               className={cn(
-                "flex items-center gap-2 [&>svg]:h-3 [&>svg]:w-3 [&>svg]:text-ink-400"
+                "flex items-center gap-2 [&>svg]:h-3 [&>svg]:w-3 [&>svg]:text-ink-500"
               )}
             >
               {itemConfig?.icon && !hideIcon ? (

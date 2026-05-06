@@ -34,7 +34,7 @@ export function CMP006TabsPagination() {
 
   return (
     <div className="flex flex-col w-[1440px]">
-      <div className="flex flex-col w-full bg-ink-25">
+      <div className="flex flex-col w-full bg-ink-50">
         <ArtboardHeader
           code="CMP-006"
           title="Tabs · pagination"
@@ -49,7 +49,7 @@ export function CMP006TabsPagination() {
               code="CMP-006.1 — UNDERLINE TABS"
               hint="page-level navigation"
             />
-            <div className="flex flex-col rounded-sm bg-white border border-ink-75">
+            <div className="flex flex-col rounded-sm bg-white border border-ink-100">
               <Tabs value={tab} onValueChange={setTab}>
                 <TabsList variant="line">
                   <TabsTrigger value="overview">Overview</TabsTrigger>
@@ -83,7 +83,7 @@ export function CMP006TabsPagination() {
               code="CMP-006.2 — SEGMENTED · PAGINATION"
               hint="<SegmentedPill> · <ToggleGroup> · <Pagination>"
             />
-            <div className="flex flex-col rounded-sm gap-5 bg-white border border-ink-75 p-7">
+            <div className="flex flex-col rounded-sm gap-5 bg-white border border-ink-100 p-7">
               {/* Three segmented groups */}
               <div className="flex items-center flex-wrap gap-4">
                 <SegmentedPill
@@ -114,7 +114,7 @@ export function CMP006TabsPagination() {
                   aria-label="Sort order"
                   value={[sort]}
                   onValueChange={(v) => v.length > 0 && setSort(v[v.length - 1])}
-                  className="rounded-lg overflow-clip gap-0"
+                  className="rounded-sm overflow-clip gap-0"
                 >
                   {[
                     { value: 'newest', label: 'Newest' },
@@ -126,7 +126,7 @@ export function CMP006TabsPagination() {
                       value={opt.value}
                       className={cn(
                         'h-7 px-3 min-w-0 rounded-none text-xs font-sans font-medium text-ink-900 bg-white',
-                        'border border-ink-200 hover:bg-ink-25',
+                        'border border-ink-300 hover:bg-ink-50',
                         i > 0 && '-ml-px',
                         'data-[pressed]:bg-ink-800 data-[pressed]:text-white data-[pressed]:border-ink-800',
                         'aria-pressed:bg-ink-800 aria-pressed:text-white aria-pressed:border-ink-800',

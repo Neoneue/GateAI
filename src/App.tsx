@@ -75,13 +75,13 @@ export default function App() {
           1px stub when collapsed. */}
       <nav
         className={cn(
-          'shrink-0 h-full bg-ink-25 overflow-hidden transition-[width] duration-200 ease-out motion-reduce:transition-none',
-          sidebarCollapsed ? 'w-0' : 'w-60 border-r border-ink-100',
+          'shrink-0 h-full bg-ink-50 overflow-hidden transition-[width] duration-200 ease-out motion-reduce:transition-none',
+          sidebarCollapsed ? 'w-0' : 'w-60 border-r border-ink-200',
         )}
         aria-hidden={sidebarCollapsed}
       >
         <div className="w-60 shrink-0 h-full flex flex-col">
-          <div className="flex items-start justify-between gap-2 px-5 py-5 border-b border-ink-100">
+          <div className="flex items-start justify-between gap-2 px-5 py-5 border-b border-ink-200">
             <div className="flex flex-col gap-1 min-w-0">
               <div className="flex flex-col font-mono text-xs uppercase tracking-[0.12em] font-medium text-ink-500">
                 <span>Constellation</span>
@@ -94,7 +94,7 @@ export default function App() {
             <button
               type="button"
               onClick={() => setSidebarCollapsed(true)}
-              className="shrink-0 size-7 inline-flex items-center justify-center rounded-md text-ink-500 hover:text-ink-900 hover:bg-white/60 transition-colors duration-150 ease-out"
+              className="shrink-0 size-7 inline-flex items-center justify-center rounded-sm text-ink-500 hover:text-ink-900 hover:bg-white/60 transition-colors duration-150 ease-out"
               aria-label="Collapse sidebar"
             >
               <PanelLeftClose className="size-4" strokeWidth={1.75} />
@@ -107,15 +107,15 @@ export default function App() {
                 type="button"
                 onClick={() => setActive(p.id)}
                 className={cn(
-                  'flex items-center justify-between px-3 py-2 rounded-md text-left transition-colors',
+                  'flex items-center justify-between px-3 py-2 rounded-sm text-left transition-colors',
                   'font-sans text-sm',
                   active === p.id
-                    ? 'bg-white text-ink-900 font-medium shadow-xs border border-ink-100'
+                    ? 'bg-white text-ink-900 font-medium shadow-xs border border-ink-200'
                     : 'text-ink-600 hover:text-ink-900 hover:bg-white/60 border border-transparent',
                 )}
               >
                 <span>{p.name}</span>
-                <span className="font-mono text-xs uppercase tracking-[0.08em] text-ink-400">
+                <span className="font-mono text-xs uppercase tracking-[0.08em] text-ink-500">
                   {p.code}
                 </span>
               </button>
@@ -125,12 +125,12 @@ export default function App() {
       </nav>
 
       {/* Main scrollable content */}
-      <main className="relative flex-1 h-full overflow-auto bg-ink-25">
+      <main className="relative flex-1 h-full overflow-auto bg-ink-50">
         {sidebarCollapsed ? (
           <button
             type="button"
             onClick={() => setSidebarCollapsed(false)}
-            className="fixed top-4 left-4 z-10 size-8 inline-flex items-center justify-center rounded-md bg-white border border-ink-100 shadow-xs text-ink-500 hover:text-ink-900 transition-colors duration-150 ease-out"
+            className="fixed top-4 left-4 z-10 size-8 inline-flex items-center justify-center rounded-sm bg-white border border-ink-200 shadow-xs text-ink-500 hover:text-ink-900 transition-colors duration-150 ease-out"
             aria-label="Show sidebar"
           >
             <PanelLeftOpen className="size-4" strokeWidth={1.75} />

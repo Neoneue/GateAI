@@ -18,7 +18,7 @@ export function CMP003BadgesAndTags() {
 
   return (
     <div className="flex flex-col w-[1440px]">
-      <div className="flex flex-col w-full bg-ink-25">
+      <div className="flex flex-col w-full bg-ink-50">
         <ArtboardHeader
           code="CMP-003"
           title="Badges & tags"
@@ -27,14 +27,14 @@ export function CMP003BadgesAndTags() {
         />
 
         <div className="flex flex-col gap-6">
-        <div className="flex gap-6 bg-ink-25">
+        <div className="flex gap-6 bg-ink-50">
           {/* CMP-003.1 — STATUS */}
-          <div className="flex flex-col grow gap-3 basis-0 bg-ink-25">
+          <div className="flex flex-col grow gap-3 basis-0 bg-ink-50">
             <SectionHeader
               code="CMP-003.1 — STATUS"
               hint="<Badge variant=… /> + <StatusDot />"
             />
-            <div className="flex flex-col rounded-sm gap-3 bg-white border border-ink-75 p-7">
+            <div className="flex flex-col rounded-sm gap-3 bg-white border border-ink-100 p-7">
               <div className="flex flex-wrap items-center gap-2">
                 <Badge variant="success">
                   <StatusDot kind="success" />
@@ -75,12 +75,12 @@ export function CMP003BadgesAndTags() {
           </div>
 
           {/* CMP-003.2 — COUNTERS & CHIPS */}
-          <div className="flex flex-col grow gap-3 basis-0 bg-ink-25">
+          <div className="flex flex-col grow gap-3 basis-0 bg-ink-50">
             <SectionHeader
               code="CMP-003.2 — COUNTERS & CHIPS"
               hint="<Badge /> · <Tag onRemove /> · mono marks"
             />
-            <div className="flex flex-col rounded-sm gap-4 bg-white border border-ink-75 p-7">
+            <div className="flex flex-col rounded-sm gap-4 bg-white border border-ink-100 p-7">
               {/* Counters / version pills / accent labels */}
               <div className="flex flex-wrap items-center gap-3">
                 <Badge variant="secondary" className="rounded-sm h-5 px-2 font-mono font-normal">
@@ -123,10 +123,10 @@ export function CMP003BadgesAndTags() {
 
               {/* Rev marks — mono uppercase, square corner */}
               <div className="flex flex-wrap items-center gap-2">
-                <Badge variant="secondary" className="rounded-none h-5 px-2 font-mono uppercase tracking-widest text-ink-400 border border-ink-100">
+                <Badge variant="secondary" className="rounded-none h-5 px-2 font-mono uppercase tracking-widest text-ink-500 border border-ink-200">
                   R.01
                 </Badge>
-                <Badge variant="secondary" className="rounded-none h-5 px-2 font-mono uppercase tracking-widest text-ink-400 border border-ink-100">
+                <Badge variant="secondary" className="rounded-none h-5 px-2 font-mono uppercase tracking-widest text-ink-500 border border-ink-200">
                   SHEET 011
                 </Badge>
                 <Badge variant="default" className="rounded-none h-5 px-2 font-mono uppercase tracking-widest">
@@ -138,12 +138,12 @@ export function CMP003BadgesAndTags() {
         </div>
 
         {/* CMP-003.3 — DELTA TAG */}
-        <div className="flex flex-col gap-3 bg-ink-25">
+        <div className="flex flex-col gap-3 bg-ink-50">
           <SectionHeader
             code="CMP-003.3 — DELTA TAG"
             hint="<DeltaTag delta=… note=… /> · directional pill + optional note"
           />
-          <div className="flex flex-col rounded-sm gap-4 bg-white border border-ink-75 p-7">
+          <div className="flex flex-col rounded-sm gap-4 bg-white border border-ink-100 p-7">
             {/* Positive — pill alone, then with note */}
             <div className="flex flex-wrap items-center gap-6">
               <DeltaTag delta="+8.2%" />

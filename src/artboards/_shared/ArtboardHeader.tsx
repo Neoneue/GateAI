@@ -22,7 +22,7 @@ export function ArtboardHeader({
   status = 'released',
 }: ArtboardHeaderProps) {
   return (
-    <div className="flex items-start mb-8 pb-4 gap-8 bg-ink-25 border-b border-ink-75">
+    <div className="flex items-start mb-8 pb-4 gap-8 bg-ink-50 border-b border-ink-100">
       <div className="flex flex-col w-[200px] shrink-0 gap-1">
         <div className="flex items-baseline gap-1 font-mono uppercase tracking-[0.1em] text-xs">
           <span className="text-ink-500">§</span>
@@ -30,7 +30,7 @@ export function ArtboardHeader({
         </div>
       </div>
       <div className="flex flex-col grow gap-1.5">
-        <h1 className="font-sans font-medium text-ink-800 text-4xl/10 -tracking-[1px] m-0">
+        <h1 className="font-sans font-medium text-ink-800 text-3xl/9 -tracking-[1px] m-0">
           {title}
         </h1>
         <p className="font-mono text-ink-600 text-xs/[18.6px] max-w-[620px] m-0">
@@ -52,13 +52,19 @@ export function ArtboardHeader({
 }
 
 export function SectionHeader({ code, hint }: { code: string; hint?: string }) {
+  const [prefix, title] = code.split(' — ');
   return (
-    <div className="flex items-baseline justify-between bg-ink-25">
-      <div className="font-mono uppercase tracking-[0.1em] font-medium text-ink-500 text-xs">
-        {code}
+    <div className="flex flex-col bg-ink-50 gap-1.5">
+      <div className="flex items-baseline justify-between">
+        <div className="font-mono uppercase tracking-[0.1em] font-medium text-ink-500 text-xs">
+          {prefix}
+        </div>
+        {hint && <div className="font-mono text-ink-400 text-xs">{hint}</div>}
       </div>
-      {hint && (
-        <div className="font-mono text-ink-300 text-xs">{hint}</div>
+      {title && (
+        <h2 className="font-sans font-medium text-ink-800 text-2xl/8 -tracking-[0.5px] m-0">
+          {title}
+        </h2>
       )}
     </div>
   );

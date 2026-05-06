@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils"
 const badgeVariants = cva(
   // Skill: performance.md — only colors actually animate on a badge,
   // so transition just colors (and the focus ring shadow).
-  "group/badge inline-flex h-5 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-xs border border-transparent pl-3 pr-2 text-xs font-medium whitespace-nowrap transition-[colors,box-shadow] duration-150 ease-out focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&>svg]:pointer-events-none [&>svg]:size-3!",
+  "group/badge inline-flex h-5 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-xs border border-transparent pl-2.5 pr-1.5 text-xs font-medium whitespace-nowrap transition-[colors,box-shadow] duration-150 ease-out focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&>svg]:pointer-events-none [&>svg]:size-3!",
   {
     variants: {
       variant: {
@@ -24,13 +24,13 @@ const badgeVariants = cva(
 
         /* ─── Constellation Gate AI status variants ────────────── */
         success:
-          "bg-success/15 text-success [a]:hover:bg-success/25",
+          "bg-success-100 text-success-700 [a]:hover:bg-success-200",
         warning:
-          "bg-warning/15 text-warning [a]:hover:bg-warning/25",
+          "bg-warning-100 text-warning-700 [a]:hover:bg-warning-200",
         info:
-          "bg-primary/15 text-primary [a]:hover:bg-primary/25",
+          "bg-blue-700/10 text-blue-600 [a]:hover:bg-blue-700/20",
         neutral:
-          "bg-ink-50 text-ink-700 border-ink-100 [a]:hover:bg-ink-100",
+          "bg-ink-100 text-ink-700 border-ink-200 [a]:hover:bg-ink-200",
       },
     },
     defaultVariants: {

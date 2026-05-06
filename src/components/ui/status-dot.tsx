@@ -1,11 +1,11 @@
 import { cn } from '@/lib/utils';
 
 const statusColors = {
-  success: 'bg-success',
-  warning: 'bg-warning',
+  success: 'bg-success-600',
+  warning: 'bg-warning-600',
   danger: 'bg-destructive',
-  info: 'bg-primary',
-  neutral: 'bg-ink-400',
+  info: 'bg-blue-600',
+  neutral: 'bg-ink-500',
 } as const;
 
 export type StatusDotKind = keyof typeof statusColors;

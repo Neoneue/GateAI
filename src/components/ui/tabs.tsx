@@ -27,8 +27,8 @@ const tabsListVariants = cva(
     variants: {
       variant: {
         default:
-          "w-fit justify-center rounded-lg p-1 group-data-horizontal/tabs:h-8 bg-muted",
-        line: "w-full justify-start gap-0 px-5 bg-transparent border-b border-ink-75",
+          "w-fit justify-center rounded-sm p-1 group-data-horizontal/tabs:h-8 bg-muted",
+        line: "w-full justify-start gap-0 px-5 bg-transparent border-b border-ink-100",
       },
     },
     defaultVariants: {
@@ -60,7 +60,7 @@ function TabsList({
       {variant === "default" ? (
         <TabsPrimitive.Indicator
           data-slot="tabs-indicator"
-          className="absolute z-0 left-(--active-tab-left) top-(--active-tab-top) w-(--active-tab-width) h-(--active-tab-height) rounded-md bg-background shadow-sm transition-[left,width,top,height] duration-200 ease-out motion-reduce:transition-none"
+          className="absolute z-0 left-(--active-tab-left) top-(--active-tab-top) w-(--active-tab-width) h-(--active-tab-height) rounded-xs bg-background shadow-sm transition-[left,width,top,height] duration-200 ease-out motion-reduce:transition-none"
         />
       ) : null}
       {children}
@@ -78,7 +78,7 @@ function TabsTrigger({ className, ...props }: TabsPrimitive.Tab.Props) {
         // and the underline opacity.
         // `z-10` keeps trigger labels above the sliding TabsIndicator
         // (which sits at z-0 inside the list).
-        "relative z-10 inline-flex h-[calc(100%-1px)] items-center justify-center gap-2 rounded-md border border-transparent text-sm whitespace-nowrap transition-colors duration-150 ease-out group-data-vertical/tabs:w-full group-data-vertical/tabs:justify-start focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-50 has-data-[icon=inline-end]:pr-1 has-data-[icon=inline-start]:pl-1 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        "relative z-10 inline-flex h-[calc(100%-1px)] items-center justify-center gap-2 rounded-xs border border-transparent text-sm whitespace-nowrap transition-colors duration-150 ease-out group-data-vertical/tabs:w-full group-data-vertical/tabs:justify-start focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-50 has-data-[icon=inline-end]:pr-1 has-data-[icon=inline-start]:pl-1 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         "group-data-[variant=default]/tabs-list:flex-1 group-data-[variant=default]/tabs-list:px-2 group-data-[variant=default]/tabs-list:py-1 group-data-[variant=default]/tabs-list:font-medium group-data-[variant=default]/tabs-list:text-foreground/60 group-data-[variant=default]/tabs-list:hover:text-foreground dark:group-data-[variant=default]/tabs-list:text-muted-foreground dark:group-data-[variant=default]/tabs-list:hover:text-foreground",
         // Default variant active text only — bg + shadow now live on
         // the sliding TabsIndicator.

@@ -147,7 +147,7 @@ const RESPONSE_LINES: CodeLine[] = [
 export function CMP008cCodeCards() {
   return (
     <div className="flex flex-col w-[1440px]">
-      <div className="flex flex-col w-full bg-ink-25">
+      <div className="flex flex-col w-full bg-ink-50">
         <ArtboardHeader
           code="CMP-008c"
           title="Code cards"
@@ -188,7 +188,7 @@ export function CMP008cCodeCards() {
 
 function HeroCard() {
   return (
-    <div className="flex items-center gap-8 p-7 rounded-sm bg-white border border-ink-75">
+    <div className="flex items-center gap-8 p-7 rounded-sm bg-white border border-ink-100">
       <div className="flex flex-col grow shrink basis-0 gap-4">
         <div className="font-mono uppercase tracking-[0.12em] text-blue-700 text-xs/4 font-medium">
           QUICKSTART
@@ -253,7 +253,7 @@ const STEPS: StepItem[] = [
 
 function StepsCard() {
   return (
-    <div className="flex flex-col p-7 gap-5 rounded-sm bg-white border border-ink-75">
+    <div className="flex flex-col p-7 gap-5 rounded-sm bg-white border border-ink-100">
       {STEPS.map((step) => (
         <div key={step.n} className="flex items-start gap-4">
           <div className="flex items-center justify-center shrink-0 size-6 rounded-full bg-blue-700">
@@ -267,7 +267,7 @@ function StepsCard() {
             </div>
             <p className="text-ink-600 text-xs/4 m-0">{step.body}</p>
             {step.snippet && (
-              <div className="mt-2 rounded-md bg-ink-50 border border-ink-75">
+              <div className="mt-2 rounded-sm bg-ink-100 border border-ink-100">
                 <CodeBlock lines={[step.snippet]} density="inline" />
               </div>
             )}
@@ -307,19 +307,19 @@ function DarkTerminalCard() {
 function RequestResponseCard() {
   return (
     <CodeCard>
-      <div className="flex items-center gap-2 px-4 py-3 bg-ink-50 border-b border-ink-75">
-        <span className="inline-flex items-center h-5 px-2 rounded-md bg-ink-800 font-sans font-medium text-white text-xs/4 tracking-[0.06em]">
+      <div className="flex items-center gap-2 px-4 py-3 bg-ink-100 border-b border-ink-100">
+        <span className="inline-flex items-center h-5 px-2 rounded-sm bg-ink-800 font-sans font-medium text-white text-xs/4 tracking-[0.06em]">
           POST
         </span>
         <span className="font-sans text-ink-800 text-xs/4">/v1/messages</span>
         {/* Status pill — uses <Tag> primitive with chrome stripped for density.
             Paper renders the pill as text-only on the header strip; the <Tag>
             wrapper keeps it semantically a "removable/status chip" type. */}
-        <Tag className="ml-auto h-5 bg-transparent border-transparent text-success font-mono">
+        <Tag className="ml-auto h-5 bg-transparent border-transparent text-success-700 font-mono">
           200 · 842ms
         </Tag>
       </div>
-      <div className="border-b border-ink-75">
+      <div className="border-b border-ink-100">
         <CodeBlock lines={REQUEST_LINES} />
       </div>
       <CodeBlock lines={RESPONSE_LINES} />

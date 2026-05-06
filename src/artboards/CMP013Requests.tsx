@@ -18,7 +18,6 @@ import {
   MoreHorizontal,
   PanelLeftClose,
   PanelLeftOpen,
-  Play,
   Search,
   Settings2,
   Shield,
@@ -115,7 +114,7 @@ export function CMP013Requests({
 } = {}) {
   return (
     <div className="flex flex-col w-[1440px] min-w-0">
-      <div className="flex flex-col w-full bg-ink-25">
+      <div className="flex flex-col w-full bg-ink-50">
         <ArtboardHeader
           code="CMP-013"
           title="Requests · Observability"
@@ -152,7 +151,7 @@ function DashboardSurface({
   onToggleSidebar: () => void;
 }) {
   return (
-    <div className="flex flex-col w-full overflow-hidden rounded-md border border-ink-100 bg-white shadow-xs">
+    <div className="flex flex-col w-full overflow-hidden rounded-sm bg-white shadow-(--shadow-border)">
       <ScreenHead />
       <div className="flex flex-row min-h-0">
         <SidebarShell expanded={sidebarExpanded} onNavigate={onNavigate} />
@@ -177,7 +176,7 @@ function SidebarShell({
       aria-label="Primary navigation"
       style={{ transitionTimingFunction: 'cubic-bezier(0.32, 0.72, 0, 1)' }}
       className={cn(
-        'relative shrink-0 overflow-hidden bg-white border-r border-ink-100 transition-[width] duration-300 motion-reduce:transition-none',
+        'relative shrink-0 overflow-hidden bg-white border-r border-ink-200 transition-[width] duration-300 motion-reduce:transition-none',
         expanded ? 'w-60' : 'w-16',
       )}
     >
@@ -207,7 +206,7 @@ function SidebarShell({
 
 function ScreenHead() {
   return (
-    <div className="relative flex items-center h-[41px] px-4 bg-ink-25 border-b border-ink-100 shrink-0">
+    <div className="relative flex items-center h-[41px] px-4 bg-ink-50 border-b border-ink-200 shrink-0">
       <div className="flex items-center gap-2">
         <span className="size-2.5 rounded-full bg-[var(--color-traffic-red)]" aria-hidden />
         <span className="size-2.5 rounded-full bg-[var(--color-traffic-amber)]" aria-hidden />
@@ -247,8 +246,8 @@ function DashSidebar({ onNavigate }: { onNavigate?: (pageId: string) => void }) 
                   onClick={item.pageId ? () => onNavigate?.(item.pageId!) : undefined}
                   className={
                     item.active
-                      ? 'flex items-center justify-center size-9 rounded-lg bg-ink-100 text-ink-900'
-                      : 'flex items-center justify-center size-9 rounded-lg text-ink-400 transition-colors duration-150 ease-out hover:text-ink-700 hover:bg-ink-50'
+                      ? 'flex items-center justify-center size-9 rounded-sm bg-ink-200 text-ink-900'
+                      : 'flex items-center justify-center size-9 rounded-sm text-ink-500 transition-colors duration-150 ease-out hover:text-ink-700 hover:bg-ink-100'
                   }
                 >
                   <Icon className="size-[18px]" strokeWidth={1.5} />
@@ -323,7 +322,7 @@ const SIDEBAR_SECTIONS: SidebarSection[] = [
 function DashSidebarExpanded({ onNavigate }: { onNavigate?: (pageId: string) => void }) {
   return (
     <div className="flex flex-col w-60 h-full shrink-0">
-      <div className="flex items-center gap-3 px-4 py-4 border-b border-ink-100 shrink-0">
+      <div className="flex items-center gap-3 px-4 py-4 border-b border-ink-200 shrink-0">
         <BrandMark className="size-8 shrink-0 text-blue-700" />
         <div className="flex flex-col leading-tight min-w-0">
           <span className="font-mono text-xs uppercase tracking-[0.1em] font-medium text-ink-500">
@@ -334,10 +333,10 @@ function DashSidebarExpanded({ onNavigate }: { onNavigate?: (pageId: string) => 
           </span>
         </div>
       </div>
-      <div className="px-3 py-3 border-b border-ink-100 shrink-0">
+      <div className="px-3 py-3 border-b border-ink-200 shrink-0">
         <button
           type="button"
-          className="flex items-center justify-between gap-2 w-full p-2 rounded-md border border-ink-100 bg-white hover:bg-ink-25 transition-colors duration-150 ease-out"
+          className="flex items-center justify-between gap-2 w-full p-2 rounded-sm border border-ink-200 bg-white hover:bg-ink-50 transition-colors duration-150 ease-out"
         >
           <span className="font-sans text-sm font-medium text-ink-900 truncate min-w-0">
             Chad's project
@@ -346,7 +345,7 @@ function DashSidebarExpanded({ onNavigate }: { onNavigate?: (pageId: string) => 
             <span className="inline-flex items-center h-5 px-2 rounded-full bg-blue-50 text-blue-700 font-sans text-xs font-medium">
               Pro
             </span>
-            <ChevronsUpDown className="size-4 text-ink-400" strokeWidth={1.75} aria-hidden />
+            <ChevronsUpDown className="size-4 text-ink-500" strokeWidth={1.75} aria-hidden />
           </div>
         </button>
       </div>
@@ -368,8 +367,8 @@ function DashSidebarExpanded({ onNavigate }: { onNavigate?: (pageId: string) => 
                   onClick={item.pageId ? () => onNavigate?.(item.pageId!) : undefined}
                   className={
                     item.active
-                      ? 'flex items-center gap-3 px-2 py-2 rounded-md border border-ink-100 bg-ink-50 text-ink-900 font-medium shadow-xs'
-                      : 'flex items-center gap-3 px-2 py-2 rounded-md border border-transparent text-ink-700 hover:text-ink-900 hover:bg-ink-25 transition-colors duration-150 ease-out'
+                      ? 'flex items-center gap-3 px-2 py-2 rounded-sm border border-ink-200 bg-ink-100 text-ink-900 font-medium shadow-xs'
+                      : 'flex items-center gap-3 px-2 py-2 rounded-sm border border-transparent text-ink-700 hover:text-ink-900 hover:bg-ink-50 transition-colors duration-150 ease-out'
                   }
                 >
                   <Icon className="size-4 shrink-0" strokeWidth={1.75} />
@@ -380,7 +379,7 @@ function DashSidebarExpanded({ onNavigate }: { onNavigate?: (pageId: string) => 
           </div>
         ))}
       </nav>
-      <div className="flex items-center justify-between gap-2 px-3 py-3 border-t border-ink-100 shrink-0">
+      <div className="flex items-center justify-between gap-2 px-3 py-3 border-t border-ink-200 shrink-0">
         <div className="flex items-center gap-2 min-w-0">
           <span className="size-7 shrink-0 rounded-full bg-blue-700" aria-hidden />
           <span className="font-sans text-sm font-medium text-ink-900 truncate">
@@ -390,7 +389,7 @@ function DashSidebarExpanded({ onNavigate }: { onNavigate?: (pageId: string) => 
         <button
           type="button"
           aria-label="User menu"
-          className="shrink-0 size-7 inline-flex items-center justify-center rounded-md text-ink-500 hover:text-ink-900 hover:bg-ink-50 transition-colors duration-150 ease-out"
+          className="shrink-0 size-7 inline-flex items-center justify-center rounded-sm text-ink-500 hover:text-ink-900 hover:bg-ink-100 transition-colors duration-150 ease-out"
         >
           <MoreHorizontal className="size-4" strokeWidth={1.75} />
         </button>
@@ -409,7 +408,7 @@ function DashMain({
   onToggleSidebar: () => void;
 }) {
   return (
-    <div className="flex flex-col flex-1 min-w-0 bg-ink-25">
+    <div className="flex flex-col flex-1 min-w-0 bg-ink-50">
       <DashTopBar
         sidebarExpanded={sidebarExpanded}
         onToggleSidebar={onToggleSidebar}
@@ -431,7 +430,7 @@ function DashTopBar({
   onToggleSidebar: () => void;
 }) {
   return (
-    <div className="flex items-center justify-between h-[49px] px-6 bg-white border-b border-ink-100 shrink-0">
+    <div className="flex items-center justify-between h-[49px] px-6 bg-white border-b border-ink-200 shrink-0">
       <div className="flex items-center gap-2">
         <Button
           variant="ghost"
@@ -439,22 +438,42 @@ function DashTopBar({
           aria-label={sidebarExpanded ? 'Collapse sidebar' : 'Expand sidebar'}
           aria-expanded={sidebarExpanded}
           onClick={onToggleSidebar}
-          className="-ml-2 text-ink-400 hover:text-ink-700 aria-expanded:bg-transparent aria-expanded:text-ink-400 hover:aria-expanded:text-ink-700"
+          className="-ml-2 text-ink-500 hover:text-ink-700 aria-expanded:bg-transparent aria-expanded:text-ink-500 hover:aria-expanded:text-ink-700"
         >
-          {sidebarExpanded ? (
-            <PanelLeftClose className="size-4" strokeWidth={1.75} />
-          ) : (
-            <PanelLeftOpen className="size-4" strokeWidth={1.75} />
-          )}
+          {/* Skill: animations.md — contextual icon cross-fade. Both icons stay
+              in DOM, absolute-positioned over each other; toggle scale/opacity/blur
+              with the skill's exact values (0.25→1, 0→1, 4px→0). */}
+          <span className="relative inline-flex size-4 items-center justify-center">
+            <PanelLeftClose
+              aria-hidden
+              strokeWidth={1.75}
+              className={cn(
+                'absolute size-4 transition-[opacity,transform,filter] duration-300 [transition-timing-function:cubic-bezier(0.2,0,0,1)] motion-reduce:transition-none',
+                sidebarExpanded
+                  ? 'opacity-100 scale-100 blur-0'
+                  : 'opacity-0 scale-[0.25] blur-[4px]',
+              )}
+            />
+            <PanelLeftOpen
+              aria-hidden
+              strokeWidth={1.75}
+              className={cn(
+                'absolute size-4 transition-[opacity,transform,filter] duration-300 [transition-timing-function:cubic-bezier(0.2,0,0,1)] motion-reduce:transition-none',
+                sidebarExpanded
+                  ? 'opacity-0 scale-[0.25] blur-[4px]'
+                  : 'opacity-100 scale-100 blur-0',
+              )}
+            />
+          </span>
         </Button>
         <span className="font-sans text-xs text-ink-500">All Projects</span>
-        <ChevronRight className="size-3 text-ink-300" strokeWidth={1.75} aria-hidden />
+        <ChevronRight className="size-3 text-ink-400" strokeWidth={1.75} aria-hidden />
         <span className="font-sans text-xs text-ink-500">Constellation Gate AI</span>
-        <ChevronRight className="size-3 text-ink-300" strokeWidth={1.75} aria-hidden />
+        <ChevronRight className="size-3 text-ink-400" strokeWidth={1.75} aria-hidden />
         <span aria-current="page" className="font-sans text-xs font-medium text-ink-900">Requests</span>
       </div>
       <div className="flex items-center gap-1">
-        <Button variant="outline" size="sm" className="border-ink-100 bg-white text-ink-900">
+        <Button variant="outline" size="sm" className="border-ink-200 bg-white text-ink-900">
           Docs
         </Button>
         <Button
@@ -478,11 +497,11 @@ function DashTopBar({
 function PageHeader() {
   return (
     <div className="flex items-end justify-between gap-6">
-      <div className="flex flex-col gap-2">
-        <h1 className="font-sans font-medium text-ink-900 text-3xl/9 -tracking-[1px] m-0">
+      <div className="flex flex-col gap-2 max-w-1/2">
+        <h1 className="font-sans font-medium text-ink-900 text-3xl/9 -tracking-[1px] text-balance m-0">
           Requests
         </h1>
-        <p className="font-sans text-ink-400 text-base tracking-tight m-0 max-w-[640px]">
+        <p className="font-sans text-ink-500 text-base tracking-tight text-pretty m-0">
           Every generation routed through the gateway. Click a row to inspect prompts, security scans and the audit anchor. Group by conversation to follow a chain of calls.
         </p>
       </div>
@@ -490,10 +509,6 @@ function PageHeader() {
         <Button variant="outline" size="default">
           <Download data-icon="inline-start" />
           Export CSV
-        </Button>
-        <Button variant="default" size="default">
-          <Play data-icon="inline-start" />
-          Replay
         </Button>
       </div>
     </div>
@@ -503,35 +518,33 @@ function PageHeader() {
 /* ─── Hero metric (REQUESTS / 1H + line chart + breakdown) ───────────────── */
 
 // 61 minute-bucketed points spanning the trailing hour 13:30 → 14:30
-// inclusive. The chart shows the running total of requests, climbing from
-// 0 to the headline 8,241 by 14:30. Per-minute increments below preserve
-// the original ramping shape; HERO_DATA scales them so the running sum
-// lands exactly at HERO_TOTAL.
+// inclusive. Each point is the per-minute request count (NOT a running
+// total). Shape: baseline drifts upward (~50/min → ~220/min) so the
+// line rises diagonally across the hour; oscillation amplitude grows
+// quadratically (t^1.5) so the first quarter reads almost smooth and
+// the last quarter has visible 4-minute peaks/dips — matches the
+// "ramp with growing wobble" reference. Sum is tuned to 8,241 so the
+// headline number and breakdown rows reconcile.
 const HERO_INCREMENTS = [
-  4, 5, 4, 6, 5, 7, 6, 8, 7, 9,
-  8, 11, 10, 12, 11, 13, 12, 15, 14, 18,
-  16, 20, 18, 22, 20, 25, 23, 27, 25, 30,
-  28, 33, 30, 36, 32, 38, 34, 40, 36, 42,
-  38, 44, 40, 46, 42, 48, 44, 50, 46, 52,
-  48, 54, 50, 55, 52, 57, 54, 58, 56, 60, 62,
+   50,  53,  55,  59,  62,  64,  66,  70,  74,  76,
+   76,  81,  87,  87,  86,  93, 100,  98,  95, 104,
+  113, 110, 105, 115, 127, 121, 114, 127, 140, 132,
+  123, 138, 154, 144, 131, 149, 168, 155, 140, 161,
+  182, 166, 148, 172, 192, 178, 157, 183, 211, 189,
+  165, 195, 221, 200, 173, 206, 240, 212, 181, 217, 250,
 ];
-const HERO_TOTAL = 8241;
-const HERO_INCREMENT_SUM = HERO_INCREMENTS.reduce((a, b) => a + b, 0);
+const HERO_TOTAL = HERO_INCREMENTS.reduce((a, b) => a + b, 0);
 
-const HERO_DATA = (() => {
-  let running = 0;
-  return HERO_INCREMENTS.map((inc, i) => {
-    running += inc;
-    // i=0 → 13:30, i=60 → 14:30 — labels printed `H:MM` (24h, no leading zero).
-    const minute = 30 + i;
-    const hh = Math.floor(13 + minute / 60);
-    const mm = minute % 60;
-    return {
-      time: `${hh}:${mm.toString().padStart(2, '0')}`,
-      requests: Math.round((running / HERO_INCREMENT_SUM) * HERO_TOTAL),
-    };
-  });
-})();
+const HERO_DATA = HERO_INCREMENTS.map((inc, i) => {
+  // i=0 → 13:30, i=60 → 14:30 — labels printed `H:MM` (24h, no leading zero).
+  const minute = 30 + i;
+  const hh = Math.floor(13 + minute / 60);
+  const mm = minute % 60;
+  return {
+    time: `${hh}:${mm.toString().padStart(2, '0')}`,
+    requests: inc,
+  };
+});
 
 const HERO_TICKS = ['13:30', '13:40', '13:50', '14:00', '14:10', '14:20', '14:30'];
 
@@ -544,7 +557,7 @@ const heroChartConfig = {
 
 function HeroMetricCard() {
   return (
-    <div className="flex flex-col gap-4 rounded-md bg-white border border-ink-100 shadow-xs p-4">
+    <div className="flex flex-col gap-4 rounded-sm bg-white shadow-(--shadow-border) p-4">
       <div className="flex items-start justify-between gap-6">
         <div className="flex flex-col gap-2 shrink-0">
           <div className="font-mono uppercase tracking-[0.1em] text-xs font-medium text-ink-500">
@@ -552,7 +565,7 @@ function HeroMetricCard() {
           </div>
           <div className="flex items-baseline gap-3">
             <div className="font-mono text-3xl/9 font-medium tabular-nums -tracking-[1px] text-ink-900">
-              8,241
+              {HERO_TOTAL.toLocaleString()}
             </div>
             <DeltaTag delta="+12.8%" note="vs last hour" />
           </div>
@@ -585,15 +598,17 @@ function HeroMetricCard() {
               <stop offset="100%" stopColor="var(--color-blue-700)" stopOpacity={0} />
             </linearGradient>
           </defs>
-          {/* Domain ceiling 8,500 gives ~3px of headroom above the 8k gridline so the
-              cumulative line (peaks at 8,241) isn't clipped by the chart rect top. */}
+          {/* Domain ceiling 300 gives ~5px of headroom above the top peak (250/min)
+              so the line doesn't clip the chart rect top. Per-minute counts, not
+              cumulative — curve starts near 50 and ramps up to ~250 with growing
+              oscillation. */}
           <YAxis
             width={0}
             tick={false}
             axisLine={false}
             tickLine={false}
-            domain={[0, 8500]}
-            ticks={[0, 2000, 4000, 6000, 8000]}
+            domain={[0, 300]}
+            ticks={[0, 100, 200, 300]}
           />
           <XAxis
             dataKey="time"
@@ -623,7 +638,7 @@ function HeroMetricCard() {
                   dy="0.71em"
                   textAnchor={anchor}
                   fontSize={11}
-                  fill="var(--color-ink-400)"
+                  fill="var(--color-ink-500)"
                 >
                   {value}
                 </text>
@@ -631,26 +646,26 @@ function HeroMetricCard() {
             }}
           />
           <ChartTooltip
-            cursor={{ stroke: 'var(--color-ink-300)', strokeDasharray: '2 3' }}
+            cursor={{ stroke: 'var(--color-ink-400)', strokeDasharray: '2 3' }}
             content={<ChartTooltipContent indicator="dot" />}
           />
           <Area
             dataKey="requests"
-            type="monotone"
+            type="linear"
             stroke="var(--color-blue-700)"
             strokeWidth={1.5}
             fill="url(#cmp013-hero-spark)"
             isAnimationActive={false}
           />
           {/* ChartContainer is pinned to h-24 (96px); XAxis height=24 + margin top=4
-              gives a drawing rect from y=4 to y=72 (68px tall). With domain [0, 8500],
-              gridlines at 0/2k/4k/6k/8k land at y = 72, 56, 40, 24, 8 respectively.
+              gives a drawing rect from y=4 to y=72 (68px tall). With domain [0, 300],
+              gridlines at 0/100/200/300 land at y = 72, 49, 27, 4 respectively.
               Hardcoded because YAxis width={0} disables tick-driven grid generation. */}
           <CartesianGrid
             horizontal
             vertical={false}
-            horizontalPoints={[8, 24, 40, 56, 72]}
-            stroke="var(--color-ink-200)"
+            horizontalPoints={[4, 27, 49, 72]}
+            stroke="var(--color-ink-300)"
             strokeDasharray="2 3"
           />
         </AreaChart>
@@ -669,9 +684,9 @@ function BreakdownRow({
   tone: 'success' | 'danger' | 'warning';
 }) {
   const dotColor =
-    tone === 'success' ? 'bg-success'
+    tone === 'success' ? 'bg-success-600'
     : tone === 'danger' ? 'bg-destructive'
-    : 'bg-warning';
+    : 'bg-warning-600';
   // Returns three grid cells (no wrapper element). Parent is a 3-col grid
   // so dots and values align across rows. `justify-self-end` right-aligns
   // text-flow cells within their tracks.
@@ -691,7 +706,7 @@ function BreakdownRow({
 /* ─── Table section (toolbar + table in one card · pagination below) ─────
  *
  * Shape lifted from CMP-011.1 (SORTABLE TABLE):
- *   <div rounded-md bg-white border …>      ← single card
+ *   <div rounded-sm bg-white border …>      ← single card
  *     <toolbar>                              ← search · segmented · selects
  *     <Table>                                ← header + rows
  *   </div>
@@ -772,7 +787,7 @@ function RequestsTableSection() {
 
   return (
     <>
-    <div className="flex flex-col w-full rounded-md overflow-hidden bg-white border border-ink-100 shadow-xs">
+    <div className="flex flex-col w-full rounded-sm overflow-hidden bg-white shadow-(--shadow-border)">
         {/* Toolbar — shape lifted from CMP-011.1. No flex-wrap: the
             sortable-table convention is single-row, and the filter set
             fits in the gray well at this width. */}
@@ -805,7 +820,7 @@ function RequestsTableSection() {
             <SelectTrigger
               size="sm"
               aria-label="Model"
-              className="border-ink-100 bg-white text-ink-900 font-normal"
+              className="border-ink-200 bg-white text-ink-900 font-normal"
             >
               <SelectValue placeholder="Model" />
             </SelectTrigger>
@@ -824,7 +839,7 @@ function RequestsTableSection() {
             <SelectTrigger
               size="sm"
               aria-label="Key"
-              className="border-ink-100 bg-white text-ink-900 font-normal"
+              className="border-ink-200 bg-white text-ink-900 font-normal"
             >
               <SelectValue placeholder="Key" />
             </SelectTrigger>
@@ -840,7 +855,7 @@ function RequestsTableSection() {
             <SelectTrigger
               size="sm"
               aria-label="Status"
-              className="border-ink-100 bg-white text-ink-900 font-normal"
+              className="border-ink-200 bg-white text-ink-900 font-normal"
             >
               <SelectValue placeholder="Status" />
             </SelectTrigger>
@@ -875,18 +890,18 @@ function RequestsTableSection() {
               const badge = STATUS_BADGE[row.status];
               const isMissing = row.inTokens === '—';
               const numericCls = isMissing
-                ? 'whitespace-nowrap font-mono tabular-nums text-ink-300'
+                ? 'whitespace-nowrap font-mono tabular-nums text-ink-400'
                 : 'whitespace-nowrap font-mono tabular-nums text-ink-800';
               const latencyCls =
                 row.latency === '—'
-                  ? 'whitespace-nowrap font-mono tabular-nums text-ink-300'
+                  ? 'whitespace-nowrap font-mono tabular-nums text-ink-400'
                   : row.slow
-                    ? 'whitespace-nowrap font-mono tabular-nums text-warning-2'
+                    ? 'whitespace-nowrap font-mono tabular-nums text-warning-600'
                     : 'whitespace-nowrap font-mono tabular-nums text-ink-800';
               return (
                 <TableRow
                   key={`${row.time}-${i}`}
-                  className="cursor-pointer"
+                  className="cursor-pointer transition-colors duration-150 ease-out hover:bg-ink-50"
                   onClick={() => setSelectedRow(row)}
                 >
                   <TableCell className="whitespace-nowrap font-mono tabular-nums -tracking-[0.14px] text-ink-500">
@@ -900,7 +915,7 @@ function RequestsTableSection() {
                   </TableCell>
                   <TableCell className="whitespace-nowrap">
                     <div className="flex items-center gap-2">
-                      <VendorAvatar vendor={row.vendor} tone="neutral" />
+                      <VendorAvatar vendor={row.vendor} />
                       <span className="font-mono text-sm text-ink-900 -tracking-[0.2px]">
                         {row.model}
                       </span>
@@ -923,18 +938,18 @@ function RequestsTableSection() {
         </Table>
 
         {/* Pagination footer — bottom row of the card */}
-        <div className="flex items-center justify-between gap-3 py-3 px-4 border-t border-ink-100">
+        <div className="flex items-center justify-between gap-3 py-3 px-4 border-t border-ink-200">
           <div className="flex items-center gap-3">
             <span className="font-mono text-xs text-ink-500 tabular-nums -tracking-[0.01em]">
               Showing 1–25 of 8,241
             </span>
-            <span className="text-ink-300" aria-hidden>·</span>
+            <span className="text-ink-400" aria-hidden>·</span>
             <span className="font-mono text-xs font-medium text-ink-500 -tracking-[0.01em]">Rows</span>
             <Select value={rowsPerPage} onValueChange={setRowsPerPage}>
               <SelectTrigger
                 size="sm"
                 aria-label="Rows per page"
-                className="border-ink-100 bg-white text-ink-900 font-normal"
+                className="border-ink-200 bg-white text-ink-900 font-normal"
               >
                 <SelectValue />
               </SelectTrigger>
@@ -1001,7 +1016,7 @@ function RequestsTableSection() {
 /* ─── Request detail dialog ────────────────────────────────────────────────
  * Drill-in modal opened from a row click. Mirrors the table's per-row data
  * (model, vendor, key, latency, cost, tokens) and adds context the row
- * doesn't carry (provider name, endpoint, cache status, replay count).
+ * doesn't carry (provider name, endpoint, cache status).
  * Tabs scaffold for future depth (Messages / Security / Audit) — only
  * Summary is wired today.
  *
@@ -1032,7 +1047,7 @@ function RequestDetailBody({ row }: { row: RequestRow }) {
   const provider = VENDOR_META[row.vendor].label;
   // Tabs is controlled so the footer can swap actions per tab
   // (Audit gets Copy proof / View on DE; everyone else gets the
-  // request-action set Copy ID / Open conversation / Replay).
+  // request-action set Copy ID / Open conversation).
   const [activeTab, setActiveTab] = useState('summary');
   return (
     <>
@@ -1050,7 +1065,14 @@ function RequestDetailBody({ row }: { row: RequestRow }) {
           </Badge>
         </div>
         <p className="font-mono text-xs text-ink-500 -tracking-[0.01em]">
-          Apr 22, 2026 · {row.time} UTC · part of conversation {row.conversation}
+          Apr 22, 2026 · {row.time} UTC · part of conversation{' '}
+          <a
+            href="#"
+            onClick={(e) => e.preventDefault()}
+            className="text-ink-700 outline-none underline decoration-ink-300 underline-offset-2 hover:decoration-ink-500 focus-visible:decoration-ink-500"
+          >
+            {row.conversation}
+          </a>
         </p>
       </DialogHeader>
 
@@ -1070,12 +1092,12 @@ function RequestDetailBody({ row }: { row: RequestRow }) {
             <KpiTile label="Tokens Out" value={row.outTokens} />
           </div>
 
-          <div className="rounded-md border border-ink-100 overflow-hidden">
+          <div className="rounded-sm border border-ink-200 overflow-hidden">
             <DetailRow
               label="Model"
               value={
                 <div className="flex items-center gap-2">
-                  <VendorAvatar vendor={row.vendor} tone="neutral" />
+                  <VendorAvatar vendor={row.vendor} />
                   <span className="font-mono text-sm text-ink-900 -tracking-[0.2px]">
                     {row.model}
                   </span>
@@ -1104,10 +1126,6 @@ function RequestDetailBody({ row }: { row: RequestRow }) {
                 </Badge>
               }
             />
-            <DetailRow
-              label="Replays"
-              value={<span className="font-mono text-sm tabular-nums text-ink-900">0</span>}
-            />
           </div>
         </TabsContent>
 
@@ -1122,7 +1140,7 @@ function RequestDetailBody({ row }: { row: RequestRow }) {
         </TabsContent>
       </Tabs>
 
-      <DialogFooter className="-mx-4 -mb-4 px-4 py-3 border-t border-ink-100 sm:justify-end">
+      <DialogFooter className="-mx-4 -mb-4 px-4 py-3 border-t border-ink-200 sm:justify-end">
         {activeTab === 'audit' ? (
           <>
             <Button variant="outline" size="sm">
@@ -1140,13 +1158,9 @@ function RequestDetailBody({ row }: { row: RequestRow }) {
               <Copy data-icon="inline-start" />
               Copy ID
             </Button>
-            <Button variant="outline" size="sm">
+            <Button variant="default" size="sm">
               Open conversation
               <ExternalLink data-icon="inline-end" />
-            </Button>
-            <Button variant="default" size="sm">
-              <Play data-icon="inline-start" />
-              Replay
             </Button>
           </>
         )}
@@ -1157,7 +1171,7 @@ function RequestDetailBody({ row }: { row: RequestRow }) {
 
 function KpiTile({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex flex-col gap-1 rounded-md bg-white border border-ink-100 px-3 py-3">
+    <div className="flex flex-col gap-1 rounded-sm bg-white border border-ink-200 px-3 py-3">
       <span className="font-mono text-xs uppercase tracking-[0.1em] font-medium text-ink-500">
         {label}
       </span>
@@ -1177,7 +1191,7 @@ function DetailRow({ label, value }: { label: string; value: React.ReactNode }) 
   // Label is `font-medium text-ink-600` — at `font-normal` it reads as
   // ambient body text rather than a field label.
   return (
-    <div className="grid grid-cols-4 gap-3 items-center py-3 border-b border-ink-100 last:border-b-0">
+    <div className="grid grid-cols-4 gap-3 items-center py-3 border-b border-ink-200 last:border-b-0">
       <span className="font-sans text-sm font-medium text-ink-600 pl-4">{label}</span>
       <div className="col-span-3 pr-4">{value}</div>
     </div>
@@ -1245,11 +1259,11 @@ function MessageBlock({
 }) {
   // Assistant turns lift onto the brand surface so the model's reply is
   // distinguishable from prompt / tool noise; everything else uses the
-  // neutral ink-50 well.
+  // neutral ink-100 well.
   const bubbleSurface =
     role === 'assistant'
       ? 'bg-blue-50 border-blue-100'
-      : 'bg-ink-50 border-ink-100';
+      : 'bg-ink-100 border-ink-200';
   return (
     <div className="flex flex-col gap-2">
       {/* Voice split: role is a sans Title Case label (message metadata,
@@ -1260,12 +1274,12 @@ function MessageBlock({
         {ROLE_LABEL[role]}
         {tool ? (
           <>
-            <span className="text-ink-300"> · </span>
+            <span className="text-ink-400"> · </span>
             <span className="font-mono font-normal text-ink-700">{tool}</span>
           </>
         ) : null}
       </div>
-      <div className={`rounded-md border px-3 py-2 text-sm text-ink-900 ${bubbleSurface}`}>
+      <div className={`rounded-sm border px-3 py-2 text-sm text-ink-900 ${bubbleSurface}`}>
         {body}
       </div>
     </div>
@@ -1328,7 +1342,7 @@ function SecurityCheckRow({
   status: 'pass';
 }) {
   return (
-    <div className="flex items-start justify-between gap-3 rounded-md border border-ink-100 px-4 py-3">
+    <div className="flex items-start justify-between gap-3 rounded-sm border border-ink-200 px-4 py-3">
       <div className="flex flex-col gap-1 min-w-0">
         <span className="font-sans text-sm font-medium text-ink-900">{title}</span>
         <span className="font-sans text-xs text-ink-500">{description}</span>
@@ -1348,7 +1362,7 @@ function SecurityCheckRow({
    request id. */
 function AuditPanel() {
   return (
-    <div className="rounded-md border border-ink-100 overflow-hidden">
+    <div className="rounded-sm border border-ink-200 overflow-hidden">
       <DetailRow
         label="Leaf hash"
         value={
@@ -1401,8 +1415,8 @@ function AuditPanel() {
 
 function EmptyTabPanel({ label }: { label: string }) {
   return (
-    <div className="flex items-center justify-center h-32 rounded-md border border-dashed border-ink-100 bg-ink-25">
-      <span className="font-mono text-xs uppercase tracking-[0.1em] font-medium text-ink-400">
+    <div className="flex items-center justify-center h-32 rounded-sm border border-dashed border-ink-200 bg-ink-50">
+      <span className="font-mono text-xs uppercase tracking-[0.1em] font-medium text-ink-500">
         {label} · TODO
       </span>
     </div>

@@ -40,7 +40,7 @@ export function CMP005FilterBar() {
 
   return (
     <div className="flex flex-col w-[1440px]">
-      <div className="flex flex-col w-full bg-ink-25">
+      <div className="flex flex-col w-full bg-ink-50">
         <ArtboardHeader
           code="CMP-005"
           title="Filter bar"
@@ -49,12 +49,12 @@ export function CMP005FilterBar() {
         />
 
         {/* CMP-005.1 — LIST FILTER BAR */}
-        <div className="flex flex-col gap-3 bg-ink-25">
+        <div className="flex flex-col gap-3 bg-ink-50">
           <SectionHeader
             code="CMP-005.1 — LIST FILTER BAR"
             hint="<Input> · <Select> · <Tag> · <SegmentedPill>"
           />
-          <div className="flex flex-col rounded-sm gap-3 bg-white border border-ink-75 p-7">
+          <div className="flex flex-col rounded-sm gap-3 bg-white border border-ink-100 p-7">
             {/* Row 1 — search + scope dropdowns + count.
                 All controls use size="default" (h-9 px-4) from the primitive contract. */}
             <div className="flex items-center flex-wrap gap-2">
@@ -139,7 +139,7 @@ export function CMP005FilterBar() {
                 <Tag
                   key={label}
                   onRemove={() => setChips((prev) => prev.filter((t) => t !== label))}
-                  className="bg-ink-50 border-ink-75 tabular-nums -tracking-[0.01em]"
+                  className="bg-ink-100 border-ink-100 tabular-nums -tracking-[0.01em]"
                 >
                   {label}
                 </Tag>

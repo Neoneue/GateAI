@@ -49,8 +49,8 @@ function PaginationLink({
       variant="outline"
       size={size}
       className={cn(
-        "border-ink-75 text-ink-600 font-normal tabular-nums -tracking-[0.01em]",
-        "hover:bg-ink-25 hover:text-ink-900",
+        "border-ink-100 text-ink-600 font-normal tabular-nums -tracking-[0.01em]",
+        "hover:bg-ink-50 hover:text-ink-900",
         isActive &&
           "bg-ink-800 border-ink-800 text-white font-medium hover:bg-ink-800 hover:text-white",
         className,
@@ -109,7 +109,7 @@ function PaginationEllipsis({
       aria-hidden
       data-slot="pagination-ellipsis"
       className={cn(
-        "flex size-7 items-center justify-center text-ink-300 [&_svg:not([class*='size-'])]:size-3.5",
+        "flex size-7 items-center justify-center text-ink-400 [&_svg:not([class*='size-'])]:size-3.5",
         className,
       )}
       {...props}

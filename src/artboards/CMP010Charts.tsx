@@ -29,7 +29,7 @@ import { ArtboardHeader, SectionHeader } from './_shared/ArtboardHeader';
 export function CMP010Charts() {
   return (
     <div className="flex flex-col w-[1440px]">
-      <div className="flex flex-col w-full bg-ink-25">
+      <div className="flex flex-col w-full bg-ink-50">
         <ArtboardHeader
           code="CMP-010"
           title="Charts"
@@ -94,7 +94,7 @@ const spendChartConfig: ChartConfig = {
 
 function SpendTrendCard() {
   return (
-    <Card className="w-[720px] rounded-lg p-4 gap-4">
+    <Card className="w-[720px] rounded-sm p-4 gap-4">
       <div className="flex items-center justify-between">
         <div className="text-base font-medium -tracking-[0.25px] text-ink-900">
           Spend trend
@@ -105,9 +105,9 @@ function SpendTrendCard() {
         </div>
         <button
           type="button"
-          className="flex items-center h-[34px] rounded-lg px-3 gap-2 bg-white border border-ink-100 text-sm -tracking-[0.14px] text-ink-900"
+          className="flex items-center h-[34px] rounded-sm px-3 gap-2 bg-white border border-ink-200 text-sm -tracking-[0.14px] text-ink-900"
         >
-          <Calendar className="size-3.5 text-ink-400" strokeWidth={1.75} />
+          <Calendar className="size-3.5 text-ink-500" strokeWidth={1.75} />
           Apr 17 – May 17 2026
         </button>
       </div>
@@ -126,7 +126,7 @@ function SpendTrendCard() {
           <CartesianGrid
             horizontal
             vertical={false}
-            stroke="var(--color-ink-100)"
+            stroke="var(--color-ink-200)"
             strokeDasharray="3 4"
           />
           <XAxis
@@ -136,7 +136,7 @@ function SpendTrendCard() {
             tickMargin={12}
             tick={{
               fontSize: 12,
-              fill: 'var(--color-ink-400)',
+              fill: 'var(--color-ink-500)',
             }}
           />
           <YAxis
@@ -148,13 +148,13 @@ function SpendTrendCard() {
             tickFormatter={(v) => `$${v}`}
             tick={{
               fontSize: 12,
-              fill: 'var(--color-ink-400)',
+              fill: 'var(--color-ink-500)',
             }}
             width={48}
           />
           <ChartTooltip
             cursor={{
-              stroke: 'var(--color-ink-400)',
+              stroke: 'var(--color-ink-500)',
               strokeDasharray: '2 3',
               strokeOpacity: 0.6,
             }}
@@ -315,7 +315,7 @@ const MICRO_BAR_HEIGHTS = [
   25, 24, 24, 23, 22, 22, 21, 20, 20, 19, // haiku
   18, 17, 17, 16, 15, 14, 13, // llama
   11, 9, 7, // mistral
-  5, 4, // tail (ink-100)
+  5, 4, // tail (ink-200)
 ];
 
 function CostByModelCard() {
@@ -329,24 +329,24 @@ function CostByModelCard() {
     const color =
       modelIdx < MODELS.length
         ? seriesColor(MODELS[modelIdx])
-        : 'var(--color-ink-100)';
+        : 'var(--color-ink-200)';
     consumed += 1;
     return { i, h, color };
   });
 
   return (
-    <Card className="w-[720px] rounded-lg p-4 gap-4">
+    <Card className="w-[720px] rounded-sm p-4 gap-4">
       <div className="flex items-center justify-between">
         <div className="text-base font-medium -tracking-[0.25px] text-ink-900">
           Cost by model
         </div>
         <button
           type="button"
-          className="flex items-center justify-center h-8 rounded-lg px-3 gap-2 bg-white border border-ink-100 text-sm font-medium -tracking-[0.14px] text-ink-900"
+          className="flex items-center justify-center h-8 rounded-sm px-3 gap-2 bg-white border border-ink-200 text-sm font-medium -tracking-[0.14px] text-ink-900"
         >
           Last 7 days
           <ChevronDown
-            className="size-3.5 text-ink-400"
+            className="size-3.5 text-ink-500"
             strokeWidth={1.75}
           />
         </button>
@@ -376,18 +376,18 @@ function CostByModelCard() {
               className="size-2 rounded-full shrink-0"
               style={{ backgroundColor: seriesColor(m) }}
             />
-            <span className="text-xs text-ink-400">{m.label}</span>
+            <span className="text-xs text-ink-500">{m.label}</span>
           </div>
         ))}
       </div>
 
       <div className="flex flex-col w-full">
-        <div className="flex items-center py-2 border-b border-ink-100">
-          <div className="grow text-sm text-ink-400">Model</div>
-          <div className="w-30 text-right shrink-0 text-sm text-ink-400">
+        <div className="flex items-center py-2 border-b border-ink-200">
+          <div className="grow text-sm text-ink-500">Model</div>
+          <div className="w-30 text-right shrink-0 text-sm text-ink-500">
             Cost
           </div>
-          <div className="w-35 text-right shrink-0 text-sm text-ink-400">
+          <div className="w-35 text-right shrink-0 text-sm text-ink-500">
             Trend
           </div>
         </div>
@@ -397,7 +397,7 @@ function CostByModelCard() {
             className={
               i === MODELS.length - 1
                 ? 'flex items-center py-2'
-                : 'flex items-center py-2 border-b border-ink-100'
+                : 'flex items-center py-2 border-b border-ink-200'
             }
           >
             <div className="grow flex items-center gap-2">
@@ -431,7 +431,7 @@ function DeltaTag({
 }) {
   const negative = delta.trim().startsWith('-');
   const Icon = negative ? ArrowDownRight : ArrowUpRight;
-  const color = negative ? 'text-danger-2' : 'text-success-2';
+  const color = negative ? 'text-danger-500' : 'text-success-500';
   const iconSize = compact ? 'size-3' : 'size-3.5';
   return (
     <div className="inline-flex items-center gap-1">
@@ -442,7 +442,7 @@ function DeltaTag({
         {delta}
       </span>
       {note ? (
-        <span className="pl-1 text-sm text-ink-400">{note}</span>
+        <span className="pl-1 text-sm text-ink-500">{note}</span>
       ) : null}
     </div>
   );

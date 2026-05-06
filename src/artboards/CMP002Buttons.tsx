@@ -22,7 +22,7 @@ export function CMP002Buttons() {
 
   return (
     <div className="flex flex-col w-[1440px]">
-      <div className="flex flex-col w-full bg-ink-25">
+      <div className="flex flex-col w-full bg-ink-50">
         <ArtboardHeader
           code="CMP-002"
           title="Buttons"
@@ -31,12 +31,12 @@ export function CMP002Buttons() {
         />
 
         {/* CMP-002.1 · VARIANTS */}
-        <div className="flex flex-col mb-7 gap-3 bg-ink-25">
+        <div className="flex flex-col mb-7 gap-3 bg-ink-50">
           <SectionHeader
             code="CMP-002.1 — VARIANTS"
             hint="<Button variant=… /> · default · outline · secondary · ghost · destructive · link"
           />
-          <div className="flex flex-wrap items-center rounded-sm gap-5 bg-white border border-ink-75 p-7">
+          <div className="flex flex-wrap items-center rounded-sm gap-5 bg-white border border-ink-100 p-7">
             <Button variant="default">
               <Plus data-icon="inline-start" />
               Create key
@@ -56,12 +56,12 @@ export function CMP002Buttons() {
         </div>
 
         {/* CMP-002.2 · SIZES */}
-        <div className="flex flex-col mb-7 gap-3 bg-ink-25">
+        <div className="flex flex-col mb-7 gap-3 bg-ink-50">
           <SectionHeader
             code="CMP-002.2 — SIZES"
             hint="<Button size=… /> · xs · sm · default · lg"
           />
-          <div className="flex flex-wrap items-center rounded-sm gap-5 bg-white border border-ink-75 p-7">
+          <div className="flex flex-wrap items-center rounded-sm gap-5 bg-white border border-ink-100 p-7">
             <Button size="xs">Tiny</Button>
             <Button size="sm">Small</Button>
             <Button size="default">Default</Button>
@@ -70,14 +70,14 @@ export function CMP002Buttons() {
         </div>
 
         {/* CMP-002.3 · STATES + CMP-002.4 · ICON + CMP-002.5 · GROUP */}
-        <div className="flex gap-4 bg-ink-25">
+        <div className="flex gap-4 bg-ink-50">
           {/* STATES — explicit visual representations (not :hover/:focus) */}
           <div className="flex flex-col grow gap-3 basis-0">
             <SectionHeader
               code="CMP-002.3 — STATES"
               hint="default · hover · active · focus · loading · disabled"
             />
-            <div className="flex flex-col rounded-sm gap-3 bg-white border border-ink-75 p-7">
+            <div className="flex flex-col rounded-sm gap-3 bg-white border border-ink-100 p-7">
               <Button className="w-full" tabIndex={-1}>Default</Button>
               <Button className="w-full bg-primary/85" tabIndex={-1}>Hover</Button>
               <Button className="w-full translate-y-px" tabIndex={-1}>Active</Button>
@@ -101,7 +101,7 @@ export function CMP002Buttons() {
               code="CMP-002.4 — ICON"
               hint="data-icon=inline-start · icon-only · button-group"
             />
-            <div className="flex flex-col rounded-sm gap-3 bg-white border border-ink-75 p-7">
+            <div className="flex flex-col rounded-sm gap-3 bg-white border border-ink-100 p-7">
               <div className="flex flex-wrap gap-2">
                 <Button variant="secondary" size="sm">
                   <Download data-icon="inline-start" />
@@ -140,12 +140,12 @@ export function CMP002Buttons() {
               code="CMP-002.5 — GROUP"
               hint="<ToggleGroup> · <SegmentedPill>"
             />
-            <div className="flex flex-col rounded-sm gap-3 bg-white border border-ink-75 p-7 items-start">
+            <div className="flex flex-col rounded-sm gap-3 bg-white border border-ink-100 p-7 items-start">
               {/* Bordered group: Day · Week · Month · Year */}
               <ToggleGroup
                 value={period}
                 onValueChange={(v) => v.length > 0 && setPeriod(v)}
-                className="rounded-lg overflow-clip gap-0"
+                className="rounded-sm overflow-clip gap-0"
               >
                 {[
                   { value: 'day', label: 'Day' },
@@ -158,7 +158,7 @@ export function CMP002Buttons() {
                     value={opt.value}
                     className={cn(
                       'h-6 px-3 min-w-0 rounded-none text-xs font-sans font-medium text-ink-900 bg-white',
-                      'border border-ink-100 hover:bg-ink-25',
+                      'border border-ink-200 hover:bg-ink-50',
                       i > 0 && '-ml-px',
                       'data-[pressed]:bg-ink-900 data-[pressed]:text-white data-[pressed]:border-ink-900',
                       'aria-pressed:bg-ink-900 aria-pressed:text-white aria-pressed:border-ink-900',

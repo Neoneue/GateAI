@@ -16,7 +16,6 @@ import {
   MoreHorizontal,
   PanelLeftClose,
   PanelLeftOpen,
-  Plus,
   Search,
   Settings2,
   Shield,
@@ -87,7 +86,7 @@ export function CMP014Conversations({
 } = {}) {
   return (
     <div className="flex flex-col w-[1440px] min-w-0">
-      <div className="flex flex-col w-full bg-ink-25">
+      <div className="flex flex-col w-full bg-ink-50">
         <ArtboardHeader
           code="CMP-014"
           title="Conversations · Observability"
@@ -124,7 +123,7 @@ function DashboardSurface({
   onToggleSidebar: () => void;
 }) {
   return (
-    <div className="flex flex-col w-full overflow-hidden rounded-md border border-ink-100 bg-white shadow-xs">
+    <div className="flex flex-col w-full overflow-hidden rounded-sm bg-white shadow-(--shadow-border)">
       <ScreenHead />
       <div className="flex flex-row min-h-0">
         <SidebarShell expanded={sidebarExpanded} onNavigate={onNavigate} />
@@ -149,7 +148,7 @@ function SidebarShell({
       aria-label="Primary navigation"
       style={{ transitionTimingFunction: 'cubic-bezier(0.32, 0.72, 0, 1)' }}
       className={cn(
-        'relative shrink-0 overflow-hidden bg-white border-r border-ink-100 transition-[width] duration-300 motion-reduce:transition-none',
+        'relative shrink-0 overflow-hidden bg-white border-r border-ink-200 transition-[width] duration-300 motion-reduce:transition-none',
         expanded ? 'w-60' : 'w-16',
       )}
     >
@@ -179,7 +178,7 @@ function SidebarShell({
 
 function ScreenHead() {
   return (
-    <div className="relative flex items-center h-[41px] px-4 bg-ink-25 border-b border-ink-100 shrink-0">
+    <div className="relative flex items-center h-[41px] px-4 bg-ink-50 border-b border-ink-200 shrink-0">
       <div className="flex items-center gap-2">
         <span className="size-2.5 rounded-full bg-[var(--color-traffic-red)]" aria-hidden />
         <span className="size-2.5 rounded-full bg-[var(--color-traffic-amber)]" aria-hidden />
@@ -219,8 +218,8 @@ function DashSidebar({ onNavigate }: { onNavigate?: (pageId: string) => void }) 
                   onClick={item.pageId ? () => onNavigate?.(item.pageId!) : undefined}
                   className={
                     item.active
-                      ? 'flex items-center justify-center size-9 rounded-lg bg-ink-100 text-ink-900'
-                      : 'flex items-center justify-center size-9 rounded-lg text-ink-400 transition-colors duration-150 ease-out hover:text-ink-700 hover:bg-ink-50'
+                      ? 'flex items-center justify-center size-9 rounded-sm bg-ink-200 text-ink-900'
+                      : 'flex items-center justify-center size-9 rounded-sm text-ink-500 transition-colors duration-150 ease-out hover:text-ink-700 hover:bg-ink-100'
                   }
                 >
                   <Icon className="size-[18px]" strokeWidth={1.5} />
@@ -297,7 +296,7 @@ const SIDEBAR_SECTIONS: SidebarSection[] = [
 function DashSidebarExpanded({ onNavigate }: { onNavigate?: (pageId: string) => void }) {
   return (
     <div className="flex flex-col w-60 h-full shrink-0">
-      <div className="flex items-center gap-3 px-4 py-4 border-b border-ink-100 shrink-0">
+      <div className="flex items-center gap-3 px-4 py-4 border-b border-ink-200 shrink-0">
         <BrandMark className="size-8 shrink-0 text-blue-700" />
         <div className="flex flex-col leading-tight min-w-0">
           <span className="font-mono text-xs uppercase tracking-[0.1em] font-medium text-ink-500">
@@ -308,10 +307,10 @@ function DashSidebarExpanded({ onNavigate }: { onNavigate?: (pageId: string) => 
           </span>
         </div>
       </div>
-      <div className="px-3 py-3 border-b border-ink-100 shrink-0">
+      <div className="px-3 py-3 border-b border-ink-200 shrink-0">
         <button
           type="button"
-          className="flex items-center justify-between gap-2 w-full p-2 rounded-md border border-ink-100 bg-white hover:bg-ink-25 transition-colors duration-150 ease-out"
+          className="flex items-center justify-between gap-2 w-full p-2 rounded-sm border border-ink-200 bg-white hover:bg-ink-50 transition-colors duration-150 ease-out"
         >
           <span className="font-sans text-sm font-medium text-ink-900 truncate min-w-0">
             Chad's project
@@ -320,7 +319,7 @@ function DashSidebarExpanded({ onNavigate }: { onNavigate?: (pageId: string) => 
             <span className="inline-flex items-center h-5 px-2 rounded-full bg-blue-50 text-blue-700 font-sans text-xs font-medium">
               Pro
             </span>
-            <ChevronsUpDown className="size-4 text-ink-400" strokeWidth={1.75} aria-hidden />
+            <ChevronsUpDown className="size-4 text-ink-500" strokeWidth={1.75} aria-hidden />
           </div>
         </button>
       </div>
@@ -342,8 +341,8 @@ function DashSidebarExpanded({ onNavigate }: { onNavigate?: (pageId: string) => 
                   onClick={item.pageId ? () => onNavigate?.(item.pageId!) : undefined}
                   className={
                     item.active
-                      ? 'flex items-center gap-3 px-2 py-2 rounded-md border border-ink-100 bg-ink-50 text-ink-900 font-medium shadow-xs'
-                      : 'flex items-center gap-3 px-2 py-2 rounded-md border border-transparent text-ink-700 hover:text-ink-900 hover:bg-ink-25 transition-colors duration-150 ease-out'
+                      ? 'flex items-center gap-3 px-2 py-2 rounded-sm border border-ink-200 bg-ink-100 text-ink-900 font-medium shadow-xs'
+                      : 'flex items-center gap-3 px-2 py-2 rounded-sm border border-transparent text-ink-700 hover:text-ink-900 hover:bg-ink-50 transition-colors duration-150 ease-out'
                   }
                 >
                   <Icon className="size-4 shrink-0" strokeWidth={1.75} />
@@ -354,7 +353,7 @@ function DashSidebarExpanded({ onNavigate }: { onNavigate?: (pageId: string) => 
           </div>
         ))}
       </nav>
-      <div className="flex items-center justify-between gap-2 px-3 py-3 border-t border-ink-100 shrink-0">
+      <div className="flex items-center justify-between gap-2 px-3 py-3 border-t border-ink-200 shrink-0">
         <div className="flex items-center gap-2 min-w-0">
           <span className="size-7 shrink-0 rounded-full bg-blue-700" aria-hidden />
           <span className="font-sans text-sm font-medium text-ink-900 truncate">
@@ -364,7 +363,7 @@ function DashSidebarExpanded({ onNavigate }: { onNavigate?: (pageId: string) => 
         <button
           type="button"
           aria-label="User menu"
-          className="shrink-0 size-7 inline-flex items-center justify-center rounded-md text-ink-500 hover:text-ink-900 hover:bg-ink-50 transition-colors duration-150 ease-out"
+          className="shrink-0 size-7 inline-flex items-center justify-center rounded-sm text-ink-500 hover:text-ink-900 hover:bg-ink-100 transition-colors duration-150 ease-out"
         >
           <MoreHorizontal className="size-4" strokeWidth={1.75} />
         </button>
@@ -383,7 +382,7 @@ function DashMain({
   onToggleSidebar: () => void;
 }) {
   return (
-    <div className="flex flex-col flex-1 min-w-0 bg-ink-25">
+    <div className="flex flex-col flex-1 min-w-0 bg-ink-50">
       <DashTopBar
         sidebarExpanded={sidebarExpanded}
         onToggleSidebar={onToggleSidebar}
@@ -405,7 +404,7 @@ function DashTopBar({
   onToggleSidebar: () => void;
 }) {
   return (
-    <div className="flex items-center justify-between h-[49px] px-6 bg-white border-b border-ink-100 shrink-0">
+    <div className="flex items-center justify-between h-[49px] px-6 bg-white border-b border-ink-200 shrink-0">
       <div className="flex items-center gap-2">
         <Button
           variant="ghost"
@@ -413,24 +412,44 @@ function DashTopBar({
           aria-label={sidebarExpanded ? 'Collapse sidebar' : 'Expand sidebar'}
           aria-expanded={sidebarExpanded}
           onClick={onToggleSidebar}
-          className="-ml-2 text-ink-400 hover:text-ink-700 aria-expanded:bg-transparent aria-expanded:text-ink-400 hover:aria-expanded:text-ink-700"
+          className="-ml-2 text-ink-500 hover:text-ink-700 aria-expanded:bg-transparent aria-expanded:text-ink-500 hover:aria-expanded:text-ink-700"
         >
-          {sidebarExpanded ? (
-            <PanelLeftClose className="size-4" strokeWidth={1.75} />
-          ) : (
-            <PanelLeftOpen className="size-4" strokeWidth={1.75} />
-          )}
+          {/* Skill: animations.md — contextual icon cross-fade. Both icons stay
+              in DOM, absolute-positioned over each other; toggle scale/opacity/blur
+              with the skill's exact values (0.25→1, 0→1, 4px→0). */}
+          <span className="relative inline-flex size-4 items-center justify-center">
+            <PanelLeftClose
+              aria-hidden
+              strokeWidth={1.75}
+              className={cn(
+                'absolute size-4 transition-[opacity,transform,filter] duration-300 [transition-timing-function:cubic-bezier(0.2,0,0,1)] motion-reduce:transition-none',
+                sidebarExpanded
+                  ? 'opacity-100 scale-100 blur-0'
+                  : 'opacity-0 scale-[0.25] blur-[4px]',
+              )}
+            />
+            <PanelLeftOpen
+              aria-hidden
+              strokeWidth={1.75}
+              className={cn(
+                'absolute size-4 transition-[opacity,transform,filter] duration-300 [transition-timing-function:cubic-bezier(0.2,0,0,1)] motion-reduce:transition-none',
+                sidebarExpanded
+                  ? 'opacity-0 scale-[0.25] blur-[4px]'
+                  : 'opacity-100 scale-100 blur-0',
+              )}
+            />
+          </span>
         </Button>
         <span className="font-sans text-xs text-ink-500">All Projects</span>
-        <ChevronRight className="size-3 text-ink-300" strokeWidth={1.75} aria-hidden />
+        <ChevronRight className="size-3 text-ink-400" strokeWidth={1.75} aria-hidden />
         <span className="font-sans text-xs text-ink-500">Constellation Gate AI</span>
-        <ChevronRight className="size-3 text-ink-300" strokeWidth={1.75} aria-hidden />
+        <ChevronRight className="size-3 text-ink-400" strokeWidth={1.75} aria-hidden />
         <span aria-current="page" className="font-sans text-xs font-medium text-ink-900">
           Conversations
         </span>
       </div>
       <div className="flex items-center gap-1">
-        <Button variant="outline" size="sm" className="border-ink-100 bg-white text-ink-900">
+        <Button variant="outline" size="sm" className="border-ink-200 bg-white text-ink-900">
           Docs
         </Button>
         <Button
@@ -454,22 +473,18 @@ function DashTopBar({
 function PageHeader() {
   return (
     <div className="flex items-end justify-between gap-6">
-      <div className="flex flex-col gap-2 max-w-[760px]">
-        <h1 className="font-sans font-medium text-ink-900 text-3xl/9 -tracking-[1px] m-0">
+      <div className="flex flex-col gap-2 max-w-1/2">
+        <h1 className="font-sans font-medium text-ink-900 text-3xl/9 -tracking-[1px] text-balance m-0">
           Conversations
         </h1>
-        <p className="font-sans text-ink-500 text-base tracking-tight m-0">
+        <p className="font-sans text-ink-500 text-base tracking-tight text-pretty m-0">
           A conversation is a chain of requests that share session context — agent runs, multi-turn chats, tool-calling loops. Click any row to see the message thread alongside its request trace.
         </p>
       </div>
       <div className="flex items-center gap-2 shrink-0">
-        <Button variant="outline" size="default" className="border-ink-100 bg-white text-ink-900">
+        <Button variant="outline" size="default" className="border-ink-200 bg-white text-ink-900">
           <Download data-icon="inline-start" />
           Export
-        </Button>
-        <Button variant="default" size="default">
-          <Plus data-icon="inline-start" />
-          New session
         </Button>
       </div>
     </div>
@@ -480,9 +495,9 @@ function PageHeader() {
 
 function KpiRail() {
   const dividerCls =
-    'relative before:absolute before:left-0 before:inset-y-4 before:w-px before:bg-ink-100';
+    'relative before:absolute before:left-0 before:inset-y-4 before:w-px before:bg-ink-200';
   return (
-    <div className="grid grid-cols-4 rounded-md bg-white border border-ink-100 shadow-xs overflow-hidden">
+    <div className="grid grid-cols-4 rounded-sm bg-white shadow-(--shadow-border) overflow-hidden">
       <CompactKpi
         flat
         title="Active Now"
@@ -490,8 +505,8 @@ function KpiRail() {
         delta="+12"
         spark={
           <CompactSpark
-            colorVar="var(--color-ink-400)"
-            data={[180, 192, 200, 215, 220, 232, 240, 244, 247]}
+            colorVar="var(--color-ink-500)"
+            data={[238, 252, 230, 244, 256, 234, 248, 240, 247]}
           />
         }
       />
@@ -503,8 +518,8 @@ function KpiRail() {
           delta="+6.4%"
           spark={
             <CompactSpark
-              colorVar="var(--color-warning-2)"
-              data={[14000, 14800, 15400, 16100, 16800, 17200, 17600, 17900, 18210]}
+              colorVar="var(--color-warning-500)"
+              data={[1740, 2120, 1680, 2040, 2380, 1820, 2240, 1960, 2230]}
             />
           }
         />
@@ -517,8 +532,8 @@ function KpiRail() {
           delta="+1.8"
           spark={
             <CompactSpark
-              colorVar="var(--color-success-2)"
-              data={[10.5, 11.2, 11.8, 12.4, 12.9, 13.3, 13.6, 13.9, 14.2]}
+              colorVar="var(--color-success-500)"
+              data={[13.4, 14.8, 13.1, 14.2, 14.9, 13.6, 14.5, 13.9, 14.2]}
             />
           }
         />
@@ -532,7 +547,7 @@ function KpiRail() {
           spark={
             <CompactSpark
               colorVar="var(--color-blue-500)"
-              data={[0.092, 0.090, 0.088, 0.087, 0.086, 0.084, 0.083, 0.082, 0.082]}
+              data={[0.087, 0.082, 0.090, 0.083, 0.085, 0.080, 0.084, 0.079, 0.082]}
               endDot
             />
           }
@@ -569,13 +584,13 @@ type ConversationRow = {
 };
 
 const CONVERSATION_ROWS: ConversationRow[] = [
-  { title: 'Why was the SEPA transfer 0x4a3e flagged for review yesterday?', conversationId: 'cnv_aurora_42',   initiator: 'service-eu-payments',  turns:  9, reqs: 14, vendors: ['anthropic', 'mistral'],          tokens: '4,051',   cost: '$0.1042', status: 'active',    updated: '14:28:04' },
+  { title: 'Why was the SEPA transfer 0x4a3e flagged for review yesterday?', conversationId: 'cnv_aurora_42',   initiator: 'service-eu-payments',  turns:  9, reqs: 14, vendors: ['anthropic'],                      tokens: '4,051',   cost: '$0.1042', status: 'active',    updated: '14:28:04' },
   { title: 'Draft a 4-step onboarding sequence for new fin clients',         conversationId: 'cnv_skylark_18', initiator: 'kira.tan@acme.io',     turns:  6, reqs: 11, vendors: ['anthropic', 'openai'],            tokens: '8,114',   cost: '$0.4218', status: 'active',    updated: '14:22:11' },
   { title: 'Classify the attached document and click KYC if needed',         conversationId: 'cnv_meridian_07',initiator: 'service-kyc-bot',      turns:  3, reqs:  4, vendors: ['google'],                         tokens: '2,104',   cost: '$0.3104', status: 'active',    updated: '14:15:22' },
   { title: 'Investigate the variance in YOY revenue between segments',       conversationId: 'cnv_orion_70',   initiator: 'mateus.silva@ebux.com',turns: 18, reqs: 38, vendors: ['anthropic', 'openai', 'mistral'], tokens: '52,810',  cost: '$0.5841', status: 'completed', updated: '14:02:48' },
   { title: 'Draft a postmortem for incident INC-2026-04-1107',               conversationId: 'cnv_polaris_55', initiator: 'service.incident-bot', turns:  4, reqs:  7, vendors: ['anthropic'],                      tokens: '3,402',   cost: '$0.1102', status: 'active',    updated: '13:48:33' },
-  { title: 'Customer requesting a refund on order ORD-89412',                conversationId: 'cnv_lyra_92',    initiator: 'service-support-bot',  turns: 14, reqs: 32, vendors: ['openai', 'meta'],                 tokens: '12,608',  cost: '$0.0812', status: 'failed',    updated: '13:36:10' },
-  { title: 'Summarize Q1 2026 earnings call for top 10 holdings',            conversationId: 'cnv_vela_21',    initiator: 'pulja.shah@acme.io',   turns: 12, reqs: 26, vendors: ['anthropic', 'google'],            tokens: '102,041', cost: '$0.1402', status: 'completed', updated: '13:18:55' },
+  { title: 'Customer requesting a refund on order ORD-89412',                conversationId: 'cnv_lyra_92',    initiator: 'service-support-bot',  turns: 14, reqs: 32, vendors: ['openai'],                         tokens: '12,608',  cost: '$0.0812', status: 'failed',    updated: '13:36:10' },
+  { title: 'Summarize Q1 2026 earnings call for top 10 holdings',            conversationId: 'cnv_vela_21',    initiator: 'pulja.shah@acme.io',   turns: 12, reqs: 26, vendors: ['anthropic'],                      tokens: '102,041', cost: '$0.1402', status: 'completed', updated: '13:18:55' },
 ];
 
 function ConversationsTableSection() {
@@ -586,7 +601,7 @@ function ConversationsTableSection() {
   const [rowsPerPage, setRowsPerPage] = useState('25');
 
   return (
-    <div className="flex flex-col w-full rounded-md overflow-hidden bg-white border border-ink-100 shadow-xs">
+    <div className="flex flex-col w-full rounded-sm overflow-hidden bg-white shadow-(--shadow-border)">
       {/* Toolbar */}
       <div className="flex items-center gap-2 py-3 px-4">
         <div className="relative w-72 min-w-0 shrink-0">
@@ -612,11 +627,12 @@ function ConversationsTableSection() {
           ]}
           aria-label="Conversation scope"
         />
+        <div className="grow" />
         <Select value={user} onValueChange={setUser}>
           <SelectTrigger
             size="sm"
             aria-label="User"
-            className="border-ink-100 bg-white text-ink-900 font-normal"
+            className="border-ink-200 bg-white text-ink-900 font-normal"
           >
             <SelectValue placeholder="User" />
           </SelectTrigger>
@@ -631,7 +647,7 @@ function ConversationsTableSection() {
           <SelectTrigger
             size="sm"
             aria-label="Key"
-            className="border-ink-100 bg-white text-ink-900 font-normal"
+            className="border-ink-200 bg-white text-ink-900 font-normal"
           >
             <SelectValue placeholder="Key" />
           </SelectTrigger>
@@ -642,13 +658,6 @@ function ConversationsTableSection() {
             <SelectItem value="dev">dev</SelectItem>
           </SelectContent>
         </Select>
-        <div className="grow" />
-        <span className="font-mono text-xs text-ink-500 -tracking-[0.01em]">
-          7 of 18,210
-        </span>
-        <Button variant="outline" size="sm" className="border-ink-100 bg-white text-ink-900">
-          More
-        </Button>
       </div>
 
       {/* Table */}
@@ -670,12 +679,16 @@ function ConversationsTableSection() {
           {CONVERSATION_ROWS.map((row) => {
             const badge = STATUS_BADGE[row.status];
             return (
-              <TableRow key={row.conversationId} className="cursor-pointer">
+              <TableRow key={row.conversationId} className="cursor-pointer transition-colors duration-150 ease-out hover:bg-ink-50">
                 <TableCell className="max-w-[360px]">
                   <div className="flex flex-col gap-1 min-w-0">
-                    <span className="font-sans text-sm text-ink-900 -tracking-[0.14px] truncate">
+                    <a
+                      href="#"
+                      onClick={(e) => e.preventDefault()}
+                      className="font-sans text-sm text-ink-900 -tracking-[0.14px] truncate outline-none underline decoration-ink-300 underline-offset-2 hover:decoration-ink-500 focus-visible:decoration-ink-500"
+                    >
                       {row.title}
-                    </span>
+                    </a>
                     <span className="font-mono text-xs text-ink-500 -tracking-[0.01em]">
                       {row.conversationId}
                     </span>
@@ -693,7 +706,7 @@ function ConversationsTableSection() {
                 <TableCell>
                   <div className="flex items-center gap-1">
                     {row.vendors.map((v) => (
-                      <VendorAvatar key={v} vendor={v} tone="neutral" />
+                      <VendorAvatar key={v} vendor={v} />
                     ))}
                   </div>
                 </TableCell>
@@ -719,18 +732,18 @@ function ConversationsTableSection() {
       </Table>
 
       {/* Pagination footer */}
-      <div className="flex items-center justify-between gap-3 py-3 px-4 border-t border-ink-100">
+      <div className="flex items-center justify-between gap-3 py-3 px-4 border-t border-ink-200">
         <div className="flex items-center gap-3">
           <span className="font-mono text-xs text-ink-500 tabular-nums -tracking-[0.01em]">
             Showing 1–25 of 18,210
           </span>
-          <span className="text-ink-300" aria-hidden>·</span>
+          <span className="text-ink-400" aria-hidden>·</span>
           <span className="font-mono text-xs font-medium text-ink-500 -tracking-[0.01em]">Rows</span>
           <Select value={rowsPerPage} onValueChange={setRowsPerPage}>
             <SelectTrigger
               size="sm"
               aria-label="Rows per page"
-              className="border-ink-100 bg-white text-ink-900 font-normal"
+              className="border-ink-200 bg-white text-ink-900 font-normal"
             >
               <SelectValue />
             </SelectTrigger>
