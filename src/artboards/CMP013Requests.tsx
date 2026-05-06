@@ -1,29 +1,11 @@
 import { useState } from 'react';
 import {
-  Activity,
-  ArrowLeftRight,
-  Bell,
-  Box,
-  ChevronRight,
-  ChevronsUpDown,
-  Coins,
   Copy,
-  CreditCard,
   Download,
   ExternalLink,
-  Home,
-  KeyRound,
-  Lock,
-  MessageSquare,
-  MoreHorizontal,
-  PanelLeftClose,
-  PanelLeftOpen,
   Search,
-  Settings2,
   Shield,
-  ShieldCheck,
   TriangleAlert,
-  Users,
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -50,7 +32,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Separator } from '@/components/ui/separator';
 import { StatusDot } from '@/components/ui/status-dot';
 import {
   Table,
@@ -74,10 +55,9 @@ import {
   type ChartConfig,
 } from '@/components/ui/chart';
 import { VENDOR_META, VendorAvatar, type Vendor } from '@/components/icons/vendor-meta';
-import { BrandMark } from '@/components/icons/brand-mark';
 import { DeltaTag } from '@/components/ui/compact-kpi';
-import { cn } from '@/lib/utils';
 import { ArtboardHeader, SectionHeader } from './_shared/ArtboardHeader';
+import { DashboardChrome } from './_shared/DashboardChrome';
 
 /* ─────────────────────────────────────────────────────────────────────────
  * CMP-013 — Requests (Observability)
@@ -98,9 +78,13 @@ import { ArtboardHeader, SectionHeader } from './_shared/ArtboardHeader';
  * (green / red / amber for 200 / 4xx / 5xx) ride success / destructive /
  * warning at low alpha — same approach as CMP-003.
  *
- * Column alignment: all left-aligned per the recent CMP-011 convention —
- * `font-mono tabular-nums` on numerics so columns visually align without
- * the `text-right` mismatch.
+ * Column alignment: numerics (In, Out, Latency, Cost) right-aligned with
+ * `font-mono tabular-nums`. Right-edge anchoring stacks the ones-place at
+ * a fixed x across rows so magnitudes compare at a glance — the standard
+ * tabular convention. `tabular-nums` alone only fixes intra-row digit
+ * width; right-align fixes inter-row drift when `4,051` sits above
+ * `52,810`. Latency cell reserves a fixed leading icon slot on every row
+ * so the slow-row TriangleAlert doesn't shift the digit column.
  * ───────────────────────────────────────────────────────────────────────── */
 
 export function CMP013Requests({
@@ -128,365 +112,20 @@ export function CMP013Requests({
             hint="v-shell · gray well · hero metric · filter bar · request log"
           />
 
-          <DashboardSurface
-            onNavigate={onNavigate}
+          <DashboardChrome
+            urlSlug="requests"
+            screenEyebrow="REQUESTS"
+            breadcrumbCurrent="Requests"
+            activeNavId="requests"
             sidebarExpanded={innerSidebarExpanded}
             onToggleSidebar={onToggleInnerSidebar ?? (() => {})}
-          />
+            onNavigate={onNavigate}
+          >
+            <PageHeader />
+            <HeroMetricCard />
+            <RequestsTableSection />
+          </DashboardChrome>
         </div>
-      </div>
-    </div>
-  );
-}
-
-/* ─── The surface (production frame) ─────────────────────────────────────── */
-
-function DashboardSurface({
-  onNavigate,
-  sidebarExpanded,
-  onToggleSidebar,
-}: {
-  onNavigate?: (pageId: string) => void;
-  sidebarExpanded: boolean;
-  onToggleSidebar: () => void;
-}) {
-  return (
-    <div className="flex flex-col w-full overflow-hidden rounded-sm bg-white shadow-(--shadow-border)">
-      <ScreenHead />
-      <div className="flex flex-row min-h-0">
-        <SidebarShell expanded={sidebarExpanded} onNavigate={onNavigate} />
-        <DashMain
-          sidebarExpanded={sidebarExpanded}
-          onToggleSidebar={onToggleSidebar}
-        />
-      </div>
-    </div>
-  );
-}
-
-function SidebarShell({
-  expanded,
-  onNavigate,
-}: {
-  expanded: boolean;
-  onNavigate?: (pageId: string) => void;
-}) {
-  return (
-    <aside
-      aria-label="Primary navigation"
-      style={{ transitionTimingFunction: 'cubic-bezier(0.32, 0.72, 0, 1)' }}
-      className={cn(
-        'relative shrink-0 overflow-hidden bg-white border-r border-ink-200 transition-[width] duration-300 motion-reduce:transition-none',
-        expanded ? 'w-60' : 'w-16',
-      )}
-    >
-      <div
-        aria-hidden={expanded}
-        className={cn(
-          'absolute inset-y-0 left-0 transition-opacity duration-200 ease-out motion-reduce:transition-none',
-          expanded ? 'opacity-0 pointer-events-none' : 'opacity-100',
-        )}
-      >
-        <DashSidebar onNavigate={onNavigate} />
-      </div>
-      <div
-        aria-hidden={!expanded}
-        className={cn(
-          'absolute inset-y-0 left-0 transition-opacity duration-200 ease-out motion-reduce:transition-none',
-          expanded ? 'opacity-100' : 'opacity-0 pointer-events-none',
-        )}
-      >
-        <DashSidebarExpanded onNavigate={onNavigate} />
-      </div>
-    </aside>
-  );
-}
-
-/* ─── Screen head (production chrome strip) ──────────────────────────────── */
-
-function ScreenHead() {
-  return (
-    <div className="relative flex items-center h-[41px] px-4 bg-ink-50 border-b border-ink-200 shrink-0">
-      <div className="flex items-center gap-2">
-        <span className="size-2.5 rounded-full bg-[var(--color-traffic-red)]" aria-hidden />
-        <span className="size-2.5 rounded-full bg-[var(--color-traffic-amber)]" aria-hidden />
-        <span className="size-2.5 rounded-full bg-[var(--color-traffic-green)]" aria-hidden />
-      </div>
-      <div className="absolute left-1/2 -translate-x-1/2 font-mono text-xs text-ink-600 tabular-nums">
-        acme-prod.constellation.io / requests
-      </div>
-      <div className="ml-auto font-mono uppercase tracking-[0.1em] text-xs font-medium text-ink-500">
-        DIR.A · REQUESTS
-      </div>
-    </div>
-  );
-}
-
-/* ─── Sidebar (collapsed 64px icon rail) ──────────────────────────────────
- * Mirrors `SIDEBAR_SECTIONS` (the expanded nav data) so collapsed and
- * expanded never drift. Section groups are separated by a `<Separator />`
- * since we don't have eyebrow labels at this width. */
-
-function DashSidebar({ onNavigate }: { onNavigate?: (pageId: string) => void }) {
-  return (
-    <div className="flex flex-col items-center justify-between w-16 h-full py-5 shrink-0">
-      <div className="flex flex-col items-center gap-1 w-full">
-        <BrandMark className="size-8 text-blue-700" />
-        {SIDEBAR_SECTIONS.map((section, i) => (
-          <div key={section.label ?? `top-${i}`} className="flex flex-col items-center gap-1 w-full">
-            <Separator className={i === 0 ? 'w-8 my-2' : 'w-8 my-1'} />
-            {section.items.map((item) => {
-              const Icon = item.icon;
-              return (
-                <button
-                  key={item.id}
-                  type="button"
-                  aria-label={item.label}
-                  aria-current={item.active ? 'page' : undefined}
-                  onClick={item.pageId ? () => onNavigate?.(item.pageId!) : undefined}
-                  className={
-                    item.active
-                      ? 'flex items-center justify-center size-9 rounded-sm bg-ink-200 text-ink-900'
-                      : 'flex items-center justify-center size-9 rounded-sm text-ink-500 transition-colors duration-150 ease-out hover:text-ink-700 hover:bg-ink-100'
-                  }
-                >
-                  <Icon className="size-[18px]" strokeWidth={1.5} />
-                </button>
-              );
-            })}
-          </div>
-        ))}
-      </div>
-      <div className="flex items-center justify-center size-6 rounded-full bg-blue-700 text-white font-mono text-xs font-medium">
-        CP
-      </div>
-    </div>
-  );
-}
-
-/* ─── Sidebar (expanded 240px full nav) ───────────────────────────────── */
-
-type SidebarItem = {
-  id: string;
-  icon: React.ComponentType<{ className?: string; strokeWidth?: number }>;
-  label: string;
-  active?: boolean;
-  pageId?: string;
-};
-
-type SidebarSection = {
-  label?: string;
-  items: SidebarItem[];
-};
-
-const SIDEBAR_SECTIONS: SidebarSection[] = [
-  {
-    items: [
-      { id: 'overview',      icon: Home,           label: 'Overview',                 pageId: 'cmp-012' },
-      { id: 'requests',      icon: ArrowLeftRight, label: 'Requests', active: true,   pageId: 'cmp-013' },
-      { id: 'conversations', icon: MessageSquare,  label: 'Conversations',            pageId: 'cmp-014' },
-    ],
-  },
-  {
-    label: 'Gateway',
-    items: [
-      { id: 'models',        icon: Box,         label: 'Models' },
-      { id: 'token-savings', icon: Coins,       label: 'Token Savings' },
-      { id: 'guardrails',    icon: ShieldCheck, label: 'Guardrails' },
-    ],
-  },
-  {
-    label: 'Security',
-    items: [
-      { id: 'security-overview', icon: TriangleAlert, label: 'Overview' },
-      { id: 'policies',          icon: Shield,        label: 'Policies' },
-      { id: 'events',            icon: Bell,          label: 'Events' },
-    ],
-  },
-  {
-    label: 'Audit',
-    items: [{ id: 'audit-trail', icon: Lock, label: 'Audit Trail' }],
-  },
-  {
-    label: 'Workspace Admin',
-    items: [
-      { id: 'activity', icon: Activity,   label: 'Activity' },
-      { id: 'team',     icon: Users,      label: 'Team' },
-      { id: 'billing',  icon: CreditCard, label: 'Billing' },
-      { id: 'api-keys', icon: KeyRound,   label: 'API Keys' },
-      { id: 'settings', icon: Settings2,  label: 'Settings' },
-    ],
-  },
-];
-
-function DashSidebarExpanded({ onNavigate }: { onNavigate?: (pageId: string) => void }) {
-  return (
-    <div className="flex flex-col w-60 h-full shrink-0">
-      <div className="flex items-center gap-3 px-4 py-4 border-b border-ink-200 shrink-0">
-        <BrandMark className="size-8 shrink-0 text-blue-700" />
-        <div className="flex flex-col leading-tight min-w-0">
-          <span className="font-mono text-xs uppercase tracking-[0.1em] font-medium text-ink-500">
-            Constellation
-          </span>
-          <span className="font-sans text-base font-medium text-ink-900">
-            Gate <span className="text-blue-700">AI</span>
-          </span>
-        </div>
-      </div>
-      <div className="px-3 py-3 border-b border-ink-200 shrink-0">
-        <button
-          type="button"
-          className="flex items-center justify-between gap-2 w-full p-2 rounded-sm border border-ink-200 bg-white hover:bg-ink-50 transition-colors duration-150 ease-out"
-        >
-          <span className="font-sans text-sm font-medium text-ink-900 truncate min-w-0">
-            Chad's project
-          </span>
-          <div className="shrink-0 flex items-center gap-1.5">
-            <span className="inline-flex items-center h-5 px-2 rounded-full bg-blue-50 text-blue-700 font-sans text-xs font-medium">
-              Pro
-            </span>
-            <ChevronsUpDown className="size-4 text-ink-500" strokeWidth={1.75} aria-hidden />
-          </div>
-        </button>
-      </div>
-      <nav className="flex flex-col gap-4 px-3 py-3 overflow-y-auto flex-1">
-        {SIDEBAR_SECTIONS.map((section, i) => (
-          <div key={section.label ?? `top-${i}`} className="flex flex-col gap-1">
-            {section.label ? (
-              <div className="px-2 pt-1 pb-1 font-mono text-xs uppercase tracking-[0.1em] font-medium text-ink-500">
-                {section.label}
-              </div>
-            ) : null}
-            {section.items.map((item) => {
-              const Icon = item.icon;
-              return (
-                <button
-                  key={item.id}
-                  type="button"
-                  aria-current={item.active ? 'page' : undefined}
-                  onClick={item.pageId ? () => onNavigate?.(item.pageId!) : undefined}
-                  className={
-                    item.active
-                      ? 'flex items-center gap-3 px-2 py-2 rounded-sm border border-ink-200 bg-ink-100 text-ink-900 font-medium shadow-xs'
-                      : 'flex items-center gap-3 px-2 py-2 rounded-sm border border-transparent text-ink-700 hover:text-ink-900 hover:bg-ink-50 transition-colors duration-150 ease-out'
-                  }
-                >
-                  <Icon className="size-4 shrink-0" strokeWidth={1.75} />
-                  <span className="font-sans text-sm">{item.label}</span>
-                </button>
-              );
-            })}
-          </div>
-        ))}
-      </nav>
-      <div className="flex items-center justify-between gap-2 px-3 py-3 border-t border-ink-200 shrink-0">
-        <div className="flex items-center gap-2 min-w-0">
-          <span className="size-7 shrink-0 rounded-full bg-blue-700" aria-hidden />
-          <span className="font-sans text-sm font-medium text-ink-900 truncate">
-            Chad
-          </span>
-        </div>
-        <button
-          type="button"
-          aria-label="User menu"
-          className="shrink-0 size-7 inline-flex items-center justify-center rounded-sm text-ink-500 hover:text-ink-900 hover:bg-ink-100 transition-colors duration-150 ease-out"
-        >
-          <MoreHorizontal className="size-4" strokeWidth={1.75} />
-        </button>
-      </div>
-    </div>
-  );
-}
-
-/* ─── Main pane (gray well + content) ────────────────────────────────────── */
-
-function DashMain({
-  sidebarExpanded,
-  onToggleSidebar,
-}: {
-  sidebarExpanded: boolean;
-  onToggleSidebar: () => void;
-}) {
-  return (
-    <div className="flex flex-col flex-1 min-w-0 bg-ink-50">
-      <DashTopBar
-        sidebarExpanded={sidebarExpanded}
-        onToggleSidebar={onToggleSidebar}
-      />
-      <div className="flex flex-col gap-6 p-6">
-        <PageHeader />
-        <HeroMetricCard />
-        <RequestsTableSection />
-      </div>
-    </div>
-  );
-}
-
-function DashTopBar({
-  sidebarExpanded,
-  onToggleSidebar,
-}: {
-  sidebarExpanded: boolean;
-  onToggleSidebar: () => void;
-}) {
-  return (
-    <div className="flex items-center justify-between h-[49px] px-6 bg-white border-b border-ink-200 shrink-0">
-      <div className="flex items-center gap-2">
-        <Button
-          variant="ghost"
-          size="icon-sm"
-          aria-label={sidebarExpanded ? 'Collapse sidebar' : 'Expand sidebar'}
-          aria-expanded={sidebarExpanded}
-          onClick={onToggleSidebar}
-          className="-ml-2 text-ink-500 hover:text-ink-700 aria-expanded:bg-transparent aria-expanded:text-ink-500 hover:aria-expanded:text-ink-700"
-        >
-          {/* Skill: animations.md — contextual icon cross-fade. Both icons stay
-              in DOM, absolute-positioned over each other; toggle scale/opacity/blur
-              with the skill's exact values (0.25→1, 0→1, 4px→0). */}
-          <span className="relative inline-flex size-4 items-center justify-center">
-            <PanelLeftClose
-              aria-hidden
-              strokeWidth={1.75}
-              className={cn(
-                'absolute size-4 transition-[opacity,transform,filter] duration-300 [transition-timing-function:cubic-bezier(0.2,0,0,1)] motion-reduce:transition-none',
-                sidebarExpanded
-                  ? 'opacity-100 scale-100 blur-0'
-                  : 'opacity-0 scale-[0.25] blur-[4px]',
-              )}
-            />
-            <PanelLeftOpen
-              aria-hidden
-              strokeWidth={1.75}
-              className={cn(
-                'absolute size-4 transition-[opacity,transform,filter] duration-300 [transition-timing-function:cubic-bezier(0.2,0,0,1)] motion-reduce:transition-none',
-                sidebarExpanded
-                  ? 'opacity-0 scale-[0.25] blur-[4px]'
-                  : 'opacity-100 scale-100 blur-0',
-              )}
-            />
-          </span>
-        </Button>
-        <span className="font-sans text-xs text-ink-500">All Projects</span>
-        <ChevronRight className="size-3 text-ink-400" strokeWidth={1.75} aria-hidden />
-        <span className="font-sans text-xs text-ink-500">Constellation Gate AI</span>
-        <ChevronRight className="size-3 text-ink-400" strokeWidth={1.75} aria-hidden />
-        <span aria-current="page" className="font-sans text-xs font-medium text-ink-900">Requests</span>
-      </div>
-      <div className="flex items-center gap-1">
-        <Button variant="outline" size="sm" className="border-ink-200 bg-white text-ink-900">
-          Docs
-        </Button>
-        <Button
-          variant="ghost"
-          size="icon-sm"
-          aria-label="Notifications"
-          className="text-ink-500 hover:text-ink-900"
-        >
-          <Bell className="size-4" strokeWidth={1.75} />
-        </Button>
-        <span className="inline-flex items-center justify-center size-6 ml-2 rounded-full bg-blue-700 text-white font-sans text-xs font-medium">
-          CP
-        </span>
       </div>
     </div>
   );
@@ -498,16 +137,17 @@ function PageHeader() {
   return (
     <div className="flex items-end justify-between gap-6">
       <div className="flex flex-col gap-2 max-w-1/2">
-        <h1 className="font-sans font-medium text-ink-900 text-3xl/9 -tracking-[1px] text-balance m-0">
+        {/* h2 — see CMP012 PageHeader note. */}
+        <h2 className="font-sans font-medium text-ink-900 text-3xl/9 -tracking-[1px] text-balance m-0">
           Requests
-        </h1>
+        </h2>
         <p className="font-sans text-ink-500 text-base tracking-tight text-pretty m-0">
-          Every generation routed through the gateway. Click a row to inspect prompts, security scans and the audit anchor. Group by conversation to follow a chain of calls.
+          Every generation routed through the gateway. Click any row to inspect prompts, security scans and the audit anchor.
         </p>
       </div>
       <div className="flex items-center gap-3 shrink-0">
         <Button variant="outline" size="default">
-          <Download data-icon="inline-start" />
+          <Download data-icon="inline-start" aria-hidden />
           Export CSV
         </Button>
       </div>
@@ -565,7 +205,7 @@ function HeroMetricCard() {
           </div>
           <div className="flex items-baseline gap-3">
             <div className="font-mono text-3xl/9 font-medium tabular-nums -tracking-[1px] text-ink-900">
-              {HERO_TOTAL.toLocaleString()}
+              {HERO_TOTAL.toLocaleString('en-US')}
             </div>
             <DeltaTag delta="+12.8%" note="vs last hour" />
           </div>
@@ -749,17 +389,17 @@ type RequestRow = {
 
 const REQUEST_ROWS: RequestRow[] = [
   { time: '14:30:14', status: 'success', code: '200', vendor: 'anthropic', model: 'claude-sonnet-4.8', conversation: 'cnv_aurora_42',  keyId: 'prod-web',   inTokens: '2,847', outTokens: '1,204', latency: '1.13s', slow: true,  cost: '$0.0284' },
-  { time: '14:29:51', status: 'success', code: '200', vendor: 'openai',    model: 'gpt-5',             conversation: 'cnv_aurora_42',  keyId: 'prod-web',   inTokens: '1,892', outTokens: '955',   latency: '0.96s',             cost: '$0.0192' },
+  { time: '14:29:51', status: 'success', code: '200', vendor: 'openai',    model: 'gpt-5.1',             conversation: 'cnv_aurora_42',  keyId: 'prod-web',   inTokens: '1,892', outTokens: '955',   latency: '0.96s',             cost: '$0.0192' },
   { time: '14:29:23', status: 'success', code: '200', vendor: 'anthropic', model: 'claude-sonnet-4.8', conversation: 'cnv_skylark_18', keyId: 'prod-agent', inTokens: '1,420', outTokens: '2,008', latency: '2.14s', slow: true,  cost: '$0.0312' },
   { time: '14:28:48', status: 'success', code: '200', vendor: 'google',    model: 'gemini-3-pro',      conversation: 'cnv_skylark_18', keyId: 'prod-agent', inTokens: '1,204', outTokens: '688',   latency: '1.08s', slow: true,  cost: '$0.0091' },
   { time: '14:28:09', status: 'danger',  code: '500', vendor: 'anthropic', model: 'claude-opus-4.7',   conversation: 'cnv_meridian_07',keyId: 'prod-web',   inTokens: '—',     outTokens: '—',     latency: '—',                 cost: '—'       },
-  { time: '14:27:42', status: 'success', code: '200', vendor: 'meta',      model: 'llama-4-405b',      conversation: 'cnv_orion_70',   keyId: 'dev',        inTokens: '5,024', outTokens: '2,612', latency: '1.95s', slow: true,  cost: '$0.0068' },
+  { time: '14:27:42', status: 'success', code: '200', vendor: 'meta',      model: 'llama-4.2-405b',      conversation: 'cnv_orion_70',   keyId: 'dev',        inTokens: '5,024', outTokens: '2,612', latency: '1.95s', slow: true,  cost: '$0.0068' },
   { time: '14:27:11', status: 'success', code: '200', vendor: 'mistral',   model: 'mistral-large-3',   conversation: 'cnv_skylark_18', keyId: 'prod-agent', inTokens: '1,442', outTokens: '820',   latency: '0.91s',             cost: '$0.0072' },
-  { time: '14:26:52', status: 'warn',    code: '429', vendor: 'openai',    model: 'gpt-5',             conversation: 'cnv_meridian_07',keyId: 'prod-web',   inTokens: '—',     outTokens: '—',     latency: '0.18s',             cost: '$0.0000' },
+  { time: '14:26:52', status: 'warn',    code: '429', vendor: 'openai',    model: 'gpt-5.1',             conversation: 'cnv_meridian_07',keyId: 'prod-web',   inTokens: '—',     outTokens: '—',     latency: '0.18s',             cost: '$0.0000' },
   { time: '14:26:14', status: 'success', code: '200', vendor: 'anthropic', model: 'claude-sonnet-4.8', conversation: 'cnv_skylark_18', keyId: 'prod-agent', inTokens: '3,104', outTokens: '1,420', latency: '1.31s', slow: true,  cost: '$0.0315' },
   { time: '14:25:47', status: 'success', code: '200', vendor: 'xai',       model: 'grok-4.1-fast',     conversation: 'cnv_polaris_55', keyId: 'prod-web',   inTokens: '6,204', outTokens: '3,109', latency: '0.42s',             cost: '$0.0184' },
   { time: '14:25:10', status: 'success', code: '200', vendor: 'google',    model: 'gemini-3-pro',      conversation: 'cnv_aurora_42',  keyId: 'prod-web',   inTokens: '942',   outTokens: '517',   latency: '0.74s',             cost: '$0.0062' },
-  { time: '14:24:38', status: 'warn',    code: '408', vendor: 'meta',      model: 'llama-4-405b',      conversation: 'cnv_polaris_55', keyId: 'dev',        inTokens: '4,108', outTokens: '0',     latency: '8.04s', slow: true,  cost: '$0.0000' },
+  { time: '14:24:38', status: 'warn',    code: '408', vendor: 'meta',      model: 'llama-4.2-405b',      conversation: 'cnv_polaris_55', keyId: 'dev',        inTokens: '4,108', outTokens: '0',     latency: '8.04s', slow: true,  cost: '$0.0000' },
   { time: '14:24:02', status: 'success', code: '200', vendor: 'anthropic', model: 'claude-sonnet-4.8', conversation: 'cnv_orion_70',   keyId: 'prod-agent', inTokens: '1,712', outTokens: '904',   latency: '1.05s', slow: true,  cost: '$0.0167' },
   { time: '14:23:24', status: 'success', code: '200', vendor: 'mistral',   model: 'mistral-large-3',   conversation: 'cnv_aurora_42',  keyId: 'prod-web',   inTokens: '2,209', outTokens: '1,058', latency: '0.83s',             cost: '$0.0096' },
 ];
@@ -800,6 +440,10 @@ function RequestsTableSection() {
             />
             <Input
               size="sm"
+              type="search"
+              name="q"
+              autoComplete="off"
+              spellCheck={false}
               placeholder="Search request…"
               className="pl-8"
               aria-label="Search requests"
@@ -827,9 +471,9 @@ function RequestsTableSection() {
             <SelectContent>
               <SelectItem value="all">All models</SelectItem>
               <SelectItem value="claude-sonnet-4.8">claude-sonnet-4.8</SelectItem>
-              <SelectItem value="gpt-5">gpt-5</SelectItem>
+              <SelectItem value="gpt-5.1">gpt-5.1</SelectItem>
               <SelectItem value="gemini-3-pro">gemini-3-pro</SelectItem>
-              <SelectItem value="llama-4-405b">llama-4-405b</SelectItem>
+              <SelectItem value="llama-4.2-405b">llama-4.2-405b</SelectItem>
               <SelectItem value="grok-4.1-fast">grok-4.1-fast</SelectItem>
               <SelectItem value="mistral-large-3">mistral-large-3</SelectItem>
             </SelectContent>
@@ -879,10 +523,10 @@ function RequestsTableSection() {
               <TableHead className="whitespace-nowrap">Model</TableHead>
               <TableHead className="whitespace-nowrap">Conversation</TableHead>
               <TableHead className="whitespace-nowrap">Key</TableHead>
-              <TableHead className="whitespace-nowrap">In</TableHead>
-              <TableHead className="whitespace-nowrap">Out</TableHead>
-              <TableHead className="whitespace-nowrap">Latency</TableHead>
-              <TableHead className="whitespace-nowrap">Cost</TableHead>
+              <TableHead className="text-right whitespace-nowrap">In</TableHead>
+              <TableHead className="text-right whitespace-nowrap">Out</TableHead>
+              <TableHead className="text-right whitespace-nowrap">Latency</TableHead>
+              <TableHead className="text-right whitespace-nowrap">Cost</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -890,19 +534,37 @@ function RequestsTableSection() {
               const badge = STATUS_BADGE[row.status];
               const isMissing = row.inTokens === '—';
               const numericCls = isMissing
-                ? 'whitespace-nowrap font-mono tabular-nums text-ink-400'
-                : 'whitespace-nowrap font-mono tabular-nums text-ink-800';
-              const latencyCls =
+                ? 'text-right whitespace-nowrap font-mono tabular-nums text-ink-400'
+                : 'text-right whitespace-nowrap font-mono tabular-nums text-ink-800';
+              // Slow rows: leading amber TriangleAlert + ink-900 (one step
+              // darker than the ink-800 default). Same weight as non-slow rows
+              // so `tabular-nums` keeps the column tracks aligned — font-medium
+              // would widen the digits and leave the column ragged. The icon
+              // sits in a fixed-width slot reserved on every row (slow or not)
+              // so the digit column stays anchored at the cell's right edge
+              // regardless of slow state — value owns the alignment edge, icon
+              // qualifies it from the left.
+              const isSlow = row.slow && row.latency !== '—';
+              const latencyTextCls =
                 row.latency === '—'
-                  ? 'whitespace-nowrap font-mono tabular-nums text-ink-400'
-                  : row.slow
-                    ? 'whitespace-nowrap font-mono tabular-nums text-warning-600'
-                    : 'whitespace-nowrap font-mono tabular-nums text-ink-800';
+                  ? 'text-ink-400'
+                  : isSlow
+                    ? 'text-ink-900'
+                    : 'text-ink-800';
               return (
                 <TableRow
                   key={`${row.time}-${i}`}
-                  className="cursor-pointer transition-colors duration-150 ease-out hover:bg-ink-50"
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`Inspect ${row.code} request to ${row.model} at ${row.time}`}
+                  className="cursor-pointer transition-colors duration-150 ease-out hover:bg-ink-50 focus-visible:bg-ink-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500"
                   onClick={() => setSelectedRow(row)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      setSelectedRow(row);
+                    }
+                  }}
                 >
                   <TableCell className="whitespace-nowrap font-mono tabular-nums -tracking-[0.14px] text-ink-500">
                     {row.time}
@@ -921,15 +583,29 @@ function RequestsTableSection() {
                       </span>
                     </div>
                   </TableCell>
-                  <TableCell className="whitespace-nowrap font-mono tabular-nums -tracking-[0.14px] text-ink-600">
+                  <TableCell className="whitespace-nowrap font-mono tabular-nums -tracking-[0.14px] text-ink-800">
                     {row.conversation}
                   </TableCell>
-                  <TableCell className="whitespace-nowrap font-mono text-ink-600 -tracking-[0.14px]">
+                  <TableCell className="whitespace-nowrap font-mono text-ink-800 -tracking-[0.14px]">
                     {row.keyId}
                   </TableCell>
                   <TableCell className={numericCls}>{row.inTokens}</TableCell>
                   <TableCell className={numericCls}>{row.outTokens}</TableCell>
-                  <TableCell className={latencyCls}>{row.latency}</TableCell>
+                  <TableCell className="text-right whitespace-nowrap font-mono tabular-nums">
+                    <span className="inline-flex items-center justify-end gap-1.5">
+                      {isSlow ? (
+                        <TriangleAlert
+                          className="size-3 shrink-0 text-warning-600"
+                          strokeWidth={1.75}
+                          aria-hidden
+                        />
+                      ) : (
+                        <span className="size-3 shrink-0" aria-hidden />
+                      )}
+                      {isSlow ? <span className="sr-only">slow</span> : null}
+                      <span className={latencyTextCls}>{row.latency}</span>
+                    </span>
+                  </TableCell>
                   <TableCell className={numericCls}>{row.cost}</TableCell>
                 </TableRow>
               );
@@ -941,7 +617,7 @@ function RequestsTableSection() {
         <div className="flex items-center justify-between gap-3 py-3 px-4 border-t border-ink-200">
           <div className="flex items-center gap-3">
             <span className="font-mono text-xs text-ink-500 tabular-nums -tracking-[0.01em]">
-              Showing 1–25 of 8,241
+              Showing <span className="font-medium">1–25</span> of <span className="font-medium">8,241</span>
             </span>
             <span className="text-ink-400" aria-hidden>·</span>
             <span className="font-mono text-xs font-medium text-ink-500 -tracking-[0.01em]">Rows</span>
@@ -968,10 +644,7 @@ function RequestsTableSection() {
               <PaginationItem key={n}>
                 <PaginationLink
                   isActive={page === n}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setPage(n);
-                  }}
+                  onClick={() => setPage(n)}
                 >
                   {n}
                 </PaginationLink>
@@ -983,20 +656,14 @@ function RequestsTableSection() {
             <PaginationItem>
               <PaginationLink
                 isActive={page === 330}
-                onClick={(e) => {
-                  e.preventDefault();
-                  setPage(330);
-                }}
+                onClick={() => setPage(330)}
               >
                 330
               </PaginationLink>
             </PaginationItem>
             <PaginationItem>
               <PaginationNext
-                onClick={(e) => {
-                  e.preventDefault();
-                  setPage((p) => Math.min(330, p + 1));
-                }}
+                onClick={() => setPage((p) => Math.min(330, p + 1))}
               />
             </PaginationItem>
           </PaginationContent>
@@ -1064,15 +731,14 @@ function RequestDetailBody({ row }: { row: RequestRow }) {
             {row.code}
           </Badge>
         </div>
-        <p className="font-mono text-xs text-ink-500 -tracking-[0.01em]">
+        <p className="font-mono text-xs text-ink-500 -tracking-[0.01em] text-pretty">
           Apr 22, 2026 · {row.time} UTC · part of conversation{' '}
-          <a
-            href="#"
-            onClick={(e) => e.preventDefault()}
-            className="text-ink-700 outline-none underline decoration-ink-300 underline-offset-2 hover:decoration-ink-500 focus-visible:decoration-ink-500"
+          <button
+            type="button"
+            className="text-ink-700 bg-transparent p-0 outline-none underline decoration-ink-300 underline-offset-2 hover:decoration-ink-500 focus-visible:decoration-ink-500"
           >
             {row.conversation}
-          </a>
+          </button>
         </p>
       </DialogHeader>
 
@@ -1144,23 +810,23 @@ function RequestDetailBody({ row }: { row: RequestRow }) {
         {activeTab === 'audit' ? (
           <>
             <Button variant="outline" size="sm">
-              <Copy data-icon="inline-start" />
-              Copy proof
+              <Copy data-icon="inline-start" aria-hidden />
+              Copy Proof
             </Button>
             <Button variant="default" size="sm">
               View on DE
-              <ExternalLink data-icon="inline-end" />
+              <ExternalLink data-icon="inline-end" aria-hidden />
             </Button>
           </>
         ) : (
           <>
             <Button variant="outline" size="sm">
-              <Copy data-icon="inline-start" />
+              <Copy data-icon="inline-start" aria-hidden />
               Copy ID
             </Button>
             <Button variant="default" size="sm">
-              Open conversation
-              <ExternalLink data-icon="inline-end" />
+              Open Conversation
+              <ExternalLink data-icon="inline-end" aria-hidden />
             </Button>
           </>
         )}
@@ -1279,7 +945,7 @@ function MessageBlock({
           </>
         ) : null}
       </div>
-      <div className={`rounded-sm border px-3 py-2 text-sm text-ink-900 ${bubbleSurface}`}>
+      <div className={`rounded-sm border px-3 py-2 text-sm text-ink-900 text-pretty ${bubbleSurface}`}>
         {body}
       </div>
     </div>
@@ -1345,7 +1011,7 @@ function SecurityCheckRow({
     <div className="flex items-start justify-between gap-3 rounded-sm border border-ink-200 px-4 py-3">
       <div className="flex flex-col gap-1 min-w-0">
         <span className="font-sans text-sm font-medium text-ink-900">{title}</span>
-        <span className="font-sans text-xs text-ink-500">{description}</span>
+        <span className="font-sans text-xs text-ink-500 text-pretty">{description}</span>
       </div>
       <Badge variant="success">
         <StatusDot kind="success" />
@@ -1391,7 +1057,7 @@ function AuditPanel() {
         label="Quorum"
         value={
           <div className="flex items-center gap-2">
-            <Shield className="size-3.5 text-ink-500" strokeWidth={1.75} />
+            <Shield className="size-3.5 text-ink-500" strokeWidth={1.75} aria-hidden />
             <span className="font-sans text-sm text-ink-900">3-of-3 verified</span>
           </div>
         }
@@ -1413,12 +1079,3 @@ function AuditPanel() {
   );
 }
 
-function EmptyTabPanel({ label }: { label: string }) {
-  return (
-    <div className="flex items-center justify-center h-32 rounded-sm border border-dashed border-ink-200 bg-ink-50">
-      <span className="font-mono text-xs uppercase tracking-[0.1em] font-medium text-ink-500">
-        {label} · TODO
-      </span>
-    </div>
-  );
-}

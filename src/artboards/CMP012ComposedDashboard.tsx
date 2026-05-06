@@ -1,30 +1,13 @@
 import { useState } from 'react';
 import {
-  Activity,
-  ArrowLeftRight,
-  Bell,
   BookOpen,
-  Box,
   ChevronRight,
-  ChevronsUpDown,
-  Coins,
-  CreditCard,
   Download,
-  Home,
-  KeyRound,
-  Lock,
-  MessageSquare,
   MoreHorizontal,
-  PanelLeftClose,
-  PanelLeftOpen,
   Plus,
   RefreshCw,
-  Settings2,
   Shield,
-  ShieldCheck,
   Sparkles,
-  TriangleAlert,
-  Users,
 } from 'lucide-react';
 import {
   Bar,
@@ -43,7 +26,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
 import { StatusDot } from '@/components/ui/status-dot';
 import {
   ChartContainer,
@@ -67,9 +49,8 @@ import {
   VendorAvatar,
   type Vendor,
 } from '@/components/icons/vendor-meta';
-import { BrandMark } from '@/components/icons/brand-mark';
-import { cn } from '@/lib/utils';
 import { ArtboardHeader, SectionHeader } from './_shared/ArtboardHeader';
+import { DashboardChrome } from './_shared/DashboardChrome';
 
 /* ─────────────────────────────────────────────────────────────────────────
  * CMP-012 — Composed · Dashboard
@@ -114,401 +95,22 @@ export function CMP012ComposedDashboard({
             hint="v-shell · gray well · KPI rail · charts · audit feed"
           />
 
-          <DashboardSurface
-            onNavigate={onNavigate}
+          <DashboardChrome
+            urlSlug="overview"
+            screenEyebrow="OVERVIEW"
+            breadcrumbCurrent="Overview"
+            activeNavId="overview"
             sidebarExpanded={innerSidebarExpanded}
             onToggleSidebar={onToggleInnerSidebar ?? (() => {})}
-          />
+            onNavigate={onNavigate}
+          >
+            <PageHeader />
+            <KpiRail />
+            <MiddleRow />
+            <RecentRequestsCard />
+            <QuickActionsRow />
+          </DashboardChrome>
         </div>
-      </div>
-    </div>
-  );
-}
-
-/* ─── The surface (production frame) ─────────────────────────────────────── */
-
-function DashboardSurface({
-  onNavigate,
-  sidebarExpanded,
-  onToggleSidebar,
-}: {
-  onNavigate?: (pageId: string) => void;
-  sidebarExpanded: boolean;
-  onToggleSidebar: () => void;
-}) {
-  return (
-    <div className="flex flex-col w-full overflow-hidden rounded-sm bg-white shadow-(--shadow-border)">
-      <ScreenHead />
-      <div className="flex flex-row min-h-0">
-        <SidebarShell expanded={sidebarExpanded} onNavigate={onNavigate} />
-        <DashMain
-          sidebarExpanded={sidebarExpanded}
-          onToggleSidebar={onToggleSidebar}
-        />
-      </div>
-    </div>
-  );
-}
-
-/* ─── Sidebar shell — width animation + content cross-fade ───────────────
- * Wraps both `DashSidebar` (64px collapsed) and `DashSidebarExpanded`
- * (240px expanded) so the toggle is a smooth 300ms width animation
- * (drawer curve from emil-design-eng) instead of an instant component
- * swap. Both children render absolute-pinned to the top-left; opacity
- * cross-fades them so content morphs in step with the width change.
- *
- * The `transition-[width]` rule does run layout/paint (the skill's
- * "transform + opacity only" bar) — accepted because width is what
- * actually has to change so DashMain reflows. One-shot, not sustained.
- * `motion-reduce:transition-none` honors reduced-motion. */
-function SidebarShell({
-  expanded,
-  onNavigate,
-}: {
-  expanded: boolean;
-  onNavigate?: (pageId: string) => void;
-}) {
-  return (
-    <aside
-      aria-label="Primary navigation"
-      style={{ transitionTimingFunction: 'cubic-bezier(0.32, 0.72, 0, 1)' }}
-      className={cn(
-        'relative shrink-0 overflow-hidden bg-white border-r border-ink-200 transition-[width] duration-300 motion-reduce:transition-none',
-        expanded ? 'w-60' : 'w-16',
-      )}
-    >
-      <div
-        aria-hidden={expanded}
-        className={cn(
-          'absolute inset-y-0 left-0 transition-opacity duration-200 ease-out motion-reduce:transition-none',
-          expanded
-            ? 'opacity-0 pointer-events-none'
-            : 'opacity-100',
-        )}
-      >
-        <DashSidebar onNavigate={onNavigate} />
-      </div>
-      <div
-        aria-hidden={!expanded}
-        className={cn(
-          'absolute inset-y-0 left-0 transition-opacity duration-200 ease-out motion-reduce:transition-none',
-          expanded
-            ? 'opacity-100'
-            : 'opacity-0 pointer-events-none',
-        )}
-      >
-        <DashSidebarExpanded onNavigate={onNavigate} />
-      </div>
-    </aside>
-  );
-}
-
-/* ─── Screen head (production chrome strip) ──────────────────────────────── */
-
-function ScreenHead() {
-  return (
-    <div className="relative flex items-center h-[41px] px-4 bg-ink-50 border-b border-ink-200 shrink-0">
-      <div className="flex items-center gap-2">
-        {/* macOS traffic-lights — tokens live in src/index.css so the
-            chrome strip never inlines hex literals. */}
-        <span className="size-2.5 rounded-full bg-[var(--color-traffic-red)]" aria-hidden />
-        <span className="size-2.5 rounded-full bg-[var(--color-traffic-amber)]" aria-hidden />
-        <span className="size-2.5 rounded-full bg-[var(--color-traffic-green)]" aria-hidden />
-      </div>
-      <div className="absolute left-1/2 -translate-x-1/2 font-mono text-xs text-ink-600 tabular-nums">
-        acme-prod.constellation.io / overview
-      </div>
-      <div className="ml-auto font-mono uppercase tracking-[0.1em] text-xs font-medium text-ink-500">
-        DIR.A · OVERVIEW
-      </div>
-    </div>
-  );
-}
-
-/* ─── Sidebar (collapsed 64px icon rail) ──────────────────────────────────
- * Mirrors `SIDEBAR_SECTIONS` (the expanded nav data) so collapsed and
- * expanded never drift. Section groups are separated by a `<Separator />`
- * since we don't have eyebrow labels at this width. */
-
-function DashSidebar({ onNavigate }: { onNavigate?: (pageId: string) => void }) {
-  return (
-    <div className="flex flex-col items-center justify-between w-16 h-full py-5 shrink-0">
-      <div className="flex flex-col items-center gap-1 w-full">
-        <BrandMark className="size-8 text-blue-700" />
-        {SIDEBAR_SECTIONS.map((section, i) => (
-          <div key={section.label ?? `top-${i}`} className="flex flex-col items-center gap-1 w-full">
-            <Separator className={i === 0 ? 'w-8 my-2' : 'w-8 my-1'} />
-            {section.items.map((item) => {
-              const Icon = item.icon;
-              return (
-                <button
-                  key={item.id}
-                  type="button"
-                  aria-label={item.label}
-                  aria-current={item.active ? 'page' : undefined}
-                  onClick={item.pageId ? () => onNavigate?.(item.pageId!) : undefined}
-                  className={
-                    item.active
-                      ? 'flex items-center justify-center size-9 rounded-sm bg-ink-200 text-ink-900'
-                      : 'flex items-center justify-center size-9 rounded-sm text-ink-500 transition-colors duration-150 ease-out hover:text-ink-700 hover:bg-ink-100'
-                  }
-                >
-                  <Icon className="size-[18px]" strokeWidth={1.5} />
-                </button>
-              );
-            })}
-          </div>
-        ))}
-      </div>
-      <div className="flex items-center justify-center size-6 rounded-full bg-blue-700 text-white font-mono text-xs font-medium">
-        CP
-      </div>
-    </div>
-  );
-}
-
-/* ─── Expanded sidebar (240px full nav) ──────────────────────────────────
- * Sibling of <DashSidebar /> (the 64px icon rail). Toggled via the
- * panel-left button in DashTopBar. Sections use mono-uppercase eyebrow
- * group labels (Eyebrow / sm spec from CMP-000); active item uses the
- * project's white-pill convention (`bg-white border-ink-200 shadow-xs`).
- * No left-edge indicator line — the active pill carries the signal. */
-
-type SidebarItem = {
-  id: string;
-  icon: React.ComponentType<{ className?: string; strokeWidth?: number }>;
-  label: string;
-  active?: boolean;
-  pageId?: string;
-};
-
-type SidebarSection = {
-  /** Eyebrow group label; omit for the top section (no header). */
-  label?: string;
-  items: SidebarItem[];
-};
-
-const SIDEBAR_SECTIONS: SidebarSection[] = [
-  {
-    items: [
-      { id: 'overview',      icon: Home,           label: 'Overview', active: true,  pageId: 'cmp-012' },
-      { id: 'requests',      icon: ArrowLeftRight, label: 'Requests',                pageId: 'cmp-013' },
-      { id: 'conversations', icon: MessageSquare,  label: 'Conversations',           pageId: 'cmp-014' },
-    ],
-  },
-  {
-    label: 'Gateway',
-    items: [
-      { id: 'models',         icon: Box,         label: 'Models' },
-      { id: 'token-savings',  icon: Coins,       label: 'Token Savings' },
-      { id: 'guardrails',     icon: ShieldCheck, label: 'Guardrails' },
-    ],
-  },
-  {
-    label: 'Security',
-    items: [
-      { id: 'security-overview', icon: TriangleAlert, label: 'Overview' },
-      { id: 'policies',          icon: Shield,        label: 'Policies' },
-      { id: 'events',            icon: Bell,          label: 'Events' },
-    ],
-  },
-  {
-    label: 'Audit',
-    items: [{ id: 'audit-trail', icon: Lock, label: 'Audit Trail' }],
-  },
-  {
-    label: 'Workspace Admin',
-    items: [
-      { id: 'activity', icon: Activity,   label: 'Activity' },
-      { id: 'team',     icon: Users,      label: 'Team' },
-      { id: 'billing',  icon: CreditCard, label: 'Billing' },
-      { id: 'api-keys', icon: KeyRound,   label: 'API Keys' },
-      { id: 'settings', icon: Settings2,  label: 'Settings' },
-    ],
-  },
-];
-
-function DashSidebarExpanded({ onNavigate }: { onNavigate?: (pageId: string) => void }) {
-  return (
-    <div className="flex flex-col w-60 h-full shrink-0">
-      {/* Brand area — logomark + stacked wordmark (Constellation eyebrow,
-          Gate AI title with "AI" in brand-blue). */}
-      <div className="flex items-center gap-3 px-4 py-4 border-b border-ink-200 shrink-0">
-        <BrandMark className="size-8 shrink-0 text-blue-700" />
-        <div className="flex flex-col leading-tight min-w-0">
-          <span className="font-mono text-xs uppercase tracking-[0.1em] font-medium text-ink-500">
-            Constellation
-          </span>
-          <span className="font-sans text-base font-medium text-ink-900">
-            Gate <span className="text-blue-700">AI</span>
-          </span>
-        </div>
-      </div>
-
-      {/* Workspace switcher */}
-      <div className="px-3 py-3 border-b border-ink-200 shrink-0">
-        <button
-          type="button"
-          className="flex items-center justify-between gap-2 w-full p-2 rounded-sm border border-ink-200 bg-white hover:bg-ink-50 transition-colors duration-150 ease-out"
-        >
-          <span className="font-sans text-sm font-medium text-ink-900 truncate min-w-0">
-            Chad's project
-          </span>
-          <div className="shrink-0 flex items-center gap-1.5">
-            <span className="inline-flex items-center h-5 px-2 rounded-full bg-blue-50 text-blue-700 font-sans text-xs font-medium">
-              Pro
-            </span>
-            <ChevronsUpDown className="size-4 text-ink-500" strokeWidth={1.75} aria-hidden />
-          </div>
-        </button>
-      </div>
-
-      {/* Nav sections */}
-      <nav className="flex flex-col gap-4 px-3 py-3 overflow-y-auto flex-1">
-        {SIDEBAR_SECTIONS.map((section, i) => (
-          <div key={section.label ?? `top-${i}`} className="flex flex-col gap-1">
-            {section.label ? (
-              <div className="px-2 pt-1 pb-1 font-mono text-xs uppercase tracking-[0.1em] font-medium text-ink-500">
-                {section.label}
-              </div>
-            ) : null}
-            {section.items.map((item) => {
-              const Icon = item.icon;
-              return (
-                <button
-                  key={item.id}
-                  type="button"
-                  aria-current={item.active ? 'page' : undefined}
-                  onClick={item.pageId ? () => onNavigate?.(item.pageId!) : undefined}
-                  className={
-                    item.active
-                      ? 'flex items-center gap-3 px-2 py-2 rounded-sm border border-ink-200 bg-ink-100 text-ink-900 font-medium shadow-xs'
-                      : 'flex items-center gap-3 px-2 py-2 rounded-sm border border-transparent text-ink-700 hover:text-ink-900 hover:bg-ink-50 transition-colors duration-150 ease-out'
-                  }
-                >
-                  <Icon className="size-4 shrink-0" strokeWidth={1.75} />
-                  <span className="font-sans text-sm">{item.label}</span>
-                </button>
-              );
-            })}
-          </div>
-        ))}
-      </nav>
-
-      {/* Bottom user area */}
-      <div className="flex items-center justify-between gap-2 px-3 py-3 border-t border-ink-200 shrink-0">
-        <div className="flex items-center gap-2 min-w-0">
-          <span className="size-7 shrink-0 rounded-full bg-blue-700" aria-hidden />
-          <span className="font-sans text-sm font-medium text-ink-900 truncate">
-            Chad
-          </span>
-        </div>
-        <button
-          type="button"
-          aria-label="User menu"
-          className="shrink-0 size-7 inline-flex items-center justify-center rounded-sm text-ink-500 hover:text-ink-900 hover:bg-ink-100 transition-colors duration-150 ease-out"
-        >
-          <MoreHorizontal className="size-4" strokeWidth={1.75} />
-        </button>
-      </div>
-    </div>
-  );
-}
-
-/* ─── Main pane (gray well + content) ────────────────────────────────────── */
-
-function DashMain({
-  sidebarExpanded,
-  onToggleSidebar,
-}: {
-  sidebarExpanded: boolean;
-  onToggleSidebar: () => void;
-}) {
-  return (
-    <div className="flex flex-col flex-1 min-w-0 bg-ink-50">
-      <DashTopBar
-        sidebarExpanded={sidebarExpanded}
-        onToggleSidebar={onToggleSidebar}
-      />
-      <div className="flex flex-col gap-6 p-6">
-        <PageHeader />
-        <KpiRail />
-        <MiddleRow />
-        <RecentRequestsCard />
-        <QuickActionsRow />
-      </div>
-    </div>
-  );
-}
-
-function DashTopBar({
-  sidebarExpanded,
-  onToggleSidebar,
-}: {
-  sidebarExpanded: boolean;
-  onToggleSidebar: () => void;
-}) {
-  return (
-    <div className="flex items-center justify-between h-[49px] px-6 bg-white border-b border-ink-200 shrink-0">
-      <div className="flex items-center gap-2">
-        <Button
-          variant="ghost"
-          size="icon-sm"
-          aria-label={sidebarExpanded ? 'Collapse sidebar' : 'Expand sidebar'}
-          aria-expanded={sidebarExpanded}
-          onClick={onToggleSidebar}
-          className="-ml-2 text-ink-500 hover:text-ink-700 aria-expanded:bg-transparent aria-expanded:text-ink-500 hover:aria-expanded:text-ink-700"
-        >
-          {/* Skill: animations.md — contextual icon cross-fade. Both icons stay
-              in DOM, absolute-positioned over each other; toggle scale/opacity/blur
-              with the skill's exact values (0.25→1, 0→1, 4px→0). */}
-          <span className="relative inline-flex size-4 items-center justify-center">
-            <PanelLeftClose
-              aria-hidden
-              strokeWidth={1.75}
-              className={cn(
-                'absolute size-4 transition-[opacity,transform,filter] duration-300 [transition-timing-function:cubic-bezier(0.2,0,0,1)] motion-reduce:transition-none',
-                sidebarExpanded
-                  ? 'opacity-100 scale-100 blur-0'
-                  : 'opacity-0 scale-[0.25] blur-[4px]',
-              )}
-            />
-            <PanelLeftOpen
-              aria-hidden
-              strokeWidth={1.75}
-              className={cn(
-                'absolute size-4 transition-[opacity,transform,filter] duration-300 [transition-timing-function:cubic-bezier(0.2,0,0,1)] motion-reduce:transition-none',
-                sidebarExpanded
-                  ? 'opacity-0 scale-[0.25] blur-[4px]'
-                  : 'opacity-100 scale-100 blur-0',
-              )}
-            />
-          </span>
-        </Button>
-        <span className="font-sans text-xs text-ink-500">All Projects</span>
-        <ChevronRight className="size-3 text-ink-400" strokeWidth={1.75} aria-hidden />
-        <span className="font-sans text-xs text-ink-500">Constellation Gate AI</span>
-        <ChevronRight className="size-3 text-ink-400" strokeWidth={1.75} aria-hidden />
-        <span aria-current="page" className="font-sans text-xs font-medium text-ink-900">Overview</span>
-      </div>
-      <div className="flex items-center gap-1">
-        <Button variant="outline" size="sm" className="border-ink-200 bg-white text-ink-900">
-          Docs
-        </Button>
-        {/* Skill: surfaces.md — promote to Button `icon-sm` so the hit
-            target jumps from 24px to 32px without colliding with the
-            adjacent Docs button (gap-1 = 4px) or the avatar span. */}
-        <Button
-          variant="ghost"
-          size="icon-sm"
-          aria-label="Notifications"
-          className="text-ink-500 hover:text-ink-900"
-        >
-          <Bell className="size-4" strokeWidth={1.75} />
-        </Button>
-        <span className="inline-flex items-center justify-center size-6 ml-2 rounded-full bg-blue-700 text-white font-sans text-xs font-medium">
-          CP
-        </span>
       </div>
     </div>
   );
@@ -520,20 +122,24 @@ function PageHeader() {
   return (
     <div className="flex items-end justify-between gap-6">
       <div className="flex flex-col gap-2 max-w-1/2">
-        <h1 className="font-sans font-medium text-ink-900 text-3xl/9 -tracking-[1px] text-balance m-0">
+        {/* h2 (not h1) — the artboard's ArtboardHeader already emits the
+            outer h1; this is the in-surface page title and reads as h2
+            in the document outline so RecentRequestsCard h3 doesn't
+            create a level skip. */}
+        <h2 className="font-sans font-medium text-ink-900 text-3xl/9 -tracking-[1px] text-balance m-0">
           Overview
-        </h1>
+        </h2>
         <p className="font-sans text-ink-500 text-base tracking-tight text-pretty m-0">
           Traffic, spend and latency across every model on the gateway.
         </p>
       </div>
       <div className="flex items-center gap-3">
         <Button variant="outline" size="default">
-          <Download data-icon="inline-start" />
+          <Download data-icon="inline-start" aria-hidden />
           Export
         </Button>
         <Button variant="default" size="default">
-          <Plus data-icon="inline-start" />
+          <Plus data-icon="inline-start" aria-hidden />
           Create Key
         </Button>
       </div>
@@ -585,6 +191,7 @@ function KpiRail() {
           title="Avg Latency"
           value="1.24 s"
           delta="-3.2%"
+          deltaInverted
           spark={
             <CompactSpark
               colorVar="var(--color-warning-500)"
@@ -810,14 +417,10 @@ export function TopKeysCard() {
               proper hit area; skill: performance.md — explicit transition. */}
           <button
             type="button"
-            aria-label="More"
-            className="relative inline-flex items-center justify-center size-6 rounded-xs text-ink-500 transition-colors duration-150 ease-out hover:text-ink-900 hover:bg-ink-100 after:absolute after:-inset-2 after:content-['']"
+            aria-label="More options for Top Keys"
+            className="relative inline-flex items-center justify-center size-6 rounded-xs text-ink-500 transition-[color,background-color,transform] duration-150 ease-out hover:text-ink-900 hover:bg-ink-100 active:translate-y-px motion-reduce:transition-none motion-reduce:active:translate-y-0 after:absolute after:-inset-2 after:content-['']"
           >
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
-              <circle cx="3" cy="8" r="1.25" fill="currentColor" />
-              <circle cx="8" cy="8" r="1.25" fill="currentColor" />
-              <circle cx="13" cy="8" r="1.25" fill="currentColor" />
-            </svg>
+            <MoreHorizontal className="size-4" strokeWidth={1.75} aria-hidden />
           </button>
         </CardAction>
       </CardHeader>
@@ -864,7 +467,7 @@ const RECENT_REQUESTS: {
   { time: '14:28:04', vendor: 'anthropic', model: 'claude-sonnet-4.8', status: 'success', code: '200',  tokens: '4,051', latency: '1.21s', cost: '$0.028' },
   { time: '14:27:52', vendor: 'openai',    model: 'gpt-5.1',           status: 'success', code: '200',  tokens: '2,847', latency: '0.89s', cost: '$0.019' },
   { time: '14:27:41', vendor: 'xai',       model: 'grok-4.1-fast',     status: 'success', code: '200',  tokens: '6,120', latency: '2.14s', cost: '$0.012' },
-  { time: '14:27:30', vendor: 'google',    model: 'gemini-3-pro',      status: 'warn',    code: 'slow', tokens: '1,892', latency: '4.08s', cost: '$0.009' },
+  { time: '14:27:30', vendor: 'google',    model: 'gemini-3-pro',      status: 'warn',    code: '408',  tokens: '1,892', latency: '4.08s', cost: '$0.009' },
   { time: '14:27:18', vendor: 'anthropic', model: 'claude-opus-4.7',   status: 'danger',  code: '500',  tokens: '0',     latency: '0.18s', cost: '$0.000' },
   { time: '14:26:54', vendor: 'meta',      model: 'llama-4.2-405b',    status: 'success', code: '200',  tokens: '3,204', latency: '1.65s', cost: '$0.006' },
 ];
@@ -890,8 +493,8 @@ export function RecentRequestsCard() {
           Recent Requests
         </h3>
         <Button variant="ghost" size="sm" className="text-ink-500 hover:text-ink-900 -mr-2">
-          View all
-          <ChevronRight data-icon="inline-end" />
+          View All
+          <ChevronRight data-icon="inline-end" aria-hidden />
         </Button>
       </div>
 
@@ -963,7 +566,7 @@ type QuickAction = {
 };
 
 const QUICK_ACTIONS: QuickAction[] = [
-  { icon: RefreshCw,  title: 'Rotate API key',         subtitle: 'Last rotated 6.2 days ago' },
+  { icon: RefreshCw,  title: 'Rotate API key',         subtitle: 'Last rotated 6 days ago' },
   { icon: Sparkles,   title: 'Upgrade to Enterprise',  subtitle: 'Unlock custom rate limits', accent: true },
   { icon: Shield,     title: 'Review security events', subtitle: '3 events in the last hour' },
   { icon: BookOpen,   title: 'Read integration guide', subtitle: 'SDK quickstart' },
@@ -1007,12 +610,12 @@ function QuickActionItem({ icon: Icon, title, subtitle, accent }: QuickAction) {
   return (
     <button
       type="button"
-      className={`w-full flex items-center gap-3 p-4 text-left transition-colors duration-150 ease-out ${sectionCls}`}
+      className={`w-full flex items-center gap-3 p-4 text-left transition-[background-color,transform] duration-150 ease-out active:scale-[0.98] motion-reduce:transition-none motion-reduce:active:scale-100 ${sectionCls}`}
     >
       <span
         className={`shrink-0 size-8 inline-flex items-center justify-center rounded-xs ${chipCls}`}
       >
-        <Icon className="size-4" strokeWidth={1.75} />
+        <Icon className="size-4" strokeWidth={1.75} aria-hidden />
       </span>
       <div className="flex flex-col gap-1 min-w-0 flex-1">
         <span className="font-sans text-sm font-medium text-ink-900 truncate">
@@ -1022,7 +625,7 @@ function QuickActionItem({ icon: Icon, title, subtitle, accent }: QuickAction) {
           {subtitle}
         </span>
       </div>
-      <ChevronRight className="shrink-0 size-4 text-ink-500" strokeWidth={1.75} />
+      <ChevronRight className="shrink-0 size-4 text-ink-500" strokeWidth={1.75} aria-hidden />
     </button>
   );
 }

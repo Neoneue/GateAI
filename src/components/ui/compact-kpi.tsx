@@ -1,4 +1,4 @@
-import { ArrowDownLeft, ArrowUpRight } from 'lucide-react';
+import { ArrowDownRight, ArrowUpRight } from 'lucide-react';
 import { Area, AreaChart, CartesianGrid, Line, XAxis } from 'recharts';
 import {
   ChartContainer,
@@ -7,13 +7,26 @@ import {
 
 /* ─────────────────────────────────────────────────────────────────────────
  * DeltaTag — directional arrow + delta value, optional trailing note.
- * Negative deltas (leading "-") render danger; otherwise success.
+ *
+ * Default: positive (more) = success, negative (less) = danger.
+ * `inverted`: lower-is-better metrics (latency, cost-per-x, error rate);
+ * negative paints success and positive paints danger. Direction arrow
+ * still tracks the literal sign — only the tone flips.
  * ───────────────────────────────────────────────────────────────────────── */
 
-export function DeltaTag({ delta, note }: { delta: string; note?: string }) {
+export function DeltaTag({
+  delta,
+  note,
+  inverted = false,
+}: {
+  delta: string;
+  note?: string;
+  inverted?: boolean;
+}) {
   const negative = delta.trim().startsWith('-');
-  const Icon = negative ? ArrowDownLeft : ArrowUpRight;
-  const toneCls = negative ? 'text-destructive' : 'text-success-700';
+  const Icon = negative ? ArrowDownRight : ArrowUpRight;
+  const isGood = inverted ? negative : !negative;
+  const toneCls = isGood ? 'text-success-700' : 'text-destructive';
   // Strip the leading +/- since the directional arrow already carries
   // sign; redundant prefix adds visual noise to the value.
   const display = delta.replace(/^[+-]/, '').trim();
@@ -42,6 +55,7 @@ export function CompactKpi({
   value,
   delta,
   deltaNote,
+  deltaInverted = false,
   noteLine,
   spark,
   flat = false,
@@ -50,6 +64,8 @@ export function CompactKpi({
   value: string;
   delta?: string;
   deltaNote?: string;
+  /** Pass-through to DeltaTag for lower-is-better metrics. */
+  deltaInverted?: boolean;
   noteLine?: string;
   spark: React.ReactNode;
   flat?: boolean;
@@ -65,7 +81,7 @@ export function CompactKpi({
           {value}
         </div>
         {delta ? (
-          <DeltaTag delta={delta} note={deltaNote} />
+          <DeltaTag delta={delta} note={deltaNote} inverted={deltaInverted} />
         ) : (
           <span className="text-sm tracking-tight text-ink-500">{noteLine}</span>
         )}

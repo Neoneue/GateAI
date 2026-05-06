@@ -82,7 +82,7 @@ function TableHead({ className, ...props }: React.ComponentProps<"th">) {
         // the body cells; sans here keeps the voice split clean. font-medium
         // + ink-600 gives 12px sans enough presence to register as a header
         // row without competing with the body.
-        "h-9 px-3 text-left align-middle text-xs font-medium text-ink-500 first:px-4 last:px-4 [&:has([role=checkbox])]:pr-0",
+        "h-9 px-4 text-left align-middle text-xs font-medium text-ink-500 [&:has([role=checkbox])]:pr-0",
         className,
       )}
       {...props}
@@ -95,7 +95,7 @@ function TableCell({ className, ...props }: React.ComponentProps<"td">) {
     <td
       data-slot="table-cell"
       className={cn(
-        "px-3 py-3 align-middle text-sm text-ink-900 first:px-4 last:px-4 [&:has([role=checkbox])]:pr-0",
+        "px-4 py-3 align-middle text-sm text-ink-900 [&:has([role=checkbox])]:pr-0",
         className,
       )}
       {...props}

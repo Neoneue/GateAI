@@ -50,6 +50,8 @@ graph TB
 
 The app has **no router**. Page switching is `useState` over a flat `NAV` array. The active page is rendered into a centered scroll container.
 
+The CMP-012/013/014 surfaces share their **production-shell chrome** via `_shared/DashboardChrome.tsx` (outer card + ScreenHead + topbar) and the `Sidebar` primitive at `components/ui/sidebar.tsx` (collapsed-rail / expanded-nav cross-fade). The single source of truth for sidebar nav data is `_shared/nav-sections.ts` (`SIDEBAR_SECTIONS`). Inner-sidebar collapse state lives in App-level `useState` and is forwarded to each artboard via `innerSidebarExpanded` / `onToggleInnerSidebar` props so the toggle persists across page swaps.
+
 ```mermaid
 graph TB
     MAIN["main.tsx<br/>StrictMode + createRoot"]
@@ -123,6 +125,8 @@ graph TB
 - One or more `<SectionHeader code={"CMP-XXX.N — TITLE"} hint=... />` blocks delimiting sub-sections
 - Content composed entirely from primitives in `src/components/ui/` (or extracted helpers)
 - Registered in `src/App.tsx` `NAV[]` (and `PageId` union extended)
+
+Production-shell artboards (CMP-012/013/014) additionally wrap their page content in `<DashboardChrome ... activeNavId="..." sidebarExpanded={...} onToggleSidebar={...}>{children}</DashboardChrome>` from `_shared/DashboardChrome.tsx`, which renders the screen head, the `<Sidebar>` primitive, and the breadcrumb topbar. The artboard file owns only the page-internal pieces (PageHeader, KPI rail, tables, etc.).
 
 Section list (current build):
 
@@ -201,6 +205,20 @@ graph LR
 
 **Subtitle width policy (codified 2026-05-06):** Page-header description text caps at `max-w-1/2` of the page (50% of the page-header flex parent). Applied to the **wrapper column** (the `flex flex-col` containing both `<h1>` and `<p>`), not directly to the `<p>` — fractional max-w on a leaf inside a content-sized column won't behave as expected.
 
+**Table ink-density tiers (codified 2026-05-06, PM-flagged):** Body cells in composed-surface tables (CMP-012/013/014) use **three ink tiers only** — no `ink-600` or `ink-700` middle tones. PM caught a perceptual drift between `ink-600` IDs and `ink-800` numerics (~15-pt OKLCH lightness gap, very visible).
+
+| Tier | Role | Token |
+|---|---|---|
+| 500 | Context — timestamps, sub-IDs sitting under a primary identifier | `text-ink-500` |
+| 800 | Body data — IDs, keys, numerics, initiators, secondary text | `text-ink-800` |
+| 900 | Primary identifier — model name, row title button | `text-ink-900` |
+
+Plus `ink-400` reserved for missing-data dashes (`—`) so they read as semantically empty. Badges/pills handle their own color and are exempt. Industry-aligned (Material / Carbon / Atlassian / Polaris / Vercel Geist all run three-tier). See `feedback_table-ink-tiers.md`.
+
+**Numeric column alignment (codified 2026-05-06):** Numeric columns in composed-surface tables right-align via `text-right` on TableHead + TableCell. `tabular-nums` alone only fixes intra-row digit width — it does not fix inter-row drift when `4,051` sits above `52,810`. Right-edge anchoring places the ones-place at a fixed x across rows so magnitudes compare at a glance. CMP-013's earlier left-align comment ("CMP-011 convention — `tabular-nums` makes left-align OK") was wrong reasoning and has been rewritten.
+
+**Latency icon-slot pattern (CMP-013 specific):** When a numeric column carries a conditional row-state indicator (e.g. slow-row TriangleAlert in the Latency column), every row reserves a fixed-width icon slot in the **leading** position (icon-then-value reading order). Slow rows render the icon; non-slow rows render an invisible `size-3` placeholder. `inline-flex justify-end` inside a `text-right` cell pins the assembly to the cell's right edge so digit columns stay anchored regardless of row state. Don't trail the icon after the value — that breaks alignment.
+
 ---
 
 ## 5. Primitive reuse graph (the load-bearing one)
@@ -230,6 +248,12 @@ graph LR
         SON["sonner"]
         CKPI["compact-kpi<br/>CompactKpi · CompactSpark ·<br/>DeltaTag"]
         CCARD["code-card<br/>CodeCard · CodeCardHeader ·<br/>CodeCardTabs ·<br/>CodeCardCopyButton ·<br/>CodeBlock · TerminalCard"]
+        SBAR["sidebar<br/>Sidebar · SidebarItem · SidebarSection<br/>(collapsed icon-rail ↔ expanded nav<br/>cross-fade, inert-gated focus)"]
+    end
+
+    subgraph CHROME["src/artboards/_shared/"]
+        DCHROME["DashboardChrome<br/>surface card + ScreenHead +<br/>Sidebar + DashTopBar +<br/>page-content slot"]
+        NAVS[("nav-sections.ts<br/>SIDEBAR_SECTIONS<br/>(single source of truth)")]
     end
 
     subgraph ICN["src/components/icons/"]
@@ -291,11 +315,24 @@ graph LR
 
     A012 -.->|re-exports<br/>RequestVolumeCard, TopKeysCard,<br/>RecentRequestsCard| A008a
     A012 -.->|re-exports<br/>RecentRequestsCard| A011
+
+    SBAR --> DCHROME
+    NAVS --> DCHROME
+    BTN --> DCHROME
+    BM --> SBAR
+    SEP --> SBAR
+    DCHROME --> A012
+    DCHROME --> A013
+    DCHROME --> A014["CMP014 Conversations"]
 ```
 
 **Key reuse loops to call out:**
 
-- **`CompactKpi` + `DeltaTag` + `CompactSpark`** live in `src/components/ui/compact-kpi.tsx`. Consumed by `CMP-003` (delta tag spec sheet), `CMP-008b` (Stat cards), `CMP-012` (KPI rail), `CMP-013` (hero card), `CMP-014` (KPI rail). Title style (`font-mono font-medium uppercase tracking-[0.1em] text-xs text-ink-500`) is canonical Eyebrow / sm. **DeltaTag** (final treatment 2026-05-05): bare directional arrow (Lucide `ArrowUpRight` / `ArrowDownLeft`) + value in mono — NO pill chip, NO wash background. Color via plain `text-success-700` / `text-destructive` on inline-flex span. Strips leading `+`/`-` since icon carries direction. **CompactSpark** defaults `endDot = true` (flipped 2026-05-06) so trailing dot is consistent across all KPI rails.
+- **`CompactKpi` + `DeltaTag` + `CompactSpark`** live in `src/components/ui/compact-kpi.tsx`. Consumed by `CMP-003` (delta tag spec sheet), `CMP-008b` (Stat cards), `CMP-012` (KPI rail), `CMP-013` (hero card), `CMP-014` (KPI rail). Title style (`font-mono font-medium uppercase tracking-[0.1em] text-xs text-ink-500`) is canonical Eyebrow / sm. **DeltaTag** (final treatment 2026-05-05, arrow direction corrected 2026-05-06, rate-vs-volume rule codified 2026-05-06): bare directional arrow (Lucide `ArrowUpRight` / `ArrowDownRight`) + value in mono — NO pill chip, NO wash background. Both arrows move forward in time (rightward); only the vertical direction differs by sign. Default coloring is sign-based: positive = `text-success-700` + up arrow, negative = `text-destructive` + down arrow. The `inverted` prop (passed through from CompactKpi's `deltaInverted`) flips the tone — positive paints red, negative paints green. Direction arrow still tracks the literal sign — only the color flips. No textual qualifier accompanies the inverted color (a "Lower is better" sub-line was tried 2026-05-06 and rejected as bad UI).
+
+**Rate-vs-volume rule for `deltaInverted`:** `deltaInverted` only applies to **rate metrics where lower is unambiguously better** — latency, error rate, cost-per-call, cost-per-conversation, time-to-first-token. **Volume metrics stay sign-based** even when they're cost-flavored — Total Cost rising correlates with usage growth (which is what you want for a usage-based product), so it's not unambiguously bad and shouldn't paint red. Total Errors as a count is similar — could mean more traffic. Use `deltaInverted` only when "down is good" is true regardless of context.
+
+Active inverted call sites today: CMP-012 Avg Latency, CMP-014 Avg Cost / Conv. Total Cost is intentionally NOT inverted. Color via plain `text-success-700` / `text-destructive` on inline-flex span. Strips leading `+`/`-` since icon carries direction. **CompactSpark** defaults `endDot = true` (flipped 2026-05-06) so trailing dot is consistent across all KPI rails.
 - **`Card` family** lives in `src/components/ui/card.tsx`. Card primitive uses `shadow-(--shadow-border)` (layered ring + ambient lift), no hard border — refactored 2026-05-06 from the previous `border + shadow-xs` pattern. `RequestVolumeCard`, `TopKeysCard`, `RecentRequestsCard` (defined in `CMP012ComposedDashboard.tsx`, **exported** for reuse) are consumed by `CMP-008a`, `CMP-011`, and `CMP-012`. Single source of truth.
 - **`VendorAvatar` + `VENDOR_META`** lives in `src/components/icons/vendor-meta.tsx`. Consumed by CMP-007, CMP-010, CMP-011, CMP-012, CMP-013, CMP-014. The `color` field is single-source. **Final treatment (locked 2026-05-05 after 4 iterations):** white provider glyph on saturated brand-color chip, **no `tone` prop**. Used everywhere identically — tables, KPI cards, modal headers, top-key lists. Trade-off accepted: vendor-stacked tables read as a multi-hue column, but cross-surface consistency wins. **DO NOT reintroduce `tone` prop** without explicit ask (`feedback_vendor-avatar-treatment.md`).
 - **`BrandMark`** (added 2026-05-05) — Constellation Gate AI logomark in `src/components/icons/brand-mark.tsx`. 7-path constellation SVG with `fill="currentColor"`. Consumed by CMP-012, CMP-013, CMP-014 left rails (`<BrandMark className="size-8 text-blue-700" />`). Static asset at `public/logomark.svg`. `--color-blue-700` is anchored to the logomark's brand color via OKLCH (`oklch(0.345 0.224 268.85)` ≈ `#1F2FCE`).
@@ -309,6 +346,7 @@ graph LR
   - Card titles: 16–20px (text-base / text-xl)
   Each step a meaningful drop. Called via `<SectionHeader code="CMP-XXX.N — TITLE" hint="…" />` from every artboard's section markers.
 - **Sidebar toggle icon cross-fade** (added 2026-05-06) in CMP-012/013/014 PageHeader/topbar — `PanelLeftClose` ↔ `PanelLeftOpen` swap is no longer an instant React conditional. Both icons live in DOM, absolute-positioned over each other, cross-fading on toggle: `scale 0.25 → 1`, `opacity 0 → 1`, `blur 4px → 0`, `cubic-bezier(0.2, 0, 0, 1)`, 300ms. `motion-reduce:transition-none` for accessibility.
+- **`PaginationLink` renders as `<button type="button">`** (codified 2026-05-06) in `src/components/ui/pagination.tsx`. Original shadcn primitive used Base UI's `nativeButton={false}` + `render={<a>}` to force anchor rendering — wrong for this codebase, which has no router. Cmd/middle-click on pagination was never going anywhere. Type changed from `ComponentProps<"a">` to `ComponentProps<"button">`; `aria-current` / `data-slot` / `data-active` land on the button directly. Call sites (CMP-013, CMP-014) drop dead `e.preventDefault()` and `href="#"` — the onClick handler is now the actual action. **Inline anchors in composed surfaces (modal subtitle conversation refs, row-title links) follow the same conversion** — `<a href="#" onClick={preventDefault}>` is replaced by `<button type="button">` styled with the link affordance (ink + permanent faint underline). Visual contract preserved; semantics corrected.
 
 ---
 
@@ -402,7 +440,10 @@ mvp/
     ├── index.css                   ← Tailwind v4 imports + @theme tokens
     ├── App.css                     ← (legacy, mostly empty)
     ├── artboards/
-    │   ├── _shared/ArtboardHeader.tsx
+    │   ├── _shared/
+    │   │   ├── ArtboardHeader.tsx
+    │   │   ├── DashboardChrome.tsx     ← surface card + ScreenHead + Sidebar + DashTopBar (CMP-012/013/014)
+    │   │   └── nav-sections.ts         ← SIDEBAR_SECTIONS — single source of truth for production-shell nav
     │   ├── CMP000Typography.tsx
     │   ├── CMP001Colors.tsx
     │   ├── CMP002Buttons.tsx
@@ -426,7 +467,7 @@ mvp/
     │   │   ├── model-providers.tsx ← Anthropic/OpenAI/Gemini/Grok/Meta/Mistral/DeepSeek/Cohere SVGs
     │   │   ├── vendor-meta.tsx     ← Vendor type + VENDOR_META + VendorAvatar (single brand-chip treatment)
     │   │   └── brand-mark.tsx      ← Constellation logomark (currentColor)
-    │   └── ui/                     ← 28+ shadcn/Base UI primitives
+    │   └── ui/                     ← 29+ shadcn/Base UI primitives (incl. sidebar.tsx — production-shell nav primitive)
     ├── lib/
     │   ├── utils.ts                ← cn() helper
     │   └── portal-target.tsx
@@ -444,8 +485,9 @@ mvp/
 - **Agent skill routing:** `front-end-developer/agent/front-end-developer.md` (skill table near the top)
 - **Paper canvas reference:** the Paper file *Brilliant quartz* (`app.paper.design/file/01KQ33WPFNCEZAER8FDFPVW5EP`)
 - **Session decision logs (most recent first):**
+  - `~/.claude/projects/-Users-cponticas-Documents-GitHub-mvp/memory/2026-05-06-session-audit-fixes.md` — Vercel Web Interface Guidelines audit + Groups A (a11y/icon/locale) + B1 (PaginationLink → button; modal/row anchors → buttons) + numeric right-align convergence + leading-icon latency slot + three-tier table ink policy
   - `~/.claude/projects/-Users-cponticas-Documents-GitHub-mvp/memory/2026-05-06-session-continued.md` — make-interfaces-feel-better audit + 5-priority polish pass + max-w-1/2 subtitle policy + Replay removal
   - `~/.claude/projects/-Users-cponticas-Documents-GitHub-mvp/memory/2026-05-05-session-design-pass.md` — Geist alignment: typescale + materials + section heading hierarchy + vendor avatar + link affordance + OKLCH color migration
-  - `~/.claude/projects/-Users-cponticas-Documents-GitHub-mvp/memory/MEMORY.md` — index of all feedback memories (color system, material ladder, link affordance, vendor avatar, design-system priority, etc.)
+  - `~/.claude/projects/-Users-cponticas-Documents-GitHub-mvp/memory/MEMORY.md` — index of all feedback memories (color system, material ladder, link affordance, vendor avatar, design-system priority, table ink tiers, etc.)
 
 When the project structure changes (new primitive extracted, new artboard added, contract chain shifts, build pipeline changes), update this file. The diagrams should always match the source.
