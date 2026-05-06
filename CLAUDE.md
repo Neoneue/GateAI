@@ -7,8 +7,12 @@ Guidance for Claude Code working in this repo.
 **Before any UI / design / frontend work in this session, read these in order:**
 
 1. `front-end-developer/agent/front-end-developer.md` — the controlling design methodology for this repo. Quality bar ("The Standard"), no-hardcoded-values rule, source-data-before-target rule, "name your defaults" requirement, research requirement (every design recommendation cites a source), pre-ship quality checks (squint / signature / swap / mobile), and the skill routing table.
-2. `docs/brand-guidelines.md` — project-side synthesis of brand decisions in code. Color palette + status palette (success/warning/danger plus -2 brighter steps), typography (Geist + Geist Mono only, Tailwind type scale only, voice split with the four-voice taxonomy, eyebrow sm/default sizes), logo + `<BrandMark />` component, voice traits + sample sentences + banned-phrases anti-list, layout grid policy (12-col, 16px gutter, 24px page margins at lg+), component conventions (16px card padding, 4px grid spacing, sliding-indicator selectors, primary = ink-900).
-3. `data-model.md` (project root) — architecture map for this repo. Stack, app shell, artboard pattern, token contract chain, primitive reuse graph, Paper-to-code flow, file tree.
+2. `docs/brand-guidelines.md` — project-side synthesis of brand decisions in code. Color palette (now 5 OKLCH ramps + Tailwind 50–950 naming as of 2026-05-05), typography (Geist + Geist Mono only, Tailwind type scale only with `text-3xl/4xl/6xl` overridden to Geist values 32/40/64, voice split with the four-voice taxonomy), logo + `<BrandMark />` component, voice traits + sample sentences + banned-phrases anti-list, layout grid policy, component conventions (16px card padding, 4px grid spacing, sliding-indicator selectors, primary = ink-900). **Note:** brand-guidelines.md may lag behind the code on the most recent decisions — the OKLCH migration, material ladder, and link affordance landed in `index.css` first; check the session memory logs (next item) for current state.
+3. `data-model.md` (project root) — architecture map for this repo. Stack, app shell, artboard pattern, token contract chain (updated 2026-05-06 for the OKLCH 5-ramp system + material ladder), primitive reuse graph, Paper-to-code flow, file tree.
+4. **Most-recent session decision logs** (read these for "what changed yesterday and why"):
+   - `~/.claude/projects/-Users-cponticas-Documents-GitHub-mvp/memory/2026-05-06-session-continued.md` — audit pass + Replay removal + subtitle width policy
+   - `~/.claude/projects/-Users-cponticas-Documents-GitHub-mvp/memory/2026-05-05-session-design-pass.md` — Geist alignment: typescale + materials + heading hierarchy + vendor avatar + link affordance + OKLCH color migration
+   - `~/.claude/projects/-Users-cponticas-Documents-GitHub-mvp/memory/MEMORY.md` — index of all feedback memories (vendor avatar locked to brand chip, no blue links, two-tier material ladder, color system structure)
 
 The CLAUDE.md files (this one and `~/.claude/CLAUDE.md`) are auto-loaded into every session by the Claude Code harness, so they're already in context. The three files above are **not** auto-loaded — read them explicitly via the Read tool at session start.
 
@@ -152,13 +156,17 @@ The full skill table is in `agent/front-end-developer.md`. When unsure which ski
 ## Conventions specific to this repo
 
 - **Artboard files** are named `CMP{NNN}{PascalName}.tsx` and export a function with the same name. Each one is a single page wrapped in `<div className="flex flex-col w-[1440px]">` — fixed 1440px to mirror Paper.
-- **Every artboard starts with `<ArtboardHeader />`** (code · title · description · parts · status), then groups its content as `<SectionHeader code="CMP-XXX.N — TITLE" hint="…" />` blocks. The `ArtboardHeader.tsx` comment is explicit: this header chrome is the spec-sheet wrapper, **not** part of the design system shipped to apps.
-- **Adding a new artboard:** create the file in `src/artboards/`, then register it in the `PAGES[]` array in `src/App.tsx` (also extend the `PageId` union).
-- **Color tokens** live in `src/index.css` under `@theme {}`: `ink-25..900` (neutrals), `blue-50..950` (brand), plus semantic `--color-primary/success/warning/danger`. Use these via Tailwind utilities (`bg-ink-25`, `text-ink-800`) — never hard-code hex. This is the no-hardcoded-values rule from the contract.
-- **Body has a canvas grid background** painted in `index.css` (`linear-gradient` 40px). Anything that should sit on white needs an explicit `bg-white` or `bg-ink-25`.
+- **Every artboard starts with `<ArtboardHeader />`** (code · title · description · parts · status), then groups its content as `<SectionHeader code="CMP-XXX.N — TITLE" hint="…" />` blocks. SectionHeader parses the `code` prop on " — " separator: prefix renders as a small mono uppercase eyebrow, title as an `<h2 class="text-2xl/8">` sans-medium ink-800. Three-step page hierarchy: artboard h1 = 32px (text-3xl/9) → section h2 = 24px (text-2xl/8) → card title = 16–20px. Spec-sheet chrome — **not** shipped to apps.
+- **Adding a new artboard:** create the file in `src/artboards/`, then register it in the `NAV[]` array in `src/App.tsx` (also extend the `PageId` union).
+- **Color tokens (rewritten 2026-05-05, OKLCH migration):** Five OKLCH ramps in `src/index.css` `@theme {}`, all 11 steps (50–950): `ink-*` (neutral), `blue-*` (brand, blue-700 anchored to logomark), `success-*` (Tailwind v4 green), `warning-*` (Tailwind v4 amber), `danger-*` (Tailwind v4 red). Step roles stable across ramps — 50/100 washes, 200 borders, 500 secondary text/chart strokes, 600 saturated mid, 700 saturated text, 800/900 high-contrast. Single-token semantics (`text-warning`, `bg-success`, `-2` brighter variants) **were removed** during the migration — use ramp tokens (`text-warning-700`, `bg-success-100`). `info` aliases to blue (no separate ramp). `--destructive` shadcn semantic still works (points at `danger-600`). Use via Tailwind utilities (`bg-ink-200`, `text-warning-700`) — **never hard-code hex**.
+- **Material ladder (codified 2026-05-05):** Two-tier elevation. Everyday surfaces use `rounded-sm` (6px) + `shadow-(--shadow-border)` — Card primitive, KpiRail, table containers, etc. Modal surfaces use `rounded-xl` (overridden in `@theme inline` to 12px) + `shadow-(--shadow-modal)`. Sub-elements inside tracks use `rounded-xs` (4px) — Tabs trigger/indicator, Segmented item/indicator, SelectItem. Item radius < container radius (concentric rule).
+- **Body has a canvas grid background** painted in `index.css` (`linear-gradient` 40px). Anything that should sit on white needs an explicit `bg-white` or `bg-ink-50`.
 - **Button icons:** put `data-icon="inline-start"` (or `inline-end`) on the SVG inside `<Button>` to get the variant-aware padding adjustment from `button.tsx`'s CVA. Plain icons work but won't get the trim.
 - **Mono vs sans:** Geist Mono is the "machine voice" (codes, IDs, numerics, eyebrow labels). Geist Sans is the "human voice" (titles, body, button labels). Roughly 60/40 mono/sans on operational surfaces — see Paper §CMP-000.2.
 - **Numerics in tables** should be Geist Mono and tabular. The data-table artboard is the reference.
+- **Inline links** use ink + permanent faint underline: `underline decoration-ink-200 underline-offset-2 hover:decoration-ink-500 focus-visible:decoration-ink-500 outline-none`. **No blue link color** — blue is reserved for info/completed/active-tab/focus.
+- **VendorAvatar** is one treatment everywhere: white provider glyph on saturated brand-color chip. **No `tone` prop** (locked after 4 iterations). `<VendorAvatar vendor={v} />` — that's the API.
+- **Page-header subtitle width** is capped at `max-w-1/2` on the WRAPPER column (not the `<p>` directly — fractional max-w on a leaf inside a content-sized column won't behave). Cap = 50% of the page-header flex parent.
 
 ## Source of truth: Paper
 
@@ -189,6 +197,7 @@ Section catalog (current code state — Paper nodeIds where known; the React fil
 | CMP-011 | `CMP011DataTable.tsx` (sortable list / activity feed / drill-down panel) | ✓ |
 | CMP-012 | `CMP012ComposedDashboard.tsx` (consolidated KPI rail + Quick Actions section) | ✓ |
 | CMP-013 | `CMP013Requests.tsx` (Requests / Observability — hero card + table + drill-in modal) | ✓ |
+| CMP-014 | `CMP014Conversations.tsx` (Conversations — KPI rail + filtered conversations table) | ✓ |
 
 Masthead and Hero from the original Paper file are intentionally not ported — the React app uses its own left-nav shell instead.
 
@@ -210,3 +219,9 @@ Masthead and Hero from the original Paper file are intentionally not ported — 
 - The fixed 1440px artboard width.
 - `components.json` shadcn config (`style: "base-nova"`).
 - The `ArtboardHeader` / `SectionHeader` API — every artboard depends on it.
+- **The 5-ramp OKLCH color system + step role conventions** — locked 2026-05-05 (see `feedback_color-system-oklch.md`). Don't reintroduce single-token semantics (`text-warning`, etc.) or `-2` brighter variants. Don't switch to hex.
+- **The two-tier material ladder** — 6px everyday / 12px modal / 4px sub-element. Don't collapse to single radius or soften the tier discipline (see `feedback_geist-material-ladder.md`).
+- **VendorAvatar's brand-chip-everywhere treatment** — locked after 4 iterations. Don't reintroduce a `tone` prop or split treatment without explicit ask (see `feedback_vendor-avatar-treatment.md`).
+- **Link affordance — ink + permanent faint underline.** Blue is overloaded with 4 other meanings; adding "link" to it was rejected after research. Don't switch links to blue (see `feedback_link-affordance.md`).
+- **Brand-mark blue** (`#1F2FCE` ≈ `oklch(0.345 0.224 268.85)` at blue-700). Anchored to `public/logomark.svg`. The blue ramp is derived around it.
+- **No dark mode** — `:root.dark` block intentionally absent. `@custom-variant dark` is declared in `index.css` for future activation; redefine `:root` semantic tokens in a `.dark` block when shipping. The OKLCH ramp values stay constant across modes.

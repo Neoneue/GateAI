@@ -70,6 +70,7 @@ graph TB
     PAGE011["CMP011 Data table"]
     PAGE012["CMP012 Composed · Dashboard"]
     PAGE013["CMP013 Requests · Observability"]
+    PAGE014["CMP014 Conversations"]
 
     MAIN --> APP
     APP --> NAV
@@ -87,9 +88,10 @@ graph TB
     MAINPANE -.->|active| PAGE011
     MAINPANE -.->|active| PAGE012
     MAINPANE -.->|active| PAGE013
+    MAINPANE -.->|active| PAGE014
 ```
 
-`PageId` is a string union of `'cmp-000' | 'cmp-001' | ... | 'cmp-008a' | 'cmp-008b' | 'cmp-008c' | 'cmp-009' | ... | 'cmp-012' | 'cmp-013'`. `NavItem` is a discriminated union supporting `{ kind: 'page', id, code, name, Component }` and (optional) `{ kind: 'group', label }` separators. The NAV-rendering branches on `kind`; group entries render as a non-clickable eyebrow label.
+`PageId` is a string union of `'cmp-000' | 'cmp-001' | ... | 'cmp-008a' | 'cmp-008b' | 'cmp-008c' | 'cmp-009' | ... | 'cmp-012' | 'cmp-013' | 'cmp-014'`. `NavItem` is a discriminated union supporting `{ kind: 'page', id, code, name, Component }` and (optional) `{ kind: 'group', label }` separators. The NAV-rendering branches on `kind`; group entries render as a non-clickable eyebrow label.
 
 The shell also has a **collapse toggle** (added 2026-05-05): the sidebar slides closed via `width 240→0` transition; a fixed-position `PanelLeftOpen` button at top-left brings it back. Lets operators view artboards full-bleed.
 
@@ -141,7 +143,8 @@ Section list (current build):
 | CMP-010 | `CMP010Charts.tsx` | Spend trend (line+area), Cost by model (stacked) |
 | CMP-011 | `CMP011DataTable.tsx` | Three table treatments: sortable list (1), activity feed (2 — re-uses RecentRequestsCard), drill-down panel with severity scoring (3) |
 | CMP-012 | `CMP012ComposedDashboard.tsx` | Production-shell Overview surface — 4-card consolidated KPI rail, RequestVolume + TopKeys row, RecentRequests table, Quick Actions section |
-| CMP-013 | `CMP013Requests.tsx` | Requests / Observability surface — hero metric card with cumulative chart, sortable request table with row-click drill-in modal (Summary / Messages / Security / Audit tabs) |
+| CMP-013 | `CMP013Requests.tsx` | Requests / Observability surface — hero metric card with oscillating activity chart, sortable request table with row-click drill-in modal (Summary / Messages / Security / Audit tabs) |
+| CMP-014 | `CMP014Conversations.tsx` | Conversations surface — KPI rail (Active Now / Conversations / Avg Turns / Avg Cost) + filtered conversations table grouped by `cnv_*` id, linkified row titles, multi-vendor model column |
 
 ---
 
@@ -149,12 +152,12 @@ Section list (current build):
 
 ```mermaid
 graph LR
-    INDEX[("src/index.css<br/>@theme {}<br/>--color-ink-25..900<br/>--color-blue-50..950 (700 = #1F2FCE,<br/>anchored to logomark)<br/>--color-white · --color-canvas<br/>--color-syntax-* · --color-traffic-*<br/>semantic: --color-primary (= ink-900),<br/>--color-success/warning/danger,<br/>--color-success-2/warning-2/danger-2")]
-    CSSVARS[":root vars<br/>--background, --foreground,<br/>--card, --popover, --primary,<br/>--secondary, --muted, --accent,<br/>--destructive, --border, --input,<br/>--ring, --chart-1..5, --radius,<br/>--sidebar-*"]
-    THEMEINLINE["@theme inline<br/>maps :root vars to<br/>Tailwind color/radius utilities"]
-    TWUTILS["Tailwind utilities<br/>bg-ink-* text-ink-* bg-blue-*<br/>text-primary bg-card<br/>rounded-lg etc."]
-    PRIMS["src/components/ui/*<br/>className strings<br/>(no hex literals here)"]
-    ARTS["src/artboards/CMP*<br/>className strings<br/>(no hex literals here)"]
+    INDEX[("src/index.css<br/>@theme {} — 5 OKLCH ramps<br/>--color-ink-50..950 (neutral, chroma 0)<br/>--color-blue-50..950 (700 = brand mark<br/>oklch(0.345 0.224 268.85) ≈ #1F2FCE)<br/>--color-success-50..950 (Tailwind v4 green)<br/>--color-warning-50..950 (Tailwind v4 amber)<br/>--color-danger-50..950 (Tailwind v4 red)<br/>--color-white · --color-canvas (#ECECE7)<br/>--color-syntax-* · --color-traffic-*<br/>--shadow-border · --shadow-popup · --shadow-modal<br/>--text-3xl/4xl/6xl (Geist values 32/40/64)")]
+    CSSVARS[":root vars<br/>--background = white<br/>--foreground = ink-900<br/>--primary = ink-900 (NOT blue)<br/>--secondary/muted/accent = ink-100<br/>--muted-foreground = ink-500<br/>--destructive = danger-600<br/>--border/input = ink-200<br/>--ring = ink-400<br/>--chart-1..5 = ink-200/400/500/700/800<br/>--radius = 0.625rem (10px base)"]
+    THEMEINLINE["@theme inline<br/>maps :root vars to<br/>Tailwind color/radius utilities<br/>--radius-xl OVERRIDDEN to 12px<br/>(Geist modal-tier)"]
+    TWUTILS["Tailwind utilities<br/>bg-ink-{50..950} text-ink-{50..950}<br/>bg-blue-* bg-success-* bg-warning-* bg-danger-*<br/>text-primary bg-card border-border<br/>rounded-sm (6) rounded-xl (12) rounded-xs (4)<br/>shadow-(--shadow-border) etc."]
+    PRIMS["src/components/ui/*<br/>className strings<br/>(no hex / oklch literals here)"]
+    ARTS["src/artboards/CMP*<br/>className strings<br/>(no hex / oklch literals here)"]
     VENDOR[("src/components/icons/<br/>vendor-meta.tsx<br/>VENDOR_META.color (brand)<br/>VENDOR_CHART_COLOR_SECONDARY<br/>(only for one-vendor multi-series)")]
 
     INDEX --> CSSVARS
@@ -166,15 +169,37 @@ graph LR
     VENDOR -.->|brand-hex exception<br/>(chips AND chart series)| ARTS
 ```
 
-**Authority:** `system.md` (host-level Theme + Project) > `front-end-developer/contract/globals.md` (Layer 1) > `src/index.css` (this repo's globals) + `docs/brand-guidelines.md` (project-side synthesis of decisions in code). Currently `system.md` does not exist; `index.css` is the operative token source, with `brand-guidelines.md` as the human-readable mirror. `vendor-meta.tsx` is the only place raw brand hex literals live (intentional — they represent external brand identities, not contract colors).
+**Authority:** `system.md` (host-level Theme + Project) > `front-end-developer/contract/globals.md` (Layer 1) > `src/index.css` (this repo's globals) + `docs/brand-guidelines.md` (project-side synthesis of decisions in code). Currently `system.md` does not exist; `index.css` is the operative token source. `vendor-meta.tsx` is the only place raw brand hex literals live (intentional — external brand identities).
 
-**Hard rule (codified 2026-05-05):** **no raw hex / oklch / rgba values outside palette atoms in `@theme`.** Every semantic token in `:root` references a palette atom via `var(--color-*)`. Shadow tokens use `color-mix(in oklch, var(--color-ink-800) X%, transparent)` instead of inline rgba. SVG presentation attributes (`fill="..."` / `stroke="..."` in TSX) accept `var(--color-*)` directly. Dark-mode block was removed (dead code; sonner hardcoded light, no `.dark` class applied anywhere).
+**Color system (rewritten 2026-05-05, OKLCH migration):** Five 11-step ramps (50/100/200/300/400/500/600/700/800/900/950), all OKLCH, Tailwind-aligned naming. Step roles are stable across ramps:
+- **50–100** subtle backgrounds (washes, hover-bg)
+- **200** borders, dividers
+- **300** strong borders, ghost-button hover-bg
+- **400** placeholder text, low-contrast accents
+- **500** secondary text, chart strokes (medium contrast)
+- **600** saturated mid (default solid surfaces, primary action color for non-ink)
+- **700** saturated dark (hover state for solids, primary text on tinted bg)
+- **800–900** text on white (high-contrast)
+- **950** deepest (rare — extreme contrast, dark-mode anchors)
 
-**Primary action color:** `--color-primary` and `--primary` resolve to `var(--color-ink-900)` — the project's primary action color is **dark ink, not blue**. Blue is the brand-accent palette only (mark, focus rings, charts, links-that-need-to-stand-out).
+`info` aliases to blue (no separate ramp). Single-token semantics (`text-warning`, `bg-success`, `-2` brighter variants) **were removed** during the migration — force step choice at the call site. Rationale + audit trail in memory file `feedback_color-system-oklch.md`.
 
-**Voice split (codified 2026-05-05):** four typographic voices, each with one job — mono uppercase = section eyebrow; sans Title Case = field/column label; mono normal = ID/value; sans body = content. Sans labels are `font-medium` minimum; `font-normal` reads as ambient body text.
+**Hard rule (still in force):** **no raw hex / oklch / rgba values outside palette atoms in `@theme`.** Every semantic token in `:root` references a palette atom via `var(--color-*)`. Shadow tokens use `color-mix(in oklch, var(--color-ink-800) X%, transparent)` so the shadow family tracks the ink ramp. SVG presentation attributes (`fill="..."` / `stroke="..."` in TSX) accept `var(--color-*)` directly. **No dark mode shipped** — `:root.dark` block is intentionally absent; `@custom-variant dark` is declared in `index.css` for future activation.
 
-**Vendor color model:** the `VENDOR_META[vendor].color` field is single-source — chips/avatars/badges and chart series both pull from it. There is no separate `chartColor` tier. Twin-hue pairs (Meta + DeepSeek both blue; Anthropic + Mistral both orange) are accepted as the design — each vendor renders in its own brand color, full strength. `VENDOR_CHART_COLOR_SECONDARY` exists only for the case where one vendor is two series in the same chart (e.g. Anthropic Sonnet + Haiku).
+**Primary action color:** `--color-primary` and `--primary` resolve to `var(--color-ink-900)` — the project's primary action color is **dark ink, not blue**. Blue is the brand-accent palette only (mark, focus rings, info-state badges, completed-state badges, active-tab indicator).
+
+**Material ladder (codified 2026-05-05, Geist alignment):** Two-tier elevation system:
+- **Everyday surfaces** — 6px radius (`rounded-sm`) + `shadow-(--shadow-border)` (1px ink-800/6% ring + subtle ambient lift). Cards, inputs, buttons, badges, KPI cards, table containers.
+- **Modal surfaces** — 12px radius (`rounded-xl` overridden in `@theme inline` to `0.75rem`) + `shadow-(--shadow-modal)`. Dialog, AlertDialog.
+- **Sub-elements inside tracks** — 4px (`rounded-xs`). Tabs trigger/indicator, Segmented item/indicator, SelectItem. Item radius < container radius (concentric rule).
+
+**Voice split (codified 2026-05-05):** four typographic voices, each with one job — mono uppercase = section eyebrow; sans Title Case = field/column label; mono normal = ID/value; sans body = content. Sans labels are `font-medium` minimum.
+
+**Vendor color model:** the `VENDOR_META[vendor].color` field is single-source — chips/avatars/badges and chart series both pull from it. **`<VendorAvatar />` final treatment (locked 2026-05-05):** white provider glyph on saturated brand-color chip, single treatment everywhere — no `tone` prop, no neutral/split variants. User iterated through 4 alternatives and rejected all but this. See `feedback_vendor-avatar-treatment.md` — don't reintroduce a `tone` prop without explicit ask.
+
+**Link affordance (codified 2026-05-05):** Inline links use **permanent faint underline + ink color** (no blue link tokens). Recipe: `underline decoration-ink-200 underline-offset-2 hover:decoration-ink-500 focus-visible:decoration-ink-500 outline-none`. Text color stays in the ink ramp matching the surface (typically `text-ink-900` for primary content, `text-ink-700` for secondary inside ink-500 meta lines). Blue is reserved for info/completed/active-tab/focus — adding "link" to that overload was rejected after research. See `feedback_link-affordance.md`.
+
+**Subtitle width policy (codified 2026-05-06):** Page-header description text caps at `max-w-1/2` of the page (50% of the page-header flex parent). Applied to the **wrapper column** (the `flex flex-col` containing both `<h1>` and `<p>`), not directly to the `<p>` — fractional max-w on a leaf inside a content-sized column won't behave as expected.
 
 ---
 
@@ -270,16 +295,20 @@ graph LR
 
 **Key reuse loops to call out:**
 
-- **`CompactKpi` + `DeltaTag`** live in `src/components/ui/compact-kpi.tsx`. Consumed by `CMP-003` (delta tag spec sheet), `CMP-008b` (Stat cards), `CMP-012` (KPI rail), and `CMP-013` (hero card). Title style (`font-mono font-medium uppercase tracking-[0.1em] text-xs text-ink-500`) is canonical Eyebrow / sm. **DeltaTag** (refactored 2026-05-05) is now a pill-style badge: filled disc icon + value text in a colored wash (`bg-success/15 text-success` for positive, `bg-destructive/15 text-destructive` for negative). Strips leading `+`/`-` since icon and color carry direction. Note ("vs last hour") sits outside the pill at `text-xs text-ink-500`.
-- **`Card` family** lives in `src/components/ui/card.tsx`. `RequestVolumeCard`, `TopKeysCard`, and `RecentRequestsCard` (defined in `CMP012ComposedDashboard.tsx`, **exported** for reuse) are consumed by `CMP-008a`, `CMP-011` (RecentRequestsCard for the activity feed section), and `CMP-012`. Single source of truth — CMP-008a / CMP-011 re-import from CMP-012, no duplication.
-- **`VendorAvatar` + `VENDOR_META`** lives in `src/components/icons/vendor-meta.tsx`. Consumed by CMP-010 (chart legend chips), CMP-011 (model column with `tone="neutral"` for table density), CMP-012 (Top Keys + Recent requests + Request Volume chart), CMP-013 (Requests table + modal Provider field). The `color` field is single-source. **`tone` prop** added 2026-05-05: `tone="neutral"` (`bg-ink-600`) for in-table density; `tone="brand"` (default) for standalone vendor identification.
-- **`BrandMark`** (added 2026-05-05) — Constellation Gate AI logomark in `src/components/icons/brand-mark.tsx`. 7-path constellation SVG with `fill="currentColor"`. Consumed by CMP-012 and CMP-013 left rails (`<BrandMark className="size-8 text-blue-700" />`). Static asset at `public/logomark.svg`. `--color-blue-700` is now anchored to the logomark's exact `#1F2FCE`.
-- **`DeltaArrow` icons** (added 2026-05-05) — `DeltaArrowUp` / `DeltaArrowDown` in `src/components/icons/delta-arrow.tsx`. Filled-disc with knockout arrow (`fill-rule="evenodd"`); on a tinted pill bg the arrow shows the wash through, giving a 3-tier color stack (wash → solid disc → pale arrow). Consumed by `DeltaTag` only.
-- **`Table` primitive** column header treatment switched 2026-05-05 from mono uppercase to **sans Title Case `font-medium text-ink-600`** (`text-xs`). Mono is now reserved for ID/value content in body cells; sans column heads stay distinct from section eyebrows.
-- **Selector primitives with sliding indicators:** `Tabs` default variant, `Segmented` pill variant, and `SegmentedPill` all use a sliding white indicator on selection (added 2026-05-05). `Tabs` uses Base UI's built-in `<TabsPrimitive.Indicator />` driven by `--active-tab-{left,top,width,height}` CSS vars. `Segmented` uses ref-tracking + `useLayoutEffect` (same machinery as `SegmentedPill`).
-- **Code card primitives** (`CodeCard`, `TerminalCard`, `CodeBlock`) live in `code-card.tsx`. CMP-008c is the only consumer today, but the family is structured for reuse on any future code-rendering surface (docs, API references, blog).
-- **Consolidated row pattern** (added 2026-05-05): single bordered card with internal sections divided by `before:` pseudo-element hairlines at `inset-y-4`. Used by CMP-012's KPI rail (4 cards consolidated into one row) and Quick Actions card (4 task cards consolidated). Replaces the 3/4-up grid-with-gaps pattern when sections share semantic context. The accent treatment on a focal section uses `bg-blue-50` (matches the assistant message bubble fill in CMP-013).
-- **`ArtboardHeader` h1** is `text-3xl/9 font-medium` (Page title spec — dropped from text-4xl on 2026-05-04 so KPI numerals anchor the visual hierarchy instead of the title) — propagates to all 16 artboards via the shared header in `_shared/ArtboardHeader.tsx`.
+- **`CompactKpi` + `DeltaTag` + `CompactSpark`** live in `src/components/ui/compact-kpi.tsx`. Consumed by `CMP-003` (delta tag spec sheet), `CMP-008b` (Stat cards), `CMP-012` (KPI rail), `CMP-013` (hero card), `CMP-014` (KPI rail). Title style (`font-mono font-medium uppercase tracking-[0.1em] text-xs text-ink-500`) is canonical Eyebrow / sm. **DeltaTag** (final treatment 2026-05-05): bare directional arrow (Lucide `ArrowUpRight` / `ArrowDownLeft`) + value in mono — NO pill chip, NO wash background. Color via plain `text-success-700` / `text-destructive` on inline-flex span. Strips leading `+`/`-` since icon carries direction. **CompactSpark** defaults `endDot = true` (flipped 2026-05-06) so trailing dot is consistent across all KPI rails.
+- **`Card` family** lives in `src/components/ui/card.tsx`. Card primitive uses `shadow-(--shadow-border)` (layered ring + ambient lift), no hard border — refactored 2026-05-06 from the previous `border + shadow-xs` pattern. `RequestVolumeCard`, `TopKeysCard`, `RecentRequestsCard` (defined in `CMP012ComposedDashboard.tsx`, **exported** for reuse) are consumed by `CMP-008a`, `CMP-011`, and `CMP-012`. Single source of truth.
+- **`VendorAvatar` + `VENDOR_META`** lives in `src/components/icons/vendor-meta.tsx`. Consumed by CMP-007, CMP-010, CMP-011, CMP-012, CMP-013, CMP-014. The `color` field is single-source. **Final treatment (locked 2026-05-05 after 4 iterations):** white provider glyph on saturated brand-color chip, **no `tone` prop**. Used everywhere identically — tables, KPI cards, modal headers, top-key lists. Trade-off accepted: vendor-stacked tables read as a multi-hue column, but cross-surface consistency wins. **DO NOT reintroduce `tone` prop** without explicit ask (`feedback_vendor-avatar-treatment.md`).
+- **`BrandMark`** (added 2026-05-05) — Constellation Gate AI logomark in `src/components/icons/brand-mark.tsx`. 7-path constellation SVG with `fill="currentColor"`. Consumed by CMP-012, CMP-013, CMP-014 left rails (`<BrandMark className="size-8 text-blue-700" />`). Static asset at `public/logomark.svg`. `--color-blue-700` is anchored to the logomark's brand color via OKLCH (`oklch(0.345 0.224 268.85)` ≈ `#1F2FCE`).
+- **`Table` primitive** column header: sans Title Case `font-medium text-ink-500` (lifted from ink-600 on 2026-05-05 so heads sit a step quieter than body values). Mono is reserved for ID/value body cells. Body numerics use `font-mono tabular-nums text-ink-800`. Clickable `<TableRow>` (CMP-013/014) gets `hover:bg-ink-50 transition-colors duration-150 ease-out` — added 2026-05-06 polish pass.
+- **Selector primitives with sliding indicators:** `Tabs` default variant, `Segmented` pill variant, and `SegmentedPill` all use a sliding white indicator on selection. `Tabs` uses Base UI's built-in `<TabsPrimitive.Indicator />` driven by `--active-tab-{left,top,width,height}` CSS vars. Item radius is `rounded-xs` (4px) inside `rounded-sm` (6px) tracks, per the concentric rule.
+- **Code card primitives** (`CodeCard`, `TerminalCard`, `CodeBlock`) live in `code-card.tsx`. CMP-008c is the only consumer today.
+- **Consolidated row pattern**: single bordered card with internal sections divided by `before:` pseudo-element hairlines at `inset-y-4`. Used by CMP-012's KPI rail (4 cards consolidated into one row) and Quick Actions card. The accent treatment on a focal section uses `bg-blue-50`.
+- **`ArtboardHeader` + `SectionHeader`** live in `_shared/ArtboardHeader.tsx`. Refactored 2026-05-05 to a three-step heading hierarchy:
+  - Artboard `<h1>`: `text-3xl/9` (32px) sans-medium ink-800 — propagates to all artboards
+  - Section `<h2>`: `text-2xl/8` (24px) sans-medium ink-800, **with mono-uppercase eyebrow above** parsing the `code` prop on " — " separator (e.g., `CMP-000.1 — SCALE` renders as small mono `CMP-000.1` then large h2 `SCALE`)
+  - Card titles: 16–20px (text-base / text-xl)
+  Each step a meaningful drop. Called via `<SectionHeader code="CMP-XXX.N — TITLE" hint="…" />` from every artboard's section markers.
+- **Sidebar toggle icon cross-fade** (added 2026-05-06) in CMP-012/013/014 PageHeader/topbar — `PanelLeftClose` ↔ `PanelLeftOpen` swap is no longer an instant React conditional. Both icons live in DOM, absolute-positioned over each other, cross-fading on toggle: `scale 0.25 → 1`, `opacity 0 → 1`, `blur 4px → 0`, `cubic-bezier(0.2, 0, 0, 1)`, 300ms. `motion-reduce:transition-none` for accessibility.
 
 ---
 
@@ -388,15 +417,15 @@ mvp/
     │   ├── CMP009Toast.tsx
     │   ├── CMP010Charts.tsx
     │   ├── CMP011DataTable.tsx          ← three layouts (sortable / activity / drill-down)
-    │   ├── CMP012ComposedDashboard.tsx  ← consolidated KPI rail + Quick Actions section (2026-05-05)
-    │   └── CMP013Requests.tsx           ← Requests / Observability surface (2026-05-05)
+    │   ├── CMP012ComposedDashboard.tsx  ← consolidated KPI rail + Quick Actions section
+    │   ├── CMP013Requests.tsx           ← Requests / Observability surface
+    │   └── CMP014Conversations.tsx      ← Conversations surface — KPI rail + filtered table (2026-05-05)
     ├── components/
     │   ├── canvas/Artboard.tsx     ← absolute-positioned wrapper (zoomable canvas mode; not used by current shell)
     │   ├── icons/
     │   │   ├── model-providers.tsx ← Anthropic/OpenAI/Gemini/Grok/Meta/Mistral/DeepSeek/Cohere SVGs
-    │   │   ├── vendor-meta.tsx     ← Vendor type + VENDOR_META + VendorAvatar (tone: brand | neutral)
-    │   │   ├── brand-mark.tsx      ← Constellation logomark (currentColor) — added 2026-05-05
-    │   │   └── delta-arrow.tsx     ← DeltaArrowUp/Down (filled-disc + knockout arrow) — added 2026-05-05
+    │   │   ├── vendor-meta.tsx     ← Vendor type + VENDOR_META + VendorAvatar (single brand-chip treatment)
+    │   │   └── brand-mark.tsx      ← Constellation logomark (currentColor)
     │   └── ui/                     ← 28+ shadcn/Base UI primitives
     ├── lib/
     │   ├── utils.ts                ← cn() helper
@@ -414,5 +443,9 @@ mvp/
 - **Design methodology contract:** `.claude/agents/front-end-developer.md` (sourced from `front-end-developer/agent/front-end-developer.md`)
 - **Agent skill routing:** `front-end-developer/agent/front-end-developer.md` (skill table near the top)
 - **Paper canvas reference:** the Paper file *Brilliant quartz* (`app.paper.design/file/01KQ33WPFNCEZAER8FDFPVW5EP`)
+- **Session decision logs (most recent first):**
+  - `~/.claude/projects/-Users-cponticas-Documents-GitHub-mvp/memory/2026-05-06-session-continued.md` — make-interfaces-feel-better audit + 5-priority polish pass + max-w-1/2 subtitle policy + Replay removal
+  - `~/.claude/projects/-Users-cponticas-Documents-GitHub-mvp/memory/2026-05-05-session-design-pass.md` — Geist alignment: typescale + materials + section heading hierarchy + vendor avatar + link affordance + OKLCH color migration
+  - `~/.claude/projects/-Users-cponticas-Documents-GitHub-mvp/memory/MEMORY.md` — index of all feedback memories (color system, material ladder, link affordance, vendor avatar, design-system priority, etc.)
 
 When the project structure changes (new primitive extracted, new artboard added, contract chain shifts, build pipeline changes), update this file. The diagrams should always match the source.
