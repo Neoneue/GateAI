@@ -2,6 +2,18 @@
 
 Guidance for Claude Code working in this repo.
 
+## Session start — required reading
+
+**Before any UI / design / frontend work in this session, read these in order:**
+
+1. `front-end-developer/agent/front-end-developer.md` — the controlling design methodology for this repo. Quality bar ("The Standard"), no-hardcoded-values rule, source-data-before-target rule, "name your defaults" requirement, research requirement (every design recommendation cites a source), pre-ship quality checks (squint / signature / swap / mobile), and the skill routing table.
+2. `docs/brand-guidelines.md` — project-side synthesis of brand decisions in code. Color palette + status palette (success/warning/danger plus -2 brighter steps), typography (Geist + Geist Mono only, Tailwind type scale only, voice split with the four-voice taxonomy, eyebrow sm/default sizes), logo + `<BrandMark />` component, voice traits + sample sentences + banned-phrases anti-list, layout grid policy (12-col, 16px gutter, 24px page margins at lg+), component conventions (16px card padding, 4px grid spacing, sliding-indicator selectors, primary = ink-900).
+3. `data-model.md` (project root) — architecture map for this repo. Stack, app shell, artboard pattern, token contract chain, primitive reuse graph, Paper-to-code flow, file tree.
+
+The CLAUDE.md files (this one and `~/.claude/CLAUDE.md`) are auto-loaded into every session by the Claude Code harness, so they're already in context. The three files above are **not** auto-loaded — read them explicitly via the Read tool at session start.
+
+If a task is purely mechanical (single-line className tweak, file rename, copy edit) per the "Working rule" section below, the reads can wait. For anything else — porting a Paper section, building a new component, design judgments, refactors — read them first.
+
 ## What this project is
 
 A design-system showcase ("Constellation Gate AI") translated section-by-section from a Paper file (`app.paper.design/file/01KQ33WPFNCEZAER8FDFPVW5EP`, file name *Brilliant quartz*, artboard `v8 Geist-rounded · Showcase`, 1536×12674px). Each `§ CMP-###` block in Paper becomes one React "artboard" page. The app shell is a fixed left nav + scrollable main pane that swaps the active artboard. There is no router — page switching is `useState` in `src/App.tsx`.
@@ -157,25 +169,28 @@ The Paper MCP server is available. Useful starting points:
 - `mcp__paper__get_jsx({ nodeId, format: "tailwind" })` — production-ready component output
 - `mcp__paper__get_computed_styles` — exact CSS values when needed
 
-Section IDs (top-level frames inside `cmp-page` `102P-0`):
+Section catalog (current code state — Paper nodeIds where known; the React file is the source of truth):
 
-| § | nodeId | shipped? |
+| Code | File | Shipped |
 |---|---|---|
-| CMP-000 Typography | `102Q-0` | ✓ |
-| CMP-001 Buttons | `106M-0` | ✓ |
-| CMP-002 Badges & tags | `10A0-0` | ✓ |
-| CMP-003 Form fields | `10CI-0` | ✓ |
-| CMP-004 Filter bar | `10FH-0` | ✓ |
-| CMP-005 Tabs · pagination | `10HY-0` | ✓ |
-| CMP-006 Modal · empty | `10K8-0` | ✓ |
-| CMP-007 Stat cards | `10NM-0` | ✓ |
-| CMP-007b Toast | `10UI-0` | ✓ |
-| CMP-008 Charts | `10WC-0` | ✓ |
-| CMP-009 Data table | `113H-0` | ✓ |
-| CMP-011 Composed · Dashboard | `118W-0` | **TODO** |
-| CMP-012 Code cards | `11MF-0` | **TODO** |
+| CMP-000 | `CMP000Typography.tsx` | ✓ |
+| CMP-001 | `CMP001Colors.tsx` | ✓ |
+| CMP-002 | `CMP002Buttons.tsx` | ✓ |
+| CMP-003 | `CMP003BadgesAndTags.tsx` (incl. CMP-003.3 DeltaTag specimen) | ✓ |
+| CMP-004 | `CMP004FormFields.tsx` | ✓ |
+| CMP-005 | `CMP005FilterBar.tsx` | ✓ |
+| CMP-006 | `CMP006TabsPagination.tsx` | ✓ |
+| CMP-007 | `CMP007ModalEmptyState.tsx` | ✓ |
+| CMP-008a | `CMP008aCards.tsx` | ✓ |
+| CMP-008b | `CMP008bStatCards.tsx` | ✓ |
+| CMP-008c | `CMP008cCodeCards.tsx` | ✓ |
+| CMP-009 | `CMP009Toast.tsx` | ✓ |
+| CMP-010 | `CMP010Charts.tsx` | ✓ |
+| CMP-011 | `CMP011DataTable.tsx` (sortable list / activity feed / drill-down panel) | ✓ |
+| CMP-012 | `CMP012ComposedDashboard.tsx` (consolidated KPI rail + Quick Actions section) | ✓ |
+| CMP-013 | `CMP013Requests.tsx` (Requests / Observability — hero card + table + drill-in modal) | ✓ |
 
-Masthead (`100W-0`) and Hero (`101K-0`) are intentionally not ported — the React app uses its own left-nav shell instead.
+Masthead and Hero from the original Paper file are intentionally not ported — the React app uses its own left-nav shell instead.
 
 ## Workflow when porting a Paper section to React
 

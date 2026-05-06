@@ -69,6 +69,7 @@ graph TB
     PAGE010["CMP010 Charts"]
     PAGE011["CMP011 Data table"]
     PAGE012["CMP012 Composed · Dashboard"]
+    PAGE013["CMP013 Requests · Observability"]
 
     MAIN --> APP
     APP --> NAV
@@ -85,9 +86,12 @@ graph TB
     MAINPANE -.->|active| PAGE010
     MAINPANE -.->|active| PAGE011
     MAINPANE -.->|active| PAGE012
+    MAINPANE -.->|active| PAGE013
 ```
 
-`PageId` is a string union of `'cmp-000' | 'cmp-001' | ... | 'cmp-008a' | 'cmp-008b' | 'cmp-008c' | 'cmp-009' | ... | 'cmp-012'`. `NavItem` is a discriminated union supporting `{ kind: 'page', id, code, name, Component }` and (optional) `{ kind: 'group', label }` separators. The NAV-rendering branches on `kind`; group entries render as a non-clickable eyebrow label.
+`PageId` is a string union of `'cmp-000' | 'cmp-001' | ... | 'cmp-008a' | 'cmp-008b' | 'cmp-008c' | 'cmp-009' | ... | 'cmp-012' | 'cmp-013'`. `NavItem` is a discriminated union supporting `{ kind: 'page', id, code, name, Component }` and (optional) `{ kind: 'group', label }` separators. The NAV-rendering branches on `kind`; group entries render as a non-clickable eyebrow label.
+
+The shell also has a **collapse toggle** (added 2026-05-05): the sidebar slides closed via `width 240→0` transition; a fixed-position `PanelLeftOpen` button at top-left brings it back. Lets operators view artboards full-bleed.
 
 ---
 
@@ -135,8 +139,9 @@ Section list (current build):
 | CMP-008c | `CMP008cCodeCards.tsx` | Code cards (5 layouts: hero / tabs / terminal / req-resp / steps) |
 | CMP-009 | `CMP009Toast.tsx` | Sonner toast deck |
 | CMP-010 | `CMP010Charts.tsx` | Spend trend (line+area), Cost by model (stacked) |
-| CMP-011 | `CMP011DataTable.tsx` | Sortable table, mono numerics, vendor chips |
-| CMP-012 | `CMP012ComposedDashboard.tsx` | Production-shell Overview surface |
+| CMP-011 | `CMP011DataTable.tsx` | Three table treatments: sortable list (1), activity feed (2 — re-uses RecentRequestsCard), drill-down panel with severity scoring (3) |
+| CMP-012 | `CMP012ComposedDashboard.tsx` | Production-shell Overview surface — 4-card consolidated KPI rail, RequestVolume + TopKeys row, RecentRequests table, Quick Actions section |
+| CMP-013 | `CMP013Requests.tsx` | Requests / Observability surface — hero metric card with cumulative chart, sortable request table with row-click drill-in modal (Summary / Messages / Security / Audit tabs) |
 
 ---
 
@@ -144,7 +149,7 @@ Section list (current build):
 
 ```mermaid
 graph LR
-    INDEX[("src/index.css<br/>@theme {}<br/>--color-ink-25..900<br/>--color-blue-50..950<br/>--color-syntax-*<br/>semantic: --color-primary,<br/>--color-success/warning/danger,<br/>--color-success-2/danger-2")]
+    INDEX[("src/index.css<br/>@theme {}<br/>--color-ink-25..900<br/>--color-blue-50..950 (700 = #1F2FCE,<br/>anchored to logomark)<br/>--color-white · --color-canvas<br/>--color-syntax-* · --color-traffic-*<br/>semantic: --color-primary (= ink-900),<br/>--color-success/warning/danger,<br/>--color-success-2/warning-2/danger-2")]
     CSSVARS[":root vars<br/>--background, --foreground,<br/>--card, --popover, --primary,<br/>--secondary, --muted, --accent,<br/>--destructive, --border, --input,<br/>--ring, --chart-1..5, --radius,<br/>--sidebar-*"]
     THEMEINLINE["@theme inline<br/>maps :root vars to<br/>Tailwind color/radius utilities"]
     TWUTILS["Tailwind utilities<br/>bg-ink-* text-ink-* bg-blue-*<br/>text-primary bg-card<br/>rounded-lg etc."]
@@ -161,9 +166,13 @@ graph LR
     VENDOR -.->|brand-hex exception<br/>(chips AND chart series)| ARTS
 ```
 
-**Authority:** `system.md` (host-level Theme + Project) > `front-end-developer/contract/globals.md` (Layer 1) > `src/index.css` (this repo's globals). Currently `system.md` does not exist; `index.css` is the operative token source. `vendor-meta.tsx` is the only place raw brand hex literals live (intentional — they represent external brand identities, not contract colors).
+**Authority:** `system.md` (host-level Theme + Project) > `front-end-developer/contract/globals.md` (Layer 1) > `src/index.css` (this repo's globals) + `docs/brand-guidelines.md` (project-side synthesis of decisions in code). Currently `system.md` does not exist; `index.css` is the operative token source, with `brand-guidelines.md` as the human-readable mirror. `vendor-meta.tsx` is the only place raw brand hex literals live (intentional — they represent external brand identities, not contract colors).
 
-**Hard rule:** no `#xxxxxx` or `oklch(...)` literals appear in `src/components/ui/*` or `src/artboards/*`. Every color reference resolves through Tailwind utilities or `var(--color-*)` references.
+**Hard rule (codified 2026-05-05):** **no raw hex / oklch / rgba values outside palette atoms in `@theme`.** Every semantic token in `:root` references a palette atom via `var(--color-*)`. Shadow tokens use `color-mix(in oklch, var(--color-ink-800) X%, transparent)` instead of inline rgba. SVG presentation attributes (`fill="..."` / `stroke="..."` in TSX) accept `var(--color-*)` directly. Dark-mode block was removed (dead code; sonner hardcoded light, no `.dark` class applied anywhere).
+
+**Primary action color:** `--color-primary` and `--primary` resolve to `var(--color-ink-900)` — the project's primary action color is **dark ink, not blue**. Blue is the brand-accent palette only (mark, focus rings, charts, links-that-need-to-stand-out).
+
+**Voice split (codified 2026-05-05):** four typographic voices, each with one job — mono uppercase = section eyebrow; sans Title Case = field/column label; mono normal = ID/value; sans body = content. Sans labels are `font-medium` minimum; `font-normal` reads as ambient body text.
 
 **Vendor color model:** the `VENDOR_META[vendor].color` field is single-source — chips/avatars/badges and chart series both pull from it. There is no separate `chartColor` tier. Twin-hue pairs (Meta + DeepSeek both blue; Anthropic + Mistral both orange) are accepted as the design — each vendor renders in its own brand color, full strength. `VENDOR_CHART_COLOR_SECONDARY` exists only for the case where one vendor is two series in the same chart (e.g. Anthropic Sonnet + Haiku).
 
@@ -201,6 +210,8 @@ graph LR
     subgraph ICN["src/components/icons/"]
         MP["model-providers<br/>(8 brand SVGs)"]
         VM["vendor-meta<br/>VENDOR_META · VendorAvatar ·<br/>VENDOR_CHART_COLOR_SECONDARY"]
+        BM["brand-mark<br/>BrandMark<br/>(Constellation logomark, currentColor)"]
+        DA["delta-arrow<br/>DeltaArrowUp · DeltaArrowDown<br/>(filled-disc + knockout arrow)"]
     end
 
     subgraph LIB["src/lib/"]
@@ -210,10 +221,12 @@ graph LR
     subgraph ARTS["Artboards"]
         A011["CMP011 Data table"]
         A012["CMP012 Composed Dashboard"]
+        A013["CMP013 Requests"]
         A008a["CMP008a Cards"]
         A008b["CMP008b Stat cards"]
         A008c["CMP008c Code cards"]
         A010["CMP010 Charts"]
+        A003["CMP003 Badges & tags"]
     end
 
     IDX --> PRIM
@@ -224,34 +237,49 @@ graph LR
 
     CKPI --> A008b
     CKPI --> A012
+    CKPI --> A013
+    CKPI --> A003
     CCARD --> A008c
     CARD --> A012
     CARD --> A008a
     TBL --> A011
     TBL --> A012
+    TBL --> A013
     VM --> A011
     VM --> A012
+    VM --> A013
     VM --> A010
+    BM --> A012
+    BM --> A013
+    DA --> CKPI
     BTN --> ARTS
     BADGE --> A012
+    BADGE --> A013
     TAG --> A012
     SDOT --> A012
+    SDOT --> A013
     SEG --> A012
     CHT --> A010
     CHT --> A012
+    CHT --> A013
     SEP --> A012
 
-    A012 -.->|re-exports<br/>RequestVolumeCard, TopKeysCard| A008a
+    A012 -.->|re-exports<br/>RequestVolumeCard, TopKeysCard,<br/>RecentRequestsCard| A008a
+    A012 -.->|re-exports<br/>RecentRequestsCard| A011
 ```
 
 **Key reuse loops to call out:**
 
-- **`CompactKpi`** lives in `src/components/ui/compact-kpi.tsx`. Consumed by `CMP008b` (Stat cards) AND `CMP012` KPI rail. Title style (`font-mono font-medium uppercase tracking-[0.1em] text-xs text-ink-500`) is canonical eyebrow.
-- **`Card` family** lives in `src/components/ui/card.tsx`. `RequestVolumeCard` and `TopKeysCard` (defined in `CMP012ComposedDashboard.tsx`, **exported** for reuse) are the two card examples in `CMP008a`. Single source of truth — CMP-008a re-imports from CMP-012, no duplication.
-- **`VendorAvatar` + `VENDOR_META`** lives in `src/components/icons/vendor-meta.tsx`. Consumed by CMP-010 (chart legend chips), CMP-011 (Recent requests model column), CMP-012 (Top Keys panel + Recent requests + Request Volume chart). The `color` field is single-source — chips and chart series both pull from it.
-- **`Table` primitive** has Geist Mono uppercase column header treatment baked in — every `<TableHead>` consumer inherits.
+- **`CompactKpi` + `DeltaTag`** live in `src/components/ui/compact-kpi.tsx`. Consumed by `CMP-003` (delta tag spec sheet), `CMP-008b` (Stat cards), `CMP-012` (KPI rail), and `CMP-013` (hero card). Title style (`font-mono font-medium uppercase tracking-[0.1em] text-xs text-ink-500`) is canonical Eyebrow / sm. **DeltaTag** (refactored 2026-05-05) is now a pill-style badge: filled disc icon + value text in a colored wash (`bg-success/15 text-success` for positive, `bg-destructive/15 text-destructive` for negative). Strips leading `+`/`-` since icon and color carry direction. Note ("vs last hour") sits outside the pill at `text-xs text-ink-500`.
+- **`Card` family** lives in `src/components/ui/card.tsx`. `RequestVolumeCard`, `TopKeysCard`, and `RecentRequestsCard` (defined in `CMP012ComposedDashboard.tsx`, **exported** for reuse) are consumed by `CMP-008a`, `CMP-011` (RecentRequestsCard for the activity feed section), and `CMP-012`. Single source of truth — CMP-008a / CMP-011 re-import from CMP-012, no duplication.
+- **`VendorAvatar` + `VENDOR_META`** lives in `src/components/icons/vendor-meta.tsx`. Consumed by CMP-010 (chart legend chips), CMP-011 (model column with `tone="neutral"` for table density), CMP-012 (Top Keys + Recent requests + Request Volume chart), CMP-013 (Requests table + modal Provider field). The `color` field is single-source. **`tone` prop** added 2026-05-05: `tone="neutral"` (`bg-ink-600`) for in-table density; `tone="brand"` (default) for standalone vendor identification.
+- **`BrandMark`** (added 2026-05-05) — Constellation Gate AI logomark in `src/components/icons/brand-mark.tsx`. 7-path constellation SVG with `fill="currentColor"`. Consumed by CMP-012 and CMP-013 left rails (`<BrandMark className="size-8 text-blue-700" />`). Static asset at `public/logomark.svg`. `--color-blue-700` is now anchored to the logomark's exact `#1F2FCE`.
+- **`DeltaArrow` icons** (added 2026-05-05) — `DeltaArrowUp` / `DeltaArrowDown` in `src/components/icons/delta-arrow.tsx`. Filled-disc with knockout arrow (`fill-rule="evenodd"`); on a tinted pill bg the arrow shows the wash through, giving a 3-tier color stack (wash → solid disc → pale arrow). Consumed by `DeltaTag` only.
+- **`Table` primitive** column header treatment switched 2026-05-05 from mono uppercase to **sans Title Case `font-medium text-ink-600`** (`text-xs`). Mono is now reserved for ID/value content in body cells; sans column heads stay distinct from section eyebrows.
+- **Selector primitives with sliding indicators:** `Tabs` default variant, `Segmented` pill variant, and `SegmentedPill` all use a sliding white indicator on selection (added 2026-05-05). `Tabs` uses Base UI's built-in `<TabsPrimitive.Indicator />` driven by `--active-tab-{left,top,width,height}` CSS vars. `Segmented` uses ref-tracking + `useLayoutEffect` (same machinery as `SegmentedPill`).
 - **Code card primitives** (`CodeCard`, `TerminalCard`, `CodeBlock`) live in `code-card.tsx`. CMP-008c is the only consumer today, but the family is structured for reuse on any future code-rendering surface (docs, API references, blog).
-- **`ArtboardHeader` h1** is `text-4xl/10 font-medium` (Page title spec), the largest size used across the app — propagates to all 15 artboards via the shared header in `_shared/ArtboardHeader.tsx`.
+- **Consolidated row pattern** (added 2026-05-05): single bordered card with internal sections divided by `before:` pseudo-element hairlines at `inset-y-4`. Used by CMP-012's KPI rail (4 cards consolidated into one row) and Quick Actions card (4 task cards consolidated). Replaces the 3/4-up grid-with-gaps pattern when sections share semantic context. The accent treatment on a focal section uses `bg-blue-50` (matches the assistant message bubble fill in CMP-013).
+- **`ArtboardHeader` h1** is `text-3xl/9 font-medium` (Page title spec — dropped from text-4xl on 2026-05-04 so KPI numerals anchor the visual hierarchy instead of the title) — propagates to all 16 artboards via the shared header in `_shared/ArtboardHeader.tsx`.
 
 ---
 
@@ -323,9 +351,12 @@ mvp/
 ├── tsconfig.{json,app,node}.json
 ├── eslint.config.js
 ├── index.html
+├── docs/
+│   └── brand-guidelines.md         ← project-side synthesis of brand decisions in code
 ├── public/
 │   ├── favicon.svg
-│   └── icons.svg
+│   ├── icons.svg
+│   └── logomark.svg                ← Constellation Gate AI logomark (added 2026-05-05)
 ├── .claude/
 │   ├── agents/front-end-developer.md   ← project-scoped subagent (committed)
 │   └── settings.local.json             ← gitignored
@@ -338,7 +369,7 @@ mvp/
 │   └── hooks/<5 .sh>/
 └── src/
     ├── main.tsx                    ← StrictMode root
-    ├── App.tsx                     ← left nav + page swap, NAV array
+    ├── App.tsx                     ← left nav + page swap, sidebar collapse toggle (2026-05-05)
     ├── index.css                   ← Tailwind v4 imports + @theme tokens
     ├── App.css                     ← (legacy, mostly empty)
     ├── artboards/
@@ -346,7 +377,7 @@ mvp/
     │   ├── CMP000Typography.tsx
     │   ├── CMP001Colors.tsx
     │   ├── CMP002Buttons.tsx
-    │   ├── CMP003BadgesAndTags.tsx
+    │   ├── CMP003BadgesAndTags.tsx     ← + CMP-003.3 DeltaTag specimen (2026-05-05)
     │   ├── CMP004FormFields.tsx
     │   ├── CMP005FilterBar.tsx
     │   ├── CMP006TabsPagination.tsx
@@ -356,14 +387,17 @@ mvp/
     │   ├── CMP008cCodeCards.tsx
     │   ├── CMP009Toast.tsx
     │   ├── CMP010Charts.tsx
-    │   ├── CMP011DataTable.tsx
-    │   └── CMP012ComposedDashboard.tsx
+    │   ├── CMP011DataTable.tsx          ← three layouts (sortable / activity / drill-down)
+    │   ├── CMP012ComposedDashboard.tsx  ← consolidated KPI rail + Quick Actions section (2026-05-05)
+    │   └── CMP013Requests.tsx           ← Requests / Observability surface (2026-05-05)
     ├── components/
     │   ├── canvas/Artboard.tsx     ← absolute-positioned wrapper (zoomable canvas mode; not used by current shell)
     │   ├── icons/
     │   │   ├── model-providers.tsx ← Anthropic/OpenAI/Gemini/Grok/Meta/Mistral/DeepSeek/Cohere SVGs
-    │   │   └── vendor-meta.tsx     ← Vendor type + VENDOR_META (single `color` field) + VendorAvatar + VENDOR_CHART_COLOR_SECONDARY
-    │   └── ui/                     ← 28 shadcn/Base UI primitives
+    │   │   ├── vendor-meta.tsx     ← Vendor type + VENDOR_META + VendorAvatar (tone: brand | neutral)
+    │   │   ├── brand-mark.tsx      ← Constellation logomark (currentColor) — added 2026-05-05
+    │   │   └── delta-arrow.tsx     ← DeltaArrowUp/Down (filled-disc + knockout arrow) — added 2026-05-05
+    │   └── ui/                     ← 28+ shadcn/Base UI primitives
     ├── lib/
     │   ├── utils.ts                ← cn() helper
     │   └── portal-target.tsx
@@ -375,6 +409,7 @@ mvp/
 ## 9. Cross-references
 
 - **Token decisions:** `src/index.css` (open this when adding/auditing colors)
+- **Brand guidelines (human-readable):** `docs/brand-guidelines.md` (color palette, typography, voice, logo, voice split, layout grid, component conventions — synthesizes what's in code)
 - **Repo conventions + dispatch rules:** `CLAUDE.md`
 - **Design methodology contract:** `.claude/agents/front-end-developer.md` (sourced from `front-end-developer/agent/front-end-developer.md`)
 - **Agent skill routing:** `front-end-developer/agent/front-end-developer.md` (skill table near the top)
