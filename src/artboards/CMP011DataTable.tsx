@@ -224,7 +224,7 @@ export function CMP011DataTable() {
 
           <div className="flex flex-col rounded-md overflow-hidden bg-white border border-ink-100 shadow-xs">
             {/* Toolbar */}
-            <div className="flex items-center justify-between gap-3 py-4 px-5">
+            <div className="flex items-center justify-between gap-3 p-4">
               <div className="flex items-center gap-2">
                 <div className="relative w-60">
                   <Search
@@ -323,7 +323,7 @@ export function CMP011DataTable() {
                 {filtered.map((row) => (
                   <TableRow key={row.name}>
                     <TableCell>
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-2">
                         <VendorAvatar vendor={row.vendor} tone="neutral" />
                         <span className="font-mono text-sm text-ink-900 -tracking-[0.2px]">
                           {row.name.split('/')[1] ?? row.name}
@@ -433,7 +433,7 @@ function RiskScoresCard() {
   return (
     <div className="flex flex-col rounded-md overflow-hidden bg-white border border-ink-100 shadow-xs">
       {/* Header — title + subtitle on the left, scope dropdown on the right */}
-      <div className="flex items-start justify-between gap-3 py-4 px-5">
+      <div className="flex items-start justify-between gap-3 p-4">
         <div className="flex flex-col gap-1">
           <h3 className="font-sans text-base/5 font-medium -tracking-[0.25px] text-ink-900 m-0">
             API key risk scores

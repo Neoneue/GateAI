@@ -69,7 +69,7 @@ const BLUE: Palette = {
     { scale: '400', value: '#6A8EFB' },
     { scale: '500', value: '#4064FF' },
     { scale: '600', value: '#2942D6' },
-    { scale: '700', value: '#1F31B9' },
+    { scale: '700', value: '#1F2FCE' },
     { scale: '800', value: '#13225F' },
     { scale: '900', value: '#0C1638' },
     { scale: '950', value: '#060B1D' },
@@ -91,9 +91,10 @@ const SEMANTIC: { code: string; name: string; description: string; meta: string;
   meta: '5 tokens · --color-{primary,success,warning,danger}',
   steps: [
     { scale: 'primary',    token: 'primary',    value: 'var(--color-blue-700)' },
-    { scale: 'success',    token: 'success',    value: '#2A904B' },
-    { scale: 'success-2',  token: 'success-2',  value: '#3FAC4A' },
-    { scale: 'warning',    token: 'warning',    value: '#DC8900' },
+    { scale: 'success',    token: 'success',    value: '#16A34A' },
+    { scale: 'success-2',  token: 'success-2',  value: '#22C55E' },
+    { scale: 'warning',    token: 'warning',    value: '#B45309' },
+    { scale: 'warning-2',  token: 'warning-2',  value: '#F97316' },
     { scale: 'danger',     token: 'danger',     value: 'oklch(0.577\n0.245 27.3)' },
   ],
 };
@@ -155,7 +156,7 @@ function PaletteCard({
               {palette.description}
             </div>
           </div>
-          <div className="font-mono text-xs text-ink-500 uppercase tracking-[0.1em]">
+          <div className="font-mono text-xs font-medium text-ink-500 uppercase tracking-[0.1em]">
             {palette.meta}
           </div>
         </div>
@@ -214,7 +215,7 @@ function SingleToneCard({
             <h2 className="font-sans font-medium text-ink-900 text-base m-0">{name}</h2>
             <div className="font-sans text-sm text-ink-500 mt-1">{description}</div>
           </div>
-          <div className="font-mono text-xs text-ink-500 uppercase tracking-[0.1em]">{meta}</div>
+          <div className="font-mono text-xs font-medium text-ink-500 uppercase tracking-[0.1em]">{meta}</div>
         </div>
         <div
           className="grid gap-px rounded-sm overflow-hidden border border-ink-100"

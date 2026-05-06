@@ -125,13 +125,30 @@ const SCALE: Specimen[] = [
     note: 'One primary number per surface. Weight 300 for air.',
   },
   {
-    label: 'Eyebrow',
-    tag: 'text-xs · label',
+    label: 'Eyebrow / sm',
+    tag: 'text-xs · inline chrome',
     sample: 'WORKSPACE · LIVE · LAST 7 DAYS',
     sampleClass:
       'font-mono text-xs font-medium uppercase tracking-[0.1em] text-ink-800',
     meta: ['Geist Mono', '12px / 16px · 500', 'tracking 0.1em'],
-    note: 'Section eyebrows, table column heads, KPI labels.',
+    note: 'Dense chrome: KPI labels, card section eyebrows, top-bar strips.',
+  },
+  {
+    label: 'Eyebrow / default',
+    tag: 'text-sm · focal',
+    sample: 'REQUEST · CONVERSATION · AUDIT',
+    sampleClass:
+      'font-mono text-sm font-medium uppercase tracking-[0.1em] text-ink-800',
+    meta: ['Geist Mono', '14px / 20px · 500', 'tracking 0.1em'],
+    note: 'Standalone / focal: modal eyebrows, drawer headers, hero strips on major surfaces.',
+  },
+  {
+    label: 'Table column head',
+    tag: 'text-xs · sans · medium · ink-600',
+    sample: 'Time · Status · Model · Conversation',
+    sampleClass: 'font-sans text-xs font-medium text-ink-600',
+    meta: ['Geist', '12px · 500', 'no tracking'],
+    note: 'Column labels on data tables. Sans Title Case (not mono uppercase) so heads stay distinct from section eyebrows; `font-medium` so the row registers as a header rather than ambient text. Mono is reserved for ID / value content in the body cells.',
   },
   {
     label: 'Breadcrumb',

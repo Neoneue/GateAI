@@ -94,7 +94,7 @@ const spendChartConfig: ChartConfig = {
 
 function SpendTrendCard() {
   return (
-    <Card className="w-[720px] rounded-lg p-5 gap-4">
+    <Card className="w-[720px] rounded-lg p-4 gap-4">
       <div className="flex items-center justify-between">
         <div className="text-base font-medium -tracking-[0.25px] text-ink-900">
           Spend trend
@@ -335,7 +335,7 @@ function CostByModelCard() {
   });
 
   return (
-    <Card className="w-[720px] rounded-lg p-5 gap-4">
+    <Card className="w-[720px] rounded-lg p-4 gap-4">
       <div className="flex items-center justify-between">
         <div className="text-base font-medium -tracking-[0.25px] text-ink-900">
           Cost by model

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
+import { DeltaTag } from '@/components/ui/compact-kpi';
 import { Tag } from '@/components/ui/tag';
 import { StatusDot } from '@/components/ui/status-dot';
 import { ArtboardHeader, SectionHeader } from './_shared/ArtboardHeader';
@@ -25,6 +26,7 @@ export function CMP003BadgesAndTags() {
           parts="6 variants"
         />
 
+        <div className="flex flex-col gap-6">
         <div className="flex gap-6 bg-ink-25">
           {/* CMP-003.1 — STATUS */}
           <div className="flex flex-col grow gap-3 basis-0 bg-ink-25">
@@ -46,10 +48,9 @@ export function CMP003BadgesAndTags() {
                   <StatusDot kind="danger" />
                   revoked
                 </Badge>
-                <Badge variant="neutral">dormant</Badge>
-                <Badge variant="info">
-                  <StatusDot kind="info" />
-                  preview
+                <Badge variant="neutral">
+                  <StatusDot kind="neutral" />
+                  dormant
                 </Badge>
               </div>
               <div className="flex flex-wrap items-center gap-2">
@@ -65,7 +66,10 @@ export function CMP003BadgesAndTags() {
                   <StatusDot kind="danger" />
                   failed
                 </Badge>
-                <Badge variant="neutral">idle</Badge>
+                <Badge variant="neutral">
+                  <StatusDot kind="neutral" />
+                  idle
+                </Badge>
               </div>
             </div>
           </div>
@@ -131,6 +135,29 @@ export function CMP003BadgesAndTags() {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* CMP-003.3 — DELTA TAG */}
+        <div className="flex flex-col gap-3 bg-ink-25">
+          <SectionHeader
+            code="CMP-003.3 — DELTA TAG"
+            hint="<DeltaTag delta=… note=… /> · directional pill + optional note"
+          />
+          <div className="flex flex-col rounded-sm gap-4 bg-white border border-ink-75 p-7">
+            {/* Positive — pill alone, then with note */}
+            <div className="flex flex-wrap items-center gap-6">
+              <DeltaTag delta="+8.2%" />
+              <DeltaTag delta="+12.6%" note="vs last hour" />
+              <DeltaTag delta="+241" note="new keys" />
+            </div>
+            {/* Negative — pill alone, then with note */}
+            <div className="flex flex-wrap items-center gap-6">
+              <DeltaTag delta="-3.4%" />
+              <DeltaTag delta="-1.2%" note="vs last 7d" />
+              <DeltaTag delta="-$0.018" note="cost / call" />
+            </div>
+          </div>
+        </div>
         </div>
       </div>
     </div>

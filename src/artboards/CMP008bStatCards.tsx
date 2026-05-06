@@ -149,7 +149,7 @@ export function CMP008bStatCards() {
 
 function KpiCardShell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex flex-col rounded-md gap-4 bg-white border border-ink-100 shadow-xs p-5">
+    <div className="flex flex-col rounded-md gap-4 bg-white border border-ink-100 shadow-xs p-4">
       {children}
     </div>
   );
@@ -392,15 +392,15 @@ function HighlightLabel({ viewBox }: { viewBox?: CartesianViewBox }) {
         height={h}
         rx={6}
         ry={6}
-        fill="#FFFFFF"
-        stroke="#E4E4E7"
+        fill="var(--color-white)"
+        stroke="var(--color-ink-100)"
       />
       <text
         x={cx}
         y={top + h / 2 + 4}
         fontFamily="Geist"
         fontSize={12}
-        fill="#09090B"
+        fill="var(--color-ink-900)"
         fontWeight={500}
         textAnchor="middle"
       >
