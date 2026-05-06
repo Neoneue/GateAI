@@ -77,7 +77,12 @@ function TableHead({ className, ...props }: React.ComponentProps<"th">) {
     <th
       data-slot="table-head"
       className={cn(
-        "h-9 px-3 text-left align-middle font-mono font-medium uppercase tracking-[0.1em] text-xs text-ink-500 first:px-5 last:px-5 [&:has([role=checkbox])]:pr-0",
+        // Sans Title Case (not mono uppercase) so column heads stay distinct
+        // from section eyebrows. Mono is reserved for ID / value content in
+        // the body cells; sans here keeps the voice split clean. font-medium
+        // + ink-600 gives 12px sans enough presence to register as a header
+        // row without competing with the body.
+        "h-9 px-3 text-left align-middle text-xs font-medium text-ink-500 first:px-4 last:px-4 [&:has([role=checkbox])]:pr-0",
         className,
       )}
       {...props}
@@ -90,7 +95,7 @@ function TableCell({ className, ...props }: React.ComponentProps<"td">) {
     <td
       data-slot="table-cell"
       className={cn(
-        "px-3 py-3 align-middle text-sm text-ink-900 first:px-5 last:px-5 [&:has([role=checkbox])]:pr-0",
+        "px-3 py-3 align-middle text-sm text-ink-900 first:px-4 last:px-4 [&:has([role=checkbox])]:pr-0",
         className,
       )}
       {...props}

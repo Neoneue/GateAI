@@ -54,7 +54,7 @@ export function ArtboardHeader({
 export function SectionHeader({ code, hint }: { code: string; hint?: string }) {
   return (
     <div className="flex items-baseline justify-between bg-ink-25">
-      <div className="font-mono uppercase tracking-[0.1em] text-ink-500 text-xs">
+      <div className="font-mono uppercase tracking-[0.1em] font-medium text-ink-500 text-xs">
         {code}
       </div>
       {hint && (

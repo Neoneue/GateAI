@@ -40,15 +40,31 @@ const tabsListVariants = cva(
 function TabsList({
   className,
   variant = "default",
+  children,
   ...props
 }: TabsPrimitive.List.Props & VariantProps<typeof tabsListVariants>) {
   return (
     <TabsPrimitive.List
       data-slot="tabs-list"
       data-variant={variant}
-      className={cn(tabsListVariants({ variant }), className)}
+      className={cn(tabsListVariants({ variant }), "relative", className)}
       {...props}
-    />
+    >
+      {/* Sliding white indicator for the default (pill) variant. Base UI
+          publishes --active-tab-{left,top,width,height} on the list as the
+          active tab changes; the indicator reads them and rides a 200ms
+          ease-out transition. The trigger's old `data-active:bg-background`
+          + `shadow-sm` are removed below so the indicator is the sole
+          source of the active-pill chrome. The `line` variant keeps its
+          existing underline pattern. */}
+      {variant === "default" ? (
+        <TabsPrimitive.Indicator
+          data-slot="tabs-indicator"
+          className="absolute z-0 left-(--active-tab-left) top-(--active-tab-top) w-(--active-tab-width) h-(--active-tab-height) rounded-md bg-background shadow-sm transition-[left,width,top,height] duration-200 ease-out motion-reduce:transition-none"
+        />
+      ) : null}
+      {children}
+    </TabsPrimitive.List>
   )
 }
 
@@ -60,9 +76,13 @@ function TabsTrigger({ className, ...props }: TabsPrimitive.Tab.Props) {
         // Skill: performance.md — `transition-all` would also animate
         // padding / sizing; we only want color + the active-state shadow
         // and the underline opacity.
-        "relative inline-flex h-[calc(100%-1px)] items-center justify-center gap-2 rounded-md border border-transparent text-sm whitespace-nowrap transition-[colors,box-shadow] duration-150 ease-out group-data-vertical/tabs:w-full group-data-vertical/tabs:justify-start focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-50 has-data-[icon=inline-end]:pr-1 has-data-[icon=inline-start]:pl-1 aria-disabled:pointer-events-none aria-disabled:opacity-50 group-data-[variant=default]/tabs-list:data-active:shadow-sm group-data-[variant=line]/tabs-list:data-active:shadow-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        // `z-10` keeps trigger labels above the sliding TabsIndicator
+        // (which sits at z-0 inside the list).
+        "relative z-10 inline-flex h-[calc(100%-1px)] items-center justify-center gap-2 rounded-md border border-transparent text-sm whitespace-nowrap transition-colors duration-150 ease-out group-data-vertical/tabs:w-full group-data-vertical/tabs:justify-start focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-50 has-data-[icon=inline-end]:pr-1 has-data-[icon=inline-start]:pl-1 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         "group-data-[variant=default]/tabs-list:flex-1 group-data-[variant=default]/tabs-list:px-2 group-data-[variant=default]/tabs-list:py-1 group-data-[variant=default]/tabs-list:font-medium group-data-[variant=default]/tabs-list:text-foreground/60 group-data-[variant=default]/tabs-list:hover:text-foreground dark:group-data-[variant=default]/tabs-list:text-muted-foreground dark:group-data-[variant=default]/tabs-list:hover:text-foreground",
-        "group-data-[variant=default]/tabs-list:data-active:bg-background group-data-[variant=default]/tabs-list:data-active:text-foreground dark:group-data-[variant=default]/tabs-list:data-active:border-input dark:group-data-[variant=default]/tabs-list:data-active:bg-input/30 dark:group-data-[variant=default]/tabs-list:data-active:text-foreground",
+        // Default variant active text only — bg + shadow now live on
+        // the sliding TabsIndicator.
+        "group-data-[variant=default]/tabs-list:data-active:text-foreground dark:group-data-[variant=default]/tabs-list:data-active:text-foreground",
         "group-data-[variant=line]/tabs-list:px-4 group-data-[variant=line]/tabs-list:pt-4 group-data-[variant=line]/tabs-list:pb-3 group-data-[variant=line]/tabs-list:rounded-none group-data-[variant=line]/tabs-list:bg-transparent group-data-[variant=line]/tabs-list:text-ink-600 group-data-[variant=line]/tabs-list:hover:text-ink-900 group-data-[variant=line]/tabs-list:data-active:bg-transparent group-data-[variant=line]/tabs-list:data-active:text-blue-700 group-data-[variant=line]/tabs-list:data-active:font-medium",
         "after:absolute after:opacity-0 after:transition-opacity group-data-horizontal/tabs:after:inset-x-0 group-data-vertical/tabs:after:inset-y-0 group-data-vertical/tabs:after:-right-1 group-data-vertical/tabs:after:w-0.5 group-data-[variant=default]/tabs-list:after:bg-foreground group-data-[variant=default]/tabs-list:group-data-horizontal/tabs:after:bottom-[-5px] group-data-[variant=default]/tabs-list:group-data-horizontal/tabs:after:h-0.5 group-data-[variant=line]/tabs-list:after:bg-blue-700 group-data-[variant=line]/tabs-list:group-data-horizontal/tabs:after:bottom-[-1px] group-data-[variant=line]/tabs-list:group-data-horizontal/tabs:after:h-0.5 group-data-[variant=line]/tabs-list:data-active:after:opacity-100",
         className

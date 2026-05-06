@@ -1,5 +1,5 @@
-/* ─── Geist + Plex via Google Fonts (must precede @import "tailwindcss") ──── */
-@import url("https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap");
+/* ─── Geist via Google Fonts (must precede @import "tailwindcss") ──── */
+@import url("https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap");
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
@@ -12,8 +12,6 @@
   /* Type families */
   --font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "Geist Mono", ui-monospace, "SFMono-Regular", monospace;
-  --font-plex: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-plex-mono: "IBM Plex Mono", ui-monospace, monospace;
 
   /* Brand blue ramp */
   --color-blue-50:  #EBF0FF;
@@ -23,7 +21,7 @@
   --color-blue-400: #6A8EFB;
   --color-blue-500: #4064FF;
   --color-blue-600: #2942D6;
-  --color-blue-700: #1F31B9;
+  --color-blue-700: #1F2FCE; /* Brand mark color — logomark.svg is the source of truth. Blue ramp aligns to the logo. */
   --color-blue-800: #13225F;
   --color-blue-900: #0C1638;
   --color-blue-950: #060B1D;
@@ -42,21 +40,28 @@
   --color-ink-50:  #F1F4F6;
   --color-ink-25:  #F8F9FB;
 
-  /* Semantic */
-  --color-primary:    var(--color-blue-700);
-  --color-primary-fg: oklch(0.956 0.020 268);
-  --color-success:    #2A904B;
-  --color-success-2:  #3FAC4A;
-  --color-warning:    #DC8900;
-  --color-danger:     oklch(0.577 0.245 27.3);
+  /* Atomic surfaces — pure white and the warm-paper canvas behind the app.
+     Defined as palette atoms so semantic tokens (`--background`, `--card`,
+     `--canvas-bg`) can reference them via var() instead of inlining hex. */
+  --color-white:  #FFFFFF;
+  --color-canvas: #ECECE7;
+
+  /* Semantic / status palette. All hex — palette atoms are the only place
+     raw color literals live; semantic tokens reference these via var(). */
+  --color-primary:    var(--color-ink-900);
+  --color-success:    #16A34A;
+  --color-success-2:  #22C55E;
+  --color-warning:    #B45309;
+  --color-warning-2:  #F97316; /* Brighter orange for chart strokes / spark lines — Tailwind orange-500 */
+  --color-danger:     #DC2626;
   --color-danger-2:   #D33A3C;
 
   /* Syntax tokens (CMP-012 code cards). Named by intent, not by hue —
      a single CodeBlock primitive paints all variants from these vars. */
-  --color-syntax-keyword:        oklch(0.554 0.197 39.9); /* curl, -H, -d, export — orange-red */
-  --color-syntax-variable:       oklch(0.792 0.171 65.1); /* $KEY interpolations — amber */
-  --color-syntax-property:       #4165FF;                  /* JSON keys / object props — saturated blue */
-  --color-syntax-terminal-blue:  #6A8EFB;                  /* terminal numbers / status — lighter blue */
+  --color-syntax-keyword:        #B6491A; /* curl, -H, -d, export — orange-red */
+  --color-syntax-variable:       #D69E2E; /* $KEY interpolations — amber */
+  --color-syntax-property:       #4165FF; /* JSON keys / object props — saturated blue */
+  --color-syntax-terminal-blue:  var(--color-blue-400); /* terminal numbers / status — aliased to the brand ramp's blue-400 (#6A8EFB) so the two tokens never drift */
 
   /* macOS window-control "traffic light" tokens. These are platform
      affordances (CMP-012 dashboard chrome strip), not part of the
@@ -68,63 +73,74 @@
 
   /* Shadow-as-border tokens (skill: surfaces.md — prefer layered shadows
      over solid borders for depth). Three-layer light-mode shadow:
-     1px ring + subtle lift + ambient depth. */
+     1px ring + subtle lift + ambient depth. The shadow color is mixed
+     from `--color-ink-800` rather than inlined as rgba so the shadow
+     family tracks the ink ramp. */
   --shadow-border:
-    0 0 0 1px rgba(17, 20, 23, 0.06),
-    0 1px 2px -1px rgba(17, 20, 23, 0.06),
-    0 2px 4px 0 rgba(17, 20, 23, 0.04);
+    0 0 0 1px color-mix(in oklch, var(--color-ink-800) 6%, transparent),
+    0 1px 2px -1px color-mix(in oklch, var(--color-ink-800) 6%, transparent),
+    0 2px 4px 0 color-mix(in oklch, var(--color-ink-800) 4%, transparent);
   --shadow-border-hover:
-    0 0 0 1px rgba(17, 20, 23, 0.08),
-    0 1px 2px -1px rgba(17, 20, 23, 0.08),
-    0 2px 4px 0 rgba(17, 20, 23, 0.06);
+    0 0 0 1px color-mix(in oklch, var(--color-ink-800) 8%, transparent),
+    0 1px 2px -1px color-mix(in oklch, var(--color-ink-800) 8%, transparent),
+    0 2px 4px 0 color-mix(in oklch, var(--color-ink-800) 6%, transparent);
 
   /* Floating-surface elevation (popovers, selects, dialogs, tooltips).
      One token so every overlay reads as the same lift; previously each
      primitive inlined its own rgba shadow which drifted over time. */
   --shadow-popup:
-    0 8px 24px -6px rgba(17, 20, 23, 0.12),
-    0 2px 6px -2px rgba(17, 20, 23, 0.08);
+    0 8px 24px -6px color-mix(in oklch, var(--color-ink-800) 12%, transparent),
+    0 2px 6px -2px color-mix(in oklch, var(--color-ink-800) 8%, transparent);
   --shadow-modal:
-    0 12px 32px -8px rgba(17, 20, 23, 0.18),
-    0 4px 8px -4px rgba(17, 20, 23, 0.10);
+    0 12px 32px -8px color-mix(in oklch, var(--color-ink-800) 18%, transparent),
+    0 4px 8px -4px color-mix(in oklch, var(--color-ink-800) 10%, transparent);
 }
 
-/* ─── Canvas surface ───────────────────────────────────────── */
+/* ─── Semantic token layer ──────────────────────────────────────────────
+ * Every semantic token resolves to a palette atom via `var(--color-*)`.
+ * No raw hex / oklch / rgba in this block — the palette in @theme above
+ * is the single source of truth for color values. */
 :root {
-  --canvas-bg: #ECECE7;
-  --canvas-grid: rgba(17, 20, 23, 0.06);
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
+  --canvas-bg:   var(--color-canvas);
+  --canvas-grid: color-mix(in oklch, var(--color-ink-800) 6%, transparent);
+
+  --background: var(--color-white);
+  --foreground: var(--color-ink-900);
+  --card: var(--color-white);
+  --card-foreground: var(--color-ink-900);
+  --popover: var(--color-white);
+  --popover-foreground: var(--color-ink-900);
+  --primary: var(--color-ink-900);
+  --primary-foreground: var(--color-white);
+  /* Gray-spectrum semantic tokens trace to the ink palette so `bg-muted`,
+     `bg-secondary`, `bg-accent`, `border-border`, etc. cascade onto one
+     gray family. */
+  --secondary: var(--color-ink-50);
+  --secondary-foreground: var(--color-ink-900);
+  --muted: var(--color-ink-50);
+  --muted-foreground: var(--color-ink-500);
+  --accent: var(--color-ink-50);
+  --accent-foreground: var(--color-ink-900);
+  --destructive: var(--color-danger);
+  --border: var(--color-ink-100);
+  --input: var(--color-ink-100);
+  --ring: var(--color-ink-300);
+  /* Chart series fall back to a 5-step ink ramp (mostly unused — specific
+     charts pick blue/danger/etc. directly). */
+  --chart-1: var(--color-ink-100);
+  --chart-2: var(--color-ink-300);
+  --chart-3: var(--color-ink-500);
+  --chart-4: var(--color-ink-700);
+  --chart-5: var(--color-ink-800);
   --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar: var(--color-white);
+  --sidebar-foreground: var(--color-ink-900);
+  --sidebar-primary: var(--color-ink-900);
+  --sidebar-primary-foreground: var(--color-white);
+  --sidebar-accent: var(--color-ink-50);
+  --sidebar-accent-foreground: var(--color-ink-900);
+  --sidebar-border: var(--color-ink-100);
+  --sidebar-ring: var(--color-ink-300);
 }
 
 /* App shell: left nav + scrollable main area. */
@@ -140,7 +156,7 @@ body,
 body {
   font-family: var(--font-sans);
   color: var(--color-ink-800);
-  background: white;
+  background: var(--color-white);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-synthesis: none;
@@ -180,6 +196,7 @@ body {
   --color-card: var(--card);
   --color-foreground: var(--foreground);
   --color-background: var(--background);
+  --radius-xs: calc(var(--radius) * 0.4);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -189,39 +206,10 @@ body {
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
-}
+/* Dark mode block intentionally absent — sonner is hardcoded to "light"
+   and no `.dark` class is applied anywhere in the app. If dark mode is
+   ever activated, redefine these tokens against a dark ink/blue palette
+   here rather than re-introducing raw oklch values. */
 
 @layer base {
   * {

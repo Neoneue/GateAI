@@ -97,8 +97,8 @@ export function VendorAvatar({
   const Icon = meta.icon;
   if (tone === 'neutral') {
     return (
-      <span className="inline-flex items-center justify-center size-5 rounded-[5px] shrink-0 bg-ink-600 text-white">
-        <Icon className="size-3" />
+      <span className="inline-flex items-center justify-center size-5 shrink-0 text-ink-800">
+        <Icon className="size-4" />
       </span>
     );
   }
