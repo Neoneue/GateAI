@@ -1,11 +1,8 @@
 import { useState } from 'react';
 import {
-  CircleDot,
   Copy,
-  Cpu,
   Download,
   ExternalLink,
-  Key,
   Search,
   Shield,
   TriangleAlert,
@@ -19,14 +16,7 @@ import {
   SheetHeader,
 } from '@/components/ui/sheet';
 import { Input } from '@/components/ui/input';
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-} from '@/components/ui/pagination';
+import { TablePaginationFooter } from '@/components/ui/table-pagination-footer';
 import { SegmentedPill } from '@/components/ui/segmented-pill';
 import {
   Select,
@@ -59,6 +49,8 @@ import {
 } from '@/components/ui/chart';
 import { VENDOR_META, VendorAvatar, type Vendor } from '@/components/icons/vendor-meta';
 import { DeltaTag } from '@/components/ui/compact-kpi';
+import { HeroNumeric } from '@/components/ui/hero-numeric';
+import { MessageBlock, type MessageRole } from '@/components/ui/message-block';
 import { ArtboardHeader, SectionHeader } from './_shared/ArtboardHeader';
 import { DashboardChrome } from './_shared/DashboardChrome';
 
@@ -207,9 +199,9 @@ function HeroMetricCard() {
             REQUESTS / 1H
           </div>
           <div className="flex items-baseline gap-3">
-            <div className="font-mono text-3xl/9 font-medium tabular-nums -tracking-[1px] text-ink-900">
+            <HeroNumeric size="lg">
               {HERO_TOTAL.toLocaleString('en-US')}
-            </div>
+            </HeroNumeric>
             <DeltaTag delta="+12.8%" note="vs last hour" />
           </div>
         </div>
@@ -416,6 +408,10 @@ const STATUS_BADGE: Record<RequestStatus, {
   danger:  { variant: 'destructive', dot: 'danger'  },
 };
 
+// Synthetic total — held at module scope so the pagination math reconciles
+// with the hero metric narrative (8,241 requests in the trailing hour).
+const REQUESTS_TOTAL = 8241;
+
 function RequestsTableSection() {
   const [range, setRange] = useState('1h');
   const [model, setModel] = useState('all');
@@ -469,7 +465,6 @@ function RequestsTableSection() {
               aria-label="Model"
               className="border-ink-200 bg-white text-ink-900 font-normal"
             >
-              <Cpu className="size-3.5 text-ink-500" strokeWidth={1.75} aria-hidden />
               <SelectValue placeholder="Model" />
             </SelectTrigger>
             <SelectContent>
@@ -489,7 +484,6 @@ function RequestsTableSection() {
               aria-label="Key"
               className="border-ink-200 bg-white text-ink-900 font-normal"
             >
-              <Key className="size-3.5 text-ink-500" strokeWidth={1.75} aria-hidden />
               <SelectValue placeholder="Key" />
             </SelectTrigger>
             <SelectContent>
@@ -506,7 +500,6 @@ function RequestsTableSection() {
               aria-label="Status"
               className="border-ink-200 bg-white text-ink-900 font-normal"
             >
-              <CircleDot className="size-3.5 text-ink-500" strokeWidth={1.75} aria-hidden />
               <SelectValue placeholder="Status" />
             </SelectTrigger>
             <SelectContent>
@@ -563,7 +556,7 @@ function RequestsTableSection() {
                   role="button"
                   tabIndex={0}
                   aria-label={`Inspect ${row.code} request to ${row.model} at ${row.time}`}
-                  className="cursor-pointer transition-colors duration-150 ease-out hover:bg-ink-50 focus-visible:bg-ink-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500"
+                  className="cursor-pointer transition-colors duration-150 ease-out motion-reduce:transition-none hover:bg-ink-50 focus-visible:bg-ink-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500"
                   onClick={() => setSelectedRow(row)}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
@@ -581,19 +574,26 @@ function RequestsTableSection() {
                       {row.code}
                     </Badge>
                   </TableCell>
-                  <TableCell className="whitespace-nowrap">
-                    <div className="flex items-center gap-2">
+                  <TableCell className="max-w-[260px]">
+                    <div className="flex items-center gap-2 min-w-0">
                       <VendorAvatar vendor={row.vendor} />
-                      <span className="font-mono text-sm text-ink-900 -tracking-[0.2px]">
+                      <span
+                        className="font-mono text-sm text-ink-900 -tracking-[0.2px] truncate"
+                        title={row.model}
+                      >
                         {row.model}
                       </span>
                     </div>
                   </TableCell>
-                  <TableCell className="whitespace-nowrap font-mono tabular-nums -tracking-[0.14px] text-ink-800">
-                    {row.conversation}
+                  <TableCell className="max-w-[200px] font-mono tabular-nums -tracking-[0.14px] text-ink-800">
+                    <span className="block truncate" title={row.conversation}>
+                      {row.conversation}
+                    </span>
                   </TableCell>
-                  <TableCell className="whitespace-nowrap font-mono text-ink-800 -tracking-[0.14px]">
-                    {row.keyId}
+                  <TableCell className="max-w-[140px] font-mono text-ink-800 -tracking-[0.14px]">
+                    <span className="block truncate" title={row.keyId}>
+                      {row.keyId}
+                    </span>
                   </TableCell>
                   <TableCell className={numericCls}>{row.inTokens}</TableCell>
                   <TableCell className={numericCls}>{row.outTokens}</TableCell>
@@ -619,62 +619,13 @@ function RequestsTableSection() {
           </TableBody>
         </Table>
 
-        {/* Pagination footer — bottom row of the card */}
-        <div className="flex items-center justify-between gap-3 py-3 px-4 border-t border-ink-200">
-          <div className="flex items-center gap-3">
-            <span className="font-mono text-xs text-ink-500 tabular-nums -tracking-[0.01em]">
-              Showing <span className="font-medium">1–25</span> of <span className="font-medium">8,241</span>
-            </span>
-            <span className="text-ink-400" aria-hidden>·</span>
-            <span className="font-mono text-xs font-medium text-ink-500 -tracking-[0.01em]">Rows</span>
-            <Select value={rowsPerPage} onValueChange={setRowsPerPage}>
-              <SelectTrigger
-                size="sm"
-                aria-label="Rows per page"
-                className="border-ink-200 bg-white text-ink-900 font-normal"
-              >
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="10">10</SelectItem>
-                <SelectItem value="25">25</SelectItem>
-                <SelectItem value="50">50</SelectItem>
-                <SelectItem value="100">100</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <Pagination className="mx-0 w-fit justify-end">
-          <PaginationContent className="gap-1">
-            {[1, 2, 3].map((n) => (
-              <PaginationItem key={n}>
-                <PaginationLink
-                  isActive={page === n}
-                  onClick={() => setPage(n)}
-                >
-                  {n}
-                </PaginationLink>
-              </PaginationItem>
-            ))}
-            <PaginationItem>
-              <PaginationEllipsis />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink
-                isActive={page === 330}
-                onClick={() => setPage(330)}
-              >
-                330
-              </PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationNext
-                onClick={() => setPage((p) => Math.min(330, p + 1))}
-              />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
-      </div>
+        <TablePaginationFooter
+          total={REQUESTS_TOTAL}
+          page={page}
+          rowsPerPage={rowsPerPage}
+          onPageChange={setPage}
+          onRowsPerPageChange={setRowsPerPage}
+        />
     </div>
     <RequestDetailSheet
       row={selectedRow}
@@ -928,7 +879,7 @@ function DetailRow({ label, value }: { label: string; value: React.ReactNode }) 
    Tool function name uses snake_case lowercase to match the Anthropic /
    OpenAI tool-call API convention. */
 const SAMPLE_MESSAGES: {
-  role: 'system' | 'user' | 'tool' | 'assistant';
+  role: MessageRole;
   tool?: string;
   body: React.ReactNode;
 }[] = [
@@ -955,55 +906,12 @@ const SAMPLE_MESSAGES: {
   },
 ];
 
-const ROLE_LABEL: Record<'system' | 'user' | 'tool' | 'assistant', string> = {
-  system: 'System',
-  user: 'User',
-  tool: 'Tool',
-  assistant: 'Assistant',
-};
-
 function MessagesPanel() {
   return (
     <div className="flex flex-col gap-4">
       {SAMPLE_MESSAGES.map((m, i) => (
         <MessageBlock key={i} role={m.role} tool={m.tool} body={m.body} />
       ))}
-    </div>
-  );
-}
-
-function MessageBlock({
-  role,
-  tool,
-  body,
-}: {
-  role: 'system' | 'user' | 'tool' | 'assistant';
-  tool?: string;
-  body: React.ReactNode;
-}) {
-  // Bubble border only — fills (bg-ink-100 / bg-blue-50) were too heavy
-  // and read as a chat-app aesthetic. Outline keeps the per-message
-  // container shape without the visual weight.
-  const bubbleBorder =
-    role === 'assistant' ? 'border-blue-100' : 'border-ink-200';
-  return (
-    <div className="flex flex-col gap-2">
-      {/* Voice split: role is a sans Title Case label (message metadata,
-          not a section eyebrow); tool function name is mono lowercase
-          since it's an API code identifier. The two halves on one line
-          carry different voices for different jobs. */}
-      <div className="font-sans text-xs font-medium text-ink-600">
-        {ROLE_LABEL[role]}
-        {tool ? (
-          <>
-            <span className="text-ink-400"> · </span>
-            <span className="font-mono font-normal text-ink-700">{tool}</span>
-          </>
-        ) : null}
-      </div>
-      <div className={`rounded-sm border px-3 py-2 text-sm text-ink-900 text-pretty ${bubbleBorder}`}>
-        {body}
-      </div>
     </div>
   );
 }

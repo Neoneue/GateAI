@@ -11,6 +11,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Sparkline } from '@/components/ui/sparkline';
+import { TablePaginationFooter } from '@/components/ui/table-pagination-footer';
 import { StatusDot } from '@/components/ui/status-dot';
 import {
   Table,
@@ -184,9 +186,16 @@ const TYPE_OPTIONS = [
   { value: 'rerank', label: 'Rerank' },
 ];
 
+// Synthetic catalog total — the rendered ROWS are the "first page" of a
+// larger model registry. Matches the pattern in CMP-013/014 (totals diverge
+// per surface) so pagination math has somewhere to walk.
+const MODELS_TOTAL = 127;
+
 export function CMP011DataTable() {
   const [type, setType] = useState('all');
   const [provider, setProvider] = useState<'all' | Vendor>('all');
+  const [page, setPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState('25');
 
   const TYPE_TO_CAPABILITIES: Record<string, Capability[]> = {
     text: ['T'],
@@ -367,6 +376,14 @@ export function CMP011DataTable() {
                 ))}
               </TableBody>
             </Table>
+
+            <TablePaginationFooter
+              total={MODELS_TOTAL}
+              page={page}
+              rowsPerPage={rowsPerPage}
+              onPageChange={setPage}
+              onRowsPerPageChange={setRowsPerPage}
+            />
           </div>
           </div>
 
@@ -530,82 +547,6 @@ function CapabilityPill({ letter }: { letter: Capability }) {
     <span className="inline-flex items-center justify-center size-5 rounded-[4px] border border-ink-200 font-mono text-xs font-medium text-ink-700">
       {display}
     </span>
-  );
-}
-
-type SparklineTone = 'critical' | 'elevated' | 'normal';
-
-function Sparkline({
-  points,
-  tone,
-  width = 80,
-  height = 24,
-}: {
-  points: number[];
-  tone?: SparklineTone;
-  width?: number;
-  height?: number;
-}) {
-  const w = width;
-  const h = height;
-  const padY = 2;
-  const max = Math.max(...points);
-  const min = Math.min(...points);
-  const range = max - min || 1;
-  const step = w / (points.length - 1);
-  const coords = points.map((p, i) => ({
-    x: i * step,
-    y: padY + (h - padY * 2) - ((p - min) / range) * (h - padY * 2),
-  }));
-  const linePath = coords
-    .map((c, i) => `${i === 0 ? 'M' : 'L'} ${c.x.toFixed(1)},${c.y.toFixed(1)}`)
-    .join(' ');
-  const last = coords[coords.length - 1];
-  const areaPath =
-    `M ${coords[0].x.toFixed(1)},${h} ` +
-    coords.map((c) => `L ${c.x.toFixed(1)},${c.y.toFixed(1)}`).join(' ') +
-    ` L ${last.x.toFixed(1)},${h} Z`;
-
-  let stroke: string;
-  let fill: string;
-  let fillOpacity = 0.6;
-  if (tone === 'critical') {
-    stroke = 'var(--color-destructive)';
-    fill = 'var(--color-destructive)';
-    fillOpacity = 0.12;
-  } else if (tone === 'elevated') {
-    stroke = 'var(--color-warning-700)';
-    fill = 'var(--color-warning-700)';
-    fillOpacity = 0.12;
-  } else if (tone === 'normal') {
-    stroke = 'var(--color-ink-500)';
-    fill = 'var(--color-ink-300)';
-    fillOpacity = 0.6;
-  } else {
-    const isUp = points[points.length - 1] >= points[0];
-    stroke = isUp ? 'var(--color-blue-700)' : 'var(--color-ink-700)';
-    fill = isUp ? 'var(--color-blue-100)' : 'var(--color-ink-200)';
-  }
-
-  return (
-    <svg
-      width={w}
-      height={h}
-      viewBox={`0 0 ${w} ${h}`}
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden
-    >
-      <path d={areaPath} fill={fill} fillOpacity={fillOpacity} />
-      <path
-        d={linePath}
-        fill="none"
-        stroke={stroke}
-        strokeWidth={1.25}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <circle cx={last.x} cy={last.y} r={2} fill={stroke} />
-    </svg>
   );
 }
 

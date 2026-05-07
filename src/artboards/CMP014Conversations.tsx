@@ -1,18 +1,17 @@
-import { useState } from 'react';
-import { Download, Key, Search, User } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { Activity, ArrowRight, Copy, Download, ExternalLink, Search, Shield, TriangleAlert, Wrench } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { CompactKpi, CompactSpark } from '@/components/ui/compact-kpi';
 import { Input } from '@/components/ui/input';
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-} from '@/components/ui/pagination';
+import { MessageBlock, type MessageRole } from '@/components/ui/message-block';
+import { TablePaginationFooter } from '@/components/ui/table-pagination-footer';
 import { SegmentedPill } from '@/components/ui/segmented-pill';
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { StatusDot } from '@/components/ui/status-dot';
 import {
   Select,
@@ -29,7 +28,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { VendorAvatar, type Vendor } from '@/components/icons/vendor-meta';
+import { VENDOR_META, VendorAvatar, type Vendor } from '@/components/icons/vendor-meta';
 import { ArtboardHeader, SectionHeader } from './_shared/ArtboardHeader';
 import { DashboardChrome } from './_shared/DashboardChrome';
 
@@ -99,7 +98,7 @@ function PageHeader() {
           Conversations
         </h2>
         <p className="font-sans text-ink-500 text-base tracking-tight text-pretty m-0">
-          A conversation is a chain of requests that share session context — agent runs, multi-turn chats, tool-calling loops. Click any row to see the message thread alongside its request trace.
+          A conversation is a chain of requests that share session context — agent runs, multi-turn chats, tool-calling loops. Click any row to see its message thread.
         </p>
       </div>
       <div className="flex items-center gap-2 shrink-0">
@@ -203,17 +202,23 @@ type ConversationRow = {
   cost: string;
   status: ConversationStatus;
   updated: string;
+  /** Conversation duration ("3m 53s") — surfaced in the detail sheet KPI rail. */
+  duration: string;
 };
 
 const CONVERSATION_ROWS: ConversationRow[] = [
-  { title: 'Why was the SEPA transfer 0x4a3e flagged for review yesterday?', conversationId: 'cnv_aurora_42',   initiator: 'service-eu-payments',  turns:  9, reqs: 14, vendors: ['anthropic'],                      tokens: '4,051',   cost: '$0.1042', status: 'active',    updated: '14:28:04' },
-  { title: 'Draft a 4-step onboarding sequence for new fin clients',         conversationId: 'cnv_skylark_18', initiator: 'kira.tan@acme.io',     turns:  6, reqs: 11, vendors: ['anthropic', 'openai'],            tokens: '8,114',   cost: '$0.4218', status: 'active',    updated: '14:22:11' },
-  { title: 'Classify the attached document and click KYC if needed',         conversationId: 'cnv_meridian_07',initiator: 'service-kyc-bot',      turns:  3, reqs:  4, vendors: ['google'],                         tokens: '2,104',   cost: '$0.3104', status: 'active',    updated: '14:15:22' },
-  { title: 'Investigate the variance in YOY revenue between segments',       conversationId: 'cnv_orion_70',   initiator: 'mateus.silva@ebux.com',turns: 18, reqs: 38, vendors: ['anthropic', 'openai', 'mistral'], tokens: '52,810',  cost: '$0.5841', status: 'completed', updated: '14:02:48' },
-  { title: 'Draft a postmortem for incident INC-2026-04-1107',               conversationId: 'cnv_polaris_55', initiator: 'service.incident-bot', turns:  4, reqs:  7, vendors: ['anthropic'],                      tokens: '3,402',   cost: '$0.1102', status: 'active',    updated: '13:48:33' },
-  { title: 'Customer requesting a refund on order ORD-89412',                conversationId: 'cnv_lyra_92',    initiator: 'service-support-bot',  turns: 14, reqs: 32, vendors: ['openai'],                         tokens: '12,608',  cost: '$0.0812', status: 'failed',    updated: '13:36:10' },
-  { title: 'Summarize Q1 2026 earnings call for top 10 holdings',            conversationId: 'cnv_vela_21',    initiator: 'pulja.shah@acme.io',   turns: 12, reqs: 26, vendors: ['anthropic'],                      tokens: '102,041', cost: '$0.1402', status: 'completed', updated: '13:18:55' },
+  { title: 'Why was the SEPA transfer 0x4a3e flagged for review yesterday?', conversationId: 'cnv_aurora_42',   initiator: 'service-eu-payments',  turns:  9, reqs: 14, vendors: ['anthropic'],                      tokens: '4,051',   cost: '$0.1042', status: 'active',    updated: '14:28:04', duration: '3m 53s'  },
+  { title: 'Draft a 4-step onboarding sequence for new fin clients',         conversationId: 'cnv_skylark_18', initiator: 'kira.tan@acme.io',     turns:  6, reqs: 11, vendors: ['anthropic', 'openai'],            tokens: '8,114',   cost: '$0.4218', status: 'active',    updated: '14:22:11', duration: '5m 12s'  },
+  { title: 'Classify the attached document and click KYC if needed',         conversationId: 'cnv_meridian_07',initiator: 'service-kyc-bot',      turns:  3, reqs:  4, vendors: ['google'],                         tokens: '2,104',   cost: '$0.3104', status: 'active',    updated: '14:15:22', duration: '0m 47s'  },
+  { title: 'Investigate the variance in YOY revenue between segments',       conversationId: 'cnv_orion_70',   initiator: 'mateus.silva@ebux.com',turns: 18, reqs: 38, vendors: ['anthropic', 'openai', 'mistral'], tokens: '52,810',  cost: '$0.5841', status: 'completed', updated: '14:02:48', duration: '14m 06s' },
+  { title: 'Draft a postmortem for incident INC-2026-04-1107',               conversationId: 'cnv_polaris_55', initiator: 'service.incident-bot', turns:  4, reqs:  7, vendors: ['anthropic'],                      tokens: '3,402',   cost: '$0.1102', status: 'active',    updated: '13:48:33', duration: '2m 18s'  },
+  { title: 'Customer requesting a refund on order ORD-89412',                conversationId: 'cnv_lyra_92',    initiator: 'service-support-bot',  turns: 14, reqs: 32, vendors: ['openai'],                         tokens: '12,608',  cost: '$0.0812', status: 'failed',    updated: '13:36:10', duration: '8m 41s'  },
+  { title: 'Summarize Q1 2026 earnings call for top 10 holdings',            conversationId: 'cnv_vela_21',    initiator: 'pulja.shah@acme.io',   turns: 12, reqs: 26, vendors: ['anthropic'],                      tokens: '102,041', cost: '$0.1402', status: 'completed', updated: '13:18:55', duration: '11m 27s' },
 ];
+
+// Synthetic total — held at module scope so pagination math reconciles
+// with the KPI rail's "Conversations: 18,210" figure.
+const CONVERSATIONS_TOTAL = 18210;
 
 function ConversationsTableSection() {
   const [scope, setScope] = useState('all');
@@ -221,8 +226,12 @@ function ConversationsTableSection() {
   const [keyId, setKeyId] = useState('all');
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState('25');
+  // Row-click drill-in. `selectedRow` doubles as the sheet's `open` signal —
+  // null = closed, a row = open. Mirrors CMP-013's RequestDetailSheet.
+  const [selectedRow, setSelectedRow] = useState<ConversationRow | null>(null);
 
   return (
+    <>
     <div className="flex flex-col w-full rounded-sm overflow-hidden bg-white shadow-(--shadow-border)">
       {/* Toolbar */}
       <div className="flex items-center gap-2 py-3 px-4">
@@ -261,7 +270,6 @@ function ConversationsTableSection() {
             aria-label="User"
             className="border-ink-200 bg-white text-ink-900 font-normal"
           >
-            <User className="size-3.5 text-ink-500" strokeWidth={1.75} aria-hidden />
             <SelectValue placeholder="User" />
           </SelectTrigger>
           <SelectContent>
@@ -277,7 +285,6 @@ function ConversationsTableSection() {
             aria-label="Key"
             className="border-ink-200 bg-white text-ink-900 font-normal"
           >
-            <Key className="size-3.5 text-ink-500" strokeWidth={1.75} aria-hidden />
             <SelectValue placeholder="Key" />
           </SelectTrigger>
           <SelectContent>
@@ -308,12 +315,13 @@ function ConversationsTableSection() {
           {CONVERSATION_ROWS.map((row) => {
             const badge = STATUS_BADGE[row.status];
             return (
-              <TableRow key={row.conversationId} className="transition-colors duration-150 ease-out hover:bg-ink-50">
+              <TableRow key={row.conversationId} className="transition-colors duration-150 ease-out motion-reduce:transition-none hover:bg-ink-50">
                 <TableCell className="max-w-[360px]">
                   <div className="flex flex-col gap-1 min-w-0">
                     <button
                       type="button"
-                      className="font-sans text-sm text-ink-900 -tracking-[0.14px] truncate text-left bg-transparent p-0 outline-none underline decoration-ink-300 underline-offset-2 hover:decoration-ink-500 focus-visible:decoration-ink-500"
+                      onClick={() => setSelectedRow(row)}
+                      className="font-sans text-sm text-ink-900 -tracking-[0.14px] truncate text-left bg-transparent p-0 outline-none underline decoration-ink-300 underline-offset-2 hover:decoration-ink-500 focus-visible:decoration-ink-500 focus-visible:ring-2 focus-visible:ring-ink-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded-xs"
                     >
                       {row.title}
                     </button>
@@ -322,8 +330,10 @@ function ConversationsTableSection() {
                     </span>
                   </div>
                 </TableCell>
-                <TableCell className="whitespace-nowrap font-mono text-sm text-ink-800 -tracking-[0.14px]">
-                  {row.initiator}
+                <TableCell className="max-w-[220px] font-mono text-sm text-ink-800 -tracking-[0.14px]">
+                  <span className="block truncate" title={row.initiator}>
+                    {row.initiator}
+                  </span>
                 </TableCell>
                 <TableCell className="text-right whitespace-nowrap font-mono text-sm tabular-nums text-ink-800">
                   {row.turns}
@@ -359,61 +369,639 @@ function ConversationsTableSection() {
         </TableBody>
       </Table>
 
-      {/* Pagination footer */}
-      <div className="flex items-center justify-between gap-3 py-3 px-4 border-t border-ink-200">
-        <div className="flex items-center gap-3">
-          <span className="font-mono text-xs text-ink-500 tabular-nums -tracking-[0.01em]">
-            Showing <span className="font-medium">1–25</span> of <span className="font-medium">18,210</span>
+      <TablePaginationFooter
+        total={CONVERSATIONS_TOTAL}
+        page={page}
+        rowsPerPage={rowsPerPage}
+        onPageChange={setPage}
+        onRowsPerPageChange={setRowsPerPage}
+      />
+    </div>
+    <ConversationDetailDialog
+      row={selectedRow}
+      onOpenChange={(open) => {
+        if (!open) setSelectedRow(null);
+      }}
+    />
+    </>
+  );
+}
+
+/* ─── Conversation detail modal ────────────────────────────────────────────
+ * Centered modal (Dialog primitive) opened from a row title click. Started
+ * as a right-docked Sheet mirroring CMP-013's pattern, but the conversation
+ * scope adds a cross-link selection between Messages and Request Trace
+ * that needs both panels visible simultaneously — sheets can't go wide
+ * enough without crowding the page chrome behind them. Modal solves the
+ * width problem and matches the original CTO mockup.
+ *
+ * Layout (top → bottom, fixed except where noted):
+ *   header        eyebrow + title + meta + close
+ *   identity row  status + cnv_id + initiator + Copy/Audit actions
+ *   prompt quote  the user's opening message
+ *   KPI rail      5 tiles (Requests / Turns / Tokens / Cost / Duration)
+ *   body grid     Messages | Request Trace, side-by-side at lg, stacked
+ *                 below — each panel scrolls internally
+ *   footer        cross-link affordance copy + initiator/key/started meta
+ *
+ * Cross-link state (`activeRequestId`) is shared by both panels: clicking a
+ * message bubble highlights the paired trace event and vice versa. State
+ * persists if the user happens to be on a narrow viewport where the
+ * panels stack — they can scroll between them without losing selection.
+ * ────────────────────────────────────────────────────────────────────── */
+
+function ConversationDetailDialog({
+  row,
+  onOpenChange,
+}: {
+  row: ConversationRow | null;
+  onOpenChange: (open: boolean) => void;
+}) {
+  return (
+    <Dialog open={!!row} onOpenChange={onOpenChange}>
+      <DialogContent
+        // sm:max-w-5xl ≈ 1024px — wide enough for the two-column body to
+        // breathe at typical desktop viewports, narrow enough that the
+        // dimmed page behind reads as context. max-h-[90vh] keeps the
+        // modal inside the viewport even on shorter screens; the body
+        // grid scrolls internally per-panel.
+        className="sm:max-w-5xl max-h-[90vh] gap-0 p-0 overflow-hidden flex flex-col"
+      >
+        {row ? <ConversationDetailBody row={row} /> : null}
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function ConversationDetailBody({ row }: { row: ConversationRow }) {
+  const badge = STATUS_BADGE[row.status];
+  // Cross-link selection state — clicking a message bubble or trace step
+  // sets the active requestId; both panels paint the matching item with
+  // the selection treatment (blue ring on the bubble, blue left-bar +
+  // blue wash on the trace row). Click again to clear.
+  const [activeRequestId, setActiveRequestId] = useState<string | null>(null);
+
+  return (
+    <>
+      {/* Top section — header + identity row + prompt quote. Fixed (does
+          not scroll); the body grid below carries the scrollable panels.
+          `pr-12` lives on the title block only so it clears the absolute
+          DialogClose X; the identity row + quote run flush to the modal's
+          right padding so action buttons align with the KPI rail edge. */}
+      <div className="flex flex-col gap-3 px-5 pt-5">
+        <div className="flex flex-col gap-1 pr-12">
+          <span className="font-mono text-xs uppercase tracking-[0.1em] font-medium text-ink-500">
+            Conversation
           </span>
-          <span className="text-ink-400" aria-hidden>·</span>
-          <span className="font-mono text-xs font-medium text-ink-500 -tracking-[0.01em]">Rows</span>
-          <Select value={rowsPerPage} onValueChange={setRowsPerPage}>
-            <SelectTrigger
-              size="sm"
-              aria-label="Rows per page"
-              className="border-ink-200 bg-white text-ink-900 font-normal"
-            >
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="10">10</SelectItem>
-              <SelectItem value="25">25</SelectItem>
-              <SelectItem value="50">50</SelectItem>
-              <SelectItem value="100">100</SelectItem>
-            </SelectContent>
-          </Select>
+          <DialogTitle className="font-sans text-lg/6 font-medium text-ink-900 m-0">
+            Messages + request trace
+          </DialogTitle>
         </div>
 
-        <Pagination className="mx-0 w-fit justify-end">
-          <PaginationContent className="gap-1">
-            {[1, 2, 3].map((n) => (
-              <PaginationItem key={n}>
-                <PaginationLink
-                  isActive={n === page}
-                  onClick={() => setPage(n)}
-                >
-                  {n}
-                </PaginationLink>
-              </PaginationItem>
-            ))}
-            <PaginationItem>
-              <PaginationEllipsis />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink
-                onClick={() => setPage(729)}
-              >
-                729
-              </PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationNext
-                onClick={() => setPage((p) => Math.min(729, p + 1))}
-              />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
+        {/* Identity row — status + cnv_id + initiator on the left, action
+            buttons (Copy ID / Audit anchor) on the right. Wraps on narrow
+            viewports so the actions drop below the identity instead of
+            colliding with the close button. */}
+        <div className="flex items-center gap-3 flex-wrap">
+          <Badge variant={badge.variant}>
+            <StatusDot kind={badge.dot} />
+            {badge.label}
+          </Badge>
+          <span className="font-mono text-sm font-medium text-ink-900 -tracking-[0.2px]">
+            {row.conversationId}
+          </span>
+          <span className="font-mono text-xs text-ink-500 -tracking-[0.01em]">
+            {row.initiator}
+          </span>
+          <div className="ml-auto flex items-center gap-2">
+            <Button variant="outline" size="sm">
+              <Copy data-icon="inline-start" aria-hidden />
+              Copy ID
+            </Button>
+            <Button variant="outline" size="sm">
+              <Shield data-icon="inline-start" aria-hidden />
+              Audit anchor
+              <ExternalLink data-icon="inline-end" aria-hidden />
+            </Button>
+          </div>
+        </div>
+
+        <blockquote className="font-sans text-sm text-ink-800 text-pretty m-0">
+          <span aria-hidden>“</span>
+          {row.title}
+          <span aria-hidden>”</span>
+        </blockquote>
+      </div>
+
+      {/* Persistent KPI rail — 5 tiles at the conversation scope. Same
+          pattern as CMP-013's request rail but with one extra tile
+          (Duration) and a `grid-cols-5` track. */}
+      <div className="px-5 pt-4">
+        <ConversationKpiRail row={row} />
+      </div>
+
+      {/* Body wrapper — two-panel grid. `flex-1 min-h-0` fills the
+          remaining modal height; the inner grid handles its own
+          overflow so the panels scroll internally. */}
+      <div className="flex flex-col flex-1 min-h-0 px-5 pt-4 pb-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 flex-1 min-h-0 overflow-hidden">
+          <ConversationMessagesPanel
+            activeRequestId={activeRequestId}
+            onSelect={setActiveRequestId}
+          />
+          <RequestTracePanel
+            activeRequestId={activeRequestId}
+            onSelect={setActiveRequestId}
+          />
+        </div>
+      </div>
+
+      {/* Footer — cross-link affordance hint LEFT, conversation
+          provenance RIGHT. Both ambient at ink-400 so they read as
+          modal chrome, not heading-weight content. The hint sits here
+          (not above the panel grid) so it doesn't compete with the
+          panel-header eyebrows. */}
+      <div className="flex items-center justify-between gap-4 px-5 py-3 border-t border-ink-200 flex-wrap">
+        <span className="font-mono text-xs text-ink-400 -tracking-[0.01em]">
+          Click a message or trace step — they’re linked.
+        </span>
+        <span className="font-mono text-xs text-ink-400 -tracking-[0.01em]">
+          Key <span className="text-ink-700">prod-web</span>{' '}
+          · started <span className="text-ink-700">{row.updated}</span>
+        </span>
+      </div>
+    </>
+  );
+}
+
+function ConversationKpiRail({ row }: { row: ConversationRow }) {
+  // Inset divider — hairline doesn't reach top/bottom edges. Matches the
+  // KpiRail patterns in CMP-012 and CMP-013.
+  const dividerCls =
+    'relative before:absolute before:left-0 before:inset-y-4 before:w-px before:bg-ink-200';
+  return (
+    <div className="grid grid-cols-5 rounded-sm bg-white shadow-(--shadow-border) overflow-hidden">
+      <ConversationKpiTile label="Requests" value={String(row.reqs)} />
+      <div className={dividerCls}>
+        <ConversationKpiTile label="Turns" value={String(row.turns)} />
+      </div>
+      <div className={dividerCls}>
+        <ConversationKpiTile label="Tokens" value={row.tokens} />
+      </div>
+      <div className={dividerCls}>
+        <ConversationKpiTile label="Cost" value={row.cost} />
+      </div>
+      <div className={dividerCls}>
+        <ConversationKpiTile label="Duration" value={row.duration} />
       </div>
     </div>
+  );
+}
+
+function ConversationKpiTile({ label, value }: { label: string; value: string }) {
+  // Mono at text-lg (18px) — below the sans-hero threshold (≥24px), so
+  // these stay in the data-tier mono register per the five-voice taxonomy.
+  return (
+    <div className="flex flex-col gap-1 px-3 py-3">
+      <span className="font-mono text-xs uppercase tracking-[0.1em] font-medium text-ink-500">
+        {label}
+      </span>
+      <span className="font-mono text-lg font-medium tabular-nums -tracking-[0.5px] text-ink-900">
+        {value}
+      </span>
+    </div>
+  );
+}
+
+/* ─── Messages tab ───────────────────────────────────────────────────────
+ * Conversation-scope dialogue (richer than CMP-013's per-request thread
+ * since a conversation spans multiple turns + tool calls). Renders via the
+ * shared <MessageBlock> primitive so the bubble treatment stays one source
+ * of truth across the request and conversation sheets. */
+
+/**
+ * Conversation thread — eight turns mirroring the agent flow. RequestIds
+ * on assistant + tool messages match SAMPLE_TRACE entries, enabling the
+ * cross-link selection (click message → highlights paired trace event).
+ * USER turn is human input — no gateway request, no requestId.
+ */
+const CONVERSATION_MESSAGES: {
+  role: MessageRole;
+  tool?: string;
+  body: React.ReactNode;
+  time: string;
+  requestId?: string;
+}[] = [
+  {
+    role: 'user',
+    time: '14:24:11',
+    body: 'Why was the SEPA transfer 0x4a3e flagged for review yesterday? Pull the audit reason and route the dispute to the right operator.',
+  },
+  {
+    role: 'assistant',
+    time: '14:24:14',
+    requestId: 'req_92cf2a',
+    body: 'Let me look that up. Calling lookup_transfer…',
+  },
+  {
+    role: 'tool',
+    tool: 'lookup_transfer',
+    time: '14:24:38',
+    requestId: 'req_70a48a',
+    body: (
+      <code className="font-mono text-sm text-ink-900 -tracking-[0.14px] break-all">
+        {'{"id":"0x4a3e","amount":"€2,840.12","status":"flagged","reason":"PEP_MATCH","recipient":"acc_88e2f"}'}
+      </code>
+    ),
+  },
+  {
+    role: 'assistant',
+    time: '14:24:54',
+    requestId: 'req_2e1f9d',
+    body: 'PEP_MATCH on the recipient — let me screen acc_88e2f against the watchlist.',
+  },
+  {
+    role: 'tool',
+    tool: 'pep_screen',
+    time: '14:25:11',
+    requestId: 'req_3a5fb8',
+    body: (
+      <code className="font-mono text-sm text-ink-900 -tracking-[0.14px] break-all">
+        {'{"hit":"ofac_pep","entity":"sanctioned_official_IT","confidence":0.96}'}
+      </code>
+    ),
+  },
+  {
+    role: 'assistant',
+    time: '14:25:34',
+    requestId: 'req_7f0218',
+    body: 'Confirmed — recipient acc_88e2f matches a PEP on the OFAC list (confidence 0.96). I’ll route this to compliance-eu-tier2 and write an audit entry.',
+  },
+  {
+    role: 'tool',
+    tool: 'route_dispute',
+    time: '14:26:14',
+    requestId: 'req_da46b8',
+    body: (
+      <code className="font-mono text-sm text-ink-900 -tracking-[0.14px] break-all">
+        {'{"queue":"compliance-eu-tier2","ticket":"DSP-2026-0418","sla":"4h"}'}
+      </code>
+    ),
+  },
+  {
+    role: 'tool',
+    tool: 'audit_write',
+    time: '14:27:31',
+    requestId: 'req_4c91a2',
+    body: (
+      <code className="font-mono text-sm text-ink-900 -tracking-[0.14px] break-all">
+        {'{"event_id":"e_7a3f9c2b","anchor":"0x7f3a91c4","block":18472911}'}
+      </code>
+    ),
+  },
+];
+
+function ConversationMessagesPanel({
+  activeRequestId,
+  onSelect,
+}: {
+  activeRequestId: string | null;
+  onSelect: (requestId: string | null) => void;
+}) {
+  // Count = assistant turns. Tool/user/system don't count as "turns" — a
+  // turn is a model response. Mirrors the convention used in the table
+  // (row.turns is assistant-only).
+  const turnCount = CONVERSATION_MESSAGES.filter((m) => m.role === 'assistant').length;
+
+  // Auto-scroll the matching message into view when the active selection
+  // changes. `block: 'nearest'` is a no-op if the message is already
+  // visible, so this is safe to fire on every change (even when the click
+  // originated inside this panel — the matched element is already at the
+  // user's cursor and stays put). Smooth behavior respects
+  // prefers-reduced-motion automatically in modern browsers.
+  const scrollRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!activeRequestId || !scrollRef.current) return;
+    const el = scrollRef.current.querySelector(
+      `[data-request-id="${activeRequestId}"]`,
+    );
+    el?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  }, [activeRequestId]);
+
+  return (
+    <div className="flex flex-col rounded-sm border border-ink-200 overflow-hidden h-full min-h-0">
+      {/* Header strip — bordered tinted band carrying the eyebrow + count.
+          Matches the framing pattern in the trace panel. `flex-none` so
+          it doesn't shrink when the body scrolls. */}
+      <div className="flex-none flex items-center justify-between px-4 py-3 bg-ink-50 border-b border-ink-200">
+        <span className="font-mono text-xs uppercase tracking-[0.1em] font-medium text-ink-500">
+          Messages
+        </span>
+        <span className="font-mono text-xs text-ink-500 tabular-nums -tracking-[0.01em]">
+          {turnCount} {turnCount === 1 ? 'turn' : 'turns'}
+        </span>
+      </div>
+      <div ref={scrollRef} className="flex flex-col gap-4 p-4 overflow-y-auto min-h-0 flex-1">
+        {CONVERSATION_MESSAGES.map((m, i) => {
+          const selected = !!m.requestId && m.requestId === activeRequestId;
+          // Bubble tone stays default regardless of trace status — warn
+          // signals live in their narrowest carriers (the inline `pep`
+          // badge inside the message body, the trace row's warnNote text,
+          // and the slow-latency text). Tinting the whole bubble was an
+          // artifact and overweighted the warn signal.
+          return (
+            <MessageBlock
+              key={i}
+              role={m.role}
+              tool={m.tool}
+              body={m.body}
+              time={m.time}
+              requestId={m.requestId}
+              selected={selected}
+              // Only assistant + tool turns participate in cross-link
+              // selection — user input has no gateway request to pair with.
+              onClick={
+                m.requestId
+                  ? () => onSelect(selected ? null : m.requestId ?? null)
+                  : undefined
+              }
+            />
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+/* ─── Request Trace tab ──────────────────────────────────────────────────
+ * Vertical timeline of model calls for the conversation. Each event = one
+ * row in the gateway log (one call to /v1/messages). Status dot signals
+ * pass/warn/fail; vendor avatar + model name identify the route; the
+ * label below describes the agent step ("plan", "tool: lookup_transfer",
+ * "reason"). Click a step (eventually) to drill into CMP-013's request
+ * sheet for that specific call. */
+
+type TraceStatus = 'success' | 'warn' | 'danger';
+
+type TraceEvent = {
+  id: string;
+  vendor: Vendor;
+  model: string;
+  label: string;
+  /** "tool" = wrench glyph in the timeline node; everything else gets the
+   *  reasoning glyph (Activity wave). Drives icon choice only — status is
+   *  separate. */
+  kind: 'tool' | 'reason';
+  status: TraceStatus;
+  warnNote?: string;
+  /** Tokens in (e.g. "1.2k"). Mono tabular when rendered. */
+  inTokens: string;
+  /** Tokens out (e.g. "184"). */
+  outTokens: string;
+  /** Wall-clock latency for this single request (e.g. "1240ms"). Slow rows
+   *  (>1000ms) paint warning-tinted in the data line per the codified
+   *  slow-row indicator policy. */
+  latency: string;
+  /** Per-request cost (e.g. "$0.0012"). Sums across the trace ≈ row.cost. */
+  cost: string;
+  time: string;
+  requestId: string;
+};
+
+const SAMPLE_TRACE: TraceEvent[] = [
+  { id: 't1', vendor: 'anthropic', model: 'claude-sonnet-4.8', label: 'plan',                  kind: 'reason', status: 'success', inTokens: '1.2k', outTokens: '184', latency: '1240ms', cost: '$0.0142', time: '14:24:14', requestId: 'req_92cf2a' },
+  { id: 't2', vendor: 'openai',    model: 'gpt-5.1',           label: 'tool: lookup_transfer', kind: 'tool',   status: 'success', inTokens: '0.4k', outTokens: '92',  latency: '620ms',  cost: '$0.0008', time: '14:24:38', requestId: 'req_70a48a' },
+  { id: 't3', vendor: 'anthropic', model: 'claude-sonnet-4.8', label: 'reason',                kind: 'reason', status: 'success', inTokens: '2.1k', outTokens: '312', latency: '1480ms', cost: '$0.0241', time: '14:24:54', requestId: 'req_2e1f9d' },
+  { id: 't4', vendor: 'openai',    model: 'gpt-5.1',           label: 'tool: pep_screen',      kind: 'tool',   status: 'warn',    warnNote: 'pep', inTokens: '0.5k', outTokens: '142', latency: '940ms',  cost: '$0.0014', time: '14:25:11', requestId: 'req_3a5fb8' },
+  { id: 't5', vendor: 'openai',    model: 'gpt-5.1',           label: 'reason',                kind: 'reason', status: 'success', inTokens: '1.8k', outTokens: '276', latency: '1160ms', cost: '$0.0184', time: '14:25:34', requestId: 'req_7f0218' },
+  { id: 't6', vendor: 'anthropic', model: 'claude-sonnet-4.8', label: 'tool: route_dispute',   kind: 'tool',   status: 'success', inTokens: '2.4k', outTokens: '380', latency: '3120ms', cost: '$0.0260', time: '14:26:14', requestId: 'req_da46b8' },
+  { id: 't7', vendor: 'openai',    model: 'gpt-5.1',           label: 'tool: audit_write',     kind: 'tool',   status: 'success', inTokens: '0.7k', outTokens: '104', latency: '720ms',  cost: '$0.0060', time: '14:27:31', requestId: 'req_4c91a2' },
+];
+
+// Status → border color for the timeline node ring. Mirrors StatusDot's
+// fill convention (-600 saturated mid).
+const TRACE_NODE_BORDER: Record<TraceStatus, string> = {
+  success: 'border-success-600',
+  warn:    'border-warning-600',
+  danger:  'border-destructive',
+};
+const TRACE_NODE_ICON_TONE: Record<TraceStatus, string> = {
+  success: 'text-success-700',
+  warn:    'text-warning-700',
+  danger:  'text-destructive',
+};
+
+function RequestTracePanel({
+  activeRequestId,
+  onSelect,
+}: {
+  activeRequestId: string | null;
+  onSelect: (requestId: string | null) => void;
+}) {
+  // Auto-scroll the matching trace event into view on selection change.
+  // Same pattern as ConversationMessagesPanel — `block: 'nearest'` keeps
+  // already-visible items put. Pairing the two effects gives bidirectional
+  // scroll-into-view: clicking a message reveals its trace event; clicking
+  // a trace event reveals its message bubble.
+  const scrollRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!activeRequestId || !scrollRef.current) return;
+    const el = scrollRef.current.querySelector(
+      `[data-request-id="${activeRequestId}"]`,
+    );
+    el?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  }, [activeRequestId]);
+
+  return (
+    <div className="flex flex-col rounded-sm border border-ink-200 overflow-hidden h-full min-h-0">
+      {/* Header strip — bordered tinted band carrying the eyebrow + count.
+          Matches the framing pattern in the messages panel. `flex-none`
+          so it doesn't shrink when the body scrolls. */}
+      <div className="flex-none flex items-center justify-between px-4 py-3 bg-ink-50 border-b border-ink-200">
+        <span className="font-mono text-xs uppercase tracking-[0.1em] font-medium text-ink-500">
+          Request Trace
+        </span>
+        <span className="font-mono text-xs text-ink-500 tabular-nums -tracking-[0.01em]">
+          {SAMPLE_TRACE.length} requests
+        </span>
+      </div>
+
+      {/* Timeline track — vertical hairline running down the column at
+          x=28px (16px panel padding + 12px = node centerline). The track
+          sits BEHIND the nodes; each node's white interior visually masks
+          the line where it crosses, giving the "beads on a string" effect.
+          `inset-y-6` shortens the line so it terminates inside the first
+          and last node centers, accounting for the row's vertical padding.
+          The wrapper carries the scroll so long traces flow without
+          forcing the modal itself to scroll. */}
+      <div ref={scrollRef} className="px-4 py-2 overflow-y-auto min-h-0 flex-1">
+        {/* Per-row track segments are rendered inside TraceItem (see
+            below) so geometry stays correct regardless of row content
+            height. First/last items truncate the segment at the node
+            center; the node's bg-white masks the line where it crosses. */}
+        <div className="flex flex-col">
+          {SAMPLE_TRACE.map((event, i) => (
+            <TraceItem
+              key={event.id}
+              event={event}
+              selected={event.requestId === activeRequestId}
+              isFirst={i === 0}
+              isLast={i === SAMPLE_TRACE.length - 1}
+              onSelect={() =>
+                onSelect(
+                  event.requestId === activeRequestId ? null : event.requestId,
+                )
+              }
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function TraceItem({
+  event,
+  selected,
+  isFirst,
+  isLast,
+  onSelect,
+}: {
+  event: TraceEvent;
+  selected: boolean;
+  isFirst: boolean;
+  isLast: boolean;
+  onSelect: () => void;
+}) {
+  // Row bg signals selection only. Warn is conveyed via the warnNote
+  // text + the pep badge inside the matching message — tinting the row
+  // overweighted the signal and read as a stuck-state artifact.
+  const rowBg = selected ? 'bg-blue-50' : '';
+
+  // Slow-latency tone: codified policy — >1000ms paints warning-700 in the
+  // data line; >2000ms also flips the timeline node ring to warning-600
+  // so the slow step pre-scans at the timeline level (matches CTO's
+  // orange-node treatment for the route_dispute that took 3120ms).
+  const latencyMs = parseInt(event.latency, 10);
+  const isSlowLatency = latencyMs > 1000;
+  const isVerySlow = latencyMs > 2000;
+  const latencyTone = isSlowLatency ? 'text-warning-700' : 'text-ink-500';
+
+  // Node ring color — slow takes priority over status-success. Warn/danger
+  // status still wins (a slow warn step would still read as warn-amber on
+  // both the node AND the row bg).
+  const nodeBorder =
+    event.status === 'success' && isVerySlow
+      ? 'border-warning-600'
+      : TRACE_NODE_BORDER[event.status];
+  const nodeIconTone =
+    event.status === 'success' && isVerySlow
+      ? 'text-warning-700'
+      : TRACE_NODE_ICON_TONE[event.status];
+
+  // Step-type icon inside the node. Tool calls get Wrench (literal); every
+  // other step gets Activity (the EKG wave — implies reasoning/processing).
+  // Wrench's mass sits low; nudge -0.5px to optically center it inside
+  // the node circle. Activity is balanced and stays at 0.
+  const StepIcon = event.kind === 'tool' ? Wrench : Activity;
+  const stepIconTransform = event.kind === 'tool' ? '-translate-y-[0.5px]' : '';
+
+  // Per-row track segment — rendered behind the node circle (DOM order
+  // puts node after, so its bg-white masks the line where it crosses).
+  // First row: line starts at node center (top-6) and runs to row
+  // bottom. Last row: line starts at row top and runs h-6 (24px) to
+  // node center. Middle rows: line spans the full row height. Within
+  // TraceItem padding box, node center is at x=24 (pl-3 + node-half);
+  // for a 2px line to center on x=24, left = 23px.
+  const trackSegment = isFirst
+    ? 'top-6 bottom-0'
+    : isLast
+      ? 'top-0 h-6'
+      : 'inset-y-0';
+
+  return (
+    <button
+      type="button"
+      onClick={onSelect}
+      data-request-id={event.requestId}
+      className={`relative flex gap-3 py-3 pl-3 pr-2 -mx-2 text-left outline-none transition-colors duration-150 ease-out motion-reduce:transition-none focus-visible:ring-2 focus-visible:ring-ink-400 focus-visible:ring-inset ${
+        selected ? '' : 'hover:bg-ink-50'
+      } ${rowBg} before:absolute before:left-0 before:inset-y-1 before:w-0.5 before:bg-blue-500 before:rounded-full before:transition-opacity before:duration-150 motion-reduce:before:transition-none ${
+        selected ? 'before:opacity-100' : 'before:opacity-0'
+      }`}
+    >
+      {/* Per-row track segment — sits at x=23 inside TraceItem coords so
+          the 2px line centers on the node centerline at x=24. Comes
+          first in DOM so the node renders above and its bg-white masks
+          the line where it crosses. */}
+      <span
+        aria-hidden
+        className={`absolute left-[23px] w-0.5 bg-ink-200 ${trackSegment}`}
+      />
+      {/* Timeline node — circular, status-bordered, white-filled so the
+          track behind it reads as broken at the bead. Icon inside marks
+          the step type. */}
+      <div
+        className={`relative size-6 shrink-0 rounded-full border-2 bg-white flex items-center justify-center ${nodeBorder}`}
+      >
+        <StepIcon
+          className={`size-3 ${nodeIconTone} ${stepIconTransform}`}
+          strokeWidth={2}
+          aria-hidden
+        />
+      </div>
+
+      {/* Content column — three stacked rows: (1) vendor + model + time,
+          (2) label + warn badge + requestId, (3) tokens · latency · cost. */}
+      <div className="flex flex-col gap-1 min-w-0 flex-1">
+        {/* Row 1 — primary identity. Vendor avatar + model name on the left;
+            timestamp right-aligned. */}
+        <div className="flex items-center gap-2 min-w-0">
+          <VendorAvatar vendor={event.vendor} />
+          <span className="font-mono text-sm text-ink-900 -tracking-[0.2px] truncate flex-1">
+            {event.model}
+          </span>
+          <span className="font-mono text-xs text-ink-500 tabular-nums -tracking-[0.01em] shrink-0">
+            {event.time}
+          </span>
+        </div>
+
+        {/* Row 2 — agent step label + optional warn badge + requestId. */}
+        <div className="flex items-center gap-2 min-w-0">
+          <span className="font-mono text-xs text-ink-500 -tracking-[0.01em] truncate flex-1">
+            {event.label}
+          </span>
+          {event.status === 'warn' && event.warnNote ? (
+            <Badge variant="warning">
+              <TriangleAlert className="size-3" strokeWidth={1.75} aria-hidden />
+              {event.warnNote}
+            </Badge>
+          ) : null}
+          <span className="font-mono text-xs text-ink-500 -tracking-[0.01em] shrink-0">
+            {event.requestId}
+          </span>
+        </div>
+
+        {/* Row 3 — per-step economics. `tokens-in → tokens-out · latency ·
+            cost`. Latency turns warning-700 on slow rows. Cost stays
+            ink-700 (slightly heavier than the surrounding ink-500 metadata
+            since it's the most-referenced figure). */}
+        <div className="flex items-center gap-2 min-w-0 text-ink-500">
+          <span className="inline-flex items-center gap-1 font-mono text-xs tabular-nums -tracking-[0.01em]">
+            {event.inTokens}
+            <ArrowRight className="size-3" strokeWidth={1.75} aria-hidden />
+            {event.outTokens}
+          </span>
+          <span className="text-ink-400" aria-hidden>·</span>
+          <span className={`font-mono text-xs tabular-nums -tracking-[0.01em] ${latencyTone}`}>
+            {event.latency}
+          </span>
+          <span className="text-ink-400" aria-hidden>·</span>
+          <span className="font-mono text-xs tabular-nums -tracking-[0.01em] text-ink-700">
+            {event.cost}
+          </span>
+        </div>
+      </div>
+    </button>
   );
 }

@@ -83,19 +83,19 @@ export function CMP003BadgesAndTags() {
             <div className="flex flex-col rounded-sm gap-4 bg-white border border-ink-100 p-7">
               {/* Counters / version pills / accent labels */}
               <div className="flex flex-wrap items-center gap-3">
-                <Badge variant="secondary" className="rounded-sm h-5 px-2 font-mono font-normal">
+                <Badge variant="secondary" className="rounded-sm h-5 px-2 font-normal">
                   v0.4.1
                 </Badge>
                 <Badge variant="link" className="h-5 px-2 rounded-sm font-medium tracking-wide uppercase">
                   BETA
                 </Badge>
-                <Badge variant="default" className="rounded-sm h-5 px-2 font-mono uppercase tracking-wider">
+                <Badge variant="default" className="rounded-sm h-5 px-2 uppercase tracking-wider">
                   NEW
                 </Badge>
-                <Badge variant="outline" className="rounded-full size-5 p-0 border-destructive text-destructive font-mono tabular-nums">
+                <Badge variant="outline" className="rounded-full size-5 p-0 border-destructive text-destructive">
                   3
                 </Badge>
-                <Badge variant="secondary" className="rounded-full px-2 h-5 font-mono tabular-nums text-ink-500">
+                <Badge variant="secondary" className="rounded-full px-2 h-5 text-ink-500">
                   +12
                 </Badge>
               </div>
@@ -123,13 +123,13 @@ export function CMP003BadgesAndTags() {
 
               {/* Rev marks — mono uppercase, square corner */}
               <div className="flex flex-wrap items-center gap-2">
-                <Badge variant="secondary" className="rounded-none h-5 px-2 font-mono uppercase tracking-widest text-ink-500 border border-ink-200">
+                <Badge variant="secondary" className="rounded-none h-5 px-2 uppercase tracking-widest text-ink-500 border border-ink-200">
                   R.01
                 </Badge>
-                <Badge variant="secondary" className="rounded-none h-5 px-2 font-mono uppercase tracking-widest text-ink-500 border border-ink-200">
+                <Badge variant="secondary" className="rounded-none h-5 px-2 uppercase tracking-widest text-ink-500 border border-ink-200">
                   SHEET 011
                 </Badge>
-                <Badge variant="default" className="rounded-none h-5 px-2 font-mono uppercase tracking-widest">
+                <Badge variant="default" className="rounded-none h-5 px-2 uppercase tracking-widest">
                   INTERNAL
                 </Badge>
               </div>

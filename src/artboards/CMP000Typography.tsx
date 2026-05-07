@@ -93,28 +93,28 @@ const SCALE: Specimen[] = [
   },
   {
     label: 'KPI hero',
-    tag: 'text-2xl · mono medium',
+    tag: 'text-2xl · sans medium',
     sample: '48,293',
-    sampleClass: 'font-mono text-2xl/8 font-medium tabular-nums -tracking-[0.5px] text-ink-800',
-    meta: ['Geist Mono', '24px / 32px · 500', 'tracking -0.5px'],
-    note: 'CompactKpi value. Per project rule: every KPI numeric is Mono with tabular-nums.',
+    sampleClass: 'font-sans text-2xl/8 font-medium tabular-nums tracking-tight text-ink-900',
+    meta: ['Geist Sans', '24px / 32px · 500', 'tracking -0.025em'],
+    note: 'CompactKpi value, panel hero (Top Keys). Renders via the <HeroNumeric> primitive at default size. Sans + tabular-nums is the "presented summary" tier — distinct from operational mono numerics in tables, badges, and IDs.',
   },
   {
     label: 'KPI hero (large)',
-    tag: 'text-3xl · mono medium',
+    tag: 'text-3xl · sans medium',
     sample: '$1,147.82',
-    sampleClass: 'font-mono text-3xl/9 font-medium tabular-nums -tracking-[1px] text-ink-800',
-    meta: ['Geist Mono', '32px / 36px · 500', 'tracking -1px'],
-    note: 'Reserved for full-width or wider-than-KPI panels where one number anchors the surface. Inside a KPI-cell-width card, drop to text-2xl to match the rail.',
+    sampleClass: 'font-sans text-3xl/9 font-medium tabular-nums tracking-tight text-ink-900',
+    meta: ['Geist Sans', '32px / 36px · 500', 'tracking -0.025em'],
+    note: 'Full-page hero metric (CMP-013 "8,241"). Renders via the <HeroNumeric size="lg"> primitive. Reserved for surfaces where one number anchors the page — inside a KPI-rail cell, drop to default size.',
   },
   {
     label: 'Metric display',
     tag: 'text-5xl · hero numeric',
     sample: '48,293',
     sampleClass:
-      'font-mono text-5xl font-light -tracking-[1.44px] leading-none tabular-nums text-ink-800',
-    meta: ['Geist Mono', '48px / 1 · 300', 'tracking -1.44px'],
-    note: 'One primary number per surface. Weight 300 for air.',
+      'font-sans text-5xl font-light -tracking-[1.44px] leading-none tabular-nums text-ink-900',
+    meta: ['Geist Sans', '48px / 1 · 300', 'tracking -1.44px'],
+    note: 'Reserved variant for landing/hero surfaces where one primary number gets maximum typographic weight. Light weight (300) provides air at this scale. Not currently consumed by any composed page — extend <HeroNumeric> with a `display` size if/when adopted.',
   },
   {
     label: 'Eyebrow / sm',
@@ -159,7 +159,7 @@ export function CMP000Typography() {
         <ArtboardHeader
           code="CMP-000"
           title="Typography"
-          description="Geist for the UI, Geist Mono for the machine. ~60% mono / 40% sans on dense operational surfaces. Tailwind class names with Geist-aligned values — text-3xl is the page-title top of scale at 32px; text-4xl/6xl remain in @theme as escape hatches but are not part of the active hierarchy."
+          description="Five-voice taxonomy: sans titles + body + button labels, sans tabular for hero summary numerics ≥24px (KPI heroes, page hero metrics — via the <HeroNumeric> primitive), mono for codes / IDs / data-tier numerics in tables and badges, mono uppercase tracked for eyebrows. Below ~20px numerics revert to mono regardless of role. Tailwind class names with Geist-aligned values — text-3xl is the page-title top of scale at 32px; text-4xl/6xl remain in @theme as escape hatches but are not part of the active hierarchy."
           parts="14 specimens"
         />
 

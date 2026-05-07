@@ -34,6 +34,7 @@ import {
   type ChartConfig,
 } from '@/components/ui/chart';
 import { CompactKpi, CompactSpark } from '@/components/ui/compact-kpi';
+import { HeroNumeric } from '@/components/ui/hero-numeric';
 import { SegmentedPill } from '@/components/ui/segmented-pill';
 import {
   Table,
@@ -433,17 +434,18 @@ export function TopKeysCard() {
       </CardHeader>
 
       <CardContent className="flex flex-col gap-3">
-        <div className="font-mono text-2xl/8 font-medium tabular-nums -tracking-[0.5px] text-ink-900">
-          $1,147.82
-        </div>
+        <HeroNumeric>$1,147.82</HeroNumeric>
 
         <div className="flex flex-col gap-4 pt-3 border-t border-ink-200">
           {TOP_KEYS.map((k) => (
-            <div key={k.label} className="flex items-center justify-between gap-3">
-              <span className="font-sans text-sm -tracking-[0.14px] text-ink-900">
+            <div key={k.label} className="flex items-center justify-between gap-3 min-w-0">
+              <span
+                className="font-sans text-sm -tracking-[0.14px] text-ink-900 truncate min-w-0 flex-1"
+                title={k.label}
+              >
                 {k.label}
               </span>
-              <span className="font-mono text-sm tabular-nums -tracking-[0.14px] text-ink-900">
+              <span className="font-mono text-sm tabular-nums -tracking-[0.14px] text-ink-900 shrink-0">
                 {k.cost}
               </span>
             </div>
@@ -472,7 +474,7 @@ const RECENT_REQUESTS: {
   { time: '14:27:52', vendor: 'openai',    model: 'gpt-5.1',           status: 'success', code: '200',  tokens: '2,847', latency: '0.89s', cost: '$0.019' },
   { time: '14:27:41', vendor: 'xai',       model: 'grok-4.1-fast',     status: 'success', code: '200',  tokens: '6,120', latency: '2.14s', cost: '$0.012' },
   { time: '14:27:30', vendor: 'google',    model: 'gemini-3-pro',      status: 'warn',    code: '408',  tokens: '1,892', latency: '4.08s', cost: '$0.009' },
-  { time: '14:27:18', vendor: 'anthropic', model: 'claude-opus-4.7',   status: 'danger',  code: '500',  tokens: '0',     latency: '0.18s', cost: '$0.000' },
+  { time: '14:27:18', vendor: 'anthropic', model: 'claude-opus-4.7',   status: 'danger',  code: '500',  tokens: '—',     latency: '—',     cost: '—'      },
   { time: '14:26:54', vendor: 'meta',      model: 'llama-4.2-405b',    status: 'success', code: '200',  tokens: '3,204', latency: '1.65s', cost: '$0.006' },
   { time: '14:26:32', vendor: 'mistral',   model: 'mistral-large-3',   status: 'success', code: '200',  tokens: '2,517', latency: '0.94s', cost: '$0.005' },
   { time: '14:26:08', vendor: 'cohere',    model: 'command-r-plus',    status: 'success', code: '200',  tokens: '1,842', latency: '0.71s', cost: '$0.004' },
@@ -518,15 +520,24 @@ export function RecentRequestsCard() {
         <TableBody>
           {RECENT_REQUESTS.map((row, i) => {
             const badge = STATUS_BADGE[row.status];
+            // Missing-data tone — match CMP-013 policy. 5xx rows render
+            // numerics as `—` in ink-400; populated rows stay ink-800.
+            const isMissing = row.tokens === '—';
+            const numericCls = isMissing
+              ? 'text-right whitespace-nowrap font-mono tabular-nums text-ink-400'
+              : 'text-right whitespace-nowrap font-mono tabular-nums text-ink-800';
             return (
               <TableRow key={`${row.time}-${i}`} className="hover:bg-transparent">
                 <TableCell className="whitespace-nowrap font-mono tabular-nums -tracking-[0.14px] text-ink-500">
                   {row.time}
                 </TableCell>
-                <TableCell className="whitespace-nowrap">
-                  <div className="flex items-center gap-2">
+                <TableCell className="max-w-[260px]">
+                  <div className="flex items-center gap-2 min-w-0">
                     <VendorAvatar vendor={row.vendor} />
-                    <span className="font-mono text-sm text-ink-900 -tracking-[0.2px]">
+                    <span
+                      className="font-mono text-sm text-ink-900 -tracking-[0.2px] truncate"
+                      title={row.model}
+                    >
                       {row.model}
                     </span>
                   </div>
@@ -537,13 +548,13 @@ export function RecentRequestsCard() {
                     {row.code}
                   </Badge>
                 </TableCell>
-                <TableCell className="text-right whitespace-nowrap font-mono tabular-nums text-ink-800">
+                <TableCell className={numericCls}>
                   {row.tokens}
                 </TableCell>
-                <TableCell className="text-right whitespace-nowrap font-mono tabular-nums text-ink-800">
+                <TableCell className={numericCls}>
                   {row.latency}
                 </TableCell>
-                <TableCell className="text-right whitespace-nowrap font-mono tabular-nums text-ink-800">
+                <TableCell className={numericCls}>
                   {row.cost}
                 </TableCell>
               </TableRow>
