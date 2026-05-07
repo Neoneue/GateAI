@@ -20,12 +20,13 @@ const CMP011DataTable         = lazy(() => import('@/artboards/CMP011DataTable')
 const CMP012ComposedDashboard = lazy(() => import('@/artboards/CMP012ComposedDashboard').then(m => ({ default: m.CMP012ComposedDashboard })));
 const CMP013Requests          = lazy(() => import('@/artboards/CMP013Requests').then(m => ({ default: m.CMP013Requests })));
 const CMP014Conversations     = lazy(() => import('@/artboards/CMP014Conversations').then(m => ({ default: m.CMP014Conversations })));
+const CMP015Security          = lazy(() => import('@/artboards/CMP015Security').then(m => ({ default: m.CMP015Security })));
 
 type PageId =
   | 'cmp-000' | 'cmp-001' | 'cmp-002' | 'cmp-003' | 'cmp-004'
   | 'cmp-005' | 'cmp-006' | 'cmp-007'
   | 'cmp-008a' | 'cmp-008b' | 'cmp-008c'
-  | 'cmp-009' | 'cmp-010' | 'cmp-011' | 'cmp-012' | 'cmp-013' | 'cmp-014';
+  | 'cmp-009' | 'cmp-010' | 'cmp-011' | 'cmp-012' | 'cmp-013' | 'cmp-014' | 'cmp-015';
 
 type Page = {
   id: PageId;
@@ -56,6 +57,7 @@ const PAGES: Page[] = [
   { id: 'cmp-012',  code: 'CMP-012',  name: 'Composed · Dashboard', Component: CMP012ComposedDashboard },
   { id: 'cmp-013',  code: 'CMP-013',  name: 'Requests',             Component: CMP013Requests },
   { id: 'cmp-014',  code: 'CMP-014',  name: 'Conversations',        Component: CMP014Conversations },
+  { id: 'cmp-015',  code: 'CMP-015',  name: 'Security',              Component: CMP015Security },
 ];
 
 export default function App() {
@@ -63,7 +65,7 @@ export default function App() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   // Inner production-frame sidebar state — lifted here so it persists
   // when navigating between CMP-012 / CMP-013 / CMP-014 via the inner nav.
-  const [innerSidebarExpanded, setInnerSidebarExpanded] = useState(false);
+  const [innerSidebarExpanded, setInnerSidebarExpanded] = useState(true);
   const Page = PAGES.find((p) => p.id === active)?.Component ?? PAGES[0].Component;
 
   return (

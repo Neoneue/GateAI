@@ -41,7 +41,7 @@ export const SIDEBAR_SECTIONS: SidebarSection[] = [
   {
     label: 'Security',
     items: [
-      { id: 'security-overview', icon: TriangleAlert, label: 'Overview' },
+      { id: 'security-overview', icon: TriangleAlert, label: 'Overview', pageId: 'cmp-015' },
       { id: 'policies',          icon: Shield,        label: 'Policies' },
       { id: 'events',            icon: Bell,          label: 'Events' },
     ],
