@@ -157,12 +157,12 @@ Section list (current build):
 ```mermaid
 graph LR
     INDEX[("src/index.css<br/>@theme {} — 5 OKLCH ramps<br/>--color-ink-50..950 (neutral, chroma 0)<br/>--color-blue-50..950 (700 = brand mark<br/>oklch(0.345 0.224 268.85) ≈ #1F2FCE)<br/>--color-success-50..950 (Tailwind v4 green)<br/>--color-warning-50..950 (Tailwind v4 amber)<br/>--color-danger-50..950 (Tailwind v4 red)<br/>--color-white · --color-canvas (#ECECE7)<br/>--color-syntax-* · --color-traffic-*<br/>--shadow-border · --shadow-popup · --shadow-modal<br/>--text-3xl/4xl/6xl (Geist values 32/40/64)")]
-    CSSVARS[":root vars<br/>--background = white<br/>--foreground = ink-900<br/>--primary = ink-900 (NOT blue)<br/>--secondary/muted/accent = ink-100<br/>--muted-foreground = ink-500<br/>--destructive = danger-600<br/>--border/input = ink-200<br/>--ring = ink-400<br/>--chart-1..5 = ink-200/400/500/700/800<br/>--radius = 0.625rem (10px base)"]
+    CSSVARS[":root vars<br/>--background = white<br/>--foreground = ink-900<br/>--primary = ink-900 (NOT blue)<br/>--secondary/muted/accent = ink-100<br/>--muted-foreground = ink-500<br/>--destructive = danger-600<br/>--border/input = ink-200<br/>--ring = ink-400<br/>--chart-1..8 = categorical OKLCH palette<br/>(brand-decoupled, see §Chart palette)<br/>--radius = 0.625rem (10px base)"]
     THEMEINLINE["@theme inline<br/>maps :root vars to<br/>Tailwind color/radius utilities<br/>--radius-xl OVERRIDDEN to 12px<br/>(Geist modal-tier)"]
     TWUTILS["Tailwind utilities<br/>bg-ink-{50..950} text-ink-{50..950}<br/>bg-blue-* bg-success-* bg-warning-* bg-danger-*<br/>text-primary bg-card border-border<br/>rounded-sm (6) rounded-xl (12) rounded-xs (4)<br/>shadow-(--shadow-border) etc."]
     PRIMS["src/components/ui/*<br/>className strings<br/>(no hex / oklch literals here)"]
     ARTS["src/artboards/CMP*<br/>className strings<br/>(no hex / oklch literals here)"]
-    VENDOR[("src/components/icons/<br/>vendor-meta.tsx<br/>VENDOR_META.color (brand)<br/>VENDOR_CHART_COLOR_SECONDARY<br/>(only for one-vendor multi-series)")]
+    VENDOR[("src/components/icons/<br/>vendor-meta.tsx<br/>VENDOR_META.color (brand)<br/>used by VendorAvatar icon only<br/>(charts use --chart-* palette)")]
 
     INDEX --> CSSVARS
     INDEX --> THEMEINLINE
@@ -170,7 +170,7 @@ graph LR
     CSSVARS --> THEMEINLINE
     TWUTILS --> PRIMS
     TWUTILS --> ARTS
-    VENDOR -.->|brand-hex exception<br/>(chips AND chart series)| ARTS
+    VENDOR -.->|brand-hex exception<br/>(VendorAvatar icons only;<br/>charts use --chart-*)| ARTS
 ```
 
 **Authority:** `system.md` (host-level Theme + Project) > `front-end-developer/contract/globals.md` (Layer 1) > `src/index.css` (this repo's globals) + `docs/brand-guidelines.md` (project-side synthesis of decisions in code). Currently `system.md` does not exist; `index.css` is the operative token source. `vendor-meta.tsx` is the only place raw brand hex literals live (intentional — external brand identities).
@@ -199,7 +199,28 @@ graph LR
 
 **Voice split (codified 2026-05-05):** four typographic voices, each with one job — mono uppercase = section eyebrow; sans Title Case = field/column label; mono normal = ID/value; sans body = content. Sans labels are `font-medium` minimum.
 
-**Vendor color model:** the `VENDOR_META[vendor].color` field is single-source — chips/avatars/badges and chart series both pull from it. **`<VendorAvatar />` final treatment (locked 2026-05-05):** white provider glyph on saturated brand-color chip, single treatment everywhere — no `tone` prop, no neutral/split variants. User iterated through 4 alternatives and rejected all but this. See `feedback_vendor-avatar-treatment.md` — don't reintroduce a `tone` prop without explicit ask.
+**Vendor color model (revised 2026-05-06):** the `VENDOR_META[vendor].color` field is the brand-hex token. Used by `<VendorAvatar />` (icon rendering) and any other surface that needs to identify a vendor by color. **NOT used by chart series anymore** — charts use the standalone `--chart-*` categorical palette (see Chart palette section below); per PM call: "we need a palette of colors for all graphs throughout the app and they should be used regardless of the content."
+
+**`<VendorAvatar />` treatment (revised 2026-05-06, iteration 7):** Bare brand-colored icon at `size-4`, no chip wrapper. SVGs use `fill="currentColor"`, so setting `style={{ color: meta.color }}` on the icon paints the glyph in the brand hex. Three vendors render multi-color via per-path fills inside their SVG (Cohere three-blob, Mistral five-band gradient, Gemini canonical layered gradients) — for these, the wrapper's `style.color` is ignored. Iteration history is captured in the `vendor-meta.tsx` file comment so this doesn't re-prosecute. Don't revert to a chip wrapper without explicit ask.
+
+**Chart palette (codified 2026-05-06):** Standalone 8-slot categorical OKLCH palette in `--chart-1..8` (`src/index.css`, exposed as `--color-chart-1..8` Tailwind utilities). Brand-decoupled — chart series pick a slot **by index** in stable order, regardless of what each series represents. Final values:
+
+| Slot | OKLCH | Hue family |
+|---|---|---|
+| 1 | `oklch(0.62 0.18 255)` | blue |
+| 2 | `oklch(0.72 0.17 50)` | orange |
+| 3 | `oklch(0.72 0.20 145)` | green |
+| 4 | `oklch(0.70 0.18 290)` | purple |
+| 5 | `oklch(0.65 0.20 18)` | coral |
+| 6 | `oklch(0.75 0.13 195)` | teal |
+| 7 | `oklch(0.85 0.16 88)` | amber |
+| 8 | `oklch(0.68 0.20 335)` | magenta |
+
+All eight slots sit at L 0.62–0.85, C 0.13–0.20 (uniformly bright, mid-saturation). Hue distribution covers all six color families; adjacent slots in palette order are ≥85° apart in hue. **No neutrals as categorical slots** — Tableau and D3 only use gray as a slot 9+ extender; an 8-slot palette uses vivid colors throughout (per IBM Carbon, Atlassian categorical8 conventions). The reasoning, full survey, and iteration history are documented in `docs/chart-colors.md`.
+
+Per-series `slot?: number` override on the series type lets specific charts pin colors to specific slots when there's a brand mnemonic worth honoring (Anthropic series → orange slot 2, OpenAI series → blue slot 1). Default is positional; opt into mnemonic only when series ARE entities readers have prior color associations with. Don't repeat slots within a single legend.
+
+**KPI rail sparklines** also use the chart palette tokens (`--color-chart-1` blue, `--color-chart-3` green, `--color-chart-7` amber, `--color-ink-500` for the neutral first slot). Earlier they used semantic ramps (success-500 / warning-500 / blue-500), which mixed coloring systems and made the rail read inconsistently — semantic-by-some-measure for some metrics, neutral for others.
 
 **Link affordance (codified 2026-05-05):** Inline links use **permanent faint underline + ink color** (no blue link tokens). Recipe: `underline decoration-ink-200 underline-offset-2 hover:decoration-ink-500 focus-visible:decoration-ink-500 outline-none`. Text color stays in the ink ramp matching the surface (typically `text-ink-900` for primary content, `text-ink-700` for secondary inside ink-500 meta lines). Blue is reserved for info/completed/active-tab/focus — adding "link" to that overload was rejected after research. See `feedback_link-affordance.md`.
 
