@@ -4,6 +4,7 @@ import {
   ChartContainer,
   type ChartConfig,
 } from '@/components/ui/chart';
+import { HeroNumeric } from '@/components/ui/hero-numeric';
 
 /* ─────────────────────────────────────────────────────────────────────────
  * DeltaTag — directional arrow + delta value, optional trailing note.
@@ -79,9 +80,7 @@ export function CompactKpi({
     <div className={containerCls}>
       <div className="font-mono font-medium uppercase tracking-[0.1em] text-ink-500 text-xs">{title}</div>
       <div className="flex items-baseline gap-2">
-        <div className="font-mono text-2xl/8 font-medium tabular-nums tracking-tight text-ink-900">
-          {value}
-        </div>
+        <HeroNumeric>{value}</HeroNumeric>
         {delta ? (
           <DeltaTag delta={delta} note={deltaNote} inverted={deltaInverted} />
         ) : (

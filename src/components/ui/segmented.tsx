@@ -102,14 +102,17 @@ function SegmentedPillVariant({
         className={cn(
           'absolute top-0 left-0 bg-white rounded-xs shadow-xs',
           indicator.ready ? 'opacity-100' : 'opacity-0',
+          // Transition lives in a class so `motion-reduce:transition-none`
+          // can override it. Gated on `indicator.ready` to skip the
+          // first-paint slide-from-zero — equivalent to the prior inline
+          // `transition: ready ? '…' : undefined` pattern.
+          indicator.ready &&
+            'transition-[transform,width] duration-[220ms] [transition-timing-function:cubic-bezier(0.77,0,0.175,1)] motion-reduce:transition-none',
         )}
         style={{
           transform: `translate(${indicator.x}px, ${indicator.y}px)`,
           width: indicator.width,
           height: indicator.height,
-          transition: indicator.ready
-            ? 'transform 220ms cubic-bezier(0.77, 0, 0.175, 1), width 220ms cubic-bezier(0.77, 0, 0.175, 1)'
-            : undefined,
         }}
       />
       {options.map((opt) => {

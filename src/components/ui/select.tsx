@@ -68,10 +68,10 @@ const selectTriggerVariants = cva(
   {
     variants: {
       size: {
-        xs: "h-7 gap-2 px-3 text-xs",
-        sm: "h-8 gap-2 px-3 text-xs",
-        default: "h-9 gap-2 px-4 text-sm",
-        lg: "h-10 gap-2 px-4 text-sm",
+        xs: "h-7 gap-2 pl-3 pr-2 text-xs",
+        sm: "h-8 gap-2 pl-3 pr-2 text-xs",
+        default: "h-9 gap-2 pl-4 pr-3 text-sm",
+        lg: "h-10 gap-2 pl-4 pr-3 text-sm",
       },
     },
     defaultVariants: {

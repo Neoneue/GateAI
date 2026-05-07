@@ -61,7 +61,7 @@ export function SegmentedPill({
       aria-label={ariaLabel}
       className={cn(
         // Paper spec WW0-0: h-10 container, py-px px-1, rounded-md (8px),
-        // bg ink-100 (#F1F4F6), border ink-100 (#E9EBEE).
+        // bg ink-100, border ink-100 (effectively borderless track).
         // `size="sm"` drops the container to h-8 for inline header chrome
         // (toolbars next to size="sm" buttons / selects); items shrink to h-6.
         'relative bg-ink-100 border border-ink-100 py-px px-1 rounded-sm gap-0',
