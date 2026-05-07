@@ -31,15 +31,61 @@ export function OpenAIIcon(props: IconProps) {
 }
 
 export function GeminiIcon(props: IconProps) {
+  // Layered render matching the canonical Gemini mark (sourced from
+  // lobe-icons gemini-color.svg). The official treatment is NOT a single
+  // diagonal gradient — it's a `#3186FF` blue base with three additional
+  // colored gradients painted on top with alpha falloff, blending into
+  // the corners. Each layer is the same path shape; the gradients are
+  // partial-opacity overlays that fade to transparent so the underlying
+  // blue shows through. All four paths share the same `d`.
+  const path =
+    'M20.616 10.835a14.147 14.147 0 01-4.45-3.001 14.111 14.111 0 01-3.678-6.452.503.503 0 00-.975 0 14.134 14.134 0 01-3.679 6.452 14.155 14.155 0 01-4.45 3.001c-.65.28-1.318.505-2.002.678a.502.502 0 000 .975c.684.172 1.35.397 2.002.677a14.147 14.147 0 014.45 3.001 14.112 14.112 0 013.679 6.453.502.502 0 00.975 0c.172-.685.397-1.351.677-2.003a14.145 14.145 0 013.001-4.45 14.113 14.113 0 016.453-3.678.503.503 0 000-.975 13.245 13.245 0 01-2.003-.678z';
   return (
     <svg
-      fill="currentColor"
       fillRule="evenodd"
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
-      <path d="M20.616 10.835a14.147 14.147 0 01-4.45-3.001 14.111 14.111 0 01-3.678-6.452.503.503 0 00-.975 0 14.134 14.134 0 01-3.679 6.452 14.155 14.155 0 01-4.45 3.001c-.65.28-1.318.505-2.002.678a.502.502 0 000 .975c.684.172 1.35.397 2.002.677a14.147 14.147 0 014.45 3.001 14.112 14.112 0 013.679 6.453.502.502 0 00.975 0c.172-.685.397-1.351.677-2.003a14.145 14.145 0 013.001-4.45 14.113 14.113 0 016.453-3.678.503.503 0 000-.975 13.245 13.245 0 01-2.003-.678z" />
+      <path d={path} fill="#3186FF" />
+      <path d={path} fill="url(#gemini-green)" />
+      <path d={path} fill="url(#gemini-red)" />
+      <path d={path} fill="url(#gemini-yellow)" />
+      <defs>
+        <linearGradient
+          id="gemini-green"
+          gradientUnits="userSpaceOnUse"
+          x1="7"
+          x2="11"
+          y1="15.5"
+          y2="12"
+        >
+          <stop stopColor="#08B962" />
+          <stop offset="1" stopColor="#08B962" stopOpacity="0" />
+        </linearGradient>
+        <linearGradient
+          id="gemini-red"
+          gradientUnits="userSpaceOnUse"
+          x1="8"
+          x2="11.5"
+          y1="5.5"
+          y2="11"
+        >
+          <stop stopColor="#F94543" />
+          <stop offset="1" stopColor="#F94543" stopOpacity="0" />
+        </linearGradient>
+        <linearGradient
+          id="gemini-yellow"
+          gradientUnits="userSpaceOnUse"
+          x1="3.5"
+          x2="17.5"
+          y1="13.5"
+          y2="12"
+        >
+          <stop stopColor="#FABC12" />
+          <stop offset="0.46" stopColor="#FABC12" stopOpacity="0" />
+        </linearGradient>
+      </defs>
     </svg>
   );
 }
@@ -73,15 +119,43 @@ export function MetaIcon(props: IconProps) {
 }
 
 export function MistralIcon(props: IconProps) {
+  // Multi-band render — Mistral's brand mark is a stepped flame with five
+  // discrete color rows, yellow at top down to red at bottom. Single path
+  // shape preserved; vertical linearGradient with hard stops at each row
+  // boundary produces the five solid bands. Path Y range is 3.4–20.572,
+  // so each band spans ~3.43 in user space (rows 1/5 through 5/5).
+  // Wrapper's `style.color` is ignored for Mistral since the path's fill
+  // resolves through the gradient.
   return (
     <svg
-      fill="currentColor"
       fillRule="evenodd"
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
+      <defs>
+        <linearGradient
+          id="mistral-flame"
+          x1="0"
+          y1="3.4"
+          x2="0"
+          y2="20.572"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop offset="0" stopColor="#FFE008" />
+          <stop offset="0.2" stopColor="#FFE008" />
+          <stop offset="0.2" stopColor="#FFAF00" />
+          <stop offset="0.4" stopColor="#FFAF00" />
+          <stop offset="0.4" stopColor="#FA7A00" />
+          <stop offset="0.6" stopColor="#FA7A00" />
+          <stop offset="0.6" stopColor="#FF4F0F" />
+          <stop offset="0.8" stopColor="#FF4F0F" />
+          <stop offset="0.8" stopColor="#E10500" />
+          <stop offset="1" stopColor="#E10500" />
+        </linearGradient>
+      </defs>
       <path
+        fill="url(#mistral-flame)"
         clipRule="evenodd"
         d="M3.428 3.4h3.429v3.428h3.429v3.429h-.002 3.431V6.828h3.427V3.4h3.43v13.714H24v3.429H13.714v-3.428h-3.428v-3.429h-3.43v3.428h3.43v3.429H0v-3.429h3.428V3.4zm10.286 13.715h3.428v-3.429h-3.427v3.429z"
       />
@@ -104,23 +178,32 @@ export function DeepSeekIcon(props: IconProps) {
 }
 
 export function CohereIcon(props: IconProps) {
+  // Multi-color render — Cohere's actual brand identity is a three-blob
+  // composition. Other vendor icons use `fill="currentColor"` so their color
+  // is set by the wrapper, but Cohere's three blobs each carry their own
+  // hue from the brand palette and would lose identity if collapsed to one.
+  // Per-path fills explicit so the wrapper's `style.color` is ignored here.
   return (
     <svg
-      fill="currentColor"
       fillRule="evenodd"
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
       <path
+        fill="#39594D"
         clipRule="evenodd"
         d="M8.128 14.099c.592 0 1.77-.033 3.398-.703 1.897-.781 5.672-2.2 8.395-3.656 1.905-1.018 2.74-2.366 2.74-4.18A4.56 4.56 0 0018.1 1H7.549A6.55 6.55 0 001 7.55c0 3.617 2.745 6.549 7.128 6.549z"
       />
       <path
+        fill="#C18BD9"
         clipRule="evenodd"
         d="M9.912 18.61a4.387 4.387 0 012.705-4.052l3.323-1.38c3.361-1.394 7.06 1.076 7.06 4.715a5.104 5.104 0 01-5.105 5.104l-3.597-.001a4.386 4.386 0 01-4.386-4.387z"
       />
-      <path d="M4.776 14.962A3.775 3.775 0 001 18.738v.489a3.776 3.776 0 007.551 0v-.49a3.775 3.775 0 00-3.775-3.775z" />
+      <path
+        fill="#FF7759"
+        d="M4.776 14.962A3.775 3.775 0 001 18.738v.489a3.776 3.776 0 007.551 0v-.49a3.775 3.775 0 00-3.775-3.775z"
+      />
     </svg>
   );
 }

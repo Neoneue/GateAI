@@ -176,6 +176,23 @@ const VENDORS: { code: string; name: string; description: string; meta: string; 
   })),
 };
 
+const CHART: { code: string; name: string; description: string; meta: string; steps: SingleTone[] } = {
+  code: 'CMP-001.8 — CHART',
+  name: 'Chart series',
+  description: 'Categorical palette for graph series. Picked by index, not by data content — series N always gets slot N. Bright mid-saturation OKLCH (L 0.62–0.85, C 0.16–0.22); adjacent hues separated by ≥85° so neighbors stay distinct without lightness alternation. See docs/chart-colors.md for the design rationale.',
+  meta: '8 slots · --color-chart-1..8',
+  steps: [
+    { scale: 'blue',   token: 'chart-1', value: 'oklch(0.62\n0.18 255)' },
+    { scale: 'orange', token: 'chart-2', value: 'oklch(0.72\n0.17 50)' },
+    { scale: 'green',  token: 'chart-3', value: 'oklch(0.72\n0.20 145)' },
+    { scale: 'purple', token: 'chart-4', value: 'oklch(0.70\n0.18 290)' },
+    { scale: 'coral',  token: 'chart-5', value: 'oklch(0.65\n0.20 18)' },
+    { scale: 'teal',   token: 'chart-6', value: 'oklch(0.75\n0.13 195)' },
+    { scale: 'amber',   token: 'chart-7', value: 'oklch(0.85\n0.16 88)' },
+    { scale: 'magenta', token: 'chart-8', value: 'oklch(0.68\n0.20 335)' },
+  ],
+};
+
 /* ─── helpers ─────────────────────────────────────────────────────────── */
 
 function PaletteCard({
@@ -298,8 +315,8 @@ export function CMP001Colors() {
         <ArtboardHeader
           code="CMP-001"
           title="Colors"
-          description="OKLCH ramps, 11-step (50–950) Tailwind-aligned naming. Five ramps: ink (neutrals), blue (brand, anchored to the brand mark at blue-700), success/warning/danger (Tailwind v4 green/amber/red OKLCH). Syntax tokens for code surfaces; vendor brands sit outside the contract."
-          parts="5 ramps + syntax + vendor"
+          description="OKLCH ramps, 11-step (50–950) Tailwind-aligned naming. Five ramps: ink (neutrals), blue (brand, anchored to the brand mark at blue-700), success/warning/danger (Tailwind v4 green/amber/red OKLCH). Syntax tokens for code surfaces; vendor brands sit outside the contract; chart series use a standalone 8-slot categorical palette."
+          parts="5 ramps + syntax + vendor + chart"
         />
 
         <div className="flex flex-col gap-7">
@@ -351,6 +368,16 @@ export function CMP001Colors() {
             meta={VENDORS.meta}
             steps={VENDORS.steps}
             background={(step) => (step as VendorTone).value}
+          />
+
+          {/* CMP-001.8 — CHART */}
+          <SingleToneCard
+            code={CHART.code}
+            name={CHART.name}
+            description={CHART.description}
+            meta={CHART.meta}
+            steps={CHART.steps}
+            background={(step) => `var(--color-${(step as SingleTone).token})`}
           />
         </div>
       </div>

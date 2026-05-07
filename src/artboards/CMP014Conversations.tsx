@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Download, Search } from 'lucide-react';
+import { Download, Key, Search, User } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { CompactKpi, CompactSpark } from '@/components/ui/compact-kpi';
@@ -139,7 +139,7 @@ function KpiRail() {
           delta="+6.4%"
           spark={
             <CompactSpark
-              colorVar="var(--color-warning-500)"
+              colorVar="var(--color-chart-7)"
               data={[1740, 2120, 1680, 2040, 2380, 1820, 2240, 1960, 2230]}
             />
           }
@@ -153,7 +153,7 @@ function KpiRail() {
           delta="+1.8"
           spark={
             <CompactSpark
-              colorVar="var(--color-success-500)"
+              colorVar="var(--color-chart-3)"
               data={[13.4, 14.8, 13.1, 14.2, 14.9, 13.6, 14.5, 13.9, 14.2]}
             />
           }
@@ -168,7 +168,7 @@ function KpiRail() {
           deltaInverted
           spark={
             <CompactSpark
-              colorVar="var(--color-blue-500)"
+              colorVar="var(--color-chart-1)"
               data={[0.087, 0.082, 0.090, 0.083, 0.085, 0.080, 0.084, 0.079, 0.082]}
               endDot
             />
@@ -261,6 +261,7 @@ function ConversationsTableSection() {
             aria-label="User"
             className="border-ink-200 bg-white text-ink-900 font-normal"
           >
+            <User className="size-3.5 text-ink-500" strokeWidth={1.75} aria-hidden />
             <SelectValue placeholder="User" />
           </SelectTrigger>
           <SelectContent>
@@ -276,6 +277,7 @@ function ConversationsTableSection() {
             aria-label="Key"
             className="border-ink-200 bg-white text-ink-900 font-normal"
           >
+            <Key className="size-3.5 text-ink-500" strokeWidth={1.75} aria-hidden />
             <SelectValue placeholder="Key" />
           </SelectTrigger>
           <SelectContent>

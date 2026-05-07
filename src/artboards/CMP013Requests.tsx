@@ -1,8 +1,11 @@
 import { useState } from 'react';
 import {
+  CircleDot,
   Copy,
+  Cpu,
   Download,
   ExternalLink,
+  Key,
   Search,
   Shield,
   TriangleAlert,
@@ -466,6 +469,7 @@ function RequestsTableSection() {
               aria-label="Model"
               className="border-ink-200 bg-white text-ink-900 font-normal"
             >
+              <Cpu className="size-3.5 text-ink-500" strokeWidth={1.75} aria-hidden />
               <SelectValue placeholder="Model" />
             </SelectTrigger>
             <SelectContent>
@@ -485,6 +489,7 @@ function RequestsTableSection() {
               aria-label="Key"
               className="border-ink-200 bg-white text-ink-900 font-normal"
             >
+              <Key className="size-3.5 text-ink-500" strokeWidth={1.75} aria-hidden />
               <SelectValue placeholder="Key" />
             </SelectTrigger>
             <SelectContent>
@@ -501,6 +506,7 @@ function RequestsTableSection() {
               aria-label="Status"
               className="border-ink-200 bg-white text-ink-900 font-normal"
             >
+              <CircleDot className="size-3.5 text-ink-500" strokeWidth={1.75} aria-hidden />
               <SelectValue placeholder="Status" />
             </SelectTrigger>
             <SelectContent>

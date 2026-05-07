@@ -48,22 +48,12 @@ export interface VendorMeta {
 export const VENDOR_META: Record<Vendor, VendorMeta> = {
   anthropic: { color: '#D97757', icon: AnthropicIcon, iconColor: '#FFFFFF', label: 'Anthropic' },
   xai:       { color: '#3D3D3D', icon: GrokIcon,      iconColor: '#FFFFFF', label: 'xAI' },
-  google:    { color: '#9B72CB', icon: GeminiIcon,    iconColor: '#FFFFFF', label: 'Google' },
-  openai:    { color: '#10A37F', icon: OpenAIIcon,    iconColor: '#FFFFFF', label: 'OpenAI' },
+  google:    { color: '#4285F4', icon: GeminiIcon,    iconColor: '#FFFFFF', label: 'Google' },
+  openai:    { color: '#3D3D3D', icon: OpenAIIcon,    iconColor: '#FFFFFF', label: 'OpenAI' },
   meta:      { color: '#0064E0', icon: MetaIcon,      iconColor: '#FFFFFF', label: 'Meta' },
   mistral:   { color: '#FA520F', icon: MistralIcon,   iconColor: '#FFFFFF', label: 'Mistral' },
   deepseek:  { color: '#4D6BFE', icon: DeepSeekIcon,  iconColor: '#FFFFFF', label: 'DeepSeek' },
   cohere:    { color: '#FF7759', icon: CohereIcon,    iconColor: '#FFFFFF', label: 'Cohere' },
-};
-
-/**
- * Secondary chart shade for the same vendor — used when a single brand
- * appears as more than one series in a chart (e.g. Anthropic with both
- * Sonnet and Haiku). Hue is preserved; lightness raised for visible
- * separation between primary and secondary at the same scale.
- */
-export const VENDOR_CHART_COLOR_SECONDARY: Partial<Record<Vendor, string>> = {
-  anthropic: 'oklch(0.830 0.075 65)',
 };
 
 export const PROVIDER_ORDER: Vendor[] = [
@@ -78,24 +68,34 @@ export const PROVIDER_ORDER: Vendor[] = [
 ];
 
 /**
- * White provider glyph centered in a saturated brand-color chip — 12px glyph
- * in a 20px rounded square. One treatment everywhere: KPI anchors, modal
- * headers, top-key lists, and data-table model columns.
+ * Provider glyph rendered in its native brand color — no chip wrapper,
+ * no mono override. SVGs in `model-providers.tsx` use `fill="currentColor"`,
+ * so setting CSS color on the icon paints the glyph in the brand hex
+ * from VENDOR_META. One treatment everywhere: KPI anchors, modal
+ * headers, top-key lists, data-table model columns.
+ *
+ * Iteration history (kept here so future sessions don't re-prosecute):
+ * (1) brand chip everywhere → too rainbow on stacked tables.
+ * (2) mono ink-800 icon-only → felt heavy.
+ * (3) brand-tinted bare icon → contrast too low at the time.
+ * (4) split treatment (neutral table / brand standalone) → too much
+ *     black in tables.
+ * (5) brand chip everywhere again — locked for a stretch.
+ * (6) mono ink-600 icon-only — quieter, but lost brand identity.
+ * (7) brand-tinted bare icon — current state. Same shape as (3) with
+ *     a clear reference (Stacklane competitor table) showing this is
+ *     the convention for product/competitor lists. Trade-off accepted:
+ *     low-contrast brands (Cohere #FF7759) sit lighter on white than
+ *     high-contrast ones (xAI #3D3D3D); the brand identity is the
+ *     payoff.
  */
 export function VendorAvatar({ vendor }: { vendor: Vendor }) {
   const meta = VENDOR_META[vendor];
   const Icon = meta.icon;
-  const isLight = meta.color === '#FFFFFF';
   return (
-    <span
-      className="inline-flex items-center justify-center size-5 rounded-[5px] shrink-0"
-      style={{
-        backgroundColor: meta.color,
-        color: meta.iconColor,
-        border: isLight ? '1px solid var(--color-ink-200)' : 'none',
-      }}
-    >
-      <Icon className="size-3" />
-    </span>
+    <Icon
+      className="size-4 shrink-0"
+      style={{ color: meta.color }}
+    />
   );
 }

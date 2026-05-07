@@ -23,13 +23,15 @@ export function DeltaTag({
   note?: string;
   inverted?: boolean;
 }) {
-  const negative = delta.trim().startsWith('-');
+  const trimmed = delta.trim();
+  const negative = trimmed.startsWith('-');
   const Icon = negative ? ArrowDownRight : ArrowUpRight;
   const isGood = inverted ? negative : !negative;
   const toneCls = isGood ? 'text-success-700' : 'text-destructive';
-  // Strip the leading +/- since the directional arrow already carries
-  // sign; redundant prefix adds visual noise to the value.
-  const display = delta.replace(/^[+-]/, '').trim();
+  // Preserve the leading +/- on the displayed value. Redundant with the
+  // arrow on its own, but the explicit sign reinforces the magnitude
+  // direction and is the convention readers expect for tabular deltas.
+  const display = trimmed;
   return (
     <div className="inline-flex items-center gap-1.5">
       <span className={`inline-flex items-center gap-0 ${toneCls}`}>

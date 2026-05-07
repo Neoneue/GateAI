@@ -44,7 +44,6 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import {
-  VENDOR_CHART_COLOR_SECONDARY,
   VENDOR_META,
   VendorAvatar,
   type Vendor,
@@ -179,7 +178,7 @@ function KpiRail() {
           delta="+12.6%"
           spark={
             <CompactSpark
-              colorVar="var(--color-blue-500)"
+              colorVar="var(--color-chart-1)"
               data={[8, 10, 12, 16, 18, 20, 25, 22, 24]}
             />
           }
@@ -194,7 +193,7 @@ function KpiRail() {
           deltaInverted
           spark={
             <CompactSpark
-              colorVar="var(--color-warning-500)"
+              colorVar="var(--color-chart-7)"
               data={[18, 16, 17, 15, 14, 13, 12, 11, 10]}
               endDot
             />
@@ -209,7 +208,7 @@ function KpiRail() {
           delta="+8.7%"
           spark={
             <CompactSpark
-              colorVar="var(--color-success-500)"
+              colorVar="var(--color-chart-3)"
               data={[10, 11, 13, 14, 16, 15, 17, 18, 18]}
             />
           }
@@ -233,51 +232,59 @@ function MiddleRow() {
 /* ─── Request Volume — grouped bars by model ─────────────────────────────── */
 
 const VOLUME_DATA = [
-  { date: 'Apr 21', sonnet: 30, gpt: 24, haiku: 36, llama: 16, mistral: 9 },
-  { date: 'Apr 22', sonnet: 33, gpt: 27, haiku: 40, llama: 19, mistral: 11 },
-  { date: 'Apr 23', sonnet: 38, gpt: 31, haiku: 47, llama: 22, mistral: 14 },
-  { date: 'Apr 24', sonnet: 36, gpt: 33, haiku: 45, llama: 25, mistral: 17 },
-  { date: 'Apr 25', sonnet: 46, gpt: 38, haiku: 53, llama: 29, mistral: 20 },
-  { date: 'Apr 26', sonnet: 50, gpt: 42, haiku: 56, llama: 31, mistral: 22 },
-  { date: 'Apr 27', sonnet: 45, gpt: 36, haiku: 49, llama: 28, mistral: 19 },
+  { date: 'Apr 21', sonnet: 30, gpt: 24, haiku: 36, llama: 16, mistral: 9,  gemini: 22 },
+  { date: 'Apr 22', sonnet: 33, gpt: 27, haiku: 40, llama: 19, mistral: 11, gemini: 25 },
+  { date: 'Apr 23', sonnet: 38, gpt: 31, haiku: 47, llama: 22, mistral: 14, gemini: 29 },
+  { date: 'Apr 24', sonnet: 36, gpt: 33, haiku: 45, llama: 25, mistral: 17, gemini: 27 },
+  { date: 'Apr 25', sonnet: 46, gpt: 38, haiku: 53, llama: 29, mistral: 20, gemini: 33 },
+  { date: 'Apr 26', sonnet: 50, gpt: 42, haiku: 56, llama: 31, mistral: 22, gemini: 36 },
+  { date: 'Apr 27', sonnet: 45, gpt: 36, haiku: 49, llama: 28, mistral: 19, gemini: 31 },
 ];
 
-/* Chart-series → vendor mapping. Each series renders in its vendor's
- * brand `color` from VENDOR_META so the bar visually matches the provider
- * chip elsewhere in the app. When a single vendor appears as more than one
- * series (Anthropic: Sonnet + Haiku), the secondary series opts into
- * VENDOR_CHART_COLOR_SECONDARY for visible separation. */
+/* Chart series order. Each entry picks a slot from the standalone
+ * categorical chart palette (`--color-chart-1..8` in index.css). Default
+ * is positional — series N gets slot N — but a per-series `slot` override
+ * lets us pin specific series to specific colors when there's a brand
+ * mnemonic worth honoring (Anthropic to orange, OpenAI to blue) without
+ * reverting to per-vendor coupling for the rest. */
 type ModelSeries = {
-  key: 'sonnet' | 'gpt' | 'haiku' | 'llama' | 'mistral';
+  key: 'sonnet' | 'gpt' | 'haiku' | 'llama' | 'mistral' | 'gemini';
   label: string;
   vendor: Vendor;
-  /** When true, use the vendor's secondary chart shade instead of the primary. */
-  useSecondaryShade?: boolean;
-  /** When set, overrides the vendor brand color entirely. Use a token
-   *  (`var(--color-ink-500)`) when a series should sit outside the vendor
-   *  palette — e.g., to keep the chart from reading too rainbow. */
-  colorOverride?: string;
+  /** Optional 1-based slot override into the chart palette (1..8). When
+   *  set, this series uses `--color-chart-{slot}` regardless of its
+   *  position in MODEL_LEGEND. Don't repeat slots — uniqueness is the
+   *  caller's responsibility. */
+  slot?: number;
 };
 
 const MODEL_LEGEND: readonly ModelSeries[] = [
-  { key: 'sonnet',  label: 'Claude Sonnet 4.5', vendor: 'anthropic' },
-  { key: 'gpt',     label: 'GPT-4o',            vendor: 'openai',    colorOverride: 'var(--color-ink-500)' },
-  { key: 'haiku',   label: 'Claude Haiku',      vendor: 'anthropic', useSecondaryShade: true },
-  { key: 'llama',   label: 'Llama 3.3',         vendor: 'meta' },
-  { key: 'mistral', label: 'Mistral Large',     vendor: 'mistral' },
+  { key: 'sonnet',  label: 'Claude Sonnet 4.5', vendor: 'anthropic', slot: 2 },  // orange
+  { key: 'gpt',     label: 'GPT-4o',            vendor: 'openai',    slot: 1 },  // blue
+  { key: 'haiku',   label: 'Claude Haiku',      vendor: 'anthropic' },           // chart-3 (green) by index
+  { key: 'llama',   label: 'Llama 3.3',         vendor: 'meta',      slot: 6 },  // teal
+  { key: 'mistral', label: 'Mistral Large',     vendor: 'mistral'   },           // chart-5 (coral) by index
+  { key: 'gemini',  label: 'Gemini 3 Pro',      vendor: 'google',    slot: 4 },  // purple
 ] as const;
 
-function seriesColor(series: ModelSeries): string {
-  if (series.colorOverride) return series.colorOverride;
-  if (series.useSecondaryShade) {
-    const secondary = VENDOR_CHART_COLOR_SECONDARY[series.vendor];
-    if (secondary) return secondary;
-  }
-  return VENDOR_META[series.vendor].color;
+const CHART_PALETTE = [
+  'var(--color-chart-1)',
+  'var(--color-chart-2)',
+  'var(--color-chart-3)',
+  'var(--color-chart-4)',
+  'var(--color-chart-5)',
+  'var(--color-chart-6)',
+  'var(--color-chart-7)',
+  'var(--color-chart-8)',
+] as const;
+
+function seriesColor(series: ModelSeries, index: number): string {
+  if (series.slot) return CHART_PALETTE[(series.slot - 1) % CHART_PALETTE.length];
+  return CHART_PALETTE[index % CHART_PALETTE.length];
 }
 
 const volumeChartConfig: ChartConfig = Object.fromEntries(
-  MODEL_LEGEND.map((m) => [m.key, { label: m.label, color: seriesColor(m) }]),
+  MODEL_LEGEND.map((m, i) => [m.key, { label: m.label, color: seriesColor(m, i) }]),
 ) as ChartConfig;
 
 const RANGE_OPTIONS = [
@@ -313,11 +320,11 @@ export function RequestVolumeCard() {
 
       <CardContent className="flex flex-col gap-4 flex-1 min-h-0">
         <div className="flex items-center flex-wrap gap-x-4 gap-y-2">
-          {MODEL_LEGEND.map((m) => (
+          {MODEL_LEGEND.map((m, i) => (
             <div key={m.key} className="flex items-center gap-2">
               <span
                 className="size-2 rounded-[2px] shrink-0"
-                style={{ backgroundColor: seriesColor(m) }}
+                style={{ backgroundColor: seriesColor(m, i) }}
               />
               <span className="font-sans text-xs text-ink-900">{m.label}</span>
             </div>
@@ -370,11 +377,11 @@ export function RequestVolumeCard() {
                 />
               }
             />
-            {MODEL_LEGEND.map((m) => (
+            {MODEL_LEGEND.map((m, i) => (
               <Bar
                 key={m.key}
                 dataKey={m.key}
-                fill={seriesColor(m)}
+                fill={seriesColor(m, i)}
                 radius={2}
                 maxBarSize={8}
                 isAnimationActive={false}
@@ -433,12 +440,9 @@ export function TopKeysCard() {
         <div className="flex flex-col gap-4 pt-3 border-t border-ink-200">
           {TOP_KEYS.map((k) => (
             <div key={k.label} className="flex items-center justify-between gap-3">
-              <div className="flex items-center min-w-0 gap-2">
-                <VendorAvatar vendor={k.vendor} />
-                <span className="font-sans text-sm font-medium -tracking-[0.14px] text-ink-900">
-                  {k.label}
-                </span>
-              </div>
+              <span className="font-sans text-sm -tracking-[0.14px] text-ink-900">
+                {k.label}
+              </span>
               <span className="font-mono text-sm tabular-nums -tracking-[0.14px] text-ink-900">
                 {k.cost}
               </span>
@@ -470,6 +474,8 @@ const RECENT_REQUESTS: {
   { time: '14:27:30', vendor: 'google',    model: 'gemini-3-pro',      status: 'warn',    code: '408',  tokens: '1,892', latency: '4.08s', cost: '$0.009' },
   { time: '14:27:18', vendor: 'anthropic', model: 'claude-opus-4.7',   status: 'danger',  code: '500',  tokens: '0',     latency: '0.18s', cost: '$0.000' },
   { time: '14:26:54', vendor: 'meta',      model: 'llama-4.2-405b',    status: 'success', code: '200',  tokens: '3,204', latency: '1.65s', cost: '$0.006' },
+  { time: '14:26:32', vendor: 'mistral',   model: 'mistral-large-3',   status: 'success', code: '200',  tokens: '2,517', latency: '0.94s', cost: '$0.005' },
+  { time: '14:26:08', vendor: 'cohere',    model: 'command-r-plus',    status: 'success', code: '200',  tokens: '1,842', latency: '0.71s', cost: '$0.004' },
 ];
 
 const STATUS_BADGE: Record<RequestStatus, {
