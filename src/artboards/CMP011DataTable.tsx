@@ -279,7 +279,7 @@ export function CMP011DataTable() {
                             className="inline-flex items-center justify-center size-4 rounded-[4px] shrink-0"
                             style={{
                               backgroundColor: meta.color,
-                              color: meta.iconColor,
+                              color: '#FFFFFF',
                               border: isLight ? '1px solid var(--color-ink-200)' : 'none',
                             }}
                           >

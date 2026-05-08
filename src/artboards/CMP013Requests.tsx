@@ -1,23 +1,20 @@
 import { useState } from 'react';
+import { CopyButton } from '@/components/ui/copy-button';
 import {
-  Copy,
   Download,
   ExternalLink,
   Search,
-  Shield,
   TriangleAlert,
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
-  Sheet,
-  SheetContent,
-  SheetFooter,
-  SheetHeader,
-} from '@/components/ui/sheet';
+  Dialog,
+  DialogContent,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { TablePaginationFooter } from '@/components/ui/table-pagination-footer';
-import { SegmentedPill } from '@/components/ui/segmented-pill';
 import {
   Select,
   SelectContent,
@@ -130,7 +127,7 @@ export function CMP013Requests({
 
 function PageHeader() {
   return (
-    <div className="flex items-end justify-between gap-6">
+    <div className="flex items-start justify-between gap-6">
       <div className="flex flex-col gap-2 max-w-1/2">
         {/* h2 — see CMP012 PageHeader note. */}
         <h2 className="font-sans font-medium text-ink-900 text-3xl/9 -tracking-[1px] text-balance m-0">
@@ -185,7 +182,7 @@ const HERO_TICKS = ['13:30', '13:40', '13:50', '14:00', '14:10', '14:20', '14:30
 
 const heroChartConfig = {
   requests: {
-    label: 'Requests',
+    label: 'Requests/min',
     color: 'var(--color-blue-700)',
   },
 } satisfies ChartConfig;
@@ -214,7 +211,7 @@ function HeroMetricCard() {
         <div className="grid grid-cols-[auto_auto_auto] items-center gap-x-2 gap-y-2 shrink-0">
           <BreakdownRow label="Success" value="8,182" tone="success" />
           <BreakdownRow label="Errors"  value="47"    tone="danger" />
-          <BreakdownRow label="Slow >1s" value="12"   tone="warning" />
+          <BreakdownRow label={'Slow > 1s'} value="12" tone="warning" />
         </div>
       </div>
 
@@ -353,11 +350,11 @@ function BreakdownRow({
  * through the rows-per-page / page-nav strip — matches the reference. */
 
 const RANGE_OPTIONS = [
-  { value: '5m',  label: '5m'  },
-  { value: '30m', label: '30m' },
-  { value: '1h',  label: '1h'  },
-  { value: '24h', label: '24h' },
-  { value: '7d',  label: '7d'  },
+  { value: '5m',  label: 'Last 5 min'    },
+  { value: '30m', label: 'Last 30 min'   },
+  { value: '1h',  label: 'Last hour'     },
+  { value: '24h', label: 'Last 24 hours' },
+  { value: '7d',  label: 'Last 7 days'   },
 ];
 
 /* ─── Requests log table ─────────────────────────────────────────────────── */
@@ -431,7 +428,7 @@ function RequestsTableSection() {
             sortable-table convention is single-row, and the filter set
             fits in the gray well at this width. */}
         <div className="flex items-center gap-2 py-3 px-4">
-          <div className="relative w-60 min-w-0 shrink-0">
+          <div className="relative w-72 min-w-0 shrink-0">
             <Search
               className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-ink-500"
               strokeWidth={1.75}
@@ -449,15 +446,22 @@ function RequestsTableSection() {
             />
           </div>
 
-          <SegmentedPill
-            size="sm"
-            value={range}
-            onValueChange={setRange}
-            options={RANGE_OPTIONS}
-            aria-label="Time range"
-          />
-
-          <div className="grow" />
+          <Select value={range} onValueChange={setRange}>
+            <SelectTrigger
+              size="sm"
+              aria-label="Time range"
+              className="border-ink-200 bg-white text-ink-900 font-normal"
+            >
+              <SelectValue placeholder="Time range" />
+            </SelectTrigger>
+            <SelectContent>
+              {RANGE_OPTIONS.map((opt) => (
+                <SelectItem key={opt.value} value={opt.value}>
+                  {opt.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
 
           <Select value={model} onValueChange={setModel}>
             <SelectTrigger
@@ -507,7 +511,7 @@ function RequestsTableSection() {
               <SelectItem value="200">200 OK</SelectItem>
               <SelectItem value="4xx">4xx</SelectItem>
               <SelectItem value="5xx">5xx</SelectItem>
-              <SelectItem value="slow">Slow &gt; 1s</SelectItem>
+              <SelectItem value="slow">{'Slow > 1s'}</SelectItem>
             </SelectContent>
           </Select>
 
@@ -627,7 +631,7 @@ function RequestsTableSection() {
           onRowsPerPageChange={setRowsPerPage}
         />
     </div>
-    <RequestDetailSheet
+    <RequestDetailDialog
       row={selectedRow}
       onOpenChange={(open) => {
         if (!open) setSelectedRow(null);
@@ -637,19 +641,18 @@ function RequestsTableSection() {
   );
 }
 
-/* ─── Request detail sheet ─────────────────────────────────────────────────
+/* ─── Request detail dialog ────────────────────────────────────────────────
  * Drill-in panel opened from a row click. Mirrors the table's per-row data
  * (model, vendor, key, latency, cost, tokens) and adds context the row
  * doesn't carry (provider name, endpoint, cache status).
- * Tabs scaffold for future depth (Messages / Security / Audit) — only
- * Summary is wired today.
  *
- * Layout uses the project's Sheet primitive — right-docked drawer at
- * sm:max-w-2xl (640px). Sheet owns its own width and gap, so this wrapper
- * doesn't pass either through.
+ * Centered modal (Dialog primitive) matching CMP-014's ConversationDetail
+ * pattern. sm:max-w-3xl gives the tabbed body breathing room without
+ * overpowering the dimmed page behind. max-h-[90vh] keeps the modal inside
+ * the viewport on shorter screens; the tabbed area scrolls internally.
  * ────────────────────────────────────────────────────────────────────── */
 
-function RequestDetailSheet({
+function RequestDetailDialog({
   row,
   onOpenChange,
 }: {
@@ -657,11 +660,11 @@ function RequestDetailSheet({
   onOpenChange: (open: boolean) => void;
 }) {
   return (
-    <Sheet open={!!row} onOpenChange={onOpenChange}>
-      <SheetContent>
+    <Dialog open={!!row} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-3xl max-h-[90vh] gap-0 p-0 overflow-hidden flex flex-col">
         {row ? <RequestDetailBody row={row} /> : null}
-      </SheetContent>
-    </Sheet>
+      </DialogContent>
+    </Dialog>
   );
 }
 
@@ -676,49 +679,45 @@ function RequestDetailBody({ row }: { row: RequestRow }) {
   const [activeTab, setActiveTab] = useState('messages');
   return (
     <>
-      <SheetHeader>
-        <span className="font-mono text-sm uppercase tracking-[0.1em] font-medium text-ink-500">
-          REQUEST
-        </span>
-        <div className="flex items-center gap-2 pr-8">
-          <span className="font-mono text-lg font-medium text-ink-900">
-            {requestId}
+      {/* Top section — eyebrow + DialogTitle + status badge + provenance.
+          `pr-12` on the title block clears the absolute DialogClose X. */}
+      <div className="flex flex-col gap-3 px-5 pt-5">
+        <div className="flex flex-col gap-1 pr-12">
+          <span className="font-mono text-xs uppercase tracking-[0.1em] font-medium text-ink-500">
+            Request
           </span>
-          <Badge variant={badge.variant}>
-            <StatusDot kind={badge.dot} />
-            {row.code}
-          </Badge>
+          <div className="flex items-center gap-2">
+            {/* DialogTitle override — keep the default `font-heading` recipe
+                replaced with the request-id mono treatment. */}
+            <DialogTitle className="font-mono text-lg leading-none font-medium text-ink-900 m-0">
+              {requestId}
+            </DialogTitle>
+            <Badge variant={badge.variant}>
+              <StatusDot kind={badge.dot} />
+              {row.code}
+            </Badge>
+          </div>
+          <p className="font-mono text-xs text-ink-500 -tracking-[0.01em] text-pretty m-0">
+            Apr 22, 2026 · {row.time} UTC · part of conversation{' '}
+            <button
+              type="button"
+              className="text-ink-700 bg-transparent p-0 outline-none underline decoration-ink-200 underline-offset-2 hover:decoration-ink-500 focus-visible:decoration-ink-500"
+            >
+              {row.conversation}
+            </button>
+          </p>
         </div>
-        <p className="font-mono text-xs text-ink-500 -tracking-[0.01em] text-pretty">
-          Apr 22, 2026 · {row.time} UTC · part of conversation{' '}
-          <button
-            type="button"
-            className="text-ink-700 bg-transparent p-0 outline-none underline decoration-ink-300 underline-offset-2 hover:decoration-ink-500 focus-visible:decoration-ink-500"
-          >
-            {row.conversation}
-          </button>
-        </p>
-      </SheetHeader>
+      </div>
 
-      {/* Persistent KPI rail — promoted out of the (former) Summary tab so
-          the most-referenced facts (latency/cost/tokens) stay visible
-          regardless of which tab is active. Single bordered container
-          with `before:` pseudo-element hairlines between tiles, same
-          pattern as CMP-012's main KPI rail. */}
-      <KpiRail row={row} />
+      {/* Persistent KPI rail — sits below the header, above the tabs. */}
+      <div className="px-5 pt-4">
+        <KpiRail row={row} />
+      </div>
 
-      {/* Hairline divider — separates the persistent rail from the tabbed
-          inspection area. -mx-4 bleeds the rule past SheetContent's p-4 so
-          it spans the full panel width. */}
-      <div className="-mx-4 border-t border-ink-200" aria-hidden />
-
-      {/* Scrollable tabbed body. `flex-1 min-h-0` grows to fill available
-          space between the persistent header (above) and the SheetFooter
-          (below); `overflow-y-auto` enables scroll when content exceeds
-          available height (e.g., audit tab with 5 guardrail checks + 6
-          anchor-proof rows). `-mx-4 px-4` lets the scrollbar appear at the
-          panel edge while content stays at the content-box width. */}
-      <div className="flex-1 min-h-0 overflow-y-auto -mx-4 px-4">
+      {/* Scrollable tabbed body. `flex-1 min-h-0` fills the remaining modal
+          height between the header above and the footer below;
+          `overflow-y-auto` enables scroll when content overflows. */}
+      <div className="flex-1 min-h-0 overflow-y-auto px-5 pt-4 pb-4">
         {/* Tabs default to Messages so the prompt/response — the load-bearing
             content of any request inspection — is visible on first open. */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="gap-4">
@@ -770,35 +769,24 @@ function RequestDetailBody({ row }: { row: RequestRow }) {
             </div>
           </TabsContent>
 
-          {/* Audit tab folds in security checks + anchor proof. Both are
-              compliance-flavored — Security = runtime guardrail checks
-              (did this request pass policy at runtime?); Audit = cryptographic
-              proof (can we prove it happened immutably?). Section eyebrows
-              distinguish the two halves. */}
-          <TabsContent value="audit" className="flex flex-col gap-6">
-            <section className="flex flex-col gap-2">
-              <h3 className="font-mono text-xs uppercase tracking-[0.1em] font-medium text-ink-500 m-0">
-                Guardrail checks
-              </h3>
-              <SecurityPanel row={row} />
-            </section>
-            <section className="flex flex-col gap-2">
-              <h3 className="font-mono text-xs uppercase tracking-[0.1em] font-medium text-ink-500 m-0">
-                Anchor proof
-              </h3>
-              <AuditPanel />
-            </section>
+          {/* Audit tab — runtime guardrail checks (did this request pass
+              policy at runtime?). */}
+          <TabsContent value="audit">
+            <SecurityPanel row={row} />
           </TabsContent>
         </Tabs>
       </div>
 
-      <SheetFooter className="sm:justify-end">
+      <div className="flex items-center justify-end gap-2 px-5 py-3 border-t border-ink-200">
         {activeTab === 'audit' ? (
           <>
-            <Button variant="outline" size="sm">
-              <Copy data-icon="inline-start" aria-hidden />
-              Copy Proof
-            </Button>
+            <CopyButton
+              mode="label"
+              size="sm"
+              text="Copy Proof"
+              value={`proof_${requestId}`}
+              label="audit proof"
+            />
             <Button variant="default" size="sm">
               View on DE
               <ExternalLink data-icon="inline-end" aria-hidden />
@@ -806,17 +794,20 @@ function RequestDetailBody({ row }: { row: RequestRow }) {
           </>
         ) : (
           <>
-            <Button variant="outline" size="sm">
-              <Copy data-icon="inline-start" aria-hidden />
-              Copy ID
-            </Button>
+            <CopyButton
+              mode="label"
+              size="sm"
+              text="Copy ID"
+              value={requestId}
+              label="request ID"
+            />
             <Button variant="default" size="sm">
               Open Conversation
               <ExternalLink data-icon="inline-end" aria-hidden />
             </Button>
           </>
         )}
-      </SheetFooter>
+      </div>
     </>
   );
 }
@@ -981,64 +972,6 @@ function SecurityCheckRow({
         <StatusDot kind="success" />
         {status}
       </Badge>
-    </div>
-  );
-}
-
-/* Audit tab — anchored proof report. Reuses Summary's DetailRow primitive
-   so both tabs read as the same family of detail tables (single bordered
-   card, label / value, hairline separators). All values are static demo
-   data; in production these come from an anchoring service tied to the
-   request id. */
-function AuditPanel() {
-  return (
-    <div className="rounded-sm border border-ink-200 overflow-hidden">
-      <DetailRow
-        label="Leaf hash"
-        value={
-          <span className="font-mono text-sm text-ink-900 -tracking-[0.14px]">
-            0xa1b8c3d7…b4a6c1d8
-          </span>
-        }
-      />
-      <DetailRow
-        label="Anchor root"
-        value={
-          <span className="font-mono text-sm text-ink-900 -tracking-[0.14px]">
-            0x7f3a91c4…d8e2b6f1
-          </span>
-        }
-      />
-      <DetailRow
-        label="Block"
-        value={
-          <span className="font-mono text-sm tabular-nums text-ink-900 -tracking-[0.14px]">
-            #18,472,911
-          </span>
-        }
-      />
-      <DetailRow
-        label="Quorum"
-        value={
-          <div className="flex items-center gap-2">
-            <Shield className="size-3.5 text-ink-500" strokeWidth={1.75} aria-hidden />
-            <span className="font-sans text-sm text-ink-900">3-of-3 verified</span>
-          </div>
-        }
-      />
-      <DetailRow
-        label="Anchored"
-        value={<span className="font-sans text-sm text-ink-900">2s after request</span>}
-      />
-      <DetailRow
-        label="Verified"
-        value={
-          <Badge variant="success">
-            <StatusDot kind="success" />
-            tamper-evident
-          </Badge>
-        }
-      />
     </div>
   );
 }

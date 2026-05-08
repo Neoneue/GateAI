@@ -48,9 +48,9 @@ export function DashboardChrome({
   children,
 }: DashboardChromeProps) {
   return (
-    <div className="flex flex-col w-full overflow-hidden rounded-sm bg-white shadow-(--shadow-border)">
+    <div className="flex flex-col w-full min-h-[900px] overflow-hidden rounded-sm bg-white shadow-(--shadow-border)">
       <ScreenHead urlSlug={urlSlug} eyebrow={screenEyebrow} />
-      <div className="flex flex-row min-h-0">
+      <div className="flex flex-row flex-1 min-h-0">
         <Sidebar
           sections={SIDEBAR_SECTIONS}
           activeId={activeNavId}

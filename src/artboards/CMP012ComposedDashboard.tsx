@@ -120,7 +120,7 @@ export function CMP012ComposedDashboard({
 
 function PageHeader() {
   return (
-    <div className="flex items-end justify-between gap-6">
+    <div className="flex items-start justify-between gap-6">
       <div className="flex flex-col gap-2 max-w-1/2">
         {/* h2 (not h1) — the artboard's ArtboardHeader already emits the
             outer h1; this is the in-surface page title and reads as h2
@@ -324,7 +324,8 @@ export function RequestVolumeCard() {
           {MODEL_LEGEND.map((m, i) => (
             <div key={m.key} className="flex items-center gap-2">
               <span
-                className="size-2 rounded-[2px] shrink-0"
+                aria-hidden
+                className="size-2 rounded-xs shrink-0"
                 style={{ backgroundColor: seriesColor(m, i) }}
               />
               <span className="font-sans text-xs text-ink-900">{m.label}</span>
@@ -426,7 +427,7 @@ export function TopKeysCard() {
           <button
             type="button"
             aria-label="More options for Top Keys"
-            className="relative inline-flex items-center justify-center size-6 rounded-xs text-ink-500 transition-[color,background-color,transform] duration-150 ease-out hover:text-ink-900 hover:bg-ink-100 active:translate-y-px motion-reduce:transition-none motion-reduce:active:translate-y-0 after:absolute after:-inset-2 after:content-['']"
+            className="relative inline-flex items-center justify-center size-6 rounded-xs text-ink-500 outline-none touch-manipulation transition-[color,background-color,transform,box-shadow] duration-150 ease-out hover:text-ink-900 hover:bg-ink-100 focus-visible:ring-3 focus-visible:ring-ring/50 active:translate-y-px motion-reduce:transition-none motion-reduce:active:translate-y-0 after:absolute after:-inset-2 after:content-['']"
           >
             <MoreHorizontal className="size-4" strokeWidth={1.75} aria-hidden />
           </button>
@@ -583,10 +584,10 @@ type QuickAction = {
 };
 
 const QUICK_ACTIONS: QuickAction[] = [
-  { icon: RefreshCw,  title: 'Rotate API key',         subtitle: 'Last rotated 6 days ago' },
+  { icon: RefreshCw,  title: 'Rotate API Key',         subtitle: 'Last rotated 6 days ago' },
   { icon: Sparkles,   title: 'Upgrade to Enterprise',  subtitle: 'Unlock custom rate limits', accent: true },
-  { icon: Shield,     title: 'Review security events', subtitle: '3 events in the last hour' },
-  { icon: BookOpen,   title: 'Read integration guide', subtitle: 'SDK quickstart' },
+  { icon: Shield,     title: 'Review Security Events', subtitle: '3 events in the last hour' },
+  { icon: BookOpen,   title: 'Read Integration Guide', subtitle: 'SDK quickstart' },
 ];
 
 function QuickActionsRow() {
@@ -627,7 +628,7 @@ function QuickActionItem({ icon: Icon, title, subtitle, accent }: QuickAction) {
   return (
     <button
       type="button"
-      className={`w-full flex items-center gap-3 p-4 text-left transition-[background-color,transform] duration-150 ease-out active:scale-[0.98] motion-reduce:transition-none motion-reduce:active:scale-100 ${sectionCls}`}
+      className={`relative w-full flex items-center gap-3 p-4 text-left outline-none touch-manipulation transition-[background-color,transform,box-shadow] duration-150 ease-out focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:ring-inset active:scale-[0.98] motion-reduce:transition-none motion-reduce:active:scale-100 ${sectionCls}`}
     >
       <span
         className={`shrink-0 size-8 inline-flex items-center justify-center rounded-xs ${chipCls}`}

@@ -1,12 +1,5 @@
 import { useState } from 'react';
-import { ChevronRight, Download, Plus, TriangleAlert } from 'lucide-react';
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  XAxis,
-  YAxis,
-} from 'recharts';
+import { Download, Plus, TriangleAlert } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -17,12 +10,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-  type ChartConfig,
-} from '@/components/ui/chart';
 import { CompactKpi, CompactSpark } from '@/components/ui/compact-kpi';
 import { SegmentedPill } from '@/components/ui/segmented-pill';
 import { Sparkline } from '@/components/ui/sparkline';
@@ -55,9 +42,8 @@ import { DashboardChrome } from './_shared/DashboardChrome';
  *   1. PageHeader               (title + actions)
  *   2. KpiRail                  (4 sparkline tiles in a single bordered row)
  *   3. CriticalRiskBanner       (inline danger-50 strip with actions)
- *   4. MiddleRow                (Attack categories col-span-2 + API key
- *                                risk scores col-span-1)
- *   5. ThreatTrendCard          (full-width stacked bar chart)
+ *   4. MiddleRow                (API key risk scores + Attack categories,
+ *                                50/50 split)
  *
  * Color palette: only ink-* / blue-* / chart-1..8 / success / warning /
  * danger / --destructive. No raw hex.
@@ -85,7 +71,7 @@ export function CMP015Security({
         <div className="flex flex-col gap-3">
           <SectionHeader
             code="CMP-015.1 — SECURITY SURFACE"
-            hint="v-shell · KPI rail · risk banner · attack categories · key risk scores · threat trend"
+            hint="v-shell · KPI rail · risk banner · attack categories · key risk scores"
           />
 
           <DashboardChrome
@@ -101,7 +87,6 @@ export function CMP015Security({
             <KpiRail />
             <CriticalRiskBanner />
             <MiddleRow />
-            <ThreatTrendCard />
           </DashboardChrome>
         </div>
       </div>
@@ -113,7 +98,7 @@ export function CMP015Security({
 
 function PageHeader() {
   return (
-    <div className="flex items-end justify-between gap-6">
+    <div className="flex items-start justify-between gap-6">
       <div className="flex flex-col gap-2 max-w-1/2">
         {/* h2 — see CMP012 PageHeader note. ArtboardHeader emits the outer
             h1; the in-surface page title reads as h2 in the document
@@ -127,11 +112,11 @@ function PageHeader() {
       </div>
       <div className="flex items-center gap-3 shrink-0">
         <Button variant="outline" size="default">
-          <Download data-icon="inline-start" aria-hidden />
+          <Download data-icon="inline-start" aria-hidden="true" />
           Export report
         </Button>
         <Button variant="default" size="default">
-          <Plus data-icon="inline-start" aria-hidden />
+          <Plus data-icon="inline-start" aria-hidden="true" />
           New policy
         </Button>
       </div>
@@ -192,7 +177,7 @@ function KpiRail() {
         <CompactKpi
           flat
           title="Avg scan latency"
-          value="18 ms"
+          value={"18 ms"}
           delta="-8.6%"
           deltaInverted
           spark={
@@ -212,25 +197,22 @@ function KpiRail() {
 
 function CriticalRiskBanner() {
   return (
-    <div role="status" aria-label="Security alert" className="rounded-sm bg-danger-50 border border-danger-200 p-4">
+    <div role="alert" className="rounded-sm bg-danger-50 border border-danger-200 p-4">
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-3 min-w-0 max-w-2/3">
           <span
             className="inline-flex items-center justify-center size-8 shrink-0 rounded-full bg-destructive text-white"
-            aria-hidden
+            aria-hidden="true"
           >
             <TriangleAlert className="size-4" strokeWidth={2} />
           </span>
           <p className="font-sans text-sm text-ink-900 -tracking-[0.14px] text-pretty m-0">
             <span className="font-medium text-destructive">Critical risk</span>
             <span className="text-ink-500"> · </span>
-            <span className="font-mono">sk-cg-…7a3</span> exceeded detection threshold (14 events / hr). All requests receiving enhanced scanning, rate-limited to 1 req/10s.
+            <span className="font-mono">sk-cg-…7a3</span> exceeded detection threshold (14&nbsp;events&nbsp;/&nbsp;hr). All requests receiving enhanced scanning, rate-limited to 1&nbsp;req&nbsp;/&nbsp;10s.
           </p>
         </div>
         <div className="flex items-center gap-2 shrink-0">
-          <Button variant="outline" size="sm">
-            Investigate
-          </Button>
           <Button variant="default" size="sm">
             Quarantine key
           </Button>
@@ -244,7 +226,7 @@ function CriticalRiskBanner() {
 
 function MiddleRow() {
   return (
-    <div className="grid grid-cols-3 gap-3">
+    <div className="grid grid-cols-2 gap-3">
       <ApiKeyRiskScoresCard />
       <AttackCategoriesCard />
     </div>
@@ -280,7 +262,7 @@ function AttackCategoriesCard() {
   const [range, setRange] = useState('7d');
   const max = Math.max(...ATTACK_CATEGORIES.map((c) => c.count));
   return (
-    <Card className="col-span-1 min-w-0">
+    <Card className="min-w-0">
       <CardHeader>
         <CardTitle className="font-sans text-base font-medium -tracking-[0.25px] text-ink-900">
           Attack categories
@@ -313,8 +295,7 @@ function AttackCategoriesCard() {
                 aria-valuemin={0}
                 aria-valuemax={max}
                 aria-label={`${cat.label}: ${cat.count} detections`}
-                className="flex-1 rounded-full bg-ink-100 overflow-hidden"
-                style={{ height: 6 }}
+                className="flex-1 h-1.5 rounded-full bg-ink-100 overflow-hidden"
               >
                 <div
                   className="h-full rounded-full"
@@ -354,24 +335,24 @@ const RISK_ROWS: RiskRow[] = [
 ];
 
 const TIER_BADGE: Record<RiskTier, {
-  variant: 'destructive' | 'warning' | 'info';
-  dot: 'danger' | 'warning' | 'info';
+  variant: 'destructive' | 'warning' | 'neutral';
+  dot: 'danger' | 'warning' | 'neutral';
 }> = {
-  critical: { variant: 'destructive', dot: 'danger'  },
-  elevated: { variant: 'warning',     dot: 'warning' },
-  normal:   { variant: 'info',        dot: 'info'    },
+  critical: { variant: 'destructive', dot: 'danger'   },
+  elevated: { variant: 'warning',     dot: 'warning'  },
+  normal:   { variant: 'neutral',     dot: 'neutral'  },
 };
 
 function ApiKeyRiskScoresCard() {
   return (
-    <div className="col-span-2 flex flex-col min-w-0 rounded-sm overflow-hidden bg-white shadow-(--shadow-border)">
+    <div className="flex flex-col min-w-0 rounded-sm overflow-hidden bg-white shadow-(--shadow-border)">
       <div className="flex items-start justify-between gap-3 p-4">
         <div className="flex flex-col gap-1 min-w-0">
           <h3 className="font-sans text-base font-medium -tracking-[0.25px] text-ink-900 m-0">
             API key risk scores
           </h3>
           <p className="font-sans text-sm/5 tracking-tight text-ink-500 m-0">
-            Decays on 1h half-life · elevated keys get enhanced scanning
+            Decays on 1 h half-life · elevated keys get enhanced scanning
           </p>
         </div>
         <Select defaultValue="all">
@@ -399,7 +380,6 @@ function ApiKeyRiskScoresCard() {
               <TableHead className="text-right whitespace-nowrap">Score</TableHead>
               <TableHead className="text-right whitespace-nowrap">Events</TableHead>
               <TableHead className="text-right whitespace-nowrap">Trend</TableHead>
-              <TableHead className="w-12" aria-hidden />
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -436,10 +416,11 @@ function ApiKeyRiskScoresCard() {
                     {row.events}
                   </TableCell>
                   <TableCell className="text-right">
-                    <Sparkline points={row.trend} tone={row.tier} />
-                  </TableCell>
-                  <TableCell className="text-right text-ink-400">
-                    <ChevronRight className="size-4 inline-block" aria-hidden />
+                    <Sparkline
+                      points={row.trend}
+                      tone={row.tier}
+                      smooth={row.tier === 'normal'}
+                    />
                   </TableCell>
                 </TableRow>
               );
@@ -450,154 +431,3 @@ function ApiKeyRiskScoresCard() {
   );
 }
 
-/* ─── Threat trend card (stacked bar chart) ──────────────────────────────── */
-
-type ThreatBucket = {
-  date: string;
-  low: number;
-  elevated: number;
-  critical: number;
-};
-
-// 14 daily buckets, Apr 14 – Apr 27 2026. Distribution: most days mostly
-// low (2-5), elevated 0-2, critical 0-1. Apr 22 peak: low 4 / elevated
-// 3 / critical 2. Total across all days/series ≈ 67.
-const THREAT_TREND: ThreatBucket[] = [
-  { date: 'Apr 14', low: 3, elevated: 0, critical: 0 }, // 3
-  { date: 'Apr 15', low: 2, elevated: 1, critical: 0 }, // 3
-  { date: 'Apr 16', low: 4, elevated: 0, critical: 0 }, // 4
-  { date: 'Apr 17', low: 3, elevated: 1, critical: 1 }, // 5
-  { date: 'Apr 18', low: 2, elevated: 0, critical: 0 }, // 2
-  { date: 'Apr 19', low: 3, elevated: 1, critical: 0 }, // 4
-  { date: 'Apr 20', low: 4, elevated: 1, critical: 0 }, // 5
-  { date: 'Apr 21', low: 5, elevated: 2, critical: 1 }, // 8
-  { date: 'Apr 22', low: 4, elevated: 3, critical: 2 }, // 9 ← peak
-  { date: 'Apr 23', low: 3, elevated: 2, critical: 1 }, // 6
-  { date: 'Apr 24', low: 4, elevated: 1, critical: 0 }, // 5
-  { date: 'Apr 25', low: 3, elevated: 1, critical: 0 }, // 4
-  { date: 'Apr 26', low: 4, elevated: 1, critical: 1 }, // 6
-  { date: 'Apr 27', low: 2, elevated: 1, critical: 0 }, // 3
-];                                                       // total = 67
-
-const THREAT_RANGE_OPTIONS = [
-  { value: '7d',  label: '7d'  },
-  { value: '14d', label: '14d' },
-  { value: '30d', label: '30d' },
-];
-
-const threatChartConfig = {
-  low:      { label: 'Low',      color: 'var(--color-chart-1)' },
-  elevated: { label: 'Elevated', color: 'var(--color-chart-7)' },
-  critical: { label: 'Critical', color: 'var(--color-chart-2)' },
-} satisfies ChartConfig;
-
-const THREAT_LEGEND = [
-  { key: 'low',      label: 'Low',      color: 'var(--color-chart-1)' },
-  { key: 'elevated', label: 'Elevated', color: 'var(--color-chart-7)' },
-  { key: 'critical', label: 'Critical', color: 'var(--color-chart-2)' },
-] as const;
-
-function ThreatTrendCard() {
-  const [range, setRange] = useState('14d');
-  return (
-    <Card className="min-w-0">
-      <CardHeader>
-        <CardTitle className="font-sans text-base font-medium -tracking-[0.25px] text-ink-900">
-          Threat trend
-        </CardTitle>
-        <CardDescription>Daily threat volume · 67 threats over 14 days</CardDescription>
-        <CardAction>
-          <SegmentedPill
-            size="sm"
-            options={THREAT_RANGE_OPTIONS}
-            value={range}
-            onValueChange={setRange}
-          />
-        </CardAction>
-      </CardHeader>
-
-      <CardContent className="flex flex-col gap-4">
-        <div className="flex items-center flex-wrap gap-x-4 gap-y-2">
-          {THREAT_LEGEND.map((s) => (
-            <div key={s.key} className="flex items-center gap-2">
-              <span
-                className="size-2 rounded-[2px] shrink-0"
-                style={{ backgroundColor: s.color }}
-              />
-              <span className="font-sans text-xs text-ink-900">{s.label}</span>
-            </div>
-          ))}
-        </div>
-
-        <ChartContainer
-          config={threatChartConfig}
-          className="aspect-auto h-[176px] w-full"
-        >
-          <BarChart
-            accessibilityLayer
-            data={THREAT_TREND}
-            margin={{ top: 8, right: 8, left: 0, bottom: 0 }}
-            barCategoryGap="20%"
-          >
-            <CartesianGrid
-              horizontal
-              vertical={false}
-              stroke="var(--color-ink-200)"
-              strokeDasharray="3 3"
-            />
-            <XAxis
-              dataKey="date"
-              tickLine={false}
-              axisLine={false}
-              tickMargin={8}
-              height={28}
-              tick={{ fontSize: 11, fill: 'var(--color-ink-500)' }}
-            />
-            <YAxis
-              tickLine={false}
-              axisLine={false}
-              tickMargin={8}
-              tick={{ fontSize: 11, fill: 'var(--color-ink-500)' }}
-              width={28}
-            />
-            <ChartTooltip
-              cursor={{ fill: 'transparent' }}
-              content={
-                <ChartTooltipContent
-                  indicator="dot"
-                  labelFormatter={(_, payload) =>
-                    payload?.[0]?.payload?.date ?? ''
-                  }
-                />
-              }
-            />
-            <Bar
-              dataKey="low"
-              stackId="threats"
-              fill="var(--color-chart-1)"
-              radius={2}
-              maxBarSize={12}
-              isAnimationActive={false}
-            />
-            <Bar
-              dataKey="elevated"
-              stackId="threats"
-              fill="var(--color-chart-7)"
-              radius={2}
-              maxBarSize={12}
-              isAnimationActive={false}
-            />
-            <Bar
-              dataKey="critical"
-              stackId="threats"
-              fill="var(--color-chart-2)"
-              radius={2}
-              maxBarSize={12}
-              isAnimationActive={false}
-            />
-          </BarChart>
-        </ChartContainer>
-      </CardContent>
-    </Card>
-  );
-}

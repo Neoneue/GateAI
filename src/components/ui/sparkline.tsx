@@ -13,11 +13,13 @@ export function Sparkline({
   tone,
   width = 80,
   height = 24,
+  smooth = false,
 }: {
   points: number[];
   tone?: SparklineTone;
   width?: number;
   height?: number;
+  smooth?: boolean;
 }) {
   const w = width;
   const h = height;
@@ -34,34 +36,56 @@ export function Sparkline({
     x: padX + i * step,
     y: padY + (h - padY * 2) - ((p - min) / range) * (h - padY * 2),
   }));
-  const linePath = coords
-    .map((c, i) => `${i === 0 ? 'M' : 'L'} ${c.x.toFixed(1)},${c.y.toFixed(1)}`)
-    .join(' ');
   const last = coords[coords.length - 1];
+  // Catmull-Rom → cubic Bezier for `smooth`; tension 0.5 softens jagged data
+  // without overshoot. Straight M/L segments otherwise.
+  const buildSegments = () => {
+    if (!smooth || coords.length < 2) {
+      return coords
+        .map((c, i) => `${i === 0 ? 'M' : 'L'} ${c.x.toFixed(1)},${c.y.toFixed(1)}`)
+        .join(' ');
+    }
+    const t = 0.5;
+    let d = `M ${coords[0].x.toFixed(1)},${coords[0].y.toFixed(1)}`;
+    for (let i = 0; i < coords.length - 1; i++) {
+      const p0 = coords[i - 1] ?? coords[i];
+      const p1 = coords[i];
+      const p2 = coords[i + 1];
+      const p3 = coords[i + 2] ?? p2;
+      const cp1x = p1.x + ((p2.x - p0.x) / 6) * t;
+      const cp1y = p1.y + ((p2.y - p0.y) / 6) * t;
+      const cp2x = p2.x - ((p3.x - p1.x) / 6) * t;
+      const cp2y = p2.y - ((p3.y - p1.y) / 6) * t;
+      d += ` C ${cp1x.toFixed(1)},${cp1y.toFixed(1)} ${cp2x.toFixed(1)},${cp2y.toFixed(1)} ${p2.x.toFixed(1)},${p2.y.toFixed(1)}`;
+    }
+    return d;
+  };
+  const linePath = buildSegments();
   const areaPath =
     `M ${coords[0].x.toFixed(1)},${h} ` +
-    coords.map((c) => `L ${c.x.toFixed(1)},${c.y.toFixed(1)}`).join(' ') +
+    `L ${coords[0].x.toFixed(1)},${coords[0].y.toFixed(1)} ` +
+    linePath.replace(/^M [^ ]+ /, '') +
     ` L ${last.x.toFixed(1)},${h} Z`;
 
+  // Chart palette only — sparklines and charts share `--color-chart-1..8`
+  // (plus `--color-ink-500` for neutral). Don't mix in semantic ramps
+  // (`destructive`, `warning-*`, `blue-*`, `ink-700`) — that breaks the
+  // "one palette per project" rule.
   let stroke: string;
   let fill: string;
-  let fillOpacity = 0.6;
+  let fillOpacity = 0.12;
   if (tone === 'critical') {
-    stroke = 'var(--color-destructive)';
-    fill = 'var(--color-destructive)';
-    fillOpacity = 0.12;
+    stroke = 'var(--color-chart-5)';
+    fill = 'var(--color-chart-5)';
   } else if (tone === 'elevated') {
-    stroke = 'var(--color-warning-700)';
-    fill = 'var(--color-warning-700)';
-    fillOpacity = 0.12;
+    stroke = 'var(--color-chart-2)';
+    fill = 'var(--color-chart-2)';
   } else if (tone === 'normal') {
     stroke = 'var(--color-ink-500)';
-    fill = 'var(--color-ink-300)';
-    fillOpacity = 0.6;
+    fill = 'var(--color-ink-500)';
   } else {
-    const isUp = points[points.length - 1] >= points[0];
-    stroke = isUp ? 'var(--color-blue-700)' : 'var(--color-ink-700)';
-    fill = isUp ? 'var(--color-blue-100)' : 'var(--color-ink-200)';
+    stroke = 'var(--color-chart-1)';
+    fill = 'var(--color-chart-1)';
   }
 
   return (

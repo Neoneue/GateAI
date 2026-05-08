@@ -9,6 +9,14 @@ import {
   MistralIcon,
   OpenAIIcon,
 } from './model-providers';
+import {
+  AzureIcon,
+  BedrockIcon,
+  FireworksIcon,
+  GroqIcon,
+  TogetherIcon,
+  VertexIcon,
+} from './marketplace-providers';
 
 /* ─────────────────────────────────────────────────────────────────────────
  * Vendor meta — canonical mapping of model providers to brand color, icon,
@@ -41,19 +49,18 @@ export type Vendor =
 export interface VendorMeta {
   color: string;
   icon: IconType;
-  iconColor: string;
   label: string;
 }
 
 export const VENDOR_META: Record<Vendor, VendorMeta> = {
-  anthropic: { color: '#D97757', icon: AnthropicIcon, iconColor: '#FFFFFF', label: 'Anthropic' },
-  xai:       { color: '#3D3D3D', icon: GrokIcon,      iconColor: '#FFFFFF', label: 'xAI' },
-  google:    { color: '#4285F4', icon: GeminiIcon,    iconColor: '#FFFFFF', label: 'Google' },
-  openai:    { color: '#3D3D3D', icon: OpenAIIcon,    iconColor: '#FFFFFF', label: 'OpenAI' },
-  meta:      { color: '#0064E0', icon: MetaIcon,      iconColor: '#FFFFFF', label: 'Meta' },
-  mistral:   { color: '#FA520F', icon: MistralIcon,   iconColor: '#FFFFFF', label: 'Mistral' },
-  deepseek:  { color: '#4D6BFE', icon: DeepSeekIcon,  iconColor: '#FFFFFF', label: 'DeepSeek' },
-  cohere:    { color: '#FF7759', icon: CohereIcon,    iconColor: '#FFFFFF', label: 'Cohere' },
+  anthropic: { color: '#D97757', icon: AnthropicIcon, label: 'Anthropic' },
+  xai:       { color: '#3D3D3D', icon: GrokIcon,      label: 'xAI' },
+  google:    { color: '#4285F4', icon: GeminiIcon,    label: 'Google' },
+  openai:    { color: '#3D3D3D', icon: OpenAIIcon,    label: 'OpenAI' },
+  meta:      { color: '#0064E0', icon: MetaIcon,      label: 'Meta' },
+  mistral:   { color: '#FA520F', icon: MistralIcon,   label: 'Mistral' },
+  deepseek:  { color: '#4D6BFE', icon: DeepSeekIcon,  label: 'DeepSeek' },
+  cohere:    { color: '#FF7759', icon: CohereIcon,    label: 'Cohere' },
 };
 
 export const PROVIDER_ORDER: Vendor[] = [
@@ -89,13 +96,91 @@ export const PROVIDER_ORDER: Vendor[] = [
  *     high-contrast ones (xAI #3D3D3D); the brand identity is the
  *     payoff.
  */
-export function VendorAvatar({ vendor }: { vendor: Vendor }) {
+export function VendorAvatar({ vendor, decorative = false }: { vendor: Vendor; decorative?: boolean }) {
   const meta = VENDOR_META[vendor];
   const Icon = meta.icon;
+  // Wrapper carries `shrink-0` so flex parents behave the same as when the
+  // primitive returned a bare `<Icon shrink-0 />`. The sr-only label means
+  // every consumer gets vendor identity announced without injecting custom
+  // sr-only spans at the call site. Pass `decorative` when the surrounding
+  // chrome already carries an aggregated label (e.g. a row of avatars
+  // labeled "Anthropic, OpenAI, Mistral" at the cell level).
   return (
-    <Icon
-      className="size-4 shrink-0"
-      style={{ color: meta.color }}
-    />
+    <span className="inline-flex shrink-0 items-center">
+      <Icon
+        className="size-4"
+        style={{ color: meta.color }}
+        aria-hidden="true"
+      />
+      {!decorative ? <span className="sr-only">{meta.label}</span> : null}
+    </span>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * Marketplace providers — AI-infrastructure hosts that serve other
+ * vendors' models (AWS Bedrock, Azure OpenAI, Google Vertex, Together,
+ * Fireworks, Groq). Distinct from `Vendor` (the model creator); a model
+ * may be created by Anthropic and routed via Bedrock or Vertex. Both
+ * meta maps share the same shape so consumers can dispatch on context
+ * (creator vs. host) without restructuring rendering code.
+ *
+ * Brand hex literals carry the same exception VENDOR_META does: external
+ * brand colors are not design-system tokens. Color picks below match each
+ * brand's primary mark hue — the dominant fill in the `*-color.svg` mark
+ * sourced from lobe-icons (mid-stop for gradients, primary fill otherwise).
+ * Mono marks (Groq) take the brand's accent orange.
+ * ───────────────────────────────────────────────────────────────────────── */
+
+export type MarketplaceProvider =
+  | 'bedrock'
+  | 'azure'
+  | 'vertex'
+  | 'together'
+  | 'fireworks'
+  | 'groq';
+
+export interface MarketplaceMeta {
+  color: string;
+  icon: IconType;
+  label: string;
+}
+
+export const MARKETPLACE_META: Record<MarketplaceProvider, MarketplaceMeta> = {
+  bedrock:   { color: '#3D8FFF', icon: BedrockIcon,   label: 'AWS Bedrock' },
+  azure:     { color: '#0078D4', icon: AzureIcon,     label: 'Azure OpenAI' },
+  vertex:    { color: '#4285F4', icon: VertexIcon,    label: 'Google Vertex' },
+  together:  { color: '#EF2CC1', icon: TogetherIcon,  label: 'Together AI' },
+  fireworks: { color: '#5019C5', icon: FireworksIcon, label: 'Fireworks AI' },
+  groq:      { color: '#F55036', icon: GroqIcon,      label: 'Groq' },
+};
+
+/**
+ * Marketplace-provider glyph rendered in its native brand color — same
+ * locked treatment as VendorAvatar: bare icon at size-4, no chip wrapper,
+ * no tone prop, sr-only label unless `decorative`. Multi-color SVGs
+ * (Bedrock gradient, Azure four-layer, Vertex Google-blue tonal stack,
+ * Together three-disk, Fireworks per-path) ignore wrapper `style.color`
+ * because their fills are pinned. Mono SVGs (Groq) are painted by the
+ * wrapper.
+ */
+export function MarketplaceAvatar({
+  provider,
+  decorative = false,
+}: {
+  provider: MarketplaceProvider;
+  decorative?: boolean;
+}) {
+  const meta = MARKETPLACE_META[provider];
+  const Icon = meta.icon;
+  return (
+    <span className="inline-flex shrink-0 items-center">
+      <Icon
+        className="size-4"
+        style={{ color: meta.color }}
+        aria-hidden="true"
+      />
+      {!decorative ? <span className="sr-only">{meta.label}</span> : null}
+    </span>
   );
 }

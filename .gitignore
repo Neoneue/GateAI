@@ -26,6 +26,7 @@ dist-ssr
 # Local Claude Code state
 .claude/settings.local.json
 .tmp/
+.tmp-screenshots/
 
 # Vendored agent bundle (sourced separately)
 front-end-developer/

@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { Copy } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { CopyButton } from '@/components/ui/copy-button';
 import { cn } from '@/lib/utils';
 
 /* ─────────────────────────────────────────────────────────────────────────
@@ -134,8 +133,14 @@ export function CodeCardTabs({
   className,
 }: CodeCardTabsProps) {
   const interactive = typeof onChange === 'function';
+  // We do NOT declare `role="tablist"`/`role="tab"` here. The full WAI-ARIA
+  // tab pattern requires arrow-key focus management, Home/End jumps,
+  // tabIndex={-1} on inactive tabs, and `role="tabpanel"` + aria-controls
+  // wiring on the content. Half-implementing the pattern is worse than not
+  // claiming it — screen readers announce these as plain buttons (which is
+  // honest), and `aria-pressed` carries the active state.
   return (
-    <div className={cn('flex items-center gap-1', className)} role="tablist">
+    <div className={cn('flex items-center gap-1', className)}>
       {items.map((item) => {
         const isActive = item === active;
         const sharedClass = cn(
@@ -153,8 +158,7 @@ export function CodeCardTabs({
             <button
               key={item}
               type="button"
-              role="tab"
-              aria-selected={isActive}
+              aria-pressed={isActive}
               onClick={() => onChange?.(item)}
               className={sharedClass}
             >
@@ -163,12 +167,7 @@ export function CodeCardTabs({
           );
         }
         return (
-          <span
-            key={item}
-            role="tab"
-            aria-selected={isActive}
-            className={sharedClass}
-          >
+          <span key={item} className={sharedClass}>
             {item}
           </span>
         );
@@ -177,28 +176,38 @@ export function CodeCardTabs({
   );
 }
 
-/* ── Copy button — thin wrapper so the icon + label stays consistent ─────── */
+/* ── Copy button — thin wrapper around the shared CopyButton primitive ──── */
 
+/**
+ * Code-card-flavoured copy button. Now a thin shim over `<CopyButton
+ * mode="label">` — the export name is preserved so existing call sites
+ * (CMP-008c, CMP-016) keep working without churn, but every use picks up
+ * the unified copy/feedback/toast behaviour from `copy-button.tsx`.
+ */
 export function CodeCardCopyButton({
-  label = 'Copy',
-  onClick,
+  value,
+  label,
   className,
 }: {
-  label?: string;
-  onClick?: () => void;
+  /** Text written to the clipboard. */
+  value: string;
+  /** Toast fragment. Full toast: `Copied ${label} to clipboard`. */
+  label: string;
   className?: string;
 }) {
   return (
-    <Button
-      variant="outline"
-      size="xs"
-      onClick={onClick}
-      className={cn('h-6 gap-1 px-2 font-medium text-ink-600 hover:text-ink-900', className)}
-    >
-      <Copy data-icon="inline-start" strokeWidth={1.8} />
-      {label}
-    </Button>
+    <CopyButton
+      mode="label"
+      value={value}
+      label={label}
+      className={className}
+    />
   );
+}
+
+/** Flatten a `CodeLine[]` to a plain string for clipboard writes. */
+export function linesToString(lines: CodeLine[]): string {
+  return lines.map((line) => line.map((t) => t.text).join('')).join('\n');
 }
 
 /* ── Code body ───────────────────────────────────────────────────────────── */
@@ -224,7 +233,7 @@ export function CodeBlock({
       : density === 'compact'
       ? 'px-4 py-3'
       : 'px-5 py-4';
-  const text_cls = density === 'inline' ? 'text-xs/4' : 'text-sm/5';
+  const text_cls = density === 'inline' ? 'text-xs/4' : 'text-xs/5';
   return (
     <div
       data-slot="code-block"

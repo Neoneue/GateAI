@@ -73,10 +73,24 @@ function SheetContent({
 }: DialogPrimitive.Popup.Props & {
   showCloseButton?: boolean
 }) {
+  // Dev-only guard: Base UI wires `aria-labelledby` from <SheetTitle> onto
+  // the popup, so a missing title leaves the dialog unnamed for AT. CMP-013
+  // shipped without one before being caught in audit; this warns next time.
+  const popupRef = React.useRef<HTMLDivElement>(null);
+  React.useEffect(() => {
+    if (!import.meta.env.DEV) return;
+    const popup = popupRef.current;
+    if (popup && !popup.hasAttribute('aria-labelledby')) {
+      console.warn(
+        '[Sheet] SheetContent rendered without a <SheetTitle>. Add one (wrap in sr-only if the design has no visible title) so the dialog has an accessible name.'
+      );
+    }
+  }, []);
   return (
     <SheetPortal>
       <SheetOverlay />
       <DialogPrimitive.Popup
+        ref={popupRef}
         data-slot="sheet-content"
         className={cn(
           // Anchoring: full viewport height, flush against the right edge.

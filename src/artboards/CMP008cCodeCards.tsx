@@ -7,6 +7,7 @@ import {
   CodeCardHeader,
   CodeCardTabs,
   TerminalCard,
+  linesToString,
   type CodeLine,
 } from '@/components/ui/code-card';
 import { ArtboardHeader, SectionHeader } from './_shared/ArtboardHeader';
@@ -214,7 +215,7 @@ function HeroCard() {
       <CodeCard elevation="raised" className="flex-1 shrink basis-0">
         <CodeCardHeader>
           <CodeCardTabs items={['curl', 'node', 'python']} active="curl" />
-          <CodeCardCopyButton />
+          <CodeCardCopyButton value={linesToString(CURL_LINES)} label="cURL snippet" />
         </CodeCardHeader>
         <CodeBlock lines={CURL_LINES} />
       </CodeCard>
@@ -285,7 +286,7 @@ function LightTabbedCard() {
     <CodeCard elevation="raised">
       <CodeCardHeader>
         <CodeCardTabs items={['curl', 'node', 'python']} active="curl" />
-        <CodeCardCopyButton />
+        <CodeCardCopyButton value={linesToString(CURL_LINES)} label="cURL snippet" />
       </CodeCardHeader>
       <CodeBlock lines={CURL_LINES} />
     </CodeCard>

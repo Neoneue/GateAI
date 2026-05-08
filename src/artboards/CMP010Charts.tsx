@@ -6,7 +6,9 @@ import {
 } from 'lucide-react';
 import {
   Bar,
+  BarChart,
   CartesianGrid,
+  Cell,
   ComposedChart,
   Line,
   XAxis,
@@ -20,8 +22,8 @@ import {
   type ChartConfig,
 } from '@/components/ui/chart';
 import {
-  VENDOR_CHART_COLOR_SECONDARY,
   VENDOR_META,
+  VendorAvatar,
   type Vendor,
 } from '@/components/icons/vendor-meta';
 import { ArtboardHeader, SectionHeader } from './_shared/ArtboardHeader';
@@ -250,11 +252,15 @@ type ModelRow = {
   key: 'sonnet' | 'gpt4o' | 'haiku' | 'llama' | 'mistral';
   label: string;
   vendor: Vendor;
-  /** When true, use the vendor's secondary chart shade instead of the primary. */
-  useSecondaryShade?: boolean;
+  /** Optional chart-palette token to override the vendor brand color. Use
+   *  for twin-vendor disambiguation (e.g. Anthropic Sonnet keeps chart-2
+   *  orange; Haiku takes chart-7 amber so the two Anthropic series read
+   *  as distinct slots). Must be a `--color-chart-N` token — never a
+   *  semantic ramp. */
+  colorOverride?: string;
   cost: string;
+  costValue: number;
   delta: string;
-  bars: number;
 };
 
 const MODELS: readonly ModelRow[] = [
@@ -263,77 +269,60 @@ const MODELS: readonly ModelRow[] = [
     label: 'Claude Sonnet 4.5',
     vendor: 'anthropic',
     cost: '$487.32',
+    costValue: 487.32,
     delta: '+12.4%',
-    bars: 18,
   },
   {
     key: 'gpt4o',
     label: 'GPT-4o',
     vendor: 'openai',
     cost: '$312.18',
+    costValue: 312.18,
     delta: '+5.2%',
-    bars: 12,
   },
   {
     key: 'haiku',
     label: 'Claude Haiku',
     vendor: 'anthropic',
-    useSecondaryShade: true,
+    colorOverride: 'var(--color-chart-7)',
     cost: '$285.40',
+    costValue: 285.40,
     delta: '-2.1%',
-    bars: 10,
   },
   {
     key: 'llama',
     label: 'Llama 3.3',
     vendor: 'meta',
     cost: '$134.62',
+    costValue: 134.62,
     delta: '+18.6%',
-    bars: 7,
   },
   {
     key: 'mistral',
     label: 'Mistral Large',
     vendor: 'mistral',
     cost: '$28.30',
+    costValue: 28.30,
     delta: '+44.2%',
-    bars: 3,
   },
 ] as const;
 
 function seriesColor(model: ModelRow): string {
-  if (model.useSecondaryShade) {
-    const secondary = VENDOR_CHART_COLOR_SECONDARY[model.vendor];
-    if (secondary) return secondary;
-  }
-  return VENDOR_META[model.vendor].color;
+  return model.colorOverride ?? VENDOR_META[model.vendor].color;
 }
 
-const MICRO_BAR_HEIGHTS = [
-  54, 52, 56, 50, 53, 51, 49, 48, 47, 46, 44, 45, 43, 42, 41, 40, 39, 38, // sonnet
-  37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 27, 26, // gpt4o
-  25, 24, 24, 23, 22, 22, 21, 20, 20, 19, // haiku
-  18, 17, 17, 16, 15, 14, 13, // llama
-  11, 9, 7, // mistral
-  5, 4, // tail (ink-200)
-];
+const costChartConfig = {
+  cost: { label: 'Cost' },
+} satisfies ChartConfig;
+
+const COST_CHART_DATA = MODELS.map((m) => ({
+  label: m.label,
+  cost: m.costValue,
+  fill: seriesColor(m),
+}));
+
 
 function CostByModelCard() {
-  let modelIdx = 0;
-  let consumed = 0;
-  const bars = MICRO_BAR_HEIGHTS.map((h, i) => {
-    if (modelIdx < MODELS.length && consumed >= MODELS[modelIdx].bars) {
-      modelIdx += 1;
-      consumed = 0;
-    }
-    const color =
-      modelIdx < MODELS.length
-        ? seriesColor(MODELS[modelIdx])
-        : 'var(--color-ink-200)';
-    consumed += 1;
-    return { i, h, color };
-  });
-
   return (
     <Card className="w-[720px] rounded-sm p-4 gap-4">
       <div className="flex items-center justify-between">
@@ -359,27 +348,56 @@ function CostByModelCard() {
         <DeltaTag delta="+12.6%" note="vs last 7d" />
       </div>
 
-      <div className="flex items-end h-14 w-full gap-2 shrink-0 mt-4">
-        {bars.map((b) => (
-          <div
-            key={b.i}
-            className="w-[5px] rounded-[1px] shrink-0"
-            style={{ height: `${b.h}px`, backgroundColor: b.color }}
+      <ChartContainer
+        config={costChartConfig}
+        className="aspect-auto h-[176px] w-full mt-2"
+      >
+        <BarChart
+          accessibilityLayer
+          data={COST_CHART_DATA}
+          margin={{ top: 8, right: 8, left: 0, bottom: 0 }}
+          barCategoryGap="20%"
+        >
+          <CartesianGrid
+            horizontal
+            vertical={false}
+            stroke="var(--color-ink-200)"
+            strokeDasharray="3 3"
           />
-        ))}
-      </div>
-
-      <div className="flex items-center flex-wrap gap-4">
-        {MODELS.map((m) => (
-          <div key={m.key} className="flex items-center gap-2">
-            <span
-              className="size-2 rounded-full shrink-0"
-              style={{ backgroundColor: seriesColor(m) }}
-            />
-            <span className="text-xs text-ink-500">{m.label}</span>
-          </div>
-        ))}
-      </div>
+          <XAxis
+            dataKey="label"
+            tickLine={false}
+            axisLine={false}
+            tickMargin={8}
+            height={28}
+            interval={0}
+            tick={{ fontSize: 11, fill: 'var(--color-ink-500)' }}
+          />
+          <YAxis
+            tickLine={false}
+            axisLine={false}
+            tickMargin={8}
+            tick={{ fontSize: 11, fill: 'var(--color-ink-500)' }}
+            tickFormatter={(v: number) => `$${v}`}
+            width={48}
+          />
+          <ChartTooltip
+            cursor={{ fill: 'transparent' }}
+            content={
+              <ChartTooltipContent
+                indicator="dot"
+                labelFormatter={(label) => label}
+                formatter={(value) => `$${(value as number).toFixed(2)}`}
+              />
+            }
+          />
+          <Bar dataKey="cost" radius={0} maxBarSize={48} isAnimationActive={false}>
+            {COST_CHART_DATA.map((d) => (
+              <Cell key={d.label} fill={d.fill} />
+            ))}
+          </Bar>
+        </BarChart>
+      </ChartContainer>
 
       <div className="flex flex-col w-full">
         <div className="flex items-center py-2 border-b border-ink-200">
@@ -401,13 +419,10 @@ function CostByModelCard() {
             }
           >
             <div className="grow flex items-center gap-2">
-              <span
-                className="size-2 rounded-full shrink-0"
-                style={{ backgroundColor: seriesColor(m) }}
-              />
+              <VendorAvatar vendor={m.vendor} />
               <span className="text-sm text-ink-900">{m.label}</span>
             </div>
-            <div className="w-30 text-right shrink-0 text-sm font-medium tabular-nums text-ink-900">
+            <div className="w-30 text-right shrink-0 text-sm tabular-nums text-ink-900">
               {m.cost}
             </div>
             <div className="w-35 flex items-center justify-end gap-1 shrink-0">

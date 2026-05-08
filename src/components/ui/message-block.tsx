@@ -128,6 +128,7 @@ export function MessageBlock({
       <Bubble
         type={onClick ? 'button' : undefined}
         onClick={onClick}
+        aria-pressed={onClick ? selected : undefined}
         className={bubbleClasses}
       >
         {body}

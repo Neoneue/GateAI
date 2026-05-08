@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
-import { Activity, ArrowRight, Copy, Download, ExternalLink, Search, Shield, TriangleAlert, Wrench } from 'lucide-react';
+import { Activity, ArrowRight, Download, Search, TriangleAlert, Wrench } from 'lucide-react';
+import { CopyButton } from '@/components/ui/copy-button';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { CompactKpi, CompactSpark } from '@/components/ui/compact-kpi';
 import { Input } from '@/components/ui/input';
 import { MessageBlock, type MessageRole } from '@/components/ui/message-block';
 import { TablePaginationFooter } from '@/components/ui/table-pagination-footer';
-import { SegmentedPill } from '@/components/ui/segmented-pill';
 import {
   Dialog,
   DialogContent,
@@ -28,7 +28,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { VENDOR_META, VendorAvatar, type Vendor } from '@/components/icons/vendor-meta';
+import { VendorAvatar, type Vendor } from '@/components/icons/vendor-meta';
 import { ArtboardHeader, SectionHeader } from './_shared/ArtboardHeader';
 import { DashboardChrome } from './_shared/DashboardChrome';
 
@@ -91,7 +91,7 @@ export function CMP014Conversations({
 
 function PageHeader() {
   return (
-    <div className="flex items-end justify-between gap-6">
+    <div className="flex items-start justify-between gap-6">
       <div className="flex flex-col gap-2 max-w-1/2">
         {/* h2 — see CMP012 PageHeader note. */}
         <h2 className="font-sans font-medium text-ink-900 text-3xl/9 -tracking-[1px] text-balance m-0">
@@ -207,7 +207,7 @@ type ConversationRow = {
 };
 
 const CONVERSATION_ROWS: ConversationRow[] = [
-  { title: 'Why was the SEPA transfer 0x4a3e flagged for review yesterday?', conversationId: 'cnv_aurora_42',   initiator: 'service-eu-payments',  turns:  9, reqs: 14, vendors: ['anthropic'],                      tokens: '4,051',   cost: '$0.1042', status: 'active',    updated: '14:28:04', duration: '3m 53s'  },
+  { title: 'Why was the SEPA transfer 0x4a3e flagged for review yesterday?', conversationId: 'cnv_aurora_42',   initiator: 'service-eu-payments',  turns:  3, reqs:  7, vendors: ['anthropic'],                      tokens: '4,051',   cost: '$0.1042', status: 'active',    updated: '14:28:04', duration: '3m 53s'  },
   { title: 'Draft a 4-step onboarding sequence for new fin clients',         conversationId: 'cnv_skylark_18', initiator: 'kira.tan@acme.io',     turns:  6, reqs: 11, vendors: ['anthropic', 'openai'],            tokens: '8,114',   cost: '$0.4218', status: 'active',    updated: '14:22:11', duration: '5m 12s'  },
   { title: 'Classify the attached document and click KYC if needed',         conversationId: 'cnv_meridian_07',initiator: 'service-kyc-bot',      turns:  3, reqs:  4, vendors: ['google'],                         tokens: '2,104',   cost: '$0.3104', status: 'active',    updated: '14:15:22', duration: '0m 47s'  },
   { title: 'Investigate the variance in YOY revenue between segments',       conversationId: 'cnv_orion_70',   initiator: 'mateus.silva@ebux.com',turns: 18, reqs: 38, vendors: ['anthropic', 'openai', 'mistral'], tokens: '52,810',  cost: '$0.5841', status: 'completed', updated: '14:02:48', duration: '14m 06s' },
@@ -252,18 +252,20 @@ function ConversationsTableSection() {
             className="pl-8 placeholder:text-ink-500"
           />
         </div>
-        <SegmentedPill
-          size="sm"
-          value={scope}
-          onValueChange={setScope}
-          options={[
-            { value: 'all',    label: 'All' },
-            { value: 'active', label: 'Active' },
-            { value: 'failed', label: 'Failed' },
-          ]}
-          aria-label="Conversation scope"
-        />
-        <div className="grow" />
+        <Select value={scope} onValueChange={setScope}>
+          <SelectTrigger
+            size="sm"
+            aria-label="Conversation scope"
+            className="border-ink-200 bg-white text-ink-900 font-normal"
+          >
+            <SelectValue placeholder="Scope" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All conversations</SelectItem>
+            <SelectItem value="active">Active</SelectItem>
+            <SelectItem value="failed">Failed</SelectItem>
+          </SelectContent>
+        </Select>
         <Select value={user} onValueChange={setUser}>
           <SelectTrigger
             size="sm"
@@ -307,24 +309,34 @@ function ConversationsTableSection() {
             <TableHead className="whitespace-nowrap">Models</TableHead>
             <TableHead className="text-right whitespace-nowrap">Tokens</TableHead>
             <TableHead className="text-right whitespace-nowrap">Cost</TableHead>
-            <TableHead className="whitespace-nowrap">Status</TableHead>
             <TableHead className="whitespace-nowrap">Updated</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {CONVERSATION_ROWS.map((row) => {
-            const badge = STATUS_BADGE[row.status];
             return (
-              <TableRow key={row.conversationId} className="transition-colors duration-150 ease-out motion-reduce:transition-none hover:bg-ink-50">
+              <TableRow
+                key={row.conversationId}
+                role="button"
+                tabIndex={0}
+                aria-label={`Inspect conversation ${row.title}`}
+                onClick={() => setSelectedRow(row)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    setSelectedRow(row);
+                  }
+                }}
+                className="cursor-pointer transition-colors duration-150 ease-out motion-reduce:transition-none hover:bg-ink-50 focus-visible:bg-ink-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500"
+              >
                 <TableCell className="max-w-[360px]">
                   <div className="flex flex-col gap-1 min-w-0">
-                    <button
-                      type="button"
-                      onClick={() => setSelectedRow(row)}
-                      className="font-sans text-sm text-ink-900 -tracking-[0.14px] truncate text-left bg-transparent p-0 outline-none underline decoration-ink-300 underline-offset-2 hover:decoration-ink-500 focus-visible:decoration-ink-500 focus-visible:ring-2 focus-visible:ring-ink-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded-xs"
+                    <span
+                      title={row.title}
+                      className="font-sans text-sm text-ink-900 -tracking-[0.14px] truncate"
                     >
                       {row.title}
-                    </button>
+                    </span>
                     <span className="font-mono text-xs text-ink-500 -tracking-[0.01em]">
                       {row.conversationId}
                     </span>
@@ -353,12 +365,6 @@ function ConversationsTableSection() {
                 </TableCell>
                 <TableCell className="text-right whitespace-nowrap font-mono text-sm tabular-nums text-ink-800">
                   {row.cost}
-                </TableCell>
-                <TableCell className="whitespace-nowrap">
-                  <Badge variant={badge.variant}>
-                    <StatusDot kind={badge.dot} />
-                    {badge.label}
-                  </Badge>
                 </TableCell>
                 <TableCell className="whitespace-nowrap font-mono text-sm tabular-nums text-ink-500 -tracking-[0.14px]">
                   {row.updated}
@@ -474,23 +480,16 @@ function ConversationDetailBody({ row }: { row: ConversationRow }) {
             {row.initiator}
           </span>
           <div className="ml-auto flex items-center gap-2">
-            <Button variant="outline" size="sm">
-              <Copy data-icon="inline-start" aria-hidden />
-              Copy ID
-            </Button>
-            <Button variant="outline" size="sm">
-              <Shield data-icon="inline-start" aria-hidden />
-              Audit anchor
-              <ExternalLink data-icon="inline-end" aria-hidden />
-            </Button>
+            <CopyButton
+              mode="label"
+              size="sm"
+              text="Copy ID"
+              value={row.conversationId}
+              label="conversation ID"
+            />
           </div>
         </div>
 
-        <blockquote className="font-sans text-sm text-ink-800 text-pretty m-0">
-          <span aria-hidden>“</span>
-          {row.title}
-          <span aria-hidden>”</span>
-        </blockquote>
       </div>
 
       {/* Persistent KPI rail — 5 tiles at the conversation scope. Same
@@ -675,17 +674,20 @@ function ConversationMessagesPanel({
 
   // Auto-scroll the matching message into view when the active selection
   // changes. `block: 'nearest'` is a no-op if the message is already
-  // visible, so this is safe to fire on every change (even when the click
-  // originated inside this panel — the matched element is already at the
-  // user's cursor and stays put). Smooth behavior respects
-  // prefers-reduced-motion automatically in modern browsers.
+  // visible, so this is safe to fire on every change. Behavior collapses
+  // to `auto` when the user prefers reduced motion — `scrollIntoView`'s
+  // smooth mode honors the media query in modern engines but we gate it
+  // explicitly so the contract is in the call site, not browser-implicit.
   const scrollRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (!activeRequestId || !scrollRef.current) return;
     const el = scrollRef.current.querySelector(
       `[data-request-id="${activeRequestId}"]`,
     );
-    el?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    const reduceMotion =
+      typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    el?.scrollIntoView({ block: 'nearest', behavior: reduceMotion ? 'auto' : 'smooth' });
   }, [activeRequestId]);
 
   return (
@@ -701,7 +703,7 @@ function ConversationMessagesPanel({
           {turnCount} {turnCount === 1 ? 'turn' : 'turns'}
         </span>
       </div>
-      <div ref={scrollRef} className="flex flex-col gap-4 p-4 overflow-y-auto min-h-0 flex-1">
+      <div ref={scrollRef} className="flex flex-col gap-4 p-4 overflow-y-auto overscroll-contain min-h-0 flex-1">
         {CONVERSATION_MESSAGES.map((m, i) => {
           const selected = !!m.requestId && m.requestId === activeRequestId;
           // Bubble tone stays default regardless of trace status — warn
@@ -809,7 +811,10 @@ function RequestTracePanel({
     const el = scrollRef.current.querySelector(
       `[data-request-id="${activeRequestId}"]`,
     );
-    el?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    const reduceMotion =
+      typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    el?.scrollIntoView({ block: 'nearest', behavior: reduceMotion ? 'auto' : 'smooth' });
   }, [activeRequestId]);
 
   return (
@@ -834,7 +839,7 @@ function RequestTracePanel({
           and last node centers, accounting for the row's vertical padding.
           The wrapper carries the scroll so long traces flow without
           forcing the modal itself to scroll. */}
-      <div ref={scrollRef} className="px-4 py-2 overflow-y-auto min-h-0 flex-1">
+      <div ref={scrollRef} className="px-4 py-2 overflow-y-auto overscroll-contain min-h-0 flex-1">
         {/* Per-row track segments are rendered inside TraceItem (see
             below) so geometry stays correct regardless of row content
             height. First/last items truncate the segment at the node
@@ -923,6 +928,7 @@ function TraceItem({
     <button
       type="button"
       onClick={onSelect}
+      aria-pressed={selected}
       data-request-id={event.requestId}
       className={`relative flex gap-3 py-3 pl-3 pr-2 -mx-2 text-left outline-none transition-colors duration-150 ease-out motion-reduce:transition-none focus-visible:ring-2 focus-visible:ring-ink-400 focus-visible:ring-inset ${
         selected ? '' : 'hover:bg-ink-50'
