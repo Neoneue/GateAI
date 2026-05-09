@@ -128,7 +128,11 @@ export function CMP005FilterBar() {
 
               <div className="grow" />
 
-              <span className="font-sans text-sm text-ink-600 tabular-nums -tracking-[0.01em]">
+              <span
+                role="status"
+                aria-live="polite"
+                className="font-mono text-sm text-ink-600 tabular-nums -tracking-[0.01em]"
+              >
                 5 of 24
               </span>
             </div>
@@ -148,7 +152,7 @@ export function CMP005FilterBar() {
                 <button
                   type="button"
                   onClick={() => setChips([])}
-                  className="ml-1 font-sans text-xs text-blue-700 hover:text-blue-800 underline decoration-1 underline-offset-[3px]"
+                  className="ml-1 font-sans text-xs text-ink-900 underline decoration-ink-200 underline-offset-2 hover:decoration-ink-500 focus-visible:decoration-ink-500 outline-none rounded-xs focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                 >
                   Clear all
                 </button>
@@ -157,7 +161,7 @@ export function CMP005FilterBar() {
                 <button
                   type="button"
                   onClick={() => setChips(['env: production', 'status: active'])}
-                  className="ml-1 font-sans text-xs text-blue-700 hover:text-blue-800 underline decoration-1 underline-offset-[3px]"
+                  className="ml-1 font-sans text-xs text-ink-900 underline decoration-ink-200 underline-offset-2 hover:decoration-ink-500 focus-visible:decoration-ink-500 outline-none rounded-xs focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                 >
                   Reset filters
                 </button>

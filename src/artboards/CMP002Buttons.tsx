@@ -77,18 +77,19 @@ export function CMP002Buttons() {
               code="CMP-002.3 — STATES"
               hint="default · hover · active · focus · loading · disabled"
             />
-            <div className="flex flex-col rounded-sm gap-3 bg-white border border-ink-100 p-7">
-              <Button className="w-full" tabIndex={-1}>Default</Button>
-              <Button className="w-full bg-primary/85" tabIndex={-1}>Hover</Button>
-              <Button className="w-full translate-y-px" tabIndex={-1}>Active</Button>
+            <div className="flex flex-col rounded-sm gap-3 bg-white border border-ink-100 p-7" role="group" aria-label="Button state specimens">
+              <Button className="w-full" tabIndex={-1} aria-disabled="true">Default</Button>
+              <Button className="w-full bg-primary/85" tabIndex={-1} aria-disabled="true">Hover</Button>
+              <Button className="w-full translate-y-px" tabIndex={-1} aria-disabled="true">Active</Button>
               <Button
                 className="w-full ring-3 ring-ring/50 border-ring"
                 tabIndex={-1}
+                aria-disabled="true"
               >
                 Focus
               </Button>
-              <Button className="w-full" tabIndex={-1} disabled>
-                <Loader2 data-icon="inline-start" className="animate-spin" />
+              <Button className="w-full" tabIndex={-1} disabled aria-busy="true">
+                <Loader2 data-icon="inline-start" className="animate-spin" aria-hidden />
                 Loading
               </Button>
               <Button className="w-full" disabled>Disabled</Button>

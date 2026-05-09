@@ -32,7 +32,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { VendorAvatar, type Vendor } from '@/components/icons/vendor-meta';
+import { VENDOR_META, VendorAvatar, type Vendor } from '@/components/icons/vendor-meta';
 import { ArtboardHeader, SectionHeader } from './_shared/ArtboardHeader';
 import { DashboardChrome } from './_shared/DashboardChrome';
 
@@ -357,9 +357,13 @@ function ConversationsTableSection() {
                   {row.reqs}
                 </TableCell>
                 <TableCell>
-                  <div className="flex items-center gap-1">
+                  <div
+                    role="img"
+                    aria-label={`Models: ${row.vendors.map((v) => VENDOR_META[v].label).join(', ')}`}
+                    className="flex items-center gap-1"
+                  >
                     {row.vendors.map((v) => (
-                      <VendorAvatar key={v} vendor={v} />
+                      <VendorAvatar key={v} vendor={v} decorative />
                     ))}
                   </div>
                 </TableCell>
@@ -462,7 +466,10 @@ function ConversationDetailBody({ row }: { row: ConversationRow }) {
           <span className="font-mono text-xs uppercase tracking-[0.1em] font-medium text-ink-500">
             Conversation
           </span>
-          <DialogTitle className="font-sans text-lg/6 font-medium text-ink-900 m-0">
+          <DialogTitle
+            aria-label={`Conversation ${row.title}`}
+            className="font-sans text-lg/6 font-medium text-ink-900 m-0"
+          >
             Messages + request trace
           </DialogTitle>
         </div>

@@ -1,4 +1,4 @@
-import { useId, useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'sonner';
 import { KeyRound, Plus, Copy, X } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -210,29 +210,26 @@ function ModalSpecimen({
   className?: string;
   onClose: () => void;
 }) {
-  const titleId = useId();
   return (
     <div
-      role="dialog"
-      aria-labelledby={titleId}
       className={
-        'flex flex-col rounded-xl bg-white border border-ink-200 shadow-[0_12px_32px_-8px_rgba(17,20,23,0.18)] overflow-clip ' +
+        'flex flex-col rounded-xl bg-white border border-ink-200 shadow-(--shadow-modal) overflow-clip ' +
         (className ?? '')
       }
     >
       <div className="flex items-start justify-between pt-4 pr-3 pb-1 pl-5">
         <div className="flex flex-col">
-          <div id={titleId} className="text-base font-medium -tracking-[0.01em] text-ink-900">
+          <div className="text-base font-medium -tracking-[0.01em] text-ink-900">
             {title}
           </div>
-          {subtitle && <div className="text-xs text-ink-600 mt-1">{subtitle}</div>}
+          {subtitle && <div className="text-xs text-ink-500 mt-1">{subtitle}</div>}
         </div>
         <Button
           variant="ghost"
           size="icon-xs"
           aria-label="Close"
           onClick={onClose}
-          className="text-ink-400 hover:text-ink-600"
+          className="text-ink-500 hover:text-ink-700"
         >
           <X />
         </Button>
@@ -253,9 +250,7 @@ function ModalFooter({ children }: { children: React.ReactNode }) {
 function GenerationDetailsModal() {
   return (
     <div
-      role="dialog"
-      aria-label="Generation details"
-      className="flex flex-col w-[640px] rounded-xl bg-white border border-ink-200 shadow-[0_12px_32px_-8px_rgba(17,20,23,0.18)] overflow-clip"
+      className="flex flex-col w-[640px] rounded-xl bg-white border border-ink-200 shadow-(--shadow-modal) overflow-clip"
     >
       {/* Header */}
       <div className="flex items-start justify-between gap-3 px-5 pt-4 pb-3 border-b border-ink-200">
@@ -273,6 +268,7 @@ function GenerationDetailsModal() {
           aria-label="Close"
           onClick={() => toast('Closed generation details')}
           className="text-ink-500 hover:text-ink-700"
+          type="button"
         >
           <X />
         </Button>

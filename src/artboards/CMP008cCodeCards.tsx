@@ -189,13 +189,13 @@ export function CMP008cCodeCards() {
 
 function HeroCard() {
   return (
-    <div className="flex items-center gap-8 p-7 rounded-sm bg-white border border-ink-100">
+    <div className="flex items-center gap-8 p-7 rounded-sm bg-white shadow-(--shadow-border)">
       <div className="flex flex-col grow shrink basis-0 gap-4">
         <div className="font-mono uppercase tracking-[0.12em] text-blue-700 text-xs/4 font-medium">
           QUICKSTART
         </div>
         <div className="flex flex-col gap-2">
-          <h3 className="font-sans font-medium text-ink-800 text-3xl/9 -tracking-[0.6px] m-0">
+          <h3 className="font-sans font-medium text-ink-800 text-2xl/8 -tracking-[0.4px] m-0">
             Send your first request
             <br />
             in one shot.
@@ -254,18 +254,18 @@ const STEPS: StepItem[] = [
 
 function StepsCard() {
   return (
-    <div className="flex flex-col p-7 gap-5 rounded-sm bg-white border border-ink-100">
+    <div className="flex flex-col p-7 gap-5 rounded-sm bg-white shadow-(--shadow-border)">
       {STEPS.map((step) => (
         <div key={step.n} className="flex items-start gap-4">
-          <div className="flex items-center justify-center shrink-0 size-6 rounded-full bg-blue-700">
+          <div aria-hidden className="flex items-center justify-center shrink-0 size-6 rounded-full bg-blue-700">
             <span className="font-mono font-medium text-white text-xs/4">
               {step.n}
             </span>
           </div>
           <div className="flex flex-col grow shrink basis-0 gap-2">
-            <div className="font-sans font-medium text-ink-800 text-sm/5">
+            <h4 className="font-sans font-medium text-ink-800 text-sm/5 m-0">
               {step.title}
-            </div>
+            </h4>
             <p className="text-ink-600 text-xs/4 m-0">{step.body}</p>
             {step.snippet && (
               <div className="mt-2 rounded-sm bg-ink-100 border border-ink-100">

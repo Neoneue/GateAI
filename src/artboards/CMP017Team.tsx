@@ -352,7 +352,7 @@ function MemberRowView({ row }: { row: MemberRow }) {
                 {row.name}
               </span>
               {row.isYou ? (
-                <span className="shrink-0 inline-flex items-center h-5 px-1.5 rounded-xs bg-ink-100 text-ink-600 font-mono text-xs font-medium tabular-nums">
+                <span className="shrink-0 inline-flex items-center h-5 px-1.5 rounded-xs bg-ink-100 text-ink-500 font-mono text-xs font-medium tabular-nums">
                   You
                 </span>
               ) : null}

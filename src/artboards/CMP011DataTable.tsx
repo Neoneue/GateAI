@@ -261,6 +261,7 @@ export function CMP011DataTable() {
                 >
                   <SelectTrigger
                     size="sm"
+                    aria-label="Provider"
                     className="border-ink-200 bg-white text-ink-900 font-normal"
                   >
                     {provider === 'all'
@@ -269,26 +270,12 @@ export function CMP011DataTable() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Providers</SelectItem>
-                    {PROVIDER_ORDER.map((v) => {
-                      const meta = VENDOR_META[v];
-                      const Icon = meta.icon;
-                      const isLight = meta.color === '#FFFFFF';
-                      return (
-                        <SelectItem key={v} value={v}>
-                          <span
-                            className="inline-flex items-center justify-center size-4 rounded-[4px] shrink-0"
-                            style={{
-                              backgroundColor: meta.color,
-                              color: '#FFFFFF',
-                              border: isLight ? '1px solid var(--color-ink-200)' : 'none',
-                            }}
-                          >
-                            <Icon className="size-2.5" />
-                          </span>
-                          {meta.label}
-                        </SelectItem>
-                      );
-                    })}
+                    {PROVIDER_ORDER.map((v) => (
+                      <SelectItem key={v} value={v}>
+                        <VendorAvatar vendor={v} decorative />
+                        {VENDOR_META[v].label}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
                 <Button
@@ -339,24 +326,24 @@ export function CMP011DataTable() {
                         </span>
                       </div>
                     </TableCell>
-                    <TableCell className="text-right font-mono tabular-nums text-ink-900">
+                    <TableCell className="text-right font-mono tabular-nums text-ink-800">
                       {row.context}
                     </TableCell>
-                    <TableCell className="text-right font-mono tabular-nums text-ink-900">
+                    <TableCell className="text-right font-mono tabular-nums text-ink-800">
                       {row.latency}
                     </TableCell>
-                    <TableCell className="text-right font-mono tabular-nums text-ink-900">
+                    <TableCell className="text-right font-mono tabular-nums text-ink-800">
                       {row.throughput}
                     </TableCell>
-                    <TableCell className="text-right font-mono tabular-nums text-ink-900">
+                    <TableCell className="text-right font-mono tabular-nums text-ink-800">
                       <span>{row.input}</span>
                       <span className="text-ink-500">/M</span>
                     </TableCell>
-                    <TableCell className="text-right font-mono tabular-nums text-ink-900">
+                    <TableCell className="text-right font-mono tabular-nums text-ink-800">
                       <span>{row.output}</span>
                       <span className="text-ink-500">/M</span>
                     </TableCell>
-                    <TableCell className="text-right font-mono tabular-nums text-ink-900">
+                    <TableCell className="text-right font-mono tabular-nums text-ink-800">
                       {row.cache}
                     </TableCell>
                     <TableCell>
@@ -520,24 +507,6 @@ function RiskScoresCard() {
         </TableBody>
       </Table>
     </div>
-  );
-}
-
-function ProviderAvatar({ vendor }: { vendor: Vendor }) {
-  const meta = VENDOR_META[vendor];
-  const Icon = meta.icon;
-  const isLight = meta.color === '#FFFFFF';
-  return (
-    <span
-      className="inline-flex items-center justify-center size-5 rounded-full shrink-0 ring-2 ring-white"
-      style={{
-        backgroundColor: meta.color,
-        color: meta.iconColor,
-        border: isLight ? '1px solid var(--color-ink-200)' : 'none',
-      }}
-    >
-      <Icon className="size-2.5" />
-    </span>
   );
 }
 

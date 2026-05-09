@@ -114,7 +114,7 @@ export function CMP003BadgesAndTags() {
                   <button
                     type="button"
                     onClick={() => setTags(['production', 'error', 'last 7d'])}
-                    className="font-mono text-xs uppercase tracking-[0.08em] text-blue-700 hover:text-blue-800"
+                    className="font-mono text-xs uppercase tracking-[0.08em] text-ink-800 underline decoration-ink-200 underline-offset-2 hover:decoration-ink-500 focus-visible:decoration-ink-500 outline-none rounded-xs focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                   >
                     Reset tags
                   </button>

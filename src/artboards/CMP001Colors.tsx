@@ -208,13 +208,13 @@ function PaletteCard({
     <div className="flex flex-col gap-3 bg-ink-50">
       <SectionHeader code={palette.code} hint={palette.description} />
       <div
-        className="flex flex-col rounded-sm gap-4 bg-white border border-ink-100 p-6 shadow-[0_1px_2px_rgba(17,20,23,0.04)]"
+        className="flex flex-col rounded-sm gap-4 bg-white p-6 shadow-(--shadow-border)"
       >
         <div className="flex items-baseline justify-between">
           <div>
-            <h2 className="font-sans font-medium text-ink-900 text-base m-0">
+            <h3 className="font-sans font-medium text-ink-900 text-base m-0">
               {palette.name}
-            </h2>
+            </h3>
             <div className="font-sans text-sm text-ink-500 mt-1">
               {palette.description}
             </div>
@@ -230,6 +230,8 @@ function PaletteCard({
           {palette.steps.map((step) => (
             <div key={step.scale} className="flex flex-col">
               <div
+                role="img"
+                aria-label={`${palette.name} ${step.scale} swatch — ${step.value.replace(/\n/g, ' ')}`}
                 className="aspect-square w-full"
                 style={{ background: background(step) }}
               />
@@ -275,7 +277,7 @@ function SingleToneCard({
       <div className="flex flex-col rounded-sm gap-4 bg-white border border-ink-100 p-6 shadow-[0_1px_2px_rgba(17,20,23,0.04)]">
         <div className="flex items-baseline justify-between">
           <div>
-            <h2 className="font-sans font-medium text-ink-900 text-base m-0">{name}</h2>
+            <h3 className="font-sans font-medium text-ink-900 text-base m-0">{name}</h3>
             <div className="font-sans text-sm text-ink-500 mt-1">{description}</div>
           </div>
           <div className="font-mono text-xs font-medium text-ink-500 uppercase tracking-[0.1em]">{meta}</div>
@@ -287,6 +289,8 @@ function SingleToneCard({
           {steps.map((step) => (
             <div key={step.token} className="flex flex-col">
               <div
+                role="img"
+                aria-label={`${name} ${step.scale} swatch — ${step.value.replace(/\n/g, ' ')}`}
                 className="aspect-square w-full"
                 style={{ background: background(step) }}
               />

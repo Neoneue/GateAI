@@ -692,7 +692,10 @@ function RequestDetailBody({ row }: { row: RequestRow }) {
           <div className="flex items-center gap-2">
             {/* DialogTitle override — keep the default `font-heading` recipe
                 replaced with the request-id mono treatment. */}
-            <DialogTitle className="font-mono text-lg leading-none font-medium text-ink-900 m-0">
+            <DialogTitle
+              aria-label={`Request ${requestId}`}
+              className="font-mono text-lg leading-none font-medium text-ink-900 m-0"
+            >
               {requestId}
             </DialogTitle>
             <Badge variant={badge.variant}>
@@ -704,6 +707,7 @@ function RequestDetailBody({ row }: { row: RequestRow }) {
             Apr 22, 2026 · {row.time} UTC · part of conversation{' '}
             <button
               type="button"
+              aria-label={`Open conversation ${row.conversation}`}
               className="text-ink-700 bg-transparent p-0 outline-none rounded-xs underline decoration-ink-200 underline-offset-2 hover:decoration-ink-500 focus-visible:decoration-ink-500 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
             >
               {row.conversation}

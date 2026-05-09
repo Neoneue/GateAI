@@ -21,6 +21,7 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from '@/components/ui/chart';
+import { HeroNumeric } from '@/components/ui/hero-numeric';
 import {
   VENDOR_META,
   VendorAvatar,
@@ -105,13 +106,14 @@ function SpendTrendCard() {
           <LegendDot color="var(--color-blue-700)" label="BYO keys" />
           <LegendDot color="var(--color-blue-300)" label="Managed-key" />
         </div>
-        <button
-          type="button"
+        <div
+          role="img"
+          aria-label="Date range: Apr 17 to May 17 2026 (specimen)"
           className="flex items-center h-[34px] rounded-sm px-3 gap-2 bg-white border border-ink-200 text-sm -tracking-[0.14px] text-ink-900"
         >
-          <Calendar className="size-3.5 text-ink-500" strokeWidth={1.75} />
+          <Calendar aria-hidden className="size-3.5 text-ink-500" strokeWidth={1.75} />
           Apr 17 – May 17 2026
-        </button>
+        </div>
       </div>
 
       <ChartContainer
@@ -217,7 +219,7 @@ function SpendTrendCard() {
             dot={false}
             activeDot={{
               r: 5,
-              fill: '#FFFFFF',
+              fill: 'var(--color-white)',
               stroke: 'var(--color-blue-700)',
               strokeWidth: 2.5,
             }}
@@ -329,22 +331,22 @@ function CostByModelCard() {
         <div className="text-base font-medium -tracking-[0.25px] text-ink-900">
           Cost by model
         </div>
-        <button
-          type="button"
+        <div
+          role="img"
+          aria-label="Period: Last 7 days (specimen)"
           className="flex items-center justify-center h-8 rounded-sm px-3 gap-2 bg-white border border-ink-200 text-sm font-medium -tracking-[0.14px] text-ink-900"
         >
           Last 7 days
           <ChevronDown
+            aria-hidden
             className="size-3.5 text-ink-500"
             strokeWidth={1.75}
           />
-        </button>
+        </div>
       </div>
 
       <div className="flex items-baseline gap-3">
-        <div className="text-3xl/9 font-medium tabular-nums -tracking-[0.9px] text-ink-900">
-          $1,247.82
-        </div>
+        <HeroNumeric size="lg">$1,247.82</HeroNumeric>
         <DeltaTag delta="+12.6%" note="vs last 7d" />
       </div>
 
@@ -422,7 +424,7 @@ function CostByModelCard() {
               <VendorAvatar vendor={m.vendor} />
               <span className="text-sm text-ink-900">{m.label}</span>
             </div>
-            <div className="w-30 text-right shrink-0 text-sm tabular-nums text-ink-900">
+            <div className="w-30 text-right shrink-0 text-sm tabular-nums text-ink-800">
               {m.cost}
             </div>
             <div className="w-35 flex items-center justify-end gap-1 shrink-0">

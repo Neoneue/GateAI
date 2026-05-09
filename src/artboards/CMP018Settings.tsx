@@ -476,7 +476,7 @@ function IntegrationEmptyState() {
     <div className="flex flex-col items-center justify-center gap-3 py-20 px-6 rounded-sm bg-white shadow-(--shadow-border) text-center">
       <span
         aria-hidden
-        className="inline-flex items-center justify-center size-12 rounded-sm bg-ink-100 text-ink-600"
+        className="inline-flex items-center justify-center size-12 rounded-sm bg-ink-100 text-ink-500"
       >
         <Layers className="size-6" strokeWidth={1.5} />
       </span>

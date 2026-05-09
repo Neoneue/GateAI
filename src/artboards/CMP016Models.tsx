@@ -1002,9 +1002,7 @@ function CapabilityStrip({ capabilities }: { capabilities: Capability[] }) {
             strokeWidth={1.75}
             aria-label={meta.label}
             role="img"
-          >
-            <title>{meta.label}</title>
-          </Icon>
+          />
         );
       })}
     </div>
@@ -1016,23 +1014,27 @@ function ProviderStack({ offerings }: { offerings: ProviderOffering[] }) {
   // counted in the +n overflow). First three vendor-glyphs render as an
   // overlapping stack; remainder collapses to a +N chip.
   const vendors: Vendor[] = [];
-  let unmappedCount = 0;
+  const unmappedNames: string[] = [];
   for (const o of offerings) {
     const v = PROVIDER_VENDOR[o.provider];
     if (v && !vendors.includes(v)) {
       vendors.push(v);
     } else if (!v) {
-      unmappedCount += 1;
+      const meta = o.provider in MARKETPLACE_META
+        ? MARKETPLACE_META[o.provider as keyof typeof MARKETPLACE_META]
+        : null;
+      if (meta) unmappedNames.push(meta.label);
     }
   }
+  const unmappedCount = unmappedNames.length;
   const visible = vendors.slice(0, 3);
   const overflow = vendors.length - visible.length + unmappedCount;
   const totalProviders = vendors.length + unmappedCount;
-  const vendorNames = vendors.map((v) => VENDOR_META[v].label).join(', ');
-  const ariaLabel =
-    unmappedCount > 0
-      ? `Available from ${totalProviders} providers including ${vendorNames}`
-      : `Available from ${totalProviders} providers: ${vendorNames}`;
+  const allNames = [
+    ...vendors.map((v) => VENDOR_META[v].label),
+    ...unmappedNames,
+  ].join(', ');
+  const ariaLabel = `Available from ${totalProviders} providers: ${allNames}`;
   return (
     <div role="img" aria-label={ariaLabel} className="flex items-center gap-1.5">
       <div className="flex items-center">
