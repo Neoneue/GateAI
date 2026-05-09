@@ -12,101 +12,87 @@ name: "Constellation Gate AI"
 description: "Operator dashboard for an AI gateway with audit anchoring — dense, technical, no-nonsense surface tuned for the human running it in production"
 
 colors:
-  # ─── shadcn semantic layer (src/index.css:164–222). Every component
-  # references these — agent should bind to these, not to ramp atoms. ───
-  primary: "oklch(0.090 0 0)"           # ← code-direct: index.css:174 → --color-ink-900
-  primary-foreground: "#FFFFFF"          # ← code-direct: index.css:175 → --color-white
-  background: "#FFFFFF"                  # ← code-direct: index.css:168
-  foreground: "oklch(0.090 0 0)"         # ← code-direct: index.css:169 → ink-900
-  card: "#FFFFFF"                        # ← code-direct: index.css:170
-  card-foreground: "oklch(0.090 0 0)"    # ← code-direct: index.css:171
-  popover: "#FFFFFF"                     # ← code-direct: index.css:172
-  popover-foreground: "oklch(0.090 0 0)" # ← code-direct: index.css:173
-  secondary: "oklch(0.960 0 0)"          # ← code-direct: index.css:180 → ink-100
-  secondary-foreground: "oklch(0.090 0 0)" # ← code-direct: index.css:181 → ink-900
-  muted: "oklch(0.960 0 0)"              # ← code-direct: index.css:182 → ink-100
-  muted-foreground: "oklch(0.530 0 0)"   # ← code-direct: index.css:183 → ink-500
-  accent: "oklch(0.960 0 0)"             # ← code-direct: index.css:184 → ink-100
-  accent-foreground: "oklch(0.090 0 0)"  # ← code-direct: index.css:185 → ink-900
-  destructive: "oklch(0.577 0.245 27.325)" # ← code-direct: index.css:186 → danger-600
-  border: "oklch(0.910 0 0)"             # ← code-direct: index.css:187 → ink-200
-  input: "oklch(0.910 0 0)"              # ← code-direct: index.css:188 → ink-200
-  ring: "oklch(0.680 0 0)"               # ← code-direct: index.css:189 → ink-400
-  canvas-bg: "#ECECE7"                   # ← code-direct: index.css:165, 102 → warm-paper
+  primary: "oklch(0.090 0 0)"
+  primary-foreground: "#FFFFFF"
+  background: "#FFFFFF"
+  foreground: "oklch(0.090 0 0)"
+  card: "#FFFFFF"
+  card-foreground: "oklch(0.090 0 0)"
+  popover: "#FFFFFF"
+  popover-foreground: "oklch(0.090 0 0)"
+  secondary: "oklch(0.960 0 0)"
+  secondary-foreground: "oklch(0.090 0 0)"
+  muted: "oklch(0.960 0 0)"
+  muted-foreground: "oklch(0.530 0 0)"
+  accent: "oklch(0.960 0 0)"
+  accent-foreground: "oklch(0.090 0 0)"
+  destructive: "oklch(0.577 0.245 27.325)"
+  border: "oklch(0.910 0 0)"
+  input: "oklch(0.910 0 0)"
+  ring: "oklch(0.680 0 0)"
+  canvas-bg: "#ECECE7"
 
-  # ─── Ink ramp (neutrals) — index.css:33–43. Pure neutral chroma. ───
-  ink-50: "oklch(0.985 0 0)"             # ← code-direct: index.css:33
-  ink-100: "oklch(0.960 0 0)"            # ← code-direct: index.css:34
-  ink-200: "oklch(0.910 0 0)"            # ← code-direct: index.css:35
-  ink-300: "oklch(0.820 0 0)"            # ← code-direct: index.css:36
-  ink-400: "oklch(0.680 0 0)"            # ← code-direct: index.css:37
-  ink-500: "oklch(0.530 0 0)"            # ← code-direct: index.css:38
-  ink-600: "oklch(0.380 0 0)"            # ← code-direct: index.css:39
-  ink-700: "oklch(0.260 0 0)"            # ← code-direct: index.css:40
-  ink-800: "oklch(0.165 0 0)"            # ← code-direct: index.css:41
-  ink-900: "oklch(0.090 0 0)"            # ← code-direct: index.css:42
-  ink-950: "oklch(0.045 0 0)"            # ← code-direct: index.css:43
+  ink-50: "oklch(0.985 0 0)"
+  ink-100: "oklch(0.960 0 0)"
+  ink-200: "oklch(0.910 0 0)"
+  ink-300: "oklch(0.820 0 0)"
+  ink-400: "oklch(0.680 0 0)"
+  ink-500: "oklch(0.530 0 0)"
+  ink-600: "oklch(0.380 0 0)"
+  ink-700: "oklch(0.260 0 0)"
+  ink-800: "oklch(0.165 0 0)"
+  ink-900: "oklch(0.090 0 0)"
+  ink-950: "oklch(0.045 0 0)"
 
-  # ─── Blue ramp (brand) — index.css:47–57. Anchored at blue-700 to logomark. ───
-  blue-50: "oklch(0.970 0.020 268.85)"   # ← code-direct: index.css:47
-  blue-100: "oklch(0.940 0.040 268.85)"  # ← code-direct: index.css:48
-  blue-200: "oklch(0.890 0.075 268.85)"  # ← code-direct: index.css:49
-  blue-300: "oklch(0.810 0.130 268.85)"  # ← code-direct: index.css:50
-  blue-400: "oklch(0.700 0.180 268.85)"  # ← code-direct: index.css:51
-  blue-500: "oklch(0.580 0.215 268.85)"  # ← code-direct: index.css:52
-  blue-600: "oklch(0.470 0.232 268.85)"  # ← code-direct: index.css:53
-  blue-700: "oklch(0.345 0.224 268.85)"  # ← code-direct: index.css:54 — brand mark, ≈#1F2FCE
-  blue-800: "oklch(0.275 0.175 268.85)"  # ← code-direct: index.css:55
-  blue-900: "oklch(0.215 0.130 268.85)"  # ← code-direct: index.css:56
-  blue-950: "oklch(0.145 0.085 268.85)"  # ← code-direct: index.css:57
+  blue-50: "oklch(0.970 0.020 268.85)"
+  blue-100: "oklch(0.940 0.040 268.85)"
+  blue-200: "oklch(0.890 0.075 268.85)"
+  blue-300: "oklch(0.810 0.130 268.85)"
+  blue-400: "oklch(0.700 0.180 268.85)"
+  blue-500: "oklch(0.580 0.215 268.85)"
+  blue-600: "oklch(0.470 0.232 268.85)"
+  blue-700: "oklch(0.345 0.224 268.85)"  # brand mark, ≈#1F2FCE
+  blue-800: "oklch(0.275 0.175 268.85)"
+  blue-900: "oklch(0.215 0.130 268.85)"
+  blue-950: "oklch(0.145 0.085 268.85)"
 
-  # ─── Success / Warning / Danger ramps — index.css:60–96. Tailwind v4 OKLCH. ───
-  # Roles per ramp: 100 wash · 200 border · 600 saturated mid · 700 saturated text on tinted bg.
-  success-50: "oklch(0.982 0.018 155.826)"   # ← code-direct: index.css:60
-  success-100: "oklch(0.962 0.044 156.743)"  # ← code-direct: index.css:61
-  success-200: "oklch(0.925 0.084 155.995)"  # ← code-direct: index.css:62
-  success-500: "oklch(0.723 0.219 149.579)"  # ← code-direct: index.css:65
-  success-600: "oklch(0.627 0.194 149.214)"  # ← code-direct: index.css:66
-  success-700: "oklch(0.527 0.154 150.069)"  # ← code-direct: index.css:67
-  warning-50: "oklch(0.987 0.022 95.277)"    # ← code-direct: index.css:73
-  warning-100: "oklch(0.962 0.059 95.617)"   # ← code-direct: index.css:74
-  warning-200: "oklch(0.924 0.120 95.746)"   # ← code-direct: index.css:75
-  warning-500: "oklch(0.769 0.188 70.080)"   # ← code-direct: index.css:78
-  warning-600: "oklch(0.666 0.179 58.318)"   # ← code-direct: index.css:79
-  warning-700: "oklch(0.555 0.163 48.998)"   # ← code-direct: index.css:80
-  danger-50: "oklch(0.971 0.013 17.380)"     # ← code-direct: index.css:86
-  danger-100: "oklch(0.936 0.032 17.717)"    # ← code-direct: index.css:87
-  danger-200: "oklch(0.885 0.062 18.334)"    # ← code-direct: index.css:88
-  danger-600: "oklch(0.577 0.245 27.325)"    # ← code-direct: index.css:92 — semantic --destructive
-  danger-700: "oklch(0.505 0.213 27.518)"    # ← code-direct: index.css:93
+  success-50: "oklch(0.982 0.018 155.826)"
+  success-100: "oklch(0.962 0.044 156.743)"
+  success-200: "oklch(0.925 0.084 155.995)"
+  success-500: "oklch(0.723 0.219 149.579)"
+  success-600: "oklch(0.627 0.194 149.214)"
+  success-700: "oklch(0.527 0.154 150.069)"
+  warning-50: "oklch(0.987 0.022 95.277)"
+  warning-100: "oklch(0.962 0.059 95.617)"
+  warning-200: "oklch(0.924 0.120 95.746)"
+  warning-500: "oklch(0.769 0.188 70.080)"
+  warning-600: "oklch(0.666 0.179 58.318)"
+  warning-700: "oklch(0.555 0.163 48.998)"
+  danger-50: "oklch(0.971 0.013 17.380)"
+  danger-100: "oklch(0.936 0.032 17.717)"
+  danger-200: "oklch(0.885 0.062 18.334)"
+  danger-600: "oklch(0.577 0.245 27.325)"  # semantic --destructive
+  danger-700: "oklch(0.505 0.213 27.518)"
 
-  # ─── Atomic surfaces — index.css:101–102. ───
-  white: "#FFFFFF"                       # ← code-direct: index.css:101
-  canvas: "#ECECE7"                      # ← code-direct: index.css:102 — warm-paper canvas
+  white: "#FFFFFF"
+  canvas: "#ECECE7"  # warm-paper canvas
 
-  # ─── Categorical chart palette — index.css:205–212. Brand-decoupled.
-  # Series pick a slot by INDEX, not by entity. 8 slots, all OKLCH at L 0.62–0.85,
-  # C 0.13–0.20, hue spacing ≥85° between adjacent slots. No neutral slot. ───
-  chart-1: "oklch(0.62 0.18 255)"        # ← code-direct: index.css:205 — blue
-  chart-2: "oklch(0.72 0.17 50)"         # ← code-direct: index.css:206 — orange
-  chart-3: "oklch(0.72 0.20 145)"        # ← code-direct: index.css:207 — green
-  chart-4: "oklch(0.70 0.18 290)"        # ← code-direct: index.css:208 — purple
-  chart-5: "oklch(0.65 0.20 18)"         # ← code-direct: index.css:209 — coral
-  chart-6: "oklch(0.75 0.13 195)"        # ← code-direct: index.css:210 — teal
-  chart-7: "oklch(0.85 0.16 88)"         # ← code-direct: index.css:211 — amber
-  chart-8: "oklch(0.68 0.20 335)"        # ← code-direct: index.css:212 — magenta
+  chart-1: "oklch(0.62 0.18 255)"  # blue
+  chart-2: "oklch(0.72 0.17 50)"  # orange
+  chart-3: "oklch(0.72 0.20 145)"  # green
+  chart-4: "oklch(0.70 0.18 290)"  # purple
+  chart-5: "oklch(0.65 0.20 18)"  # coral
+  chart-6: "oklch(0.75 0.13 195)"  # teal
+  chart-7: "oklch(0.85 0.16 88)"  # amber
+  chart-8: "oklch(0.68 0.20 335)"  # magenta
 
-  # ─── Syntax tokens (CodeBlock primitive only — index.css:106–109). Not part
-  # of the semantic palette. Re-skinning code surfaces does not bleed into UI. ───
-  syntax-keyword: "#B6491A"              # ← code-direct: index.css:106 — curl flags / orange-red
-  syntax-variable: "#D69E2E"             # ← code-direct: index.css:107 — $KEY interpolations
-  syntax-property: "#4165FF"             # ← code-direct: index.css:108 — JSON keys
+  syntax-keyword: "#B6491A"  # curl flags / orange-red
+  syntax-variable: "#D69E2E"  # $KEY interpolations
+  syntax-property: "#4165FF"  # JSON keys
 
-  # ─── macOS traffic-light tokens (CMP-012 chrome strip — index.css:115–117).
-  # Platform affordance, isolated from the danger/warning/success ramps. ───
-  traffic-red: "#FF5F57"                 # ← code-direct: index.css:115
-  traffic-amber: "#FEBC2E"               # ← code-direct: index.css:116
-  traffic-green: "#28C840"               # ← code-direct: index.css:117
+  traffic-red: "#FF5F57"
+  traffic-amber: "#FEBC2E"
+  traffic-green: "#28C840"
 
 typography:
   # Tailwind named scale only. Three sizes overridden in @theme to Geist's even-numbered
@@ -114,63 +100,63 @@ typography:
   # Arbitrary text-[Npx] is banned. font-medium minimum on sans labels — font-normal
   # reads as ambient body, not structure.
 
-  hero-numeric-lg:                       # ← code-direct: hero-numeric.tsx — text-3xl/9 + sans tabular
+  hero-numeric-lg:  # text-3xl/9 + sans tabular
     fontFamily: "Geist"
-    fontSize: 32                         # ← code-direct: index.css:152 — overridden text-3xl
-    lineHeight: 36                       # ← code-direct: text-3xl/9 utility
+    fontSize: 32  # overridden text-3xl
+    lineHeight: 36
     fontWeight: 500
     fontFeature: "tnum"
 
-  hero-numeric-default:                  # ← code-direct: hero-numeric.tsx — text-2xl/8 + sans tabular
+  hero-numeric-default:  # text-2xl/8 + sans tabular
     fontFamily: "Geist"
     fontSize: 24
     lineHeight: 32
     fontWeight: 500
     fontFeature: "tnum"
 
-  h1:                                    # ← code-direct: ArtboardHeader artboards use text-3xl
+  h1:
     fontFamily: "Geist"
     fontSize: 32
     lineHeight: 40
     fontWeight: 500
 
-  h2:                                    # ← code-direct: SectionHeader uses text-2xl/8
+  h2:
     fontFamily: "Geist"
     fontSize: 24
     lineHeight: 32
     fontWeight: 500
 
-  h3:                                    # ← code-direct: card titles, modal title
+  h3:
     fontFamily: "Geist"
-    fontSize: 18                         # ← code-direct: text-lg
+    fontSize: 18
     lineHeight: 28
     fontWeight: 500
 
-  body:                                  # ← code-direct: body { font-family: var(--font-sans) ... } index.css:235–236
+  body:
     fontFamily: "Geist"
-    fontSize: 16                         # ← code-direct: text-base
+    fontSize: 16
     lineHeight: 24
     fontWeight: 400
 
-  body-sm:                               # ← code-direct: text-sm in compact surfaces
+  body-sm:
     fontFamily: "Geist"
     fontSize: 14
     lineHeight: 20
     fontWeight: 400
 
-  body-xs:                               # ← code-direct: text-xs in dense chrome
+  body-xs:
     fontFamily: "Geist"
     fontSize: 12
     lineHeight: 16
     fontWeight: 400
 
-  label:                                 # ← code-direct: label.tsx — text-sm font-medium
+  label:  # text-sm font-medium
     fontFamily: "Geist"
     fontSize: 14
-    lineHeight: 16                       # ← code-direct: leading-none
+    lineHeight: 16
     fontWeight: 500
 
-  eyebrow-sm:                            # ← code-direct: SectionHeader code prefix, KPI labels
+  eyebrow-sm:
     fontFamily: "Geist Mono"
     fontSize: 12
     lineHeight: 16
@@ -178,7 +164,7 @@ typography:
     letterSpacing: "0.1em"
     fontVariation: "uppercase"
 
-  eyebrow-default:                       # ← code-direct: modal eyebrows, drawer headers
+  eyebrow-default:
     fontFamily: "Geist Mono"
     fontSize: 14
     lineHeight: 20
@@ -186,14 +172,14 @@ typography:
     letterSpacing: "0.1em"
     fontVariation: "uppercase"
 
-  badge:                                 # ← code-direct: badge.tsx:10 — base CVA
+  badge:  # base CVA
     fontFamily: "Geist Mono"
     fontSize: 12
     lineHeight: 16
     fontWeight: 500
     fontFeature: "tnum"
 
-  data:                                  # ← code-direct: table cells, IDs, codes — mono tabular
+  data:  # mono tabular
     fontFamily: "Geist Mono"
     fontSize: 14
     lineHeight: 20
@@ -203,250 +189,104 @@ typography:
 rounded:
   # Driven by --radius (0.625rem = 10px) in @theme inline (index.css:213, 280–290).
   # Modal radius locked to 12px regardless of base scaling.
-  xs: "4px"                              # ← code-direct: index.css:280 — sub-elements (tabs item, segmented, SelectItem, badge)
-  sm: "6px"                              # ← code-direct: index.css:281 — everyday surfaces (Card, Input, Select trigger, Button)
-  md: "8px"                              # ← code-direct: index.css:282 — intermediate
-  lg: "10px"                             # ← code-direct: index.css:283 — base radius (10px)
-  xl: "12px"                             # ← code-direct: index.css:287 — modal lock (Dialog, Sheet, AlertDialog)
-  2xl: "18px"                            # ← code-direct: index.css:288 — calc(--radius * 1.8)
-  full: "9999px"                         # ← code-direct: pills (status dots, Tag, Switch thumb track)
+  xs: "4px"  # sub-elements (tabs item, segmented, SelectItem, badge)
+  sm: "6px"  # everyday surfaces (Card, Input, Select trigger, Button)
+  md: "8px"  # intermediate
+  lg: "10px"  # base radius (10px)
+  xl: "12px"  # modal lock (Dialog, Sheet, AlertDialog)
+  2xl: "18px"  # calc(--radius * 1.8)
+  full: "9999px"
 
 spacing:
   # 4px grid only. Half-step Tailwind classes (gap-0.5/1.5/2.5/3.5) and arbitrary
   # values (gap-[18px]) are banned. Locked 2026-05-04. (decided)
-  "1": "4px"                             # ← code-direct: Tailwind v4 default — gap-1, p-1 (rare)
-  "2": "8px"                             # ← code-direct: badge inline gap, button icon gap
-  "3": "12px"                            # ← code-direct: button px-3, input px-3 (sm), inner table cells, compact toolbar py-3
-  "4": "16px"                            # ← code-direct: Card p-4, table outer cells px-4, page gutter, section gap (DEFAULT — most-frequent step)
-  "5": "20px"                            # ← code-direct: rare; legacy 20px overrides retired 2026-05-05 in favor of 16
-  "6": "24px"                            # ← code-direct: lg/xl/2xl outer page margins (lg:p-6)
-  "8": "32px"                            # ← code-direct: section spacing in spec sheets
-  "12": "48px"                           # ← code-direct: page-bottom rhythm
-  "16": "64px"                           # ← code-direct: hero strip spacing (rare)
-  "24": "96px"                           # ← code-direct: extra-spacious dividers (rare)
+  "1": "4px"  # gap-1, p-1 (rare)
+  "2": "8px"
+  "3": "12px"
+  "4": "16px"  # most-frequent step)
+  "5": "20px"
+  "6": "24px"
+  "8": "32px"
+  "12": "48px"
+  "16": "64px"
+  "24": "96px"
 
 components:
-  # ─── Buttons (button.tsx:6–43) — h-7/8/9/10 sizes; rounded-sm; medium weight. ───
-  button-default:                        # ← code-direct: button.tsx:15 — primary action, ink-900 fill
+  button-default:  # primary action, ink-900 fill
     backgroundColor: "{colors.primary}"
     textColor: "{colors.primary-foreground}"
     typography: "{typography.body-sm}"   # text-sm font-medium
     rounded: "{rounded.sm}"
     height: 36                           # h-9 (default)
     padding: "0 16"                      # px-4 — pr-3 with icon (asymmetric)
-  button-default-hover:
-    backgroundColor: "{colors.primary}"  # primary/85 — opacity adjustment, not a separate token
-  button-outline:                        # ← code-direct: button.tsx:16
-    backgroundColor: "{colors.background}"
-    textColor: "{colors.foreground}"
-    rounded: "{rounded.sm}"
-  button-secondary:                      # ← code-direct: button.tsx:18
-    backgroundColor: "{colors.secondary}"
-    textColor: "{colors.secondary-foreground}"
-  button-ghost:                          # ← code-direct: button.tsx:20 — transparent until hover
-    backgroundColor: "transparent"
-    textColor: "{colors.foreground}"
-  button-destructive:                    # ← code-direct: button.tsx:22
-    backgroundColor: "{colors.destructive}"
-    textColor: "{colors.primary-foreground}"
-  button-link:                           # ← code-direct: button.tsx:24 — note: NOT used for inline links (see Components §7 Links)
-    textColor: "{colors.primary}"
+  button-outline:    { backgroundColor: "{colors.background}", textColor: "{colors.foreground}", rounded: "{rounded.sm}" }
+  button-secondary:  { backgroundColor: "{colors.secondary}", textColor: "{colors.secondary-foreground}" }
+  button-ghost:      { backgroundColor: "transparent", textColor: "{colors.foreground}" }
+  button-destructive:{ backgroundColor: "{colors.destructive}", textColor: "{colors.primary-foreground}" }
 
-  # ─── Inputs (input.tsx:6–20). bg-ink-50 is the contract — sits flush in filter rows. ───
-  input:                                 # ← code-direct: input.tsx:8 — default
-    backgroundColor: "{colors.ink-50}"
-    textColor: "{colors.ink-800}"
-    rounded: "{rounded.sm}"
-    height: 36                           # h-9
-    padding: "0 16"                      # px-4 (default), px-3 at sm/xs
-  input-focused:                         # ← code-direct: input.tsx:8 — focus-visible:border-ring + ring/50
-    backgroundColor: "{colors.ink-50}"
-    textColor: "{colors.ink-800}"
-  input-disabled:
-    backgroundColor: "{colors.ink-100}"
-    textColor: "{colors.ink-500}"
-
-  textarea:                              # ← code-direct: textarea.tsx — same surface as Input, p-3/p-4
-    backgroundColor: "{colors.ink-50}"
-    textColor: "{colors.ink-800}"
-    rounded: "{rounded.sm}"
-    padding: "12 16"                     # py-3 px-4
-
-  input-group:                           # ← code-direct: input-group.tsx — h-9 wrapper for inputs with addons
+  input:
     backgroundColor: "{colors.ink-50}"
     textColor: "{colors.ink-800}"
     rounded: "{rounded.sm}"
     height: 36
+    padding: "0 16"  # px-4 (default), px-3 at sm/xs; focus = border-ring + ring-3/50; disabled = bg-ink-100 text-ink-500
 
-  # ─── Cards (card.tsx:14–96). Flat surface with shadow-as-border, NOT solid borders. ───
-  card:                                  # ← code-direct: card.tsx:19
+  textarea:    { backgroundColor: "{colors.ink-50}", textColor: "{colors.ink-800}", rounded: "{rounded.sm}", padding: "12 16" }
+  input-group: { backgroundColor: "{colors.ink-50}", textColor: "{colors.ink-800}", rounded: "{rounded.sm}", height: 36 }
+
+  card:
     backgroundColor: "{colors.card}"
     textColor: "{colors.ink-900}"
     rounded: "{rounded.sm}"
-    padding: 16                          # py-4 + content px-4
-    elevation: "shadow-border"           # 1px ring + 1px lift + 2px ambient (index.css:124–127)
-  card-footer:                           # ← code-direct: card.tsx:94 — divider strip with bg-ink-50
-    backgroundColor: "{colors.ink-50}"
     padding: 16
+    elevation: "shadow-border"  # CardFooter: bg-ink-50 + border-t border-ink-200 + p-4
 
-  # ─── Badges (badge.tsx:10–30). Mono tabular default — codified 2026-05-07 (decided). ───
-  badge-default:                         # ← code-direct: badge.tsx:14
+  badge-default:
     backgroundColor: "{colors.primary}"
     textColor: "{colors.primary-foreground}"
     typography: "{typography.badge}"
     rounded: "{rounded.xs}"
-    height: 20                           # h-5
-    padding: "0 6"                       # pl-2.5 pr-1.5
-  badge-secondary:                       # ← code-direct: badge.tsx:15
-    backgroundColor: "{colors.secondary}"
-    textColor: "{colors.secondary-foreground}"
-  badge-destructive:                     # ← code-direct: badge.tsx:17
-    backgroundColor: "{colors.danger-100}"
-    textColor: "{colors.danger-700}"
-  badge-outline:                         # ← code-direct: badge.tsx:19
-    textColor: "{colors.foreground}"
-  badge-success:                         # ← code-direct: badge.tsx:26
-    backgroundColor: "{colors.success-100}"
-    textColor: "{colors.success-700}"
-  badge-warning:                         # ← code-direct: badge.tsx:28
-    backgroundColor: "{colors.warning-100}"
-    textColor: "{colors.warning-700}"
-  badge-info:                            # ← code-direct: badge.tsx:30
-    backgroundColor: "{colors.blue-100}"
-    textColor: "{colors.blue-700}"
+    height: 20
+    padding: "0 6"  # pl-2.5 pr-1.5
+  badge-secondary:   { backgroundColor: "{colors.secondary}", textColor: "{colors.secondary-foreground}" }
+  badge-destructive: { backgroundColor: "{colors.danger-100}", textColor: "{colors.danger-700}" }
+  badge-outline:     { textColor: "{colors.foreground}" }
+  badge-success:     { backgroundColor: "{colors.success-100}", textColor: "{colors.success-700}" }
+  badge-warning:     { backgroundColor: "{colors.warning-100}", textColor: "{colors.warning-700}" }
+  badge-info:        { backgroundColor: "{colors.blue-100}", textColor: "{colors.blue-700}" }
 
-  # ─── Select trigger (select.tsx) — asymmetric padding pl-N pr-(N-1) for chevron balance (decided 2026-05-07). ───
   select-trigger:
     backgroundColor: "{colors.ink-50}"
     textColor: "{colors.ink-800}"
     rounded: "{rounded.sm}"
-    height: 36                           # h-9 default
-    padding: "0 12 0 16"                 # pl-4 pr-3 default; pl-3 pr-2 at sm/xs
+    height: 36
+    padding: "0 12 0 16"  # pl-4 pr-3 default; pl-3 pr-2 at sm/xs (asymmetric for chevron)
 
-  # ─── Tabs (tabs.tsx) — sliding white indicator on selection. ───
-  tabs-list:                             # ← code-direct: tabs.tsx — bg-muted track
-    backgroundColor: "{colors.muted}"
-    rounded: "{rounded.sm}"
-    height: 32                           # h-8
-    padding: 4                           # p-1
-  tabs-trigger-active:
+  tabs-list: { backgroundColor: "{colors.muted}", rounded: "{rounded.sm}", height: 32, padding: 4 }  # active trigger: bg-background rounded-xs
+  segmented: { backgroundColor: "{colors.muted}", rounded: "{rounded.sm}", height: 32 }              # active item: bg-background rounded-xs
+
+  dialog:
     backgroundColor: "{colors.background}"
-    textColor: "{colors.foreground}"
-    rounded: "{rounded.xs}"
+    rounded: "{rounded.xl}"  # 12px LOCKED
+    padding: 16
+    elevation: "shadow-modal"  # overlay: bg-ink-900/40 + backdrop-blur-xs
+  sheet: { backgroundColor: "{colors.background}", rounded: "{rounded.none}", elevation: "shadow-modal" }  # right-docked drawer
 
-  # ─── Segmented (segmented.tsx) — pill-style selector with sliding indicator. ───
-  segmented:
-    backgroundColor: "{colors.muted}"
-    rounded: "{rounded.sm}"
-    height: 32                           # h-8 default; h-7 at sm
-  segmented-item-active:
-    backgroundColor: "{colors.background}"
-    textColor: "{colors.foreground}"
-    rounded: "{rounded.xs}"
+  table-header:    { backgroundColor: "{colors.ink-50}", textColor: "{colors.ink-600}", typography: "{typography.body-sm}" }  # row hover: bg-ink-50
+  pagination-link: { textColor: "{colors.ink-600}", typography: "{typography.data}" }  # rendered as <button>, not <a>
 
-  # ─── Dialog / AlertDialog (dialog.tsx, alert-dialog.tsx). Modal tier — 12px radius + shadow-modal. ───
-  dialog:                                # ← code-direct: dialog.tsx
-    backgroundColor: "{colors.background}"
-    textColor: "{colors.ink-900}"
-    rounded: "{rounded.xl}"              # 12px LOCKED override
-    padding: 16                          # p-4
-    elevation: "shadow-modal"            # 16px lift + 1px ring (index.css:142–144)
-  dialog-overlay:
-    backgroundColor: "{colors.ink-900}"  # @ 40% with backdrop-blur-xs
+  hero-numeric: { textColor: "{colors.ink-900}", typography: "{typography.hero-numeric-default}" }  # also: hero-numeric-lg variant
+  toast:        { backgroundColor: "{colors.background}", textColor: "{colors.ink-900}", rounded: 8, elevation: "shadow-popup" }
+  status-dot:   { rounded: "{rounded.full}" }  # tones: success-600, warning-600, destructive, blue-600, ink-500
+  tag:          { backgroundColor: "{colors.ink-100}", textColor: "{colors.ink-900}", rounded: "{rounded.full}", height: 24, typography: "{typography.body-xs}" }
 
-  # ─── Sheet (sheet.tsx) — right-docked drawer for inspection workflows. ───
-  sheet:                                 # ← code-direct: sheet.tsx
-    backgroundColor: "{colors.background}"
-    textColor: "{colors.ink-900}"
-    rounded: "{rounded.none}"            # flush against viewport edge
-    elevation: "shadow-modal"
+  switch:   { backgroundColor: "{colors.primary}" }  # checked = primary, unchecked = input (ink-200); thumb rounded-full
+  checkbox: { backgroundColor: "{colors.primary}", textColor: "{colors.primary-foreground}", rounded: "{rounded.xs}" }  # checked state
+  radio:    { backgroundColor: "{colors.primary}", rounded: "{rounded.full}" }  # checked state
 
-  # ─── Table (table.tsx) — header bg-ink-50, three-tier body cell tone (decided). ───
-  table-header:                          # ← code-direct: table.tsx — bg-ink-50 with top border
-    backgroundColor: "{colors.ink-50}"
-    textColor: "{colors.ink-600}"        # column heads = sans Title Case font-medium ink-600
-    typography: "{typography.body-sm}"
-  table-row:
-    backgroundColor: "{colors.background}"
-  table-row-hover:
-    backgroundColor: "{colors.ink-50}"
-
-  # ─── Pagination (pagination.tsx). PaginationLink renders <button>, not <a> (decided 2026-05-06). ───
-  pagination-link:
-    textColor: "{colors.ink-600}"
-    typography: "{typography.data}"      # tabular-nums
-
-  # ─── HeroNumeric (hero-numeric.tsx). Single source for sans-tabular hero numerics ≥24px (decided 2026-05-07). ───
-  hero-numeric:
-    textColor: "{colors.ink-900}"
-    typography: "{typography.hero-numeric-default}"
-  hero-numeric-lg:
-    textColor: "{colors.ink-900}"
-    typography: "{typography.hero-numeric-lg}"
-
-  # ─── Toast / sonner (sonner.tsx). ───
-  toast:
-    backgroundColor: "{colors.background}"
-    textColor: "{colors.ink-900}"
-    rounded: 8                           # 0.5rem — sonner-specific, not @theme rounded scale
-    elevation: "shadow-popup"
-
-  # ─── StatusDot (status-dot.tsx). 6px dot, full radius. ───
-  status-dot-success:
-    backgroundColor: "{colors.success-600}"
-    rounded: "{rounded.full}"
-  status-dot-warning:
-    backgroundColor: "{colors.warning-600}"
-    rounded: "{rounded.full}"
-  status-dot-danger:
-    backgroundColor: "{colors.destructive}"
-    rounded: "{rounded.full}"
-  status-dot-info:
-    backgroundColor: "{colors.blue-600}"
-    rounded: "{rounded.full}"
-  status-dot-neutral:
-    backgroundColor: "{colors.ink-500}"
-    rounded: "{rounded.full}"
-
-  # ─── Tag (tag.tsx). Removable filter pill — separate from Badge. ───
-  tag:
-    backgroundColor: "{colors.ink-100}"
-    textColor: "{colors.ink-900}"
-    rounded: "{rounded.full}"            # rounded-full — pill shape
-    height: 24                           # h-6
-    typography: "{typography.body-xs}"
-
-  # ─── Switch (switch.tsx). ink-200 unchecked / ink-900 checked. ───
-  switch-checked:
-    backgroundColor: "{colors.primary}"
-  switch-unchecked:
-    backgroundColor: "{colors.input}"    # ink-200
-
-  # ─── Checkbox / Radio. Minimum hit-target via after:-inset padding. ───
-  checkbox-checked:
-    backgroundColor: "{colors.primary}"
-    textColor: "{colors.primary-foreground}"
-    rounded: "{rounded.xs}"              # 4px
-  radio-checked:
-    backgroundColor: "{colors.primary}"
-    rounded: "{rounded.full}"
-
-  # ─── DeltaTag (specimen in CMP003BadgesAndTags.tsx CMP-003.3) — directional pill. ───
-  # NOT a Badge. Inline-flex with arrow icon + mono tabular medium 12px value text.
-  # `inverted` flag for rate metrics where lower=better (latency, error-rate, cost-per-x).
-  # Volume metrics stay sign-based (Total Cost rises = usage growth, not bad).
-  delta-tag-positive:                    # default sentiment: positive = green
-    textColor: "{colors.success-700}"
-  delta-tag-negative:                    # default sentiment: negative = red
-    textColor: "{colors.destructive}"
-
-  # ─── VendorAvatar (icons/vendor-meta.tsx). Bare brand-colored icon at size-4 — NO chip wrapper (decided 2026-05-06 iter 7). ───
-  vendor-avatar:
-    rounded: "{rounded.none}"            # bare icon, no container chrome
-
-  # ─── BrandMark (icons/brand-mark.tsx). 7-path constellation, 280×280 viewbox. ───
-  brand-mark:
-    textColor: "{colors.blue-700}"       # canonical mark color — anchored to logomark.svg #1F2FCE
+  delta-tag:    { textColor: "{colors.success-700}" }  # default: positive=success-700, negative=destructive; inverted flips (rate metrics only)
+  vendor-avatar:{ rounded: "{rounded.none}" }  # bare icon, no chip wrapper
+  brand-mark:   { textColor: "{colors.blue-700}" }  # logomark.svg fill #1F2FCE
 ---
 
 # Design System — Constellation Gate AI
@@ -464,11 +304,9 @@ components:
 
 ---
 
-## 0. Direction *(our extension — preserved as unknown section by the linter)*
+## 0. Direction *(our extension)*
 
-- **Who:** the human running an AI gateway in production. Engineer or platform operator. Reads stack traces. Cares about p95 latency, error rate, token-spend per tenant, and audit anchors. Has Datadog, Splunk, and Grafana open in adjacent tabs.
-- **Verb:** **inspect** — every page is a lens onto traffic, spend, latency, conversation history, or security posture. Read-heavy. Interaction is filter, sort, drill-in, copy.
-- **Feel:** Vercel Geist meets Stripe Atlas — flat surfaces, dense rhythm, mono numerics, ink-900 primary (not blue), warm-paper canvas behind crisp white cards. Operational, not marketing.
+**Who:** human operator running an AI gateway in production. **Verb:** inspect — read-heavy; filter, sort, drill in, copy. **Feel:** Vercel Geist meets operator tooling — flat, dense, mono numerics, ink-900 primary, warm-paper canvas under white cards.
 
 ### Defaults being rejected
 
@@ -481,28 +319,22 @@ components:
 
 ---
 
-## 1. Overview *(also: "Brand & Style" — Google canonical §1)*
+## 1. Overview *(Google canonical §1)*
 
-Constellation Gate AI is an operator dashboard for an AI gateway. Every model API call routes through the gateway; this dashboard is the lens onto that traffic — request firehose, conversation reconstruction, KPI rails, security posture, audit anchoring. The audience is the human running it in production, not a product manager evaluating a demo.
+Operator dashboard for an AI gateway. Read-heavy interaction (filter, sort, drill in, copy). Information density is high: three-tier table ink (500/800/900), right-aligned mono-tabular numerics, KPI rails with sparklines + delta tags, modals as drill-ins (not splash dialogs). Warm-paper canvas (`#ECECE7`) under white cards painted with shadow-as-border.
 
-The visual register is **Vercel Geist meets operator tooling** — flat surfaces, dense rhythm, ink-900 primary, mono numerics dominant on data surfaces, sans for human-read content. A warm-paper canvas (`#ECECE7`) sits behind crisp white cards painted with shadow-as-border. Information density is high: tables follow a three-tier body-cell ink policy (500/800/900); numerics are right-aligned and mono tabular; KPI rails carry sparklines + delta tags; modals are drill-ins. The interaction model is read-heavy — filter, sort, drill in, copy.
-
-**Key characteristics:** 5 OKLCH ramps × 11 steps (`src/index.css:33–96`) · two-tier material ladder 6/12/4px (`src/index.css:280–290`) · five-voice typography (decided 2026-05-07) · no dark mode (`:root.dark` block intentionally absent) · ink-900 primary, not blue · shadow-as-border, not solid borders (`src/index.css:124–144`).
+**Key characteristics:** 5 OKLCH ramps × 11 steps · two-tier material ladder (6/12/4px) · five-voice typography · no dark mode · ink-900 primary, not blue · shadow-as-border, not solid borders.
 
 ---
 
 ## 2. Colors *(Google canonical §2)*
 
-The single source of truth is `src/index.css` `@theme {}`. **All values are OKLCH**; raw hex appears only on atomic surfaces (`#FFFFFF`, `#ECECE7` canvas) and on a small set of non-semantic platform tokens (syntax + macOS traffic lights). **No raw hex / oklch / rgba outside the `@theme` block.**
+Two layers: **palette atoms** (5 OKLCH ramps × 11 steps + atomic surfaces + 8-slot chart palette) in `@theme {}`, and **semantic layer** (shadcn vocab: `--background`, `--primary`, etc.) in `:root {}`. Semantic tokens always resolve to a palette atom via `var(--color-*)`. **No raw hex/oklch/rgba outside `@theme`.**
 
-The system has two layers:
-1. **Palette atoms** (5 ramps × 11 steps + atomic surfaces + chart palette) — `@theme {}` in `src/index.css:11–158`
-2. **Semantic layer** (shadcn vocabulary: `--background`, `--foreground`, `--primary`, etc.) — `:root {}` in `src/index.css:164–222`. Every semantic token resolves to a palette atom via `var(--color-*)`. **Never inline raw hex/oklch/rgba in this layer.**
+### Primary & brand accent
 
-### Primary & Brand Accent
-
-- **Ink** (`#0E0E0E` ≈ `oklch(0.090 0 0)` ← `{colors.ink-900}`) — Primary action color. Buttons, foreground, headlines, table primary identifier. **Not blue.** ← code-direct: `src/index.css:42, 174`
-- **Blue** (`#1F2FCE` ≈ `oklch(0.345 0.224 268.85)` ← `{colors.blue-700}`) — Brand accent. Anchored to `public/logomark.svg`; the rest of the blue ramp is derived around it. Used for info / completed / active-tab / focus. **Never for primary CTAs. Never for inline links.** ← code-direct: `src/index.css:54`
+- **Ink** `oklch(0.090 0 0)` ← `{colors.ink-900}` — primary action, foreground, headlines. **Not blue.**
+- **Blue** `oklch(0.345 0.224 268.85)` ≈ `#1F2FCE` ← `{colors.blue-700}` — brand accent (anchored to `public/logomark.svg`). Info / completed / active-tab / focus only. Never primary CTA. Never inline links.
 
 ### Step roles (apply across all 5 ramps)
 
@@ -536,29 +368,16 @@ KPI rail sparklines also consume chart palette tokens (`--color-chart-1` blue, `
 
 ### Vendor brand colors
 
-External provider identity colors. Used only by `<VendorAvatar />` — **bare brand-colored icon at `size-4`, no chip wrapper** (locked 2026-05-06, iteration 7).
-
-| Vendor | Color |
-|--------|-------|
-| Anthropic | `#D97757` |
-| OpenAI | `#10A37F` |
-| Google (Gemini) | canonical Google gradient (multi-color SVG) |
-| Meta | `#0064E0` |
-| Mistral | five-band gradient (multi-color SVG) |
-| DeepSeek | `#4D6BFE` |
-| Cohere | three-blob multi-color SVG |
-| xAI (Grok) | `#3D3D3D` |
-
-Three vendors render multi-color via per-path SVG fills (Cohere, Mistral, Gemini) — for those, the wrapper's `style.color` is ignored. ← code-direct: `src/components/icons/vendor-meta.tsx`
+Used only by `<VendorAvatar />` (bare icon at `size-4`, no chip wrapper). Anthropic `#D97757` · OpenAI `#10A37F` · Meta `#0064E0` · DeepSeek `#4D6BFE` · xAI `#3D3D3D` · Google/Mistral/Cohere multi-color SVG fills (wrapper `style.color` ignored). Source: `src/components/icons/vendor-meta.tsx`.
 
 ### Do not use
 
-- **Raw hex / oklch / rgba outside the `@theme` block.** Every color value flows through the palette → semantic → component chain.
-- **Single-token semantics** like `--color-warning` or `-2` brighter variants — removed in the OKLCH migration. Use ramp tokens (`text-warning-700`, `bg-success-100`).
-- **Blue for primary action.** `--primary` resolves to ink-900. Don't reintroduce `bg-blue-600` as primary fill.
-- **Blue for inline links.** Links are ink + permanent faint underline (see Components §7 Inline links).
-- **`text-ink-600` or `text-ink-700` as table body-cell tones** without explicit reason — middle-tier neutrals collide with the three-tier policy (see Components §7 Tables).
-- **Vendor colors as chart series colors** by default. Charts use `--chart-1..8` from palette index. (decided 2026-05-06)
+- Raw hex/oklch/rgba outside `@theme`.
+- Single-token semantics (`--color-warning`, `-2` variants) — use ramp steps (`text-warning-700`, `bg-success-100`).
+- Blue for primary action — `--primary` resolves to ink-900.
+- Blue for inline links — use ink + faint underline (see §7).
+- `text-ink-600`/`text-ink-700` as table body-cell tones — collides with three-tier policy.
+- Vendor colors as chart series colors by default — charts use `--chart-1..8` by index.
 
 ---
 
@@ -566,14 +385,14 @@ Three vendors render multi-color via per-path SVG fills (Cohere, Mistral, Gemini
 
 ### Font Family
 
-- **Sans (UI):** `"Geist", ui-sans-serif, system-ui, sans-serif` ← code-direct: `src/index.css:13`
-- **Mono (machine voice):** `"Geist Mono", ui-monospace, "SFMono-Regular", monospace` ← code-direct: `src/index.css:14`
+- **Sans:** `"Geist", ui-sans-serif, system-ui, sans-serif`
+- **Mono:** `"Geist Mono", ui-monospace, "SFMono-Regular", monospace`
 
-Loaded via Google Fonts CDN (`src/index.css:2`) + `@fontsource-variable/geist` fallback (`src/index.css:6`). **No IBM Plex** — tokens removed 2026-05-05. **No `--font-heading` separate from `--font-sans`** — Geist serves both; aliased via `@theme inline` (`src/index.css:244–245`).
+Loaded via Google Fonts CDN + `@fontsource-variable/geist` fallback. Geist serves headings too — `--font-heading` aliased to `--font-sans`. No IBM Plex.
 
 ### Hierarchy
 
-Tailwind named scale only. Three sizes overridden in `@theme {}` (`src/index.css:152–157`) to Geist's heading scale (even-numbered, larger increments at the top); all other sizes already match Geist values. **Arbitrary `text-[Npx]` is banned.**
+Tailwind named scale only. Three sizes overridden in `@theme` to Geist's heading scale (even-numbered, larger increments at top); other sizes match Geist defaults. **Arbitrary `text-[Npx]` is banned.**
 
 | Role (YAML key) | Font | Size | Weight | Line Height | Letter Spacing | Rule | Notes |
 |---|---|---|---|---|---|---|---|
@@ -605,16 +424,9 @@ Each voice has a single job; mixing them is the drift surface. **Critical rule:*
 
 **Hero/data split is size-gated.** Hero summary numerics ≥24px render sans (sans + `tabular-nums` carries the cell-padding mono affordance while signaling "presented summary"). **Below ~20px, numerics revert to mono regardless of role** — modal `KpiTile` at text-lg, table cells, badge contents, row costs all stay mono. The cutoff is real: at ~18px the digit-shape differences between Geist Sans tabular and Geist Mono become more visible, and the mono-illusion breaks.
 
-### Mono ratio
-
-Operational surfaces target ~60% mono / 40% sans. Mono is the "machine voice"; sans is the "human voice." Taste-driven, not enforced.
-
 ### Principles
 
-- **Weight ceiling:** 500 on display + headlines. Don't reach for 600/700 — the type scale + size carries hierarchy.
-- **Size floor for sans heroes:** 24px. Below that, numerics revert to mono.
-- **Letter spacing:** `tracking-tight` on sans heroes; `0.1em` on mono eyebrows; default elsewhere.
-- **Hierarchy comes from size + weight + voice change**, not color. Color is for state (active, error, muted), not structural rank.
+Operational surfaces ~60% mono / 40% sans. Weight ceiling 500 (don't reach for 600/700 — size carries hierarchy). Hierarchy from size + weight + voice change, not color (color is for state).
 
 ---
 
@@ -639,79 +451,49 @@ Operational surfaces target ~60% mono / 40% sans. Mono is the "machine voice"; s
 
 ### Grid & Container
 
-- **Composed pages use a 12-column grid with 16px gutters:** `grid grid-cols-12 gap-4`. Section widths are expressed as `col-span-N` where the row sums to 12. Asymmetric layouts (hero + sidebar, e.g. `col-span-8` + `col-span-4`) live here naturally. ← decided
-- **Outer page margins** at `lg`, `xl`, `2xl` breakpoints: **24px on all sides** (`lg:p-6` or equivalent split). Smaller breakpoints can use less.
-- **The 16px gutter is intentionally tighter than the conventional Bootstrap / Material default (24px)** — denser surface, more on-genre for an operator tool. 16 and 24 are 4px multiples, so this coexists with the 4px-grid spacing rule.
-- **Spec-sheet artboards (CMP-000 through CMP-009)** use a fixed 1440px column (`<div className="flex flex-col w-[1440px]">`) to mirror the source Paper file. Real composed pages (CMP-012/013/014/016) are responsive. ← code-direct
-- **Page-header subtitle width** is capped at `max-w-1/2` on the **wrapper column** (not the `<p>` directly — fractional max-w on a leaf inside a content-sized column won't behave). ← decided
+- **Composed pages:** 12-column grid + 16px gutters (`grid grid-cols-12 gap-4`). Asymmetric layouts via `col-span-N` (row sums to 12).
+- **Outer page margins:** 24px (`lg:p-6`) at `lg`/`xl`/`2xl`; less below.
+- **Spec-sheet artboards** (CMP-000–CMP-009) use fixed 1440px column (`w-[1440px]`) to mirror Paper; composed pages (CMP-012/013/014/016) are responsive.
+- **Page-header subtitle width:** `max-w-1/2` on the *wrapper column* (not the `<p>` — fractional max-w on a leaf doesn't behave).
 
-### Whitespace Philosophy
-
-Whitespace carries hierarchy more than weight does. The 4px grid is non-negotiable; you express hierarchy by escalating from 4 → 8 → 12 → 16 → 24 in `gap` and `padding`, not by changing alignment or adding rules. A KPI rail uses `gap-4` between sections and `gap-1.5` inside; a section block uses `gap-6` from its neighbor. Cards never touch — they sit on the warm-paper canvas with their shadow-as-border doing the separation work.
-
-The body has a 40px linear-gradient grid on `--canvas-bg` (`src/index.css:306–311`). Anything that should sit on white needs an explicit `bg-white` or `bg-ink-50`.
+Whitespace carries hierarchy. Cards never touch — shadow-as-border does the separation. Body has a 40px linear-gradient grid on `--canvas-bg`; anything sitting on white needs explicit `bg-white` or `bg-ink-50`.
 
 ---
 
 ## 5. Elevation & Depth *(Google canonical §5)*
 
-Three canonical shadow tokens, all derived from `color-mix(in oklch, var(--color-ink-800) X%, transparent)` so the shadow family **tracks the ink ramp** instead of inlining `rgba()`.
+Three shadow tokens, all `color-mix(in oklch, var(--color-ink-800) X%, transparent)` — shadow family tracks the ink ramp, never inline `rgba()`.
 
-| Level | Treatment | Use | Source |
-|---|---|---|---|
-| 0 – Flat | none | Body text on canvas; inline content | implicit |
-| 1 – Raised | `--shadow-border` (1px ring 6% + 1px lift 6% + 2px ambient 4%) | **Everyday surfaces** — Card primitive, KpiRail, table containers, hero card chrome | `src/index.css:124–127` |
-| 1.5 – Hover | `--shadow-border-hover` (1px ring 8% + 1px lift 8% + 2px ambient 6%) | Hovered card variant | `src/index.css:128–131` |
-| 2 – Menu / Popover | `--shadow-popup` (4px lift 8% + 1px ring 4%) | Selects, popovers, tooltips, dropdown menus | `src/index.css:139–141` |
-| 3 – Modal | `--shadow-modal` (16px lift 12% + 1px ring 6%) | Dialog, AlertDialog, Sheet (right-docked drawer) | `src/index.css:142–144` |
+| Tier | Token | Composition | Radius | Surfaces |
+|---|---|---|---|---|
+| Everyday | `--shadow-border` | 1px ring 6% + 1px lift 6% + 2px ambient 4% | `rounded-sm` (6px) | Card, KpiRail, table containers, hero card |
+| Hover | `--shadow-border-hover` | 1px ring 8% + 1px lift 8% + 2px ambient 6% | (same as everyday) | Hovered card variant |
+| Menu | `--shadow-popup` | 4px lift 8% + 1px ring 4% | `rounded-sm` (6px) | Select content, popovers, tooltips, dropdowns |
+| Modal | `--shadow-modal` | 16px lift 12% + 1px ring 6% | `rounded-xl` (12px LOCKED) | Dialog, AlertDialog, Sheet |
+| Sub-element | none | none | `rounded-xs` (4px) | Tabs trigger, Segmented item, SelectItem, Badge |
 
-**Rule:** shadow-first, **not** border-first. Card chrome is `rounded-sm bg-white shadow-(--shadow-border)` — no `border` class. Adapts to any background (warm-paper canvas or white) without reading harsh.
+**Rule:** shadow-first, never `border` class. **Concentric rule:** item radius < container radius (4px badge in 6px card in 12px modal). Don't override `rounded-xl` on modals — locked.
 
-**Material ladder pairing** (codified 2026-05-05):
+### Motion
 
-| Tier | Radius | Shadow | Surfaces |
-|------|--------|--------|----------|
-| Everyday | `rounded-sm` (6px) | `--shadow-border` | Card, KpiRail, table containers, hero card |
-| Modal | `rounded-xl` (12px LOCKED) | `--shadow-modal` | Dialog, AlertDialog, Sheet |
-| Sub-element | `rounded-xs` (4px) | none | Tabs trigger, Segmented item, SelectItem, Badge |
-| Menu / popover | `rounded-sm` (6px) | `--shadow-popup` | Select content, dropdowns, tooltips |
-
-**Concentric rule:** item radius < container radius. A 4px badge inside a 6px card inside a 12px modal reads correct; the reverse looks wrong.
-
-### Motion defaults
-
-All motion derived from the codebase. `transition-[colors,box-shadow]` (NOT `transition-all`), `duration-150 ease-out`, `motion-reduce:transition-none` everywhere.
-
-- **Button press:** 150ms ease-out, color + shadow + `active:translate-y-px` ← code-direct: `src/components/ui/button.tsx:11`
-- **Hover (pointer only):** 150ms ease-out on color/shadow only — no opacity ramp
-- **Sliding indicator (Tabs / Segmented / SegmentedPill):** 200ms ease-out, transform + width animated. Single visual idiom across every pill-style selector. ← decided
-- **Sheet enter:** 300ms ease-out, slide from right ← code-direct: `src/components/ui/sheet.tsx`
-- **Dialog enter:** 200ms ease-out, fade + zoom-in-95 ← code-direct: `src/components/ui/dialog.tsx`
-- **Toast:** sonner default (200ms enter + 4s hold + 200ms exit)
-- **Tab / icon swap:** 150ms ease-out
+`transition-[colors,box-shadow] duration-150 ease-out motion-reduce:transition-none` everywhere — NOT `transition-all`. Button press: + `active:translate-y-px`. Sliding indicator (Tabs/Segmented/SegmentedPill): 200ms ease-out, transform + width animated. Sheet enter: 300ms slide from right. Dialog enter: 200ms fade + zoom-in-95. Toast: sonner default (200ms enter + 4s hold + 200ms exit).
 
 ---
 
 ## 6. Shapes *(Google canonical §6)*
 
-### Border Radius Scale
+Driven by `--radius` (0.625rem = 10px base). **Modal radius is a locked override** at 12px regardless of base scaling.
 
-Driven by `--radius` token (`0.625rem` = 10px base) in `@theme inline` (`src/index.css:213, 280–290`). **Modal radius is a locked override** — `--radius-xl: 0.75rem` (12px) regardless of base scaling.
+| Token | Value | Use |
+|---|---|---|
+| `rounded.xs` | 4px | Sub-elements: Tabs trigger, Segmented item, SelectItem, Badge |
+| **`rounded.sm`** | **6px** | **Default for everyday surfaces — Card, Input, Select trigger, Button, Tabs list, table containers** |
+| `rounded.md` | 8px | Intermediate (sonner toast) |
+| `rounded.lg` | 10px | Intermediate / base radius |
+| `rounded.xl` | **12px LOCKED** | Modals only — Dialog, AlertDialog, Sheet |
+| `rounded.full` | 9999 | Pills — StatusDot, Tag, Switch thumb |
 
-| Token (YAML key) | Value | Uses | Context |
-|---|---|---|---|
-| `rounded.xs` | 4px | sub-elements | Tabs trigger, Segmented item, SelectItem, Badge |
-| **`rounded.sm`** | **6px** | **dominant** | **Default for everyday surfaces — Card, Input, Select trigger, Button, Tabs list, Segmented track, table containers** |
-| `rounded.md` | 8px | rare | Intermediate — sonner toast |
-| `rounded.lg` | 10px | rare | Intermediate — base radius value |
-| `rounded.xl` | **12px LOCKED** | modals only | Dialog, AlertDialog, Sheet — locked override |
-| `rounded.full` | 9999 | pills | Status dots, Tag, VendorAvatar (when wrapped in chip elsewhere — n/a today), Switch thumb track |
-
-**Rule:** sub-elements 4px · everyday surfaces 6px · modals 12px. Items inside containers always smaller radius than container (concentric rule). Don't mix radii on a single element. Don't override `rounded-xl` on modals — the 12px is intentional and load-bearing.
-
-### Shape Language
-
-Sharp-cornered isn't a thing here — every surface is rounded. But the curvature is tight, not soft: at 6px on a 36px-tall input, the radius reads as deliberate, not pillowy. Iconography from `lucide-react` at default stroke weight `1.75`; sizes step `size-3` (12px) / `size-3.5` (14px) / `size-4` (16px) / `size-5` (20px) chosen by surface density. Buttons trim icon-side padding via `data-icon="inline-start" | "inline-end"` so the icon doesn't visually shove the label.
+Iconography: `lucide-react` stroke `1.75`. Sizes: `size-3` (12px) / `size-3.5` / `size-4` (16px) / `size-5` (20px). In Buttons, set `data-icon="inline-start"` or `"inline-end"` for variant-aware padding trim.
 
 ---
 
@@ -914,37 +696,6 @@ The product targets desktop-first operator workflows; no mobile-shipped state to
 - **Sidebar** (left nav): no collapse spec today. Currently fixed at 256px (`w-64`) in DashboardChrome.
 - **KPI rail:** four sections side-by-side at composed widths. Mobile collapse strategy TBD.
 - **Tables:** horizontal scroll within container (`overflow-x-auto` on Table wrapper). Column priority not codified.
-
----
-
-## Agent Prompt Guide *(our extension — preserved)*
-
-### Quick Color Reference
-
-- **Primary CTA:** `{colors.primary}` background → `{colors.primary-foreground}` text (ink-900 on white)
-- **Page background (cards / dialogs):** `{colors.background}` (white); body bg is `{colors.canvas-bg}` (warm paper)
-- **Card surface:** `{colors.card}` with `shadow-(--shadow-border)` — no border class
-- **Heading text:** `{colors.foreground}` (ink-900)
-- **Body text:** `{colors.ink-800}`
-- **Secondary / muted text:** `{colors.muted-foreground}` (ink-500)
-- **Input placeholder:** `{colors.ink-400}`
-- **Input border (default):** `{colors.input}` (ink-200)
-- **Input border (focused):** `{colors.ring}` (ink-400)
-- **Label text:** `{colors.foreground}` (ink-900) — `font-medium`
-- **Semantic / required indicator:** `{colors.destructive}` (danger-600)
-- **Brand accent (info, focus, completed, active tab):** `{colors.blue-700}`
-- **Inline link:** ink + `decoration-ink-200` underline (NO blue, render as `<button>`)
-
-### Iteration Guide
-
-- **Type:** `{typography.body}` default; escalate h3 (card) → h2 (section) → h1 (page) → `{typography.hero-numeric-lg}` (full-page hero metric). Sans labels `font-medium` minimum.
-- **Surfaces:** `{components.card}` (`rounded-sm bg-white py-4 shadow-(--shadow-border)`, content `px-4`); modal `rounded-xl shadow-(--shadow-modal)`; menu `rounded-sm shadow-(--shadow-popup)`.
-- **Controls:** `{components.button-default}` for primary, `outline`/`ghost` for secondary/tertiary. `{components.input}` `bg-ink-50 border-ink-200 rounded-sm h-9`.
-- **Spacing:** default gap `{spacing.4}` (16px); dense rows `{spacing.3}` (12px); outer page margins `{spacing.6}` (24px) at `lg`/`xl`/`2xl`. 4px-grid only.
-- **Layout:** 12-column grid + 16px gutters on composed pages; target ≥1280px.
-- **Charts:** series colors from `--chart-1..8` by index, NOT from `VENDOR_META[v].color`.
-- **Icons:** lucide-react stroke `1.75`; sizes `size-3` / `size-3.5` / `size-4` / `size-5` by density. In Buttons, set `data-icon="inline-start"`/`inline-end"` for variant-aware padding.
-- **Links:** `<button type="button">` + ink + `decoration-ink-200` underline (→ `decoration-ink-500` on hover/focus). NOT blue.
 
 ---
 
