@@ -923,20 +923,19 @@ function ModelsTable({
           return (
             <TableRow
               key={model.id}
-              role="button"
-              tabIndex={0}
-              aria-label={`Inspect ${model.name}`}
-              className="cursor-pointer transition-colors duration-150 ease-out motion-reduce:transition-none hover:bg-ink-50 focus-visible:bg-ink-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500"
+              className="cursor-pointer transition-colors duration-150 ease-out motion-reduce:transition-none hover:bg-ink-50"
               onClick={() => onSelect(model)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  onSelect(model);
-                }
-              }}
             >
               <TableCell className="max-w-[280px]">
-                <div className="flex items-center gap-2 min-w-0">
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onSelect(model);
+                  }}
+                  aria-label={`Inspect ${model.name}`}
+                  className="flex items-center gap-2 min-w-0 w-full text-left bg-transparent p-0 outline-none rounded-xs focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                >
                   <VendorAvatar vendor={model.vendor} />
                   <span
                     className="font-sans text-sm text-ink-900 truncate"
@@ -944,7 +943,7 @@ function ModelsTable({
                   >
                     {model.name}
                   </span>
-                </div>
+                </button>
               </TableCell>
               <TableCell className="whitespace-nowrap">
                 <code
@@ -1028,8 +1027,14 @@ function ProviderStack({ offerings }: { offerings: ProviderOffering[] }) {
   }
   const visible = vendors.slice(0, 3);
   const overflow = vendors.length - visible.length + unmappedCount;
+  const totalProviders = vendors.length + unmappedCount;
+  const vendorNames = vendors.map((v) => VENDOR_META[v].label).join(', ');
+  const ariaLabel =
+    unmappedCount > 0
+      ? `Available from ${totalProviders} providers including ${vendorNames}`
+      : `Available from ${totalProviders} providers: ${vendorNames}`;
   return (
-    <div className="flex items-center gap-1.5">
+    <div role="img" aria-label={ariaLabel} className="flex items-center gap-1.5">
       <div className="flex items-center">
         {visible.map((v, i) => (
           <span
@@ -1049,7 +1054,7 @@ function ProviderStack({ offerings }: { offerings: ProviderOffering[] }) {
         ))}
       </div>
       {overflow > 0 ? (
-        <span className="font-mono text-xs text-ink-500 tabular-nums">+{overflow}</span>
+        <span aria-hidden className="font-mono text-xs text-ink-500 tabular-nums">+{overflow}</span>
       ) : null}
     </div>
   );

@@ -590,7 +590,7 @@ function EmptyState({
 }) {
   return (
     <div className="flex flex-col items-center justify-center gap-3 py-16 px-6 rounded-sm bg-white shadow-(--shadow-border) text-center">
-      <h2 className="font-sans text-base font-medium text-ink-900 m-0">{title}</h2>
+      <h3 className="font-sans text-base font-medium text-ink-900 m-0">{title}</h3>
       <p className="font-sans text-sm text-ink-500 max-w-md text-pretty m-0">
         {body}
       </p>
@@ -800,7 +800,7 @@ function RowActionsMenu({
                   onClick={item.onSelect}
                   className={cn(
                     'relative flex w-full cursor-pointer items-center gap-2 rounded-xs h-8 px-3 text-sm outline-none select-none',
-                    'data-[highlighted]:bg-ink-100 focus:bg-ink-100',
+                    'data-[highlighted]:bg-ink-100 focus-visible:bg-ink-100',
                     item.destructive
                       ? 'text-destructive data-[highlighted]:text-destructive'
                       : 'text-ink-900',

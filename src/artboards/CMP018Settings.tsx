@@ -339,7 +339,6 @@ function LoggingCard() {
               id="setting-log-bodies"
               checked={logBodies}
               onCheckedChange={setLogBodies}
-              aria-label="Log request & response bodies"
             />
           }
           first
@@ -364,7 +363,6 @@ function LoggingCard() {
               <SelectTrigger
                 id="setting-retention"
                 size="default"
-                aria-label="Retention period"
                 className="w-32 border-ink-200 bg-white text-ink-900"
               >
                 <SelectValue />
@@ -388,7 +386,6 @@ function LoggingCard() {
               <SelectTrigger
                 id="setting-log-level"
                 size="default"
-                aria-label="Log level"
                 className="w-32 border-ink-200 bg-white text-ink-900"
               >
                 <SelectValue>
@@ -483,9 +480,9 @@ function IntegrationEmptyState() {
       >
         <Layers className="size-6" strokeWidth={1.5} />
       </span>
-      <h2 className="font-sans text-base font-medium text-ink-900 m-0">
+      <h3 className="font-sans text-base font-medium text-ink-900 m-0">
         No integrations configured
-      </h2>
+      </h3>
       <p className="font-sans text-sm text-ink-500 max-w-md text-pretty m-0">
         Forward gateway events to Slack, PagerDuty, Datadog, and other
         destinations. Integrations are scoped to this workspace.

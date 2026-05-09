@@ -388,20 +388,21 @@ function ApiKeyRiskScoresCard() {
               return (
                 <TableRow
                   key={row.key}
-                  role="button"
-                  tabIndex={0}
-                  aria-label={`Inspect ${row.key} (${row.tierLabel} risk)`}
-                  className="cursor-pointer transition-colors duration-150 ease-out motion-reduce:transition-none hover:bg-ink-50 focus-visible:bg-ink-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500"
+                  className="cursor-pointer transition-colors duration-150 ease-out motion-reduce:transition-none hover:bg-ink-50"
                   onClick={() => { /* drill target — wire to detail panel */ }}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      /* drill target — wire to detail panel */
-                    }
-                  }}
                 >
-                  <TableCell className="font-mono text-sm text-ink-900 -tracking-[0.14px] whitespace-nowrap">
-                    {row.key}
+                  <TableCell className="whitespace-nowrap">
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        /* drill target — wire to detail panel */
+                      }}
+                      aria-label={`Inspect ${row.key} (${row.tierLabel} risk)`}
+                      className="font-mono text-sm text-ink-900 -tracking-[0.14px] text-left bg-transparent p-0 outline-none rounded-xs focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                    >
+                      {row.key}
+                    </button>
                   </TableCell>
                   <TableCell className="whitespace-nowrap">
                     <Badge variant={badge.variant}>

@@ -201,7 +201,7 @@ function HeroMetricCard() {
           </div>
           <div className="flex items-baseline gap-3">
             <HeroNumeric size="lg">
-              {HERO_TOTAL.toLocaleString('en-US')}
+              {HERO_TOTAL.toLocaleString()}
             </HeroNumeric>
             <DeltaTag delta="+12.8%" note="vs last hour" />
           </div>
@@ -561,17 +561,8 @@ function RequestsTableSection() {
               return (
                 <TableRow
                   key={`${row.time}-${i}`}
-                  role="button"
-                  tabIndex={0}
-                  aria-label={`Inspect ${row.code} request to ${row.model} at ${row.time}`}
-                  className="cursor-pointer transition-colors duration-150 ease-out motion-reduce:transition-none hover:bg-ink-50 focus-visible:bg-ink-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500"
+                  className="cursor-pointer transition-colors duration-150 ease-out motion-reduce:transition-none hover:bg-ink-50"
                   onClick={() => setSelectedRow(row)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      setSelectedRow(row);
-                    }
-                  }}
                 >
                   <TableCell className="whitespace-nowrap font-mono tabular-nums -tracking-[0.14px] text-ink-500">
                     {row.time}
@@ -583,7 +574,15 @@ function RequestsTableSection() {
                     </Badge>
                   </TableCell>
                   <TableCell className="max-w-[260px]">
-                    <div className="flex items-center gap-2 min-w-0">
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedRow(row);
+                      }}
+                      aria-label={`Inspect ${row.code} request to ${row.model} at ${row.time}`}
+                      className="flex items-center gap-2 min-w-0 w-full text-left bg-transparent p-0 outline-none rounded-xs focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                    >
                       <VendorAvatar vendor={row.vendor} />
                       <span
                         className="font-mono text-sm text-ink-900 -tracking-[0.2px] truncate"
@@ -591,7 +590,7 @@ function RequestsTableSection() {
                       >
                         {row.model}
                       </span>
-                    </div>
+                    </button>
                   </TableCell>
                   <TableCell className="max-w-[200px] font-mono tabular-nums -tracking-[0.14px] text-ink-800">
                     <span className="block truncate" title={row.conversation}>
@@ -705,7 +704,7 @@ function RequestDetailBody({ row }: { row: RequestRow }) {
             Apr 22, 2026 · {row.time} UTC · part of conversation{' '}
             <button
               type="button"
-              className="text-ink-700 bg-transparent p-0 outline-none underline decoration-ink-200 underline-offset-2 hover:decoration-ink-500 focus-visible:decoration-ink-500"
+              className="text-ink-700 bg-transparent p-0 outline-none rounded-xs underline decoration-ink-200 underline-offset-2 hover:decoration-ink-500 focus-visible:decoration-ink-500 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
             >
               {row.conversation}
             </button>

@@ -321,20 +321,19 @@ function ConversationsTableSection() {
             return (
               <TableRow
                 key={row.conversationId}
-                role="button"
-                tabIndex={0}
-                aria-label={`Inspect conversation ${row.title}`}
                 onClick={() => setSelectedRow(row)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    setSelectedRow(row);
-                  }
-                }}
-                className="cursor-pointer transition-colors duration-150 ease-out motion-reduce:transition-none hover:bg-ink-50 focus-visible:bg-ink-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500"
+                className="cursor-pointer transition-colors duration-150 ease-out motion-reduce:transition-none hover:bg-ink-50"
               >
                 <TableCell className="max-w-[360px]">
-                  <div className="flex flex-col gap-1 min-w-0">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedRow(row);
+                    }}
+                    aria-label={`Inspect conversation ${row.title}`}
+                    className="flex flex-col gap-1 min-w-0 w-full text-left bg-transparent p-0 outline-none rounded-xs focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                  >
                     <span
                       title={row.title}
                       className="font-sans text-sm text-ink-900 -tracking-[0.14px] truncate"
@@ -344,7 +343,7 @@ function ConversationsTableSection() {
                     <span className="font-mono text-xs text-ink-500 -tracking-[0.01em]">
                       {row.conversationId}
                     </span>
-                  </div>
+                  </button>
                 </TableCell>
                 <TableCell className="max-w-[220px] font-mono text-sm text-ink-800 -tracking-[0.14px]">
                   <span className="block truncate" title={row.initiator}>
