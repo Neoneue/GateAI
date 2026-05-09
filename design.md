@@ -558,6 +558,15 @@ The semantic test: are these *pages of the surface* (line tabs) or *filters/view
 - **Pagination** (`pagination.tsx`) — **renders as `<button type="button">`, not `<a>`** (no router in this app; visual = link styling, semantics = button). Same conversion applies to inline anchors in composed surfaces (modal subtitle refs, row-title links).
 - **TablePaginationFooter** (`table-pagination-footer.tsx`) — **single source of truth for table pagination chrome.** Composes count summary + rows-per-page Select + windowed page links. State (page + rowsPerPage) lives in parent; primitive is controlled. `buildPageWindow` helper exported. **Don't hand-roll** — extend the primitive.
 
+**Row-as-button pattern** (locked 2026-05-09 after WIG audit). When a table row drills into a detail surface (modal or page swap), the row is **not** `<tr role="button" tabIndex={0}>` — that's invalid ARIA (`<tr>` only legally carries `role="row"`). Instead:
+
+- `<tr>` keeps default semantics. `onClick` on the `<tr>` stays as a **mouse-only convenience** (no role, no tabIndex, no `aria-label`, no `onKeyDown`).
+- The row's **primary identifier cell** (model name, conversation title, key — pick the cell whose content names the row) wraps its content in a real `<button type="button">` carrying the row's `aria-label` and the focus ring.
+- Button onClick fires the same handler as the row onClick, with `e.stopPropagation()` so the two don't double-fire.
+- Button recipe: `flex items-center gap-2 min-w-0 w-full text-left bg-transparent p-0 outline-none rounded-xs focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2` (or `flex flex-col gap-1` when the primary cell is a stacked title + sub-id).
+
+**This pattern is currently inlined in 4 sites** (CMP-013/014/015/016). Extraction to a `<RowActionButton>` primitive is owed — see "Drift to Normalize" below. Until extracted, all 4 sites must use the exact recipe above; do not divergently restyle.
+
 **Three-tier body-cell ink density** (locked):
 
 | Tone | Use |
@@ -676,6 +685,8 @@ When one section is the focal action, accent it with `bg-blue-50` (and the icon 
 - **Don't reintroduce the `VendorAvatar` chip wrapper** — locked at iteration 7.
 - **Don't add a "Lower is better" qualifier sub-line** to inverted DeltaTags — tried and rejected.
 - **Don't reintroduce dark-mode raw values** — when activated, redefine semantic tokens in a `:root.dark` block, not by re-introducing oklch values inline.
+- **Don't hand-roll a recipe in 2+ sites.** Survey `src/components/ui/` first; if no primitive matches and you'll need the recipe twice, extract a primitive *before* writing it inline. If an audit finds the same bug in two files, extract before fixing — fixing two copies in place is the symptom of missing the primitive.
+- **Don't put `role="button"` on `<tr>`.** Use the row-as-button pattern in §7 Lists/Tables — `<button>` inside the primary cell, `<tr>` keeps default semantics with `onClick` as mouse-only convenience.
 
 ---
 
@@ -710,7 +721,12 @@ The product targets desktop-first operator workflows; no mobile-shipped state to
 
 ## Drift to Normalize *(our extension)*
 
-None outstanding (2026-05-07). If unbound hex appears outside `@theme`, bind to the closest ramp atom.
+Two un-extracted patterns owe primitives (added 2026-05-09 after WIG audit):
+
+1. **`<RowActionButton>` — 4 sites.** Row-as-button pattern (see §7 Lists/Tables) is currently inlined in `CMP013Requests.tsx`, `CMP014Conversations.tsx`, `CMP015Security.tsx`, `CMP016Models.tsx`. Same recipe four times. Extract to `src/components/ui/row-action-button.tsx` with a `layout?: 'row' | 'stack'` prop and an `aria-label` required prop; convert all 4 sites. Until extracted, the recipe is locked — see §7.
+2. **`<EmptyState>` — 2 sites.** Page-level empty state ("No pending invitations" / "No integrations configured") is inlined in `CMP017Team.tsx` (`EmptyState`) and `CMP018Settings.tsx` (`IntegrationEmptyState`). Same shape: bordered-white card, centered icon-block + `<h3>` + body text + outline action button. Extract to `src/components/ui/empty-state.tsx`. (CMP-007's `CMP007ModalEmptyState.tsx` is a *modal-internal* empty-state specimen and is a different pattern; leave it.) The two inline copies were caught with the same `<h2>` → `<h3>` bug on the same day — that duplication is the extraction signal.
+
+If unbound hex appears outside `@theme`, bind to the closest ramp atom.
 
 ## Open Questions *(our extension)*
 
