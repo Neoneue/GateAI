@@ -988,7 +988,7 @@ function TraceItem({
             {event.label}
           </span>
           {event.status === 'warn' && event.warnNote ? (
-            <Badge variant="warning">
+            <Badge variant="warning" aria-label={`Warning: ${event.warnNote} match`}>
               <TriangleAlert className="size-3" strokeWidth={1.75} aria-hidden />
               {event.warnNote}
             </Badge>

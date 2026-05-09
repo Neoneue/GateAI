@@ -197,7 +197,7 @@ function KpiRail() {
 
 function CriticalRiskBanner() {
   return (
-    <div role="alert" className="rounded-sm bg-danger-50 border border-danger-200 p-4">
+    <div role="status" className="rounded-sm bg-danger-50 border border-danger-200 p-4">
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-3 min-w-0 max-w-2/3">
           <span
