@@ -232,7 +232,7 @@ export function CodeBlock({
       ? 'px-4 py-3'
       : density === 'compact'
       ? 'px-4 py-3'
-      : 'px-5 py-4';
+      : 'px-4 py-4';
   const text_cls = density === 'inline' ? 'text-xs/4' : 'text-xs/5';
   return (
     <div

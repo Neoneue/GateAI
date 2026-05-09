@@ -22,12 +22,14 @@ const CMP013Requests          = lazy(() => import('@/artboards/CMP013Requests').
 const CMP014Conversations     = lazy(() => import('@/artboards/CMP014Conversations').then(m => ({ default: m.CMP014Conversations })));
 const CMP015Security          = lazy(() => import('@/artboards/CMP015Security').then(m => ({ default: m.CMP015Security })));
 const CMP016Models            = lazy(() => import('@/artboards/CMP016Models').then(m => ({ default: m.CMP016Models })));
+const CMP017Team              = lazy(() => import('@/artboards/CMP017Team').then(m => ({ default: m.CMP017Team })));
+const CMP018Settings          = lazy(() => import('@/artboards/CMP018Settings').then(m => ({ default: m.CMP018Settings })));
 
 type PageId =
   | 'cmp-000' | 'cmp-001' | 'cmp-002' | 'cmp-003' | 'cmp-004'
   | 'cmp-005' | 'cmp-006' | 'cmp-007'
   | 'cmp-008a' | 'cmp-008b' | 'cmp-008c'
-  | 'cmp-009' | 'cmp-010' | 'cmp-011' | 'cmp-012' | 'cmp-013' | 'cmp-014' | 'cmp-015' | 'cmp-016';
+  | 'cmp-009' | 'cmp-010' | 'cmp-011' | 'cmp-012' | 'cmp-013' | 'cmp-014' | 'cmp-015' | 'cmp-016' | 'cmp-017' | 'cmp-018';
 
 type Page = {
   id: PageId;
@@ -60,6 +62,8 @@ const PAGES: Page[] = [
   { id: 'cmp-014',  code: 'CMP-014',  name: 'Conversations',        Component: CMP014Conversations },
   { id: 'cmp-015',  code: 'CMP-015',  name: 'Security',              Component: CMP015Security },
   { id: 'cmp-016',  code: 'CMP-016',  name: 'Models',                Component: CMP016Models },
+  { id: 'cmp-017',  code: 'CMP-017',  name: 'Team',                  Component: CMP017Team },
+  { id: 'cmp-018',  code: 'CMP-018',  name: 'Settings',              Component: CMP018Settings },
 ];
 
 export default function App() {

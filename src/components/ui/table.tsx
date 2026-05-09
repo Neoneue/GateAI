@@ -72,10 +72,15 @@ function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
   )
 }
 
-function TableHead({ className, ...props }: React.ComponentProps<"th">) {
+function TableHead({ className, scope = "col", ...props }: React.ComponentProps<"th">) {
   return (
     <th
       data-slot="table-head"
+      // `scope="col"` is the WCAG H63 association affordance — without it,
+      // screen readers can't reliably link cells back to their column heads
+      // in fixed-layout multi-column tables. Defaulted in the primitive so
+      // every consumer gets it; can be overridden for row-headers.
+      scope={scope}
       className={cn(
         // Sans Title Case (not mono uppercase) so column heads stay distinct
         // from section eyebrows. Mono is reserved for ID / value content in

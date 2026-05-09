@@ -91,8 +91,13 @@ function CardFooter({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="card-footer"
+      // Card stays white throughout — no border, no wash. Structural
+      // separation between content and the action zone comes from the
+      // CardContent's bottom margin + the footer's `p-4`, matching how
+      // DialogFooter and the rest of the action-zone pattern work in
+      // this system. Surfaces that want a divider can opt in via className.
       className={cn(
-        "flex items-center rounded-b-sm border-t border-ink-200 bg-ink-50 p-4 group-data-[size=sm]/card:p-3",
+        "flex items-center rounded-b-sm p-4 group-data-[size=sm]/card:p-3",
         className
       )}
       {...props}

@@ -28,7 +28,7 @@ const tabsListVariants = cva(
       variant: {
         default:
           "w-fit justify-center rounded-sm p-1 group-data-horizontal/tabs:h-8 bg-muted",
-        line: "w-full justify-start gap-0 px-5 bg-transparent border-b border-ink-100",
+        line: "w-full justify-start gap-0 px-4 bg-transparent border-b border-ink-100",
       },
     },
     defaultVariants: {
@@ -50,17 +50,24 @@ function TabsList({
       className={cn(tabsListVariants({ variant }), "relative", className)}
       {...props}
     >
-      {/* Sliding white indicator for the default (pill) variant. Base UI
-          publishes --active-tab-{left,top,width,height} on the list as the
-          active tab changes; the indicator reads them and rides a 200ms
-          ease-out transition. The trigger's old `data-active:bg-background`
-          + `shadow-sm` are removed below so the indicator is the sole
-          source of the active-pill chrome. The `line` variant keeps its
-          existing underline pattern. */}
+      {/* Sliding indicator. Base UI publishes --active-tab-{left,top,width,height}
+          on the list as the active tab changes; the indicator reads them and
+          rides a 200ms ease-out transition. The `default` variant renders
+          a full-bounds white pill (matches the active-tab outline). The
+          `line` variant renders just a 2px bottom-edge underline that
+          slides horizontally between tabs — no fade. The triggers' old
+          `after:` pseudo for the line variant is removed below so this
+          indicator is the sole source of the underline. */}
       {variant === "default" ? (
         <TabsPrimitive.Indicator
           data-slot="tabs-indicator"
           className="absolute z-0 left-(--active-tab-left) top-(--active-tab-top) w-(--active-tab-width) h-(--active-tab-height) rounded-xs bg-background shadow-sm transition-[left,width,top,height] duration-200 ease-out motion-reduce:transition-none"
+        />
+      ) : null}
+      {variant === "line" ? (
+        <TabsPrimitive.Indicator
+          data-slot="tabs-indicator"
+          className="absolute z-0 left-(--active-tab-left) w-(--active-tab-width) bottom-[-1px] h-0.5 bg-ink-900 transition-[left,width] duration-200 ease-out motion-reduce:transition-none"
         />
       ) : null}
       {children}
@@ -84,7 +91,12 @@ function TabsTrigger({ className, ...props }: TabsPrimitive.Tab.Props) {
         // the sliding TabsIndicator.
         "group-data-[variant=default]/tabs-list:data-active:text-foreground dark:group-data-[variant=default]/tabs-list:data-active:text-foreground",
         "group-data-[variant=line]/tabs-list:px-4 group-data-[variant=line]/tabs-list:pt-4 group-data-[variant=line]/tabs-list:pb-3 group-data-[variant=line]/tabs-list:rounded-none group-data-[variant=line]/tabs-list:bg-transparent group-data-[variant=line]/tabs-list:text-ink-600 group-data-[variant=line]/tabs-list:hover:text-ink-900 group-data-[variant=line]/tabs-list:data-active:bg-transparent group-data-[variant=line]/tabs-list:data-active:text-ink-900 group-data-[variant=line]/tabs-list:data-active:font-medium",
-        "after:absolute after:opacity-0 after:transition-opacity group-data-horizontal/tabs:after:inset-x-0 group-data-vertical/tabs:after:inset-y-0 group-data-vertical/tabs:after:-right-1 group-data-vertical/tabs:after:w-0.5 group-data-[variant=default]/tabs-list:after:bg-foreground group-data-[variant=default]/tabs-list:group-data-horizontal/tabs:after:bottom-[-5px] group-data-[variant=default]/tabs-list:group-data-horizontal/tabs:after:h-0.5 group-data-[variant=line]/tabs-list:after:bg-ink-900 group-data-[variant=line]/tabs-list:group-data-horizontal/tabs:after:bottom-[-1px] group-data-[variant=line]/tabs-list:group-data-horizontal/tabs:after:h-0.5 group-data-[variant=line]/tabs-list:data-active:after:opacity-100",
+        // Per-trigger `after:` pseudo retained ONLY for the default variant
+        // vertical orientation (right-edge underline on a vertical pill list,
+        // not driven by Base UI's --active-tab vars). Line variant's underline
+        // now lives on the sliding TabsIndicator above so it tweens between
+        // triggers instead of fade-cutting.
+        "after:absolute after:opacity-0 after:transition-opacity group-data-vertical/tabs:after:inset-y-0 group-data-vertical/tabs:after:-right-1 group-data-vertical/tabs:after:w-0.5 group-data-[variant=default]/tabs-list:after:bg-foreground",
         className
       )}
       {...props}

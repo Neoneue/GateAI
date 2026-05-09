@@ -54,10 +54,10 @@ export const SIDEBAR_SECTIONS: SidebarSection[] = [
     label: 'Workspace Admin',
     items: [
       { id: 'activity', icon: Activity,   label: 'Activity' },
-      { id: 'team',     icon: Users,      label: 'Team' },
+      { id: 'team',     icon: Users,      label: 'Team', pageId: 'cmp-017' },
       { id: 'billing',  icon: CreditCard, label: 'Billing' },
       { id: 'api-keys', icon: KeyRound,   label: 'API Keys' },
-      { id: 'settings', icon: Settings2,  label: 'Settings' },
+      { id: 'settings', icon: Settings2,  label: 'Settings', pageId: 'cmp-018' },
     ],
   },
 ];

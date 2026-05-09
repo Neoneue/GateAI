@@ -205,7 +205,7 @@ function SidebarExpanded({
       </div>
 
       {/* Nav sections */}
-      <nav className="flex flex-col gap-4 px-3 py-3 overflow-y-auto flex-1">
+      <nav className="flex flex-col gap-4 px-3 pt-3 pb-6 overflow-y-auto flex-1">
         {sections.map((section, i) => (
           <div key={section.label ?? `top-${i}`} className="flex flex-col gap-1">
             {section.label ? (
@@ -293,7 +293,12 @@ function DefaultUserArea() {
         >
           CP
         </span>
-        <span className="font-sans text-sm font-medium text-ink-900 truncate">Chad</span>
+        <span className="flex flex-col min-w-0">
+          <span className="font-sans text-sm font-medium text-ink-900 truncate leading-tight">Chad</span>
+          <span className="font-sans text-xs text-ink-500 truncate leading-tight" title="chad@constellationnetwork.io">
+            chad@constellationnetwork.io
+          </span>
+        </span>
       </div>
       <button
         type="button"

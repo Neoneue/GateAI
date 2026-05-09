@@ -10,7 +10,11 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
-  DialogContent,
+  DialogScrollBody,
+  DialogScrollContent,
+  DialogScrollFooter,
+  DialogScrollHeader,
+  DialogScrollSummary,
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
@@ -661,9 +665,9 @@ function RequestDetailDialog({
 }) {
   return (
     <Dialog open={!!row} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-3xl max-h-[90vh] gap-0 p-0 overflow-hidden flex flex-col">
+      <DialogScrollContent className="sm:max-w-3xl">
         {row ? <RequestDetailBody row={row} /> : null}
-      </DialogContent>
+      </DialogScrollContent>
     </Dialog>
   );
 }
@@ -681,7 +685,7 @@ function RequestDetailBody({ row }: { row: RequestRow }) {
     <>
       {/* Top section — eyebrow + DialogTitle + status badge + provenance.
           `pr-12` on the title block clears the absolute DialogClose X. */}
-      <div className="flex flex-col gap-3 px-5 pt-5">
+      <DialogScrollHeader>
         <div className="flex flex-col gap-1 pr-12">
           <span className="font-mono text-xs uppercase tracking-[0.1em] font-medium text-ink-500">
             Request
@@ -707,17 +711,15 @@ function RequestDetailBody({ row }: { row: RequestRow }) {
             </button>
           </p>
         </div>
-      </div>
+      </DialogScrollHeader>
 
       {/* Persistent KPI rail — sits below the header, above the tabs. */}
-      <div className="px-5 pt-4">
+      <DialogScrollSummary>
         <KpiRail row={row} />
-      </div>
+      </DialogScrollSummary>
 
-      {/* Scrollable tabbed body. `flex-1 min-h-0` fills the remaining modal
-          height between the header above and the footer below;
-          `overflow-y-auto` enables scroll when content overflows. */}
-      <div className="flex-1 min-h-0 overflow-y-auto px-5 pt-4 pb-4">
+      {/* Scrollable tabbed body. */}
+      <DialogScrollBody>
         {/* Tabs default to Messages so the prompt/response — the load-bearing
             content of any request inspection — is visible on first open. */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="gap-4">
@@ -775,9 +777,9 @@ function RequestDetailBody({ row }: { row: RequestRow }) {
             <SecurityPanel row={row} />
           </TabsContent>
         </Tabs>
-      </div>
+      </DialogScrollBody>
 
-      <div className="flex items-center justify-end gap-2 px-5 py-3 border-t border-ink-200">
+      <DialogScrollFooter>
         {activeTab === 'audit' ? (
           <>
             <CopyButton
@@ -807,7 +809,7 @@ function RequestDetailBody({ row }: { row: RequestRow }) {
             </Button>
           </>
         )}
-      </div>
+      </DialogScrollFooter>
     </>
   );
 }

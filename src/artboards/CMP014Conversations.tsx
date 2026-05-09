@@ -9,7 +9,11 @@ import { MessageBlock, type MessageRole } from '@/components/ui/message-block';
 import { TablePaginationFooter } from '@/components/ui/table-pagination-footer';
 import {
   Dialog,
-  DialogContent,
+  DialogScrollBody,
+  DialogScrollContent,
+  DialogScrollFooter,
+  DialogScrollHeader,
+  DialogScrollSummary,
   DialogTitle,
 } from '@/components/ui/dialog';
 import { StatusDot } from '@/components/ui/status-dot';
@@ -425,16 +429,16 @@ function ConversationDetailDialog({
 }) {
   return (
     <Dialog open={!!row} onOpenChange={onOpenChange}>
-      <DialogContent
+      <DialogScrollContent
         // sm:max-w-5xl ≈ 1024px — wide enough for the two-column body to
         // breathe at typical desktop viewports, narrow enough that the
-        // dimmed page behind reads as context. max-h-[90vh] keeps the
-        // modal inside the viewport even on shorter screens; the body
-        // grid scrolls internally per-panel.
-        className="sm:max-w-5xl max-h-[90vh] gap-0 p-0 overflow-hidden flex flex-col"
+        // dimmed page behind reads as context. The shared scroll-shell
+        // primitive provides max-h-[90vh] / flex-col / overflow-hidden;
+        // the inner panels scroll independently inside the body.
+        className="sm:max-w-5xl"
       >
         {row ? <ConversationDetailBody row={row} /> : null}
-      </DialogContent>
+      </DialogScrollContent>
     </Dialog>
   );
 }
@@ -454,7 +458,7 @@ function ConversationDetailBody({ row }: { row: ConversationRow }) {
           `pr-12` lives on the title block only so it clears the absolute
           DialogClose X; the identity row + quote run flush to the modal's
           right padding so action buttons align with the KPI rail edge. */}
-      <div className="flex flex-col gap-3 px-5 pt-5">
+      <DialogScrollHeader>
         <div className="flex flex-col gap-1 pr-12">
           <span className="font-mono text-xs uppercase tracking-[0.1em] font-medium text-ink-500">
             Conversation
@@ -489,20 +493,20 @@ function ConversationDetailBody({ row }: { row: ConversationRow }) {
             />
           </div>
         </div>
-
-      </div>
+      </DialogScrollHeader>
 
       {/* Persistent KPI rail — 5 tiles at the conversation scope. Same
           pattern as CMP-013's request rail but with one extra tile
           (Duration) and a `grid-cols-5` track. */}
-      <div className="px-5 pt-4">
+      <DialogScrollSummary>
         <ConversationKpiRail row={row} />
-      </div>
+      </DialogScrollSummary>
 
-      {/* Body wrapper — two-panel grid. `flex-1 min-h-0` fills the
-          remaining modal height; the inner grid handles its own
-          overflow so the panels scroll internally. */}
-      <div className="flex flex-col flex-1 min-h-0 px-5 pt-4 pb-4">
+      {/* Body — two-panel grid where each panel scrolls independently.
+          Override the body's default `overflow-y-auto` to `overflow-hidden`
+          and add `flex flex-col` so the inner grid manages overflow per
+          panel rather than scrolling the whole body. */}
+      <DialogScrollBody className="overflow-hidden flex flex-col">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 flex-1 min-h-0 overflow-hidden">
           <ConversationMessagesPanel
             activeRequestId={activeRequestId}
@@ -513,14 +517,14 @@ function ConversationDetailBody({ row }: { row: ConversationRow }) {
             onSelect={setActiveRequestId}
           />
         </div>
-      </div>
+      </DialogScrollBody>
 
       {/* Footer — cross-link affordance hint LEFT, conversation
           provenance RIGHT. Both ambient at ink-400 so they read as
-          modal chrome, not heading-weight content. The hint sits here
-          (not above the panel grid) so it doesn't compete with the
-          panel-header eyebrows. */}
-      <div className="flex items-center justify-between gap-4 px-5 py-3 border-t border-ink-200 flex-wrap">
+          modal chrome, not heading-weight content. Override the
+          footer's default `justify-end` since this footer carries
+          informational copy on both edges, not just trailing actions. */}
+      <DialogScrollFooter className="justify-between flex-wrap">
         <span className="font-mono text-xs text-ink-400 -tracking-[0.01em]">
           Click a message or trace step — they’re linked.
         </span>
@@ -528,7 +532,7 @@ function ConversationDetailBody({ row }: { row: ConversationRow }) {
           Key <span className="text-ink-700">prod-web</span>{' '}
           · started <span className="text-ink-700">{row.updated}</span>
         </span>
-      </div>
+      </DialogScrollFooter>
     </>
   );
 }

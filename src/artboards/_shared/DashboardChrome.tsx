@@ -48,7 +48,7 @@ export function DashboardChrome({
   children,
 }: DashboardChromeProps) {
   return (
-    <div className="flex flex-col w-full min-h-[900px] overflow-hidden rounded-sm bg-white shadow-(--shadow-border)">
+    <div className="flex flex-col w-full h-[900px] overflow-hidden rounded-sm bg-white shadow-(--shadow-border)">
       <ScreenHead urlSlug={urlSlug} eyebrow={screenEyebrow} />
       <div className="flex flex-row flex-1 min-h-0">
         <Sidebar
@@ -57,13 +57,20 @@ export function DashboardChrome({
           expanded={sidebarExpanded}
           onNavigate={onNavigate}
         />
-        <div className="flex flex-col flex-1 min-w-0 bg-ink-50">
+        <div className="flex flex-col flex-1 min-w-0 min-h-0 bg-ink-50">
           <DashTopBar
             sidebarExpanded={sidebarExpanded}
             onToggleSidebar={onToggleSidebar}
             breadcrumbCurrent={breadcrumbCurrent}
           />
-          <div className="flex flex-col gap-6 p-6">{children}</div>
+          {/* Content pane scrolls internally; production frame stays
+              fixed at 900px so every composed page has identical
+              outer dimensions. `[&>*]:shrink-0` prevents direct
+              children from collapsing under flex's default shrink-1
+              when their natural total height exceeds the pane —
+              instead they keep their natural heights and the pane
+              scrolls. */}
+          <div className="flex flex-col gap-6 px-6 pt-6 pb-8 overflow-y-auto [&>*]:shrink-0">{children}</div>
         </div>
       </div>
     </div>
@@ -145,25 +152,27 @@ function DashTopBar({
         <nav aria-label="Breadcrumb">
           <ol className="flex items-center gap-2">
             <li>
-              <a
-                href="#"
-                onClick={(e) => e.preventDefault()}
+              {/* Buttons not anchors — this app has no router, so cmd/middle-
+                  click on an anchor would lead nowhere. Same conversion as
+                  PaginationLink. Visual contract = link styling, semantics
+                  = button. */}
+              <button
+                type="button"
                 className="font-sans text-xs text-ink-500 outline-none hover:text-ink-700 hover:underline focus-visible:text-ink-700 focus-visible:underline decoration-ink-500 underline-offset-2"
               >
                 All Projects
-              </a>
+              </button>
             </li>
             <li className="flex items-center" aria-hidden>
               <ChevronRight className="size-3 text-ink-400" strokeWidth={1.75} />
             </li>
             <li>
-              <a
-                href="#"
-                onClick={(e) => e.preventDefault()}
+              <button
+                type="button"
                 className="font-sans text-xs text-ink-500 outline-none hover:text-ink-700 hover:underline focus-visible:text-ink-700 focus-visible:underline decoration-ink-500 underline-offset-2"
               >
                 Constellation Gate AI
-              </a>
+              </button>
             </li>
             <li className="flex items-center" aria-hidden>
               <ChevronRight className="size-3 text-ink-400" strokeWidth={1.75} />
@@ -191,8 +200,12 @@ function DashTopBar({
         >
           <Bell className="size-4" strokeWidth={1.75} />
         </Button>
-        <span className="inline-flex items-center justify-center size-6 ml-2 rounded-full bg-blue-700 text-white font-sans text-xs font-medium">
-          CP
+        <span
+          role="img"
+          aria-label="Chad Ponticas"
+          className="inline-flex items-center justify-center size-6 ml-2 rounded-full bg-blue-700 text-white font-sans text-xs font-medium"
+        >
+          <span aria-hidden>CP</span>
         </span>
       </div>
     </div>

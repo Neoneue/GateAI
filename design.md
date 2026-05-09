@@ -417,8 +417,8 @@ Each voice has a single job; mixing them is the drift surface. **Critical rule:*
 | Voice | Recipe | Use |
 |-------|--------|-----|
 | **Display headline / hero numeric** | `font-sans tabular-nums font-medium tracking-tight` (via `<HeroNumeric>`) | Page titles, KPI hero values (24px), full-page hero metrics (32px), panel heroes — *summary, look at this* |
-| **Body / label** | `font-sans` (regular or `font-medium`) | Card titles, page subtitles, button labels, key/project names, table column headers — *human, read this* |
-| **Eyebrow** | `font-mono uppercase tracking-[0.1em] font-medium` | Section eyebrows, KPI labels, segmented control labels, chrome strips — *what is this* |
+| **Body / label** | `font-sans` (regular or `font-medium`) | Card titles, page subtitles, button labels, key/project names, table column headers, **form / input labels** (`<Label>` primitive) — *human, read this* |
+| **Eyebrow** | `font-mono uppercase tracking-[0.1em] font-medium` | Section eyebrows, KPI labels, segmented control labels, chrome strips — *what is this*. **Never use this for form/input labels** — those go in the Body/label row above. Mono UPPERCASE on a field label reads as a chrome strip, not as something the user is meant to fill in. |
 | **Badge / pill** | `font-mono tabular-nums font-medium text-xs` (via Badge default) | Status codes (`200`/`500`), counters, deltas, inline pills — *operational chrome* |
 | **Data** | `font-mono tabular-nums` | Table cells, IDs, codes, hashes, model identifiers, modal sub-tier numerics — *raw data* |
 
@@ -526,16 +526,25 @@ The full primitive library is `src/components/ui/*.tsx` (35 primitives). Highlig
 
 ### Cards & Containers
 
-- **Card** (`card.tsx`) — `rounded-sm bg-white py-4 text-sm text-ink-900 shadow-(--shadow-border)`. **Shadow-as-border, NOT solid 1px borders.** Composition: `<Card>` (gap-4 col) → `<CardHeader>` (px-4 grid) → `<CardTitle>` (text-base font-medium leading-snug) → `<CardDescription>` (text-sm/5 text-ink-500) → `<CardContent>` (px-4) → `<CardFooter>` (p-4 border-t border-ink-200 bg-ink-50). **Padding: 16px (`p-4`) on all sides** (locked 2026-05-05; legacy 20px overrides retired). Compact: `data-[size=sm]` → `gap-3 py-3 px-3`.
+- **Card** (`card.tsx`) — `rounded-sm bg-white py-4 text-sm text-ink-900 shadow-(--shadow-border)`. **Shadow-as-border, NOT solid 1px borders.** Composition: `<Card>` (gap-4 col) → `<CardHeader>` (px-4 grid) → `<CardTitle>` (text-base font-medium leading-snug) → `<CardDescription>` (text-sm/5 text-ink-500) → `<CardContent>` (px-4) → `<CardFooter>` (p-4, white, **no border, no wash** — structural separation comes from spacing alone, matching DialogFooter). When a `<CardFooter>` is present, Card auto-applies `pb-0` so the footer hugs the bottom edge. Compact: `data-[size=sm]` → `gap-3 py-3 px-3`.
+
+  **Card padding is locked at 16px. Do NOT pass padding/gap classes (`px-N`, `py-N`, `p-N`, `gap-N`) on `<Card>`, `<CardHeader>`, `<CardContent>`, or `<CardFooter>` from composed pages.** If you find yourself reaching for `px-5`, `py-5`, `gap-5`, `-mx-5` etc. — stop. The primitive's defaults are the contract; reach back to the design system if a surface needs different rhythm. Legitimate overrides are layout-only: `min-w-0`, `col-span-N`, `w-[Npx]`, `flex-1`, `items-center`. Any primitive-padding override must be justified with a comment citing the variant it represents, and ideally promoted to a primitive variant (`size="sm"` / `size="lg"`) rather than inlined. Spec-sheet artboards (CMP-000 series) are exempt — they show specimens in isolation and may use `p-7` for breathing room.
 - **CodeCard** (`code-card.tsx`) — code-preview card with header strip + syntax-highlighted body. Uses `<CodeBlock>` driving `--color-syntax-*` tokens. Top-right copy affordance via `<CopyButton>`.
 
 **Rule:** Cards never touch — they sit on the warm-paper canvas with shadow doing separation. The ring inside `--shadow-border` IS the border; don't add a `border` class on top.
 
 ### Selectors
 
-- **Tabs** (`tabs.tsx`) — sliding white indicator on active trigger (200ms ease-out, transform+width). Track: `bg-muted rounded-sm h-8 p-1`. Active trigger: `bg-background rounded-xs text-foreground`. Vertical orientation supported.
-- **Segmented** (`segmented.tsx`) — pill-style selector, same sliding-indicator idiom as Tabs. `bg-muted rounded-sm overflow-clip`. Sizes: default `h-8`, sm `h-7`. Variants: `pill` (default) and `group` (adjacent borders, ink-900 fill on selected — rare).
+- **Tabs** (`tabs.tsx`) — sliding white indicator on active trigger (200ms ease-out, transform+width). Two variants: `default` (pill-on-well, `bg-muted rounded-sm h-8 p-1`, active trigger `bg-background rounded-xs`) and `line` (underline, transparent track, active trigger gets a 2px ink-900 underline). Vertical orientation supported on the default variant.
+- **Segmented** (`segmented.tsx`) — pill-style selector, same sliding-indicator idiom as Tabs default. `bg-muted rounded-sm overflow-clip`. Sizes: default `h-8`, sm `h-7`. Variants: `pill` (default) and `group` (adjacent borders, ink-900 fill on selected — rare).
 - **SegmentedPill** (`segmented-pill.tsx`) — view-scope toggles in toolbars. **Don't add as an extra row** — view-scope controls live in the existing toolbar.
+
+**Rule (Tabs vs Segmented — when to pick which):**
+- **`Tabs variant="line"`** = sibling sub-pages of the same surface. Each tab represents content that would map to its own URL path (`/team/members`, `/team/invitations`, `/settings/general`). Different content semantics, equal stature, primary navigation within the page. Used by CMP-017 Team and CMP-018 Settings. Matches Vercel's settings/team/billing/integrations sub-nav, Material 3, IBM Carbon.
+- **`Tabs variant="default"`** (pill-on-well) = secondary view scope where the items are stylistic peers but the surface pattern still calls for full-page tab semantics. Rare at page-header level — most page-header tab use cases are line. Reserve for nested tab strips inside a card where the line variant would compete with surrounding chrome.
+- **`Segmented` / `SegmentedPill`** = mutually-exclusive view filters of the *same* data, lives inside a toolbar or panel, not page-level. Time-range pickers (24h / 7d / 30d), chart-type toggles (Bar / Line), unit switchers, code-vs-preview inside a card. Constrained-width by design.
+
+The semantic test: are these *pages of the surface* (line tabs) or *filters/views of the same data* (segmented)? If you'd give each one its own URL, it's a tab. If they're alternate lenses on shared content, they're segmented.
 - **Select** (`select.tsx`) — Base UI. Trigger: `bg-ink-50 border-ink-200 rounded-sm h-9 text-sm`. Content: `rounded-sm shadow-(--shadow-popup) bg-popover`. Item: `rounded-xs px-3 py-1.5 text-sm`. **Asymmetric padding** `pl-N pr-(N-1)` across all sizes (`pl-3 pr-2` xs/sm, `pl-4 pr-3` default/lg) — optical balance: text side wants more air, chevron has built-in bounding-box whitespace. Long lists use `<SelectGroup>` + `<SelectLabel>` + `<SelectSeparator>` to group (e.g. First-party vs Marketplace).
 - **Toggle** (`toggle.tsx`) — `rounded-sm h-8 px-3 text-sm font-medium`, `data-[state=on]:bg-muted`. Wrap with `<ToggleGroup>` for multi-select.
 
@@ -566,7 +575,7 @@ The full primitive library is `src/components/ui/*.tsx` (35 primitives). Highlig
 
 ### Modal / Drawer
 
-- **Dialog** (`dialog.tsx`) — centered modal. **Modal tier:** `rounded-xl` (12px LOCKED) + `shadow-(--shadow-modal)`. Overlay: `bg-ink-900/40 backdrop-blur-xs`. Content: `bg-white rounded-xl border border-ink-200 shadow-(--shadow-modal) p-4 max-w-sm`. Header: title text-base font-medium / description text-sm text-ink-500.
+- **Dialog** (`dialog.tsx`) — centered modal. **Modal tier:** `rounded-xl` (12px LOCKED) + `shadow-(--shadow-modal)`. Overlay: `bg-ink-900/40 backdrop-blur-xs`. Content: `bg-white rounded-xl border border-ink-200 shadow-(--shadow-modal) p-4 max-w-sm`. Header: title text-base font-medium / description text-sm text-ink-500. **DialogFooter carries `mt-2` in its base CVA** so the action zone sits ~24px below the last form field (compounded with a parent `gap-4`), not the same 16px sibling rhythm — clearer "now commit" gestalt without needing a divider. Don't pass `mt-N` overrides on `<DialogFooter>` from consumers; it's primitive-baked.
 - **AlertDialog** (`alert-dialog.tsx`) — same modal-tier surface; used for destructive confirmations.
 - **Sheet** (`sheet.tsx`) — right-docked drawer. Flush against viewport edge (`rounded-none`), only a left border + modal-tier shadow.
 
@@ -574,7 +583,7 @@ The full primitive library is `src/components/ui/*.tsx` (35 primitives). Highlig
 
 ### Badges, Pills, Tags
 
-- **Badge** (`badge.tsx`) — base: `h-5 rounded-xs border border-transparent pl-2.5 pr-1.5 font-mono text-xs font-medium tabular-nums`. **`font-mono tabular-nums` lives in the base CVA** — status codes, counters, deltas, word-labels all render mono by default. Variants: `default` (ink-900/white) · `secondary` · `destructive` (danger-100/700) · `outline` · `ghost` · `link` · `success` (success-100/700) · `warning` (warning-100/700) · `info` (blue-100/700).
+- **Badge** (`badge.tsx`) — base: `h-5 rounded-xs border border-transparent px-2.5 font-mono text-xs font-medium tabular-nums`. **Symmetric horizontal padding by default** so text-only badges (role labels, codes) read balanced; icon-side variants (`has-data-[icon=inline-end]:pr-1.5`, `has-data-[icon=inline-start]:pl-1.5`) tighten the icon side because chevrons / dots / triangles carry built-in whitespace inside their bounding box. **`font-mono tabular-nums` lives in the base CVA** — status codes, counters, deltas, word-labels all render mono by default. Variants: `default` (ink-900/white) · `secondary` · `destructive` (danger-100/700) · `outline` · `ghost` · `link` · `success` (success-100/700) · `warning` (warning-100/700) · `info` (blue-100/700).
 - **Tag** (`tag.tsx`) — removable filter pill (NOT a Badge). `inline-flex h-6 rounded-full bg-ink-100 border border-ink-200 text-ink-900 font-sans text-xs gap-2`. With remove: `pr-1 pl-2`; without: `px-3`. **Use Tag for filter chips, Badge for status/counter/code.**
 - **StatusDot** (`status-dot.tsx`) — 6px `rounded-full` inline-state dot. Tones: success (success-600), warning (warning-600), danger (destructive), info (blue-600), neutral (ink-500).
 - **DeltaTag** (specimen in `CMP003BadgesAndTags.tsx`) — directional pill for KPI deltas. NOT a Badge. Inline-flex arrow icon (`size-3.5`) + value text at mono medium 12px tabular. API: `<DeltaTag delta="+8.2%" note="vs last hour" inverted={false} />`.
