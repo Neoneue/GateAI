@@ -27,7 +27,7 @@ export function CMP008bStatCards() {
                   delta="+8.2%"
                   spark={
                     <CompactSpark
-                      colorVar="var(--color-blue-700)"
+                      colorVar="var(--color-chart-1)"
                       data={[6, 12, 10, 16, 20, 18, 26, 24, 28]}
                     />
                   }
@@ -38,7 +38,7 @@ export function CMP008bStatCards() {
                   delta="+12.6%"
                   spark={
                     <CompactSpark
-                      colorVar="var(--color-blue-500)"
+                      colorVar="var(--color-chart-2)"
                       data={[8, 10, 12, 16, 18, 20, 25, 22, 24]}
                     />
                   }
@@ -49,7 +49,7 @@ export function CMP008bStatCards() {
                   delta="-3.2%"
                   spark={
                     <CompactSpark
-                      colorVar="var(--color-success-500)"
+                      colorVar="var(--color-chart-3)"
                       data={[18, 16, 17, 15, 14, 13, 12, 11, 10]}
                       endDot
                     />
@@ -73,7 +73,7 @@ export function CMP008bStatCards() {
                   delta="+12.4%"
                   spark={
                     <CompactSpark
-                      colorVar="var(--color-ink-900)"
+                      colorVar="var(--color-chart-1)"
                       data={[10, 12, 11, 14, 13, 16, 15, 18, 20]}
                       endDot
                     />
@@ -99,7 +99,7 @@ export function CMP008bStatCards() {
                   delta="-3.2%"
                   spark={
                     <CompactSpark
-                      colorVar="var(--color-success-500)"
+                      colorVar="var(--color-chart-3)"
                       data={[18, 16, 17, 15, 14, 13, 12, 11, 10]}
                       endDot
                     />
@@ -112,7 +112,7 @@ export function CMP008bStatCards() {
                   delta="+14.8%"
                   spark={
                     <CompactSpark
-                      colorVar="var(--color-blue-700)"
+                      colorVar="var(--color-chart-2)"
                       data={[10, 12, 11, 13, 14, 16, 17, 18, 20]}
                       endDot
                     />

@@ -242,6 +242,7 @@ export function CMP011DataTable() {
                   />
                   <Input
                     size="sm"
+                    aria-label="Search models"
                     placeholder="Search model…"
                     className="pl-8"
                   />
@@ -312,7 +313,9 @@ export function CMP011DataTable() {
                   <TableHead className="w-[100px] text-right">Cache</TableHead>
                   <TableHead className="w-[90px]">Trend</TableHead>
                   <TableHead className="w-[120px]">Capabilities</TableHead>
-                  <TableHead className="w-[50px] text-center">ZDR</TableHead>
+                  <TableHead className="w-[50px] text-center" title="Zero-data retention">
+                    <abbr title="Zero-data retention" className="no-underline">ZDR</abbr>
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -477,7 +480,7 @@ function RiskScoresCard() {
           {RISK_ROWS.map((row) => {
             const meta = RISK_LEVELS[row.risk];
             return (
-              <TableRow key={row.key} className="cursor-pointer">
+              <TableRow key={row.key}>
                 <TableCell className="whitespace-nowrap font-mono text-sm tabular-nums -tracking-[0.14px] text-ink-900">
                   {row.key}
                 </TableCell>
@@ -492,7 +495,7 @@ function RiskScoresCard() {
                 >
                   {row.score}
                 </TableCell>
-                <TableCell className="whitespace-nowrap font-mono tabular-nums text-ink-900">
+                <TableCell className="whitespace-nowrap font-mono tabular-nums text-ink-800">
                   {row.events}
                 </TableCell>
                 <TableCell>
@@ -513,7 +516,7 @@ function RiskScoresCard() {
 function CapabilityPill({ letter }: { letter: Capability }) {
   const display = letter === 'f' ? 'ƒ' : letter;
   return (
-    <span className="inline-flex items-center justify-center size-5 rounded-[4px] border border-ink-200 font-mono text-xs font-medium text-ink-700">
+    <span className="inline-flex items-center justify-center size-5 rounded-[4px] border border-ink-200 font-mono text-xs font-medium text-ink-800">
       {display}
     </span>
   );

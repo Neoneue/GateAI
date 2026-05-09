@@ -535,8 +535,8 @@ function ConversationDetailBody({ row }: { row: ConversationRow }) {
           Click a message or trace step — they’re linked.
         </span>
         <span className="font-mono text-xs text-ink-400 -tracking-[0.01em]">
-          Key <span className="text-ink-700">prod-web</span>{' '}
-          · started <span className="text-ink-700">{row.updated}</span>
+          Key <span className="text-ink-800">prod-web</span>{' '}
+          · started <span className="text-ink-800">{row.updated}</span>
         </span>
       </DialogScrollFooter>
     </>
@@ -706,14 +706,19 @@ function ConversationMessagesPanel({
           Matches the framing pattern in the trace panel. `flex-none` so
           it doesn't shrink when the body scrolls. */}
       <div className="flex-none flex items-center justify-between px-4 py-3 bg-ink-50 border-b border-ink-200">
-        <span className="font-mono text-xs uppercase tracking-[0.1em] font-medium text-ink-500">
+        <span id="conv-messages-eyebrow" className="font-mono text-xs uppercase tracking-[0.1em] font-medium text-ink-500">
           Messages
         </span>
         <span className="font-mono text-xs text-ink-500 tabular-nums -tracking-[0.01em]">
           {turnCount} {turnCount === 1 ? 'turn' : 'turns'}
         </span>
       </div>
-      <div ref={scrollRef} className="flex flex-col gap-4 p-4 overflow-y-auto overscroll-contain min-h-0 flex-1">
+      <div
+        ref={scrollRef}
+        role="region"
+        aria-labelledby="conv-messages-eyebrow"
+        className="flex flex-col gap-4 p-4 overflow-y-auto overscroll-contain min-h-0 flex-1"
+      >
         {CONVERSATION_MESSAGES.map((m, i) => {
           const selected = !!m.requestId && m.requestId === activeRequestId;
           // Bubble tone stays default regardless of trace status — warn
@@ -833,7 +838,7 @@ function RequestTracePanel({
           Matches the framing pattern in the messages panel. `flex-none`
           so it doesn't shrink when the body scrolls. */}
       <div className="flex-none flex items-center justify-between px-4 py-3 bg-ink-50 border-b border-ink-200">
-        <span className="font-mono text-xs uppercase tracking-[0.1em] font-medium text-ink-500">
+        <span id="conv-trace-eyebrow" className="font-mono text-xs uppercase tracking-[0.1em] font-medium text-ink-500">
           Request Trace
         </span>
         <span className="font-mono text-xs text-ink-500 tabular-nums -tracking-[0.01em]">
@@ -849,7 +854,12 @@ function RequestTracePanel({
           and last node centers, accounting for the row's vertical padding.
           The wrapper carries the scroll so long traces flow without
           forcing the modal itself to scroll. */}
-      <div ref={scrollRef} className="px-4 py-2 overflow-y-auto overscroll-contain min-h-0 flex-1">
+      <div
+        ref={scrollRef}
+        role="region"
+        aria-labelledby="conv-trace-eyebrow"
+        className="px-4 py-2 overflow-y-auto overscroll-contain min-h-0 flex-1"
+      >
         {/* Per-row track segments are rendered inside TraceItem (see
             below) so geometry stays correct regardless of row content
             height. First/last items truncate the segment at the node
@@ -1013,7 +1023,7 @@ function TraceItem({
             {event.latency}
           </span>
           <span className="text-ink-400" aria-hidden>·</span>
-          <span className="font-mono text-xs tabular-nums -tracking-[0.01em] text-ink-700">
+          <span className="font-mono text-xs tabular-nums -tracking-[0.01em] text-ink-800">
             {event.cost}
           </span>
         </div>

@@ -41,7 +41,12 @@ const INITIAL_TOASTS: ToastSpec[] = [
       <>
         <span className="text-sm font-medium text-ink-800">Failed to verify</span>
         <span className="text-sm text-ink-800">block #48,291.</span>
-        <span className="text-sm text-blue-700">Retry?</span>
+        <button
+          type="button"
+          className="text-sm font-medium text-ink-800 underline decoration-ink-200 underline-offset-2 hover:decoration-ink-500 focus-visible:decoration-ink-500 outline-none rounded-xs focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+        >
+          Retry?
+        </button>
       </>
     ),
   },
@@ -127,7 +132,7 @@ function ToastRow({ spec, onDismiss }: { spec: ToastSpec; onDismiss: () => void 
       <div className="grow flex flex-col gap-1">
         <div className="flex flex-wrap gap-1">{spec.body}</div>
         {spec.detail && (
-          <div className="text-xs tabular-nums text-ink-800">{spec.detail}</div>
+          <div className="font-mono text-xs tabular-nums text-ink-800">{spec.detail}</div>
         )}
       </div>
       <Button

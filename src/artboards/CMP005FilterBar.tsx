@@ -54,7 +54,7 @@ export function CMP005FilterBar() {
             code="CMP-005.1 — LIST FILTER BAR"
             hint="<Input> · <Select> · <Tag> · <SegmentedPill>"
           />
-          <div className="flex flex-col rounded-sm gap-3 bg-white border border-ink-100 p-7">
+          <div className="flex flex-col rounded-sm gap-3 bg-white p-7 shadow-(--shadow-border)">
             {/* Row 1 — search + scope dropdowns + count.
                 All controls use size="default" (h-9 px-4) from the primitive contract. */}
             <div className="flex items-center flex-wrap gap-2">
@@ -131,7 +131,7 @@ export function CMP005FilterBar() {
               <span
                 role="status"
                 aria-live="polite"
-                className="font-mono text-sm text-ink-600 tabular-nums -tracking-[0.01em]"
+                className="font-mono text-sm text-ink-500 tabular-nums -tracking-[0.01em]"
               >
                 5 of 24
               </span>

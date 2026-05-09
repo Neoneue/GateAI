@@ -90,9 +90,9 @@ const SPEND_DATA: SpendDatum[] = [
 ];
 
 const spendChartConfig: ChartConfig = {
-  byo: { label: 'BYO keys', color: 'var(--color-blue-700)' },
-  managed: { label: 'Managed-key', color: 'var(--color-blue-300)' },
-  trend: { label: 'Trend', color: 'var(--color-blue-700)' },
+  byo: { label: 'BYO keys', color: 'var(--color-chart-1)' },
+  managed: { label: 'Managed-key', color: 'var(--color-chart-2)' },
+  trend: { label: 'Trend', color: 'var(--color-chart-1)' },
 };
 
 function SpendTrendCard() {
@@ -103,8 +103,8 @@ function SpendTrendCard() {
           Spend trend
         </div>
         <div className="flex items-center gap-5">
-          <LegendDot color="var(--color-blue-700)" label="BYO keys" />
-          <LegendDot color="var(--color-blue-300)" label="Managed-key" />
+          <LegendDot color="var(--color-chart-1)" label="BYO keys" />
+          <LegendDot color="var(--color-chart-2)" label="Managed-key" />
         </div>
         <div
           role="img"
@@ -196,7 +196,7 @@ function SpendTrendCard() {
           />
           <Bar
             dataKey="byo"
-            fill="var(--color-blue-700)"
+            fill="var(--color-chart-1)"
             fillOpacity={0.7}
             radius={2}
             maxBarSize={10}
@@ -204,7 +204,7 @@ function SpendTrendCard() {
           />
           <Bar
             dataKey="managed"
-            fill="var(--color-blue-300)"
+            fill="var(--color-chart-2)"
             fillOpacity={0.7}
             radius={2}
             maxBarSize={10}
@@ -213,14 +213,14 @@ function SpendTrendCard() {
           <Line
             dataKey="trend"
             type="monotone"
-            stroke="var(--color-blue-700)"
+            stroke="var(--color-chart-1)"
             strokeWidth={2.5}
             isAnimationActive={false}
             dot={false}
             activeDot={{
               r: 5,
               fill: 'var(--color-white)',
-              stroke: 'var(--color-blue-700)',
+              stroke: 'var(--color-chart-1)',
               strokeWidth: 2.5,
             }}
           />
@@ -270,6 +270,7 @@ const MODELS: readonly ModelRow[] = [
     key: 'sonnet',
     label: 'Claude Sonnet 4.5',
     vendor: 'anthropic',
+    colorOverride: 'var(--color-chart-2)',
     cost: '$487.32',
     costValue: 487.32,
     delta: '+12.4%',
@@ -278,6 +279,7 @@ const MODELS: readonly ModelRow[] = [
     key: 'gpt4o',
     label: 'GPT-4o',
     vendor: 'openai',
+    colorOverride: 'var(--color-chart-1)',
     cost: '$312.18',
     costValue: 312.18,
     delta: '+5.2%',
@@ -295,6 +297,7 @@ const MODELS: readonly ModelRow[] = [
     key: 'llama',
     label: 'Llama 3.3',
     vendor: 'meta',
+    colorOverride: 'var(--color-chart-4)',
     cost: '$134.62',
     costValue: 134.62,
     delta: '+18.6%',
@@ -303,6 +306,7 @@ const MODELS: readonly ModelRow[] = [
     key: 'mistral',
     label: 'Mistral Large',
     vendor: 'mistral',
+    colorOverride: 'var(--color-chart-5)',
     cost: '$28.30',
     costValue: 28.30,
     delta: '+44.2%',
@@ -310,6 +314,9 @@ const MODELS: readonly ModelRow[] = [
 ] as const;
 
 function seriesColor(model: ModelRow): string {
+  // Every MODELS entry pins an explicit chart slot via `colorOverride`. The
+  // VENDOR_META fallback is retained for type-safety + future entries that
+  // forget to set a slot, but should not be hit in practice.
   return model.colorOverride ?? VENDOR_META[model.vendor].color;
 }
 

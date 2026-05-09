@@ -687,7 +687,6 @@ function InviteMemberDialog({
               <SelectTrigger
                 id="invite-role"
                 size="default"
-                aria-label="Role"
                 className="border-ink-200 bg-white text-ink-900 w-full"
               >
                 {/* Function-child so the trigger renders only the short

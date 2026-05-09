@@ -328,7 +328,7 @@ function BreakdownRow({
   // text-flow cells within their tracks.
   return (
     <>
-      <span className="font-sans text-xs font-medium text-ink-600 -tracking-[0.12px] justify-self-end">
+      <span className="font-sans text-xs font-medium text-ink-500 -tracking-[0.12px] justify-self-end">
         {label}
       </span>
       <span className={`size-1.5 rounded-full ${dotColor}`} aria-hidden />
@@ -859,11 +859,12 @@ function DetailRow({ label, value }: { label: string; value: React.ReactNode }) 
   // Horizontal padding moves from row-level to cell-level (`pl-4` on label,
   // `pr-4` on value) so the row chrome reads the same as before but the
   // column tracks line up with the rail above.
-  // Label is `font-medium text-ink-600` — at `font-normal` it reads as
-  // ambient body text rather than a field label.
+  // Label is `font-medium text-ink-500` per the locked three-tier ink policy
+  // — the font-medium weight (not ink-600 darkness) carries the field-label
+  // signal so it reads as a label rather than ambient body text.
   return (
     <div className="grid grid-cols-4 gap-3 items-center py-3 border-b border-ink-200 last:border-b-0">
-      <span className="font-sans text-sm font-medium text-ink-600 pl-4">{label}</span>
+      <span className="font-sans text-sm font-medium text-ink-500 pl-4">{label}</span>
       <div className="col-span-3 pr-4">{value}</div>
     </div>
   );

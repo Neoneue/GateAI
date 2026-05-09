@@ -1,6 +1,5 @@
 import { type ComponentType, type SVGProps, useMemo, useState } from 'react';
 import {
-  ArrowUpDown,
   Braces,
   ChevronDown,
   ChevronLeft,
@@ -734,7 +733,7 @@ function ModelsSurface({ onSelect }: { onSelect: (model: Model) => void }) {
 function PageHeader({ modelCount, providerCount }: { modelCount: number; providerCount: number }) {
   return (
     <div className="flex flex-col gap-2 max-w-1/2">
-      <h2 className="font-sans font-medium text-ink-900 text-3xl/9 tracking-tight text-balance m-0">
+      <h2 className="font-sans font-medium text-ink-900 text-3xl/9 -tracking-[1px] text-balance m-0">
         Models
       </h2>
       <p className="font-sans text-ink-500 text-base tracking-tight text-pretty m-0">
@@ -871,11 +870,6 @@ function Toolbar({
 
       <Select value={sort} onValueChange={onSortChange}>
         <SelectTrigger size="sm" aria-label="Sort">
-          <ArrowUpDown
-            className="size-3.5 text-ink-500"
-            strokeWidth={1.75}
-            aria-hidden="true"
-          />
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
@@ -1117,7 +1111,7 @@ function ModelDetailPage({ model, onBack }: { model: Model; onBack: () => void }
           {/* Demoted to <h2> — the artboard's ArtboardHeader already renders
               the page-level <h1> ("Models"). Visual scale (text-3xl/9 = 32px)
               is preserved so the model name still anchors the hero. */}
-          <h2 className="font-sans text-3xl/9 tracking-tight font-medium text-ink-900 m-0">
+          <h2 className="font-sans text-3xl/9 -tracking-[1px] font-medium text-ink-900 m-0">
             {model.name}
           </h2>
 

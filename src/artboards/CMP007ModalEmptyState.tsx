@@ -86,11 +86,11 @@ export function CMP007ModalEmptyState() {
                   onClose={resetCreate}
                 >
                   <div className="flex flex-col gap-2">
-                    <Label htmlFor="cmp006-name" className="text-xs text-ink-600">
+                    <Label htmlFor="cmp007-name" className="text-xs text-ink-600">
                       Name
                     </Label>
                     <Input
-                      id="cmp006-name"
+                      id="cmp007-name"
                       placeholder="preview-env"
                       value={keyName}
                       onChange={(e) => setKeyName(e.target.value)}
@@ -173,7 +173,7 @@ export function CMP007ModalEmptyState() {
             />
             <Card className="p-7 rounded-sm">
               <div className="flex flex-col items-center justify-center h-80 rounded-sm gap-3 bg-white border border-ink-100 p-5">
-                <div className="flex items-center justify-center rounded-xl bg-ink-50 border border-ink-200 size-14">
+                <div className="flex items-center justify-center rounded-sm bg-ink-50 border border-ink-200 size-14">
                   <KeyRound className="size-7 text-ink-900" strokeWidth={1.5} />
                 </div>
                 <div className="flex flex-col items-center gap-1 mt-2">
