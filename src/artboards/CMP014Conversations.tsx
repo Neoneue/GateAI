@@ -856,7 +856,7 @@ function RequestTracePanel({
         ref={scrollRef}
         role="region"
         aria-labelledby="conv-trace-eyebrow"
-        className="p-4 overflow-y-auto overscroll-contain min-h-0 flex-1"
+        className="px-4 py-2 overflow-y-auto overscroll-contain min-h-0 flex-1"
       >
         {/* Per-row track segments are rendered inside TraceItem (see
             below) so geometry stays correct regardless of row content
