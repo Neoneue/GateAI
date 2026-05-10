@@ -29,12 +29,12 @@ export function CMP003BadgesAndTags() {
         <div className="flex flex-col gap-6">
         <div className="flex gap-6 bg-ink-50">
           {/* CMP-003.1 — STATUS */}
-          <div className="flex flex-col grow gap-3 basis-0 bg-ink-50">
+          <div className="flex flex-col grow gap-4 basis-0 bg-ink-50">
             <SectionHeader
               code="CMP-003.1 — STATUS"
               hint="<Badge variant=… /> + <StatusDot />"
             />
-            <div className="flex flex-col rounded-sm gap-3 bg-white p-7 shadow-(--shadow-border)">
+            <div className="flex flex-col rounded-sm gap-4 bg-white p-6 shadow-(--shadow-border)">
               <div className="flex flex-wrap items-center gap-2">
                 <Badge variant="success">
                   <StatusDot kind="success" />
@@ -75,12 +75,12 @@ export function CMP003BadgesAndTags() {
           </div>
 
           {/* CMP-003.2 — COUNTERS & CHIPS */}
-          <div className="flex flex-col grow gap-3 basis-0 bg-ink-50">
+          <div className="flex flex-col grow gap-4 basis-0 bg-ink-50">
             <SectionHeader
               code="CMP-003.2 — COUNTERS & CHIPS"
               hint="<Badge /> · <Tag onRemove /> · mono marks"
             />
-            <div className="flex flex-col rounded-sm gap-4 bg-white p-7 shadow-(--shadow-border)">
+            <div className="flex flex-col rounded-sm gap-4 bg-white p-6 shadow-(--shadow-border)">
               {/* Counters / version pills / accent labels */}
               <div className="flex flex-wrap items-center gap-3">
                 <Badge variant="secondary" className="rounded-sm h-5 px-2 font-normal">
@@ -114,7 +114,7 @@ export function CMP003BadgesAndTags() {
                   <button
                     type="button"
                     onClick={() => setTags(['production', 'error', 'last 7d'])}
-                    className="font-mono text-xs uppercase tracking-[0.08em] text-ink-800 underline decoration-ink-200 underline-offset-2 hover:decoration-ink-500 focus-visible:decoration-ink-500 outline-none rounded-xs focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                    className="font-mono text-xs uppercase tracking-[0.1em] text-ink-800 underline decoration-ink-200 underline-offset-2 hover:decoration-ink-500 focus-visible:decoration-ink-500 outline-none rounded-xs focus-visible:ring-3 focus-visible:ring-ring/50"
                   >
                     Reset tags
                   </button>
@@ -138,12 +138,12 @@ export function CMP003BadgesAndTags() {
         </div>
 
         {/* CMP-003.3 — DELTA TAG */}
-        <div className="flex flex-col gap-3 bg-ink-50">
+        <div className="flex flex-col gap-4 bg-ink-50">
           <SectionHeader
             code="CMP-003.3 — DELTA TAG"
             hint="<DeltaTag delta=… note=… /> · directional pill + optional note"
           />
-          <div className="flex flex-col rounded-sm gap-4 bg-white p-7 shadow-(--shadow-border)">
+          <div className="flex flex-col rounded-sm gap-4 bg-white p-6 shadow-(--shadow-border)">
             {/* Positive — pill alone, then with note */}
             <div className="flex flex-wrap items-center gap-6">
               <DeltaTag delta="+8.2%" />

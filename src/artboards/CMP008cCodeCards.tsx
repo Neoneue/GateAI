@@ -156,8 +156,8 @@ export function CMP008cCodeCards() {
           parts="3 layouts · 1 primitive"
         />
 
-        <div className="flex flex-col gap-7">
-          <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-8">
+          <div className="flex flex-col gap-4">
             <SectionHeader
               code="CMP-008c.1 — CARD LAYOUTS"
               hint="A · marketing hero · C · numbered steps"
@@ -167,13 +167,13 @@ export function CMP008cCodeCards() {
             <StepsCard />
           </div>
 
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-4">
             <SectionHeader
               code="CMP-008c.2 — COMPACT · THREE FLAVORS"
               hint="B1 · light tabs · B2 · dark terminal · B3 · request / response"
             />
 
-            <div className="grid grid-cols-2 gap-x-7 gap-y-6">
+            <div className="grid grid-cols-2 gap-x-8 gap-y-6">
               <LightTabbedCard />
               <DarkTerminalCard />
               <RequestResponseCard />
@@ -189,18 +189,18 @@ export function CMP008cCodeCards() {
 
 function HeroCard() {
   return (
-    <div className="flex items-center gap-8 p-7 rounded-sm bg-white shadow-(--shadow-border)">
+    <div className="flex items-center gap-8 p-6 rounded-sm bg-white shadow-(--shadow-border)">
       <div className="flex flex-col grow shrink basis-0 gap-4">
-        <div className="font-mono uppercase tracking-[0.12em] text-blue-700 text-xs/4 font-medium">
+        <div className="font-mono uppercase tracking-[0.1em] text-blue-700 text-xs/4 font-medium">
           QUICKSTART
         </div>
         <div className="flex flex-col gap-2">
-          <h3 className="font-sans font-medium text-ink-800 text-2xl/8 -tracking-[0.4px] m-0">
+          <h3 className="font-sans font-medium text-ink-800 text-2xl/8 -tracking-[0.25px] m-0">
             Send your first request
             <br />
             in one shot.
           </h3>
-          <p className="text-ink-600 text-base/6 max-w-[425px] m-0">
+          <p className="text-ink-500 text-base/6 max-w-[425px] m-0">
             Replace the placeholder key, paste it in your terminal. Sub-second
             TTFB, audit chain mounted, no SDK required.
           </p>
@@ -254,7 +254,7 @@ const STEPS: StepItem[] = [
 
 function StepsCard() {
   return (
-    <div className="flex flex-col p-7 gap-5 rounded-sm bg-white shadow-(--shadow-border)">
+    <div className="flex flex-col p-6 gap-4 rounded-sm bg-white shadow-(--shadow-border)">
       {STEPS.map((step) => (
         <div key={step.n} className="flex items-start gap-4">
           <div aria-hidden className="flex items-center justify-center shrink-0 size-6 rounded-full bg-blue-700">
@@ -266,7 +266,7 @@ function StepsCard() {
             <h4 className="font-sans font-medium text-ink-800 text-sm/5 m-0">
               {step.title}
             </h4>
-            <p className="text-ink-600 text-xs/4 m-0">{step.body}</p>
+            <p className="text-ink-500 text-xs/4 m-0">{step.body}</p>
             {step.snippet && (
               <div className="mt-2 rounded-sm bg-ink-100 border border-ink-100">
                 <CodeBlock lines={[step.snippet]} density="inline" />
@@ -309,7 +309,7 @@ function RequestResponseCard() {
   return (
     <CodeCard>
       <div className="flex items-center gap-2 px-4 py-3 bg-ink-100 border-b border-ink-100">
-        <span className="inline-flex items-center h-5 px-2 rounded-sm bg-ink-800 font-sans font-medium text-white text-xs/4 tracking-[0.06em]">
+        <span className="inline-flex items-center h-5 px-2 rounded-sm bg-ink-800 font-sans font-medium text-white text-xs/4 tracking-wider">
           POST
         </span>
         <span className="font-sans text-ink-800 text-xs/4">/v1/messages</span>

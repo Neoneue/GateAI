@@ -33,11 +33,11 @@ export function ArtboardHeader({
         <h1 className="font-sans font-medium text-ink-800 text-3xl/9 -tracking-[1px] m-0">
           {title}
         </h1>
-        <p className="font-mono text-ink-600 text-xs/[18.6px] max-w-[620px] m-0">
+        <p className="font-mono text-ink-500 text-xs/5 max-w-[620px] m-0">
           {description}
         </p>
       </div>
-      <div className="flex flex-col w-[200px] shrink-0 pt-2 gap-1 font-mono uppercase tracking-[0.067em] text-xs">
+      <div className="flex flex-col w-[200px] shrink-0 pt-2 gap-1 font-mono uppercase tracking-wider text-xs">
         <div className="flex justify-between gap-3">
           <span className="text-ink-500">parts</span>
           <span className="text-ink-800">{parts}</span>
@@ -62,7 +62,7 @@ export function SectionHeader({ code, hint }: { code: string; hint?: string }) {
         {hint && <div className="font-mono text-ink-400 text-xs">{hint}</div>}
       </div>
       {title && (
-        <h2 className="font-sans font-medium text-ink-800 text-2xl/8 -tracking-[0.5px] m-0">
+        <h2 className="font-sans font-medium text-ink-800 text-2xl/8 -tracking-[0.25px] m-0">
           {title}
         </h2>
       )}

@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { EmptyState } from '@/components/ui/empty-state';
 import {
   Dialog,
   DialogClose,
@@ -85,7 +86,7 @@ export function CMP017Team({
           parts="1 surface"
         />
 
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-4">
           <SectionHeader
             code="CMP-017.1 — TEAM SURFACE"
             hint="v-shell · gray well · page header · tabs · members table"
@@ -450,10 +451,20 @@ function InvitationsPane({ onInvite }: { onInvite: () => void }) {
   if (INVITATION_ROWS.length === 0) {
     return (
       <EmptyState
+        className="py-16"
         title="No pending invitations"
         body="Invitations you’ve sent that haven’t been accepted yet show up here. They expire after 7 days."
-        actionLabel="Invite member"
-        onAction={onInvite}
+        action={
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onInvite}
+            className="border-ink-200 bg-white text-ink-900"
+          >
+            <UserPlus data-icon="inline-start" aria-hidden />
+            Invite member
+          </Button>
+        }
       />
     );
   }
@@ -524,6 +535,7 @@ function RequestsPane() {
   if (REQUEST_ROWS.length === 0) {
     return (
       <EmptyState
+        className="py-16"
         title="No access requests"
         body="People who’ve asked to join this workspace show up here. You’ll see their email, the role they want, and a short note."
       />
@@ -575,34 +587,6 @@ function RequestsPane() {
   );
 }
 
-/* ─── Empty state ─────────────────────────────────────────────────────── */
-
-function EmptyState({
-  title,
-  body,
-  actionLabel,
-  onAction,
-}: {
-  title: string;
-  body: string;
-  actionLabel?: string;
-  onAction?: () => void;
-}) {
-  return (
-    <div className="flex flex-col items-center justify-center gap-3 py-16 px-6 rounded-sm bg-white shadow-(--shadow-border) text-center">
-      <h3 className="font-sans text-base font-medium text-ink-900 m-0">{title}</h3>
-      <p className="font-sans text-sm text-ink-500 max-w-md text-pretty m-0">
-        {body}
-      </p>
-      {actionLabel && onAction ? (
-        <Button variant="outline" size="sm" onClick={onAction} className="mt-1 border-ink-200 bg-white text-ink-900">
-          <UserPlus data-icon="inline-start" aria-hidden />
-          {actionLabel}
-        </Button>
-      ) : null}
-    </div>
-  );
-}
 
 /* ─── Invite member dialog ────────────────────────────────────────────── */
 

@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { CompactKpi, CompactSpark } from '@/components/ui/compact-kpi';
 import { Input } from '@/components/ui/input';
 import { MessageBlock, type MessageRole } from '@/components/ui/message-block';
+import { RowActionButton } from '@/components/ui/row-action-button';
 import { TablePaginationFooter } from '@/components/ui/table-pagination-footer';
 import {
   Dialog,
@@ -66,7 +67,7 @@ export function CMP014Conversations({
           parts="1 surface"
         />
 
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-4">
           <SectionHeader
             code="CMP-014.1 — CONVERSATIONS SURFACE"
             hint="v-shell · gray well · KPI rail · filter toolbar · conversation log"
@@ -325,14 +326,10 @@ function ConversationsTableSection() {
                 className="cursor-pointer transition-colors duration-150 ease-out motion-reduce:transition-none hover:bg-ink-50"
               >
                 <TableCell className="max-w-[360px]">
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setSelectedRow(row);
-                    }}
+                  <RowActionButton
+                    layout="stack"
+                    onClick={() => setSelectedRow(row)}
                     aria-label={`Inspect conversation ${row.title}`}
-                    className="flex flex-col gap-1 min-w-0 w-full text-left bg-transparent p-0 outline-none rounded-xs focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                   >
                     <span
                       title={row.title}
@@ -343,7 +340,7 @@ function ConversationsTableSection() {
                     <span className="font-mono text-xs text-ink-500 -tracking-[0.01em]">
                       {row.conversationId}
                     </span>
-                  </button>
+                  </RowActionButton>
                 </TableCell>
                 <TableCell className="max-w-[220px] font-mono text-sm text-ink-800 -tracking-[0.14px]">
                   <span className="block truncate" title={row.initiator}>
@@ -531,7 +528,7 @@ function ConversationDetailBody({ row }: { row: ConversationRow }) {
           footer's default `justify-end` since this footer carries
           informational copy on both edges, not just trailing actions. */}
       <DialogScrollFooter className="justify-between flex-wrap">
-        <span className="font-mono text-xs text-ink-400 -tracking-[0.01em]">
+        <span className="font-mono text-xs text-ink-500 -tracking-[0.01em]">
           Click a message or trace step — they’re linked.
         </span>
         <span className="font-mono text-xs text-ink-400 -tracking-[0.01em]">
@@ -570,8 +567,9 @@ function ConversationKpiRail({ row }: { row: ConversationRow }) {
 function ConversationKpiTile({ label, value }: { label: string; value: string }) {
   // Mono at text-lg (18px) — below the sans-hero threshold (≥24px), so
   // these stay in the data-tier mono register per the five-voice taxonomy.
+  // Padding `p-4` matches the 16px card-padding rule (CompactKpi / ModelKpiTile).
   return (
-    <div className="flex flex-col gap-1 px-3 py-3">
+    <div className="flex flex-col gap-1 p-4">
       <span className="font-mono text-xs uppercase tracking-[0.1em] font-medium text-ink-500">
         {label}
       </span>

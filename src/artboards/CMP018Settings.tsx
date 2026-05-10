@@ -3,6 +3,7 @@ import { KeyRound, Layers } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { EmptyState } from '@/components/ui/empty-state';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -28,7 +29,7 @@ import { DashboardChrome } from './_shared/DashboardChrome';
  *
  * Profile / security / logging / integration configuration surface. Same
  * production-frame chrome as CMP-012 / CMP-013 / CMP-014 / CMP-017.
- * Default-pill Tabs (General / Logging / Integration) per the screenshot
+ * Line-variant Tabs (General / Logging / Integration) per the screenshot
  * inspirations — Settings is a settled-state surface where each tab is a
  * peer scope, not a workflow funnel, so the pill variant's "switch context"
  * affordance reads better than the underline funnel.
@@ -54,11 +55,11 @@ export function CMP018Settings({
         <ArtboardHeader
           code="CMP-018"
           title="Settings · Workspace Admin"
-          description="Profile, security, logging, and integration configuration. Production-shell chrome shared with CMP-012 / CMP-013 / CMP-014 / CMP-017. Default-pill Tabs (General / Logging / Integration); rows in Logging use inline label + control composition rather than a dedicated primitive."
+          description="Profile, security, logging, and integration configuration. Production-shell chrome shared with CMP-012 / CMP-013 / CMP-014 / CMP-017. Line-variant Tabs (General / Logging / Integration); rows in Logging use inline label + control composition rather than a dedicated primitive."
           parts="1 surface"
         />
 
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-4">
           <SectionHeader
             code="CMP-018.1 — SETTINGS SURFACE"
             hint="v-shell · gray well · page header · pill tabs · cards"
@@ -473,23 +474,23 @@ function SettingsRow({
 
 function IntegrationEmptyState() {
   return (
-    <div className="flex flex-col items-center justify-center gap-3 py-20 px-6 rounded-sm bg-white shadow-(--shadow-border) text-center">
-      <span
-        aria-hidden
-        className="inline-flex items-center justify-center size-12 rounded-sm bg-ink-100 text-ink-500"
-      >
-        <Layers className="size-6" strokeWidth={1.5} />
-      </span>
-      <h3 className="font-sans text-base font-medium text-ink-900 m-0">
-        No integrations configured
-      </h3>
-      <p className="font-sans text-sm text-ink-500 max-w-md text-pretty m-0">
-        Forward gateway events to Slack, PagerDuty, Datadog, and other
-        destinations. Integrations are scoped to this workspace.
-      </p>
-      <Button variant="outline" size="sm" className="mt-1 border-ink-200 bg-white text-ink-900">
-        Browse integrations
-      </Button>
-    </div>
+    <EmptyState
+      className="py-20"
+      icon={
+        <span
+          aria-hidden
+          className="inline-flex items-center justify-center size-12 rounded-sm bg-ink-100 text-ink-500"
+        >
+          <Layers className="size-6" strokeWidth={1.5} />
+        </span>
+      }
+      title="No integrations configured"
+      body="Forward gateway events to Slack, PagerDuty, Datadog, and other destinations. Integrations are scoped to this workspace."
+      action={
+        <Button variant="outline" size="sm" className="border-ink-200 bg-white text-ink-900">
+          Browse integrations
+        </Button>
+      }
+    />
   );
 }

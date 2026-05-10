@@ -224,14 +224,14 @@ export function CMP011DataTable() {
           parts="3 layouts"
         />
 
-        <div className="flex flex-col gap-7">
-          <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-8">
+          <div className="flex flex-col gap-4">
           <SectionHeader
             code="CMP-011.1 — SORTABLE TABLE"
             hint=".v-tbl · header / row / selected / action"
           />
 
-          <div className="flex flex-col rounded-sm overflow-hidden bg-white border border-ink-200 shadow-xs">
+          <div className="flex flex-col rounded-sm overflow-hidden bg-white shadow-(--shadow-border)">
             {/* Toolbar */}
             <div className="flex items-center justify-between gap-3 p-4">
               <div className="flex items-center gap-2">
@@ -377,7 +377,7 @@ export function CMP011DataTable() {
           </div>
           </div>
 
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-4">
             <SectionHeader
               code="CMP-011.2 — ACTIVITY FEED"
               hint="card-wrapped · header + 'view all' · imported from CMP-012"
@@ -385,7 +385,7 @@ export function CMP011DataTable() {
             <RecentRequestsCard />
           </div>
 
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-4">
             <SectionHeader
               code="CMP-011.3 — DRILL-DOWN PANEL"
               hint="title + subtitle · status pills · severity scores · chevron rows"
@@ -438,7 +438,7 @@ const RISK_ROWS: {
 function RiskScoresCard() {
   const [scope, setScope] = useState('all');
   return (
-    <div className="flex flex-col rounded-sm overflow-hidden bg-white border border-ink-200 shadow-xs">
+    <div className="flex flex-col rounded-sm overflow-hidden bg-white shadow-(--shadow-border)">
       {/* Header — title + subtitle on the left, scope dropdown on the right */}
       <div className="flex items-start justify-between gap-3 p-4">
         <div className="flex flex-col gap-1">
@@ -516,7 +516,7 @@ function RiskScoresCard() {
 function CapabilityPill({ letter }: { letter: Capability }) {
   const display = letter === 'f' ? 'ƒ' : letter;
   return (
-    <span className="inline-flex items-center justify-center size-5 rounded-[4px] border border-ink-200 font-mono text-xs font-medium text-ink-800">
+    <span className="inline-flex items-center justify-center size-5 rounded-xs border border-ink-200 font-mono text-xs font-medium text-ink-800">
       {display}
     </span>
   );

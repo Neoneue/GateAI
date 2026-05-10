@@ -54,12 +54,12 @@ export function CMP004FormFields() {
 
         <div className="flex items-start gap-6 bg-ink-50">
           {/* CMP-004.1 — TEXT INPUTS */}
-          <div className="flex flex-col grow gap-3 basis-0 bg-ink-50">
+          <div className="flex flex-col grow gap-4 basis-0 bg-ink-50">
             <SectionHeader
               code="CMP-004.1 — TEXT INPUTS"
               hint="<Input /> · <Textarea /> · <Select />"
             />
-            <div className="flex flex-col rounded-sm gap-4 bg-white border border-ink-100 p-7">
+            <div className="flex flex-col rounded-sm gap-4 bg-white shadow-(--shadow-border) p-6">
               {/* Key name (required) */}
               <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between">
@@ -92,7 +92,7 @@ export function CMP004FormFields() {
                   id="description"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="min-h-22 leading-[22px]"
+                  className="min-h-22 leading-6"
                 />
               </div>
 
@@ -149,12 +149,12 @@ export function CMP004FormFields() {
           </div>
 
           {/* CMP-004.2 — CHECKBOX · RADIO · SWITCH */}
-          <div className="flex flex-col grow gap-3 basis-0 bg-ink-50">
+          <div className="flex flex-col grow gap-4 basis-0 bg-ink-50">
             <SectionHeader
               code="CMP-004.2 — CHECKBOX · RADIO · SWITCH"
               hint="<Checkbox /> · <RadioGroup /> · <Switch />"
             />
-            <div className="flex flex-col rounded-sm gap-5 bg-white border border-ink-100 p-7">
+            <div className="flex flex-col rounded-sm gap-4 bg-white shadow-(--shadow-border) p-6">
               {/* Scopes — checkboxes */}
               <div role="group" aria-labelledby="scopes-label" className="flex flex-col gap-3">
                 <Label id="scopes-label" className="text-ink-800 font-medium text-sm">Scopes</Label>
@@ -170,7 +170,7 @@ export function CMP004FormFields() {
                       onCheckedChange={(v) =>
                         setScopes((prev) => ({ ...prev, [s.id]: Boolean(v) }))
                       }
-                      className="size-3.5 rounded-[3px] data-[state=checked]:bg-blue-700 data-[state=checked]:border-blue-700"
+                      className="size-3.5"
                     />
                     <Label htmlFor={s.id} className="text-ink-800 font-medium text-sm">
                       {s.label}
@@ -195,9 +195,9 @@ export function CMP004FormFields() {
                       <RadioGroupItem
                         value={r.value}
                         id={`rotation-${r.value}`}
-                        className="size-3.5 data-[state=checked]:bg-blue-700 data-[state=checked]:border-blue-700"
+                        className="size-3.5"
                       />
-                      <Label htmlFor={`rotation-${r.value}`} className="text-ink-800 text-sm font-normal">
+                      <Label htmlFor={`rotation-${r.value}`} className="text-ink-800 text-sm font-medium">
                         {r.label}
                       </Label>
                     </div>
@@ -214,7 +214,7 @@ export function CMP004FormFields() {
                   { key: 'emailOnDormancy' as const, label: 'Email me on use after dormancy' },
                 ].map((n) => (
                   <div key={n.key} className="flex items-center justify-between">
-                    <Label htmlFor={n.key} className="text-ink-800 text-sm font-normal">
+                    <Label htmlFor={n.key} className="text-ink-800 text-sm font-medium">
                       {n.label}
                     </Label>
                     <Switch
@@ -223,7 +223,6 @@ export function CMP004FormFields() {
                       onCheckedChange={(v) =>
                         setNotifications((prev) => ({ ...prev, [n.key]: v }))
                       }
-                      className="data-[state=checked]:bg-blue-700"
                     />
                   </div>
                 ))}

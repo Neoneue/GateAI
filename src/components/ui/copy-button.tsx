@@ -188,7 +188,7 @@ export function CopyButton(props: CopyButtonProps) {
         onClick={trigger}
         aria-label={ariaLabel}
         className={cn(
-          'relative inline-flex items-center justify-center size-5 rounded-xs text-ink-500 hover:text-ink-900 transition-colors duration-150 ease-out motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 before:absolute before:inset-[-2px] before:content-[""]',
+          'relative inline-flex items-center justify-center size-5 rounded-xs text-ink-500 hover:text-ink-900 transition-colors duration-150 ease-out motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50 before:absolute before:inset-[-2px] before:content-[""]',
           copied && 'text-success-600 hover:text-success-600',
           className,
         )}

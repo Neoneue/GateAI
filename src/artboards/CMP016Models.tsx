@@ -31,6 +31,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { RowActionButton } from '@/components/ui/row-action-button';
 import { TablePaginationFooter } from '@/components/ui/table-pagination-footer';
 import { CodeBlock, CodeCard, CodeCardCopyButton, CodeCardHeader, CodeCardTabs, linesToString, type CodeLine, type CodeToken } from '@/components/ui/code-card';
 import { CopyButton } from '@/components/ui/copy-button';
@@ -90,7 +91,7 @@ export function CMP016Models({
           parts="1 surface"
         />
 
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-4">
           <SectionHeader
             code="CMP-016.1 — MODELS SURFACE"
             hint="v-shell · gray well · modality tabs · toolbar · models table · in-page detail subpage"
@@ -921,14 +922,9 @@ function ModelsTable({
               onClick={() => onSelect(model)}
             >
               <TableCell className="max-w-[280px]">
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onSelect(model);
-                  }}
+                <RowActionButton
+                  onClick={() => onSelect(model)}
                   aria-label={`Inspect ${model.name}`}
-                  className="flex items-center gap-2 min-w-0 w-full text-left bg-transparent p-0 outline-none rounded-xs focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                 >
                   <VendorAvatar vendor={model.vendor} />
                   <span
@@ -937,7 +933,7 @@ function ModelsTable({
                   >
                     {model.name}
                   </span>
-                </button>
+                </RowActionButton>
               </TableCell>
               <TableCell className="whitespace-nowrap">
                 <code
@@ -1091,7 +1087,8 @@ function ModelDetailPage({ model, onBack }: { model: Model; onBack: () => void }
         <button
           type="button"
           onClick={onBack}
-          className="inline-flex items-center gap-1 rounded-xs font-sans text-sm text-ink-800 underline decoration-ink-200 underline-offset-2 hover:decoration-ink-500 focus-visible:decoration-ink-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 transition-colors duration-150 ease-out motion-reduce:transition-none"
+          aria-label="Back to Models"
+          className="inline-flex items-center gap-1 rounded-xs font-sans text-sm text-ink-800 underline decoration-ink-200 underline-offset-2 hover:decoration-ink-500 focus-visible:decoration-ink-500 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50 transition-colors duration-150 ease-out motion-reduce:transition-none"
         >
           <ChevronLeft className="size-4 shrink-0" strokeWidth={1.75} aria-hidden="true" />
           Models
@@ -1099,7 +1096,7 @@ function ModelDetailPage({ model, onBack }: { model: Model; onBack: () => void }
       </div>
 
       {/* Hero — vendor eyebrow / H1 / handle / capabilities / description. */}
-      <div className="flex flex-col gap-5">
+      <div className="flex flex-col gap-4">
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2">
             <VendorAvatar vendor={model.vendor} />
@@ -1162,7 +1159,7 @@ function ModelDetailPage({ model, onBack }: { model: Model; onBack: () => void }
             onClick={() => setShowFullDesc((v) => !v)}
             aria-expanded={showFullDesc}
             aria-controls="model-description"
-            className="group inline-flex items-center gap-1 w-fit rounded-xs font-sans text-sm text-ink-800 underline decoration-ink-200 underline-offset-2 hover:decoration-ink-500 hover:text-ink-900 focus-visible:decoration-ink-500 focus-visible:text-ink-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+            className="group inline-flex items-center gap-1 w-fit rounded-xs font-sans text-sm text-ink-800 underline decoration-ink-200 underline-offset-2 hover:decoration-ink-500 hover:text-ink-900 focus-visible:decoration-ink-500 focus-visible:text-ink-900 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
           >
             {showFullDesc ? 'Show less' : 'Show more'}
             <ChevronDown
@@ -1245,7 +1242,7 @@ function ModelDetailPage({ model, onBack }: { model: Model; onBack: () => void }
 
 function PlatformPanel() {
   return (
-    <div className="grid grid-cols-3 gap-3">
+    <div className="grid grid-cols-3 gap-4">
       {PLATFORM_LINKS.map((p) => (
           <button
             key={p.name}
@@ -1253,7 +1250,7 @@ function PlatformPanel() {
             // No-op in the showcase; real impl wires to per-platform docs.
             onClick={() => undefined}
             aria-label={`Open ${p.name} integration guide`}
-            className="group flex items-start justify-between gap-3 bg-white rounded-sm shadow-(--shadow-border) px-4 py-3 text-left transition-colors duration-150 ease-out motion-reduce:transition-none hover:bg-ink-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+            className="group flex items-start justify-between gap-3 bg-white rounded-sm shadow-(--shadow-border) p-4 text-left transition-colors duration-150 ease-out motion-reduce:transition-none hover:bg-ink-50 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
           >
             <div className="flex flex-col gap-0.5 min-w-0">
               <span className="font-sans text-sm font-medium text-ink-900">{p.name}</span>
@@ -1305,10 +1302,11 @@ function ModelKpiRail({ model, head }: { model: Model; head: ProviderOffering })
 
 function ModelKpiTile({ label, value }: { label: string; value: string }) {
   // HeroNumeric default = 24px sans tabular — the locked recipe for KPI
-  // values ≥24px. Sub-20px numerics elsewhere stay mono.
+  // values ≥24px. Sub-20px numerics elsewhere stay mono. Padding `p-4`
+  // matches the 16px card-padding rule (CompactKpi primitive).
   const isMissing = value === '—';
   return (
-    <div className="flex flex-col gap-1 px-3 py-3">
+    <div className="flex flex-col gap-1 p-4">
       <span className="font-mono text-xs uppercase tracking-[0.1em] font-medium text-ink-500">
         {label}
       </span>

@@ -41,15 +41,15 @@ export function CMP007ModalEmptyState() {
           parts="4 modal variants"
         />
 
-        <div className="flex flex-col gap-7">
+        <div className="flex flex-col gap-8">
           {/* CMP-007.1 — MODAL */}
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-4">
             <SectionHeader
               code="CMP-007.1 — MODAL"
               hint="<AlertDialog> · <Dialog> · <Dialog> (payload)"
             />
-            <Card className="p-7 gap-7 rounded-sm">
-              <div className="grid grid-cols-2 gap-5 items-start">
+            <Card className="p-6 gap-8 rounded-sm">
+              <div className="grid grid-cols-2 gap-4 items-start">
                 <ModalSpecimen
                   title="Revoke prod-backend?"
                   subtitle="This key was last used 2 minutes ago."
@@ -96,7 +96,7 @@ export function CMP007ModalEmptyState() {
                       onChange={(e) => setKeyName(e.target.value)}
                     />
                   </div>
-                  <div className="flex gap-3">
+                  <div className="flex gap-4">
                     <div className="flex flex-col gap-2 flex-1">
                       <Label htmlFor="cmp007-scope" className="text-xs text-ink-600">Scope</Label>
                       <Select value={scope} onValueChange={setScope}>
@@ -155,24 +155,24 @@ export function CMP007ModalEmptyState() {
           </div>
 
           {/* CMP-007.1b — GENERATION DETAILS */}
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-4">
             <SectionHeader
               code="CMP-007.1b — GENERATION DETAILS"
               hint="<Dialog> · payload · spec sheet"
             />
-            <Card className="p-7 rounded-sm items-center">
+            <Card className="p-6 rounded-sm items-center">
               <GenerationDetailsModal />
             </Card>
           </div>
 
           {/* CMP-007.2 — EMPTY STATE */}
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-4">
             <SectionHeader
               code="CMP-007.2 — EMPTY STATE"
               hint="centered icon · heading · subtext · CTA"
             />
-            <Card className="p-7 rounded-sm">
-              <div className="flex flex-col items-center justify-center h-80 rounded-sm gap-3 bg-white border border-ink-100 p-5">
+            <Card className="p-6 rounded-sm">
+              <div className="flex flex-col items-center justify-center h-80 rounded-sm gap-4 bg-white shadow-(--shadow-border) p-6">
                 <div className="flex items-center justify-center rounded-sm bg-ink-50 border border-ink-200 size-14">
                   <KeyRound className="size-7 text-ink-900" strokeWidth={1.5} />
                 </div>
@@ -180,7 +180,7 @@ export function CMP007ModalEmptyState() {
                   <h2 className="text-lg font-medium -tracking-[0.01em] text-ink-900">
                     No API keys yet
                   </h2>
-                  <p className="max-w-60 text-center text-sm text-ink-600">
+                  <p className="max-w-60 text-center text-sm text-ink-500">
                     Create your first key to start sending requests through the gateway.
                   </p>
                 </div>
@@ -217,7 +217,7 @@ function ModalSpecimen({
         (className ?? '')
       }
     >
-      <div className="flex items-start justify-between pt-4 pr-3 pb-1 pl-5">
+      <div className="flex items-start justify-between pt-4 pr-3 pb-2 pl-4">
         <div className="flex flex-col">
           <div className="text-base font-medium -tracking-[0.01em] text-ink-900">
             {title}
@@ -234,14 +234,14 @@ function ModalSpecimen({
           <X />
         </Button>
       </div>
-      <div className="flex flex-col gap-4 pt-3 pb-4 px-5">{children}</div>
+      <div className="flex flex-col gap-4 pt-2 pb-4 px-4">{children}</div>
     </div>
   );
 }
 
 function ModalFooter({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex items-center justify-end gap-2 pt-1 -mx-5 -mb-4 pb-4 px-5">
+    <div className="flex items-center justify-end gap-2 pt-2 -mx-4 -mb-4 pb-4 px-4">
       {children}
     </div>
   );
@@ -253,7 +253,7 @@ function GenerationDetailsModal() {
       className="flex flex-col w-[640px] rounded-xl bg-white border border-ink-200 shadow-(--shadow-modal) overflow-clip"
     >
       {/* Header */}
-      <div className="flex items-start justify-between gap-3 px-5 pt-4 pb-3 border-b border-ink-200">
+      <div className="flex items-start justify-between gap-3 px-4 pt-4 pb-4 border-b border-ink-200">
         <div className="flex flex-col gap-1">
           <div className="text-base font-medium -tracking-[0.01em] text-ink-900">
             Generation details
@@ -275,7 +275,7 @@ function GenerationDetailsModal() {
       </div>
 
       {/* Body */}
-      <div className="flex flex-col px-5 py-5 gap-4">
+      <div className="flex flex-col p-4 gap-4">
         {/* Primary metadata */}
         <DetailGrid>
           <DetailRow label="Model">

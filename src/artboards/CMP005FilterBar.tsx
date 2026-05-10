@@ -49,12 +49,12 @@ export function CMP005FilterBar() {
         />
 
         {/* CMP-005.1 — LIST FILTER BAR */}
-        <div className="flex flex-col gap-3 bg-ink-50">
+        <div className="flex flex-col gap-4 bg-ink-50">
           <SectionHeader
             code="CMP-005.1 — LIST FILTER BAR"
             hint="<Input> · <Select> · <Tag> · <SegmentedPill>"
           />
-          <div className="flex flex-col rounded-sm gap-3 bg-white p-7 shadow-(--shadow-border)">
+          <div className="flex flex-col rounded-sm gap-4 bg-white p-6 shadow-(--shadow-border)">
             {/* Row 1 — search + scope dropdowns + count.
                 All controls use size="default" (h-9 px-4) from the primitive contract. */}
             <div className="flex items-center flex-wrap gap-2">
@@ -152,7 +152,7 @@ export function CMP005FilterBar() {
                 <button
                   type="button"
                   onClick={() => setChips([])}
-                  className="ml-1 font-sans text-xs text-ink-900 underline decoration-ink-200 underline-offset-2 hover:decoration-ink-500 focus-visible:decoration-ink-500 outline-none rounded-xs focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                  className="ml-1 font-sans text-xs text-ink-900 underline decoration-ink-200 underline-offset-2 hover:decoration-ink-500 focus-visible:decoration-ink-500 outline-none rounded-xs focus-visible:ring-3 focus-visible:ring-ring/50"
                 >
                   Clear all
                 </button>
@@ -161,7 +161,7 @@ export function CMP005FilterBar() {
                 <button
                   type="button"
                   onClick={() => setChips(['env: production', 'status: active'])}
-                  className="ml-1 font-sans text-xs text-ink-900 underline decoration-ink-200 underline-offset-2 hover:decoration-ink-500 focus-visible:decoration-ink-500 outline-none rounded-xs focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                  className="ml-1 font-sans text-xs text-ink-900 underline decoration-ink-200 underline-offset-2 hover:decoration-ink-500 focus-visible:decoration-ink-500 outline-none rounded-xs focus-visible:ring-3 focus-visible:ring-ring/50"
                 >
                   Reset filters
                 </button>

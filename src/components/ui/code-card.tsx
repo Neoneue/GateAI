@@ -89,10 +89,10 @@ export function CodeCard({
     <div
       data-slot="code-card"
       className={cn(
-        // Skill: surfaces.md — flat default uses the hairline `shadow-xs`;
+        // flat default uses the everyday material tier (shadow-as-border);
         // raised promotes to the popup elevation token so all floating
         // surfaces (cards, selects, dialogs, tooltips) read as one family.
-        'flex flex-col overflow-hidden rounded-sm bg-white border border-ink-100 shadow-xs',
+        'flex flex-col overflow-hidden rounded-sm bg-white shadow-(--shadow-border)',
         elevation === 'raised' && 'shadow-(--shadow-popup)',
         className,
       )}

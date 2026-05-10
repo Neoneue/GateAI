@@ -18,6 +18,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { RowActionButton } from '@/components/ui/row-action-button';
 import { TablePaginationFooter } from '@/components/ui/table-pagination-footer';
 import {
   Select,
@@ -102,7 +103,7 @@ export function CMP013Requests({
           parts="1 surface"
         />
 
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-4">
           <SectionHeader
             code="CMP-013.1 — REQUESTS SURFACE"
             hint="v-shell · gray well · hero metric · filter bar · request log"
@@ -187,7 +188,7 @@ const HERO_TICKS = ['13:30', '13:40', '13:50', '14:00', '14:10', '14:20', '14:30
 const heroChartConfig = {
   requests: {
     label: 'Requests/min',
-    color: 'var(--color-blue-700)',
+    color: 'var(--color-chart-1)',
   },
 } satisfies ChartConfig;
 
@@ -196,9 +197,9 @@ function HeroMetricCard() {
     <div className="flex flex-col gap-4 rounded-sm bg-white shadow-(--shadow-border) p-4">
       <div className="flex items-start justify-between gap-6">
         <div className="flex flex-col gap-2 shrink-0">
-          <div className="font-mono uppercase tracking-[0.1em] text-xs font-medium text-ink-500">
+          <h3 className="font-mono uppercase tracking-[0.1em] text-xs font-medium text-ink-500 m-0">
             REQUESTS / 1H
-          </div>
+          </h3>
           <div className="flex items-baseline gap-3">
             <HeroNumeric size="lg">
               {HERO_TOTAL.toLocaleString()}
@@ -230,8 +231,8 @@ function HeroMetricCard() {
         >
           <defs>
             <linearGradient id="cmp013-hero-spark" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="var(--color-blue-700)" stopOpacity={0.25} />
-              <stop offset="100%" stopColor="var(--color-blue-700)" stopOpacity={0} />
+              <stop offset="0%" stopColor="var(--color-chart-1)" stopOpacity={0.25} />
+              <stop offset="100%" stopColor="var(--color-chart-1)" stopOpacity={0} />
             </linearGradient>
           </defs>
           {/* Domain ceiling 300 gives ~5px of headroom above the top peak (250/min)
@@ -288,7 +289,7 @@ function HeroMetricCard() {
           <Area
             dataKey="requests"
             type="linear"
-            stroke="var(--color-blue-700)"
+            stroke="var(--color-chart-1)"
             strokeWidth={1.5}
             fill="url(#cmp013-hero-spark)"
             isAnimationActive={false}
@@ -574,14 +575,9 @@ function RequestsTableSection() {
                     </Badge>
                   </TableCell>
                   <TableCell className="max-w-[260px]">
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setSelectedRow(row);
-                      }}
+                    <RowActionButton
+                      onClick={() => setSelectedRow(row)}
                       aria-label={`Inspect ${row.code} request to ${row.model} at ${row.time}`}
-                      className="flex items-center gap-2 min-w-0 w-full text-left bg-transparent p-0 outline-none rounded-xs focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                     >
                       <VendorAvatar vendor={row.vendor} />
                       <span
@@ -590,7 +586,7 @@ function RequestsTableSection() {
                       >
                         {row.model}
                       </span>
-                    </button>
+                    </RowActionButton>
                   </TableCell>
                   <TableCell className="max-w-[200px] font-mono tabular-nums -tracking-[0.14px] text-ink-800">
                     <span className="block truncate" title={row.conversation}>
@@ -708,7 +704,7 @@ function RequestDetailBody({ row }: { row: RequestRow }) {
             <button
               type="button"
               aria-label={`Open conversation ${row.conversation}`}
-              className="text-ink-700 bg-transparent p-0 outline-none rounded-xs underline decoration-ink-200 underline-offset-2 hover:decoration-ink-500 focus-visible:decoration-ink-500 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+              className="text-ink-800 bg-transparent p-0 outline-none rounded-xs underline decoration-ink-200 underline-offset-2 hover:decoration-ink-500 focus-visible:decoration-ink-500 focus-visible:ring-3 focus-visible:ring-ring/50"
             >
               {row.conversation}
             </button>
@@ -840,9 +836,9 @@ function KpiRail({ row }: { row: RequestRow }) {
 
 function KpiTile({ label, value }: { label: string; value: string }) {
   // Tile chrome (border, radius, bg) lives on the parent rail container;
-  // each tile is just label + value at consistent padding.
+  // each tile is just label + value at the locked 16px card-padding rule.
   return (
-    <div className="flex flex-col gap-1 px-3 py-3">
+    <div className="flex flex-col gap-1 p-4">
       <span className="font-mono text-xs uppercase tracking-[0.1em] font-medium text-ink-500">
         {label}
       </span>
@@ -854,16 +850,14 @@ function KpiTile({ label, value }: { label: string; value: string }) {
 }
 
 function DetailRow({ label, value }: { label: string; value: React.ReactNode }) {
-  // 4-col grid mirrors the KPI rail's `grid-cols-4 gap-3` exactly so the
-  // value cell (cols 2–4) starts at the same x as the second stat card.
+  // 4-col grid mirrors the modal's KPI rail above (cols 2–4 carry the value).
   // Horizontal padding moves from row-level to cell-level (`pl-4` on label,
-  // `pr-4` on value) so the row chrome reads the same as before but the
-  // column tracks line up with the rail above.
+  // `pr-4` on value) so column tracks line up with the rail above.
   // Label is `font-medium text-ink-500` per the locked three-tier ink policy
   // — the font-medium weight (not ink-600 darkness) carries the field-label
   // signal so it reads as a label rather than ambient body text.
   return (
-    <div className="grid grid-cols-4 gap-3 items-center py-3 border-b border-ink-200 last:border-b-0">
+    <div className="grid grid-cols-4 gap-4 items-center py-3 border-b border-ink-200 last:border-b-0">
       <span className="font-sans text-sm font-medium text-ink-500 pl-4">{label}</span>
       <div className="col-span-3 pr-4">{value}</div>
     </div>
@@ -969,7 +963,7 @@ function SecurityCheckRow({
   status: 'pass';
 }) {
   return (
-    <div className="flex items-start justify-between gap-3 rounded-sm border border-ink-200 px-4 py-3">
+    <div className="flex items-start justify-between gap-3 rounded-sm border border-ink-200 p-4">
       <div className="flex flex-col gap-1 min-w-0">
         <span className="font-sans text-sm font-medium text-ink-900">{title}</span>
         <span className="font-sans text-xs text-ink-500 text-pretty">{description}</span>

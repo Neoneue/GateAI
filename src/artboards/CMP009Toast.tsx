@@ -43,7 +43,7 @@ const INITIAL_TOASTS: ToastSpec[] = [
         <span className="text-sm text-ink-800">block #48,291.</span>
         <button
           type="button"
-          className="text-sm font-medium text-ink-800 underline decoration-ink-200 underline-offset-2 hover:decoration-ink-500 focus-visible:decoration-ink-500 outline-none rounded-xs focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+          className="text-sm font-medium text-ink-800 underline decoration-ink-200 underline-offset-2 hover:decoration-ink-500 focus-visible:decoration-ink-500 outline-none rounded-xs focus-visible:ring-3 focus-visible:ring-ring/50"
         >
           Retry?
         </button>
@@ -73,13 +73,13 @@ export function CMP009Toast() {
           parts="3 variants"
         />
 
-        <div className="flex flex-col gap-7">
-          <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-8">
+          <div className="flex flex-col gap-4">
             <SectionHeader
               code="CMP-009.1 — TOAST DECK"
               hint="success · warn · error · with action"
             />
-            <Card className="p-7 rounded-sm">
+            <Card className="p-6 rounded-sm">
               <ToastDeck />
             </Card>
           </div>

@@ -89,7 +89,7 @@ export function CMP012ComposedDashboard({
           parts="1 surface"
         />
 
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-4">
           <SectionHeader
             code="CMP-012.1 — OVERVIEW SURFACE"
             hint="v-shell · gray well · KPI rail · charts · audit feed"
@@ -223,7 +223,7 @@ function KpiRail() {
 
 function MiddleRow() {
   return (
-    <div className="grid grid-cols-3 gap-3">
+    <div className="grid grid-cols-3 gap-4">
       <RequestVolumeCard />
       <TopKeysCard />
     </div>
@@ -434,10 +434,10 @@ export function TopKeysCard() {
         </CardAction>
       </CardHeader>
 
-      <CardContent className="flex flex-col gap-3">
+      <CardContent className="flex flex-col gap-4">
         <HeroNumeric>$1,147.82</HeroNumeric>
 
-        <div className="flex flex-col gap-4 pt-3 border-t border-ink-200">
+        <div className="flex flex-col gap-4 pt-4 border-t border-ink-200">
           {TOP_KEYS.map((k) => (
             <div key={k.label} className="flex items-center justify-between gap-3 min-w-0">
               <span

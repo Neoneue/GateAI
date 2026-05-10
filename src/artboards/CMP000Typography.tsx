@@ -164,12 +164,12 @@ export function CMP000Typography() {
         />
 
         {/* CMP-000.1 · SCALE */}
-        <div className="flex flex-col mb-7 gap-3 bg-ink-50">
+        <div className="flex flex-col mb-8 gap-4 bg-ink-50">
           <SectionHeader
             code="CMP-000.1 — SCALE"
             hint="Tailwind class names · Geist-aligned values · 14/20 · 16/24 · 18/28 · 24/32 · 32/40 · 48"
           />
-          <div className="flex flex-col rounded-sm py-1 px-6 bg-white border border-ink-100 shadow-[0_1px_2px_rgba(17,20,23,0.04)]">
+          <div className="flex flex-col rounded-sm py-1 px-6 bg-white shadow-(--shadow-border)">
             {SCALE.map((row, i) => (
               <div
                 key={row.label}
@@ -178,11 +178,11 @@ export function CMP000Typography() {
                 }`}
               >
                 <div className="flex flex-col w-[140px] shrink-0 gap-2">
-                  <div className="font-sans font-medium text-ink-800 text-xs/4">
+                  <h3 className="font-sans font-medium text-ink-800 text-xs/4 m-0">
                     {row.label}
-                  </div>
-                  <div className="inline-flex self-start rounded-[3px] p-1 bg-ink-100">
-                    <span className="font-sans text-ink-600 text-xs/4 tracking-[0.04em]">
+                  </h3>
+                  <div className="inline-flex self-start rounded-xs p-1 bg-ink-100">
+                    <span className="font-sans text-ink-500 text-xs/4 tracking-[0.04em]">
                       {row.tag}
                     </span>
                   </div>
@@ -192,7 +192,7 @@ export function CMP000Typography() {
                   {row.meta.map((line) => (
                     <div
                       key={line}
-                      className="font-sans text-ink-600 text-xs/4 tabular-nums"
+                      className="font-sans text-ink-500 text-xs/4 tabular-nums"
                     >
                       {line}
                     </div>
@@ -207,14 +207,14 @@ export function CMP000Typography() {
         </div>
 
         {/* CMP-000.2 · MONO VS SANS */}
-        <div className="flex flex-col gap-3 mb-7 bg-ink-50">
+        <div className="flex flex-col gap-4 mb-8 bg-ink-50">
           <SectionHeader
             code="CMP-000.2 — MONO VS SANS"
             hint="semantic split · machine voice / human voice"
           />
-          <div className="flex rounded-sm gap-4 bg-white border border-ink-100 shadow-[0_1px_2px_rgba(17,20,23,0.04)] p-6">
+          <div className="flex rounded-sm gap-4 bg-white shadow-(--shadow-border) p-6">
             <div className="flex flex-col grow gap-2">
-              <div className="font-mono text-ink-500 uppercase tracking-[0.08em] text-xs/4">
+              <div className="font-mono text-ink-500 uppercase tracking-[0.1em] text-xs/4">
                 Mono — machine voice
               </div>
               <pre className="font-mono text-ink-800 text-xs/4 tabular-nums whitespace-pre-wrap m-0">
@@ -227,7 +227,7 @@ root · 9c2e04a7f8b1`}
               </pre>
             </div>
             <div className="flex flex-col grow gap-2">
-              <div className="font-mono text-ink-500 uppercase tracking-[0.08em] text-xs/4">
+              <div className="font-mono text-ink-500 uppercase tracking-[0.1em] text-xs/4">
                 Sans — human voice
               </div>
               <pre className="font-sans text-ink-800 text-xs/4 whitespace-pre-wrap m-0">

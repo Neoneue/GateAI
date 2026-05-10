@@ -32,8 +32,8 @@ export function CMP008aCards() {
           parts="2 layouts"
         />
 
-        <div className="flex flex-col gap-7">
-          <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-8">
+          <div className="flex flex-col gap-4">
             <SectionHeader
               code="CMP-008a.1 — CHART CARD"
               hint=".v-card · header / chart body"
@@ -41,7 +41,7 @@ export function CMP008aCards() {
             <RequestVolumeCard />
           </div>
 
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-4">
             <SectionHeader
               code="CMP-008a.2 — METRIC + LIST CARD"
               hint=".v-card · metric hero / divider / row list"

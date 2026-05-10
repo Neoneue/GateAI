@@ -13,14 +13,14 @@ export function CMP008bStatCards() {
           parts="3 layouts"
         />
 
-        <div className="flex flex-col gap-7">
-          <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-8">
+          <div className="flex flex-col gap-4">
             <SectionHeader
               code="CMP-008b.2 — COMPACT + FLAT"
               hint=".compact for dense rails · .flat strips card chrome"
             />
-            <Card className="p-7 rounded-sm">
-              <div className="grid grid-cols-3 gap-3">
+            <Card className="p-6 rounded-sm">
+              <div className="grid grid-cols-3 gap-4">
                 <CompactKpi
                   title="Total Requests"
                   value="48,293"
@@ -59,7 +59,7 @@ export function CMP008bStatCards() {
             </Card>
           </div>
 
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-4">
             <SectionHeader
               code="CMP-008b.3 — STAT ROW"
               hint="KPIs with sparklines · 4 across"

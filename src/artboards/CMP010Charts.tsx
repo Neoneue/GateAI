@@ -40,8 +40,8 @@ export function CMP010Charts() {
           parts="2 chart types"
         />
 
-        <div className="flex flex-col gap-7">
-          <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-8">
+          <div className="flex flex-col gap-4">
             <SectionHeader
               code="CMP-010.1 — LINE + AREA"
               hint="Requests · last 14 days"
@@ -51,7 +51,7 @@ export function CMP010Charts() {
             </div>
           </div>
 
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-4">
             <SectionHeader
               code="CMP-010.2 — STACKED BARS"
               hint="Cost by model · last 7 days"

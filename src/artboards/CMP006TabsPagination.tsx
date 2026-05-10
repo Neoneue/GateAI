@@ -42,14 +42,14 @@ export function CMP006TabsPagination() {
           parts="3 components"
         />
 
-        <div className="flex flex-col gap-7">
+        <div className="flex flex-col gap-8">
           {/* CMP-006.1 — UNDERLINE TABS */}
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-4">
             <SectionHeader
               code="CMP-006.1 — UNDERLINE TABS"
               hint="page-level navigation"
             />
-            <div className="flex flex-col rounded-sm bg-white border border-ink-100">
+            <div className="flex flex-col rounded-sm bg-white shadow-(--shadow-border)">
               <Tabs value={tab} onValueChange={setTab}>
                 <TabsList variant="line">
                   <TabsTrigger value="overview">Overview</TabsTrigger>
@@ -58,19 +58,19 @@ export function CMP006TabsPagination() {
                   <TabsTrigger value="audit">Audit</TabsTrigger>
                   <TabsTrigger value="billing">Billing</TabsTrigger>
                 </TabsList>
-                <TabsContent value="overview" className="p-5 text-sm text-ink-600 tabular-nums -tracking-[0.01em]">
+                <TabsContent value="overview" className="p-6 text-sm text-ink-500 tabular-nums -tracking-[0.01em]">
                   panel: overview
                 </TabsContent>
-                <TabsContent value="keys" className="p-5 text-sm text-ink-600 tabular-nums -tracking-[0.01em]">
+                <TabsContent value="keys" className="p-6 text-sm text-ink-500 tabular-nums -tracking-[0.01em]">
                   panel: keys
                 </TabsContent>
-                <TabsContent value="logs" className="p-5 text-sm text-ink-600 tabular-nums -tracking-[0.01em]">
+                <TabsContent value="logs" className="p-6 text-sm text-ink-500 tabular-nums -tracking-[0.01em]">
                   panel: logs
                 </TabsContent>
-                <TabsContent value="audit" className="p-5 text-sm text-ink-600 tabular-nums -tracking-[0.01em]">
+                <TabsContent value="audit" className="p-6 text-sm text-ink-500 tabular-nums -tracking-[0.01em]">
                   panel: audit
                 </TabsContent>
-                <TabsContent value="billing" className="p-5 text-sm text-ink-600 tabular-nums -tracking-[0.01em]">
+                <TabsContent value="billing" className="p-6 text-sm text-ink-500 tabular-nums -tracking-[0.01em]">
                   panel: billing
                 </TabsContent>
               </Tabs>
@@ -78,12 +78,12 @@ export function CMP006TabsPagination() {
           </div>
 
           {/* CMP-006.2 — SEGMENTED · PAGINATION */}
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-4">
             <SectionHeader
               code="CMP-006.2 — SEGMENTED · PAGINATION"
               hint="<SegmentedPill> · <ToggleGroup> · <Pagination>"
             />
-            <div className="flex flex-col rounded-sm gap-5 bg-white border border-ink-100 p-7">
+            <div className="flex flex-col rounded-sm gap-4 bg-white shadow-(--shadow-border) p-6">
               {/* Three segmented groups */}
               <div className="flex items-center flex-wrap gap-4">
                 <SegmentedPill
@@ -191,7 +191,7 @@ export function CMP006TabsPagination() {
                   role="status"
                   aria-live="polite"
                   aria-atomic="true"
-                  className="font-sans text-xs text-ink-600 tabular-nums -tracking-[0.01em]"
+                  className="font-sans text-xs text-ink-500 tabular-nums -tracking-[0.01em]"
                 >
                   Page {page} of {totalPages} · {totalRows} rows
                 </p>

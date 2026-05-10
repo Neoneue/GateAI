@@ -11,6 +11,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { CompactKpi, CompactSpark } from '@/components/ui/compact-kpi';
+import { RowActionButton } from '@/components/ui/row-action-button';
 import { SegmentedPill } from '@/components/ui/segmented-pill';
 import { Sparkline } from '@/components/ui/sparkline';
 import {
@@ -68,7 +69,7 @@ export function CMP015Security({
           parts="1 surface"
         />
 
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-4">
           <SectionHeader
             code="CMP-015.1 — SECURITY SURFACE"
             hint="v-shell · KPI rail · risk banner · attack categories · key risk scores"
@@ -226,7 +227,7 @@ function CriticalRiskBanner() {
 
 function MiddleRow() {
   return (
-    <div className="grid grid-cols-2 gap-3">
+    <div className="grid grid-cols-2 gap-4">
       <ApiKeyRiskScoresCard />
       <AttackCategoriesCard />
     </div>
@@ -392,17 +393,14 @@ function ApiKeyRiskScoresCard() {
                   onClick={() => { /* drill target — wire to detail panel */ }}
                 >
                   <TableCell className="whitespace-nowrap">
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        /* drill target — wire to detail panel */
-                      }}
+                    <RowActionButton
+                      layout="inline"
+                      onClick={() => { /* drill target — wire to detail panel */ }}
                       aria-label={`Inspect ${row.key} (${row.tierLabel} risk)`}
-                      className="font-mono text-sm text-ink-900 -tracking-[0.14px] text-left bg-transparent p-0 outline-none rounded-xs focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                      className="font-mono text-sm text-ink-900 -tracking-[0.14px]"
                     >
                       {row.key}
-                    </button>
+                    </RowActionButton>
                   </TableCell>
                   <TableCell className="whitespace-nowrap">
                     <Badge variant={badge.variant}>
