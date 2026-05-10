@@ -198,18 +198,29 @@ rounded:
   full: "9999px"
 
 spacing:
-  # 4px grid only. Half-step Tailwind classes (gap-0.5/1.5/2.5/3.5) and arbitrary
-  # values (gap-[18px]) are banned. Locked 2026-05-04. (decided)
-  "1": "4px"  # gap-1, p-1 (rare)
-  "2": "8px"
-  "3": "12px"
-  "4": "16px"  # most-frequent step)
-  "5": "20px"
-  "6": "24px"
-  "8": "32px"
-  "12": "48px"
-  "16": "64px"
-  "24": "96px"
+  # Three-tier rule (locked 2026-05-09). Surface tier = 8px-grid only;
+  # compound tier = any 4-multiple; primitive-internal padding overrides.
+  # Half-step Tailwind classes (gap-0.5/1.5/2.5/3.5) and arbitrary values
+  # (gap-[18px]) are banned at every tier. (decided)
+  #
+  # Surface tier — page padding, section gaps, card padding, between-card gaps,
+  # empty-state heights — values are n × 8 only:
+  "2":  "8px"   # surface OK
+  "4":  "16px"  # surface OK — dominant step (Card padding, page gutter, section gap)
+  "6":  "24px"  # surface OK — outer page margins at lg+
+  "8":  "32px"  # surface OK — between-section gap
+  "10": "40px"  # surface OK
+  "12": "48px"  # surface OK — page-bottom rhythm
+  "16": "64px"  # surface OK — hero strip
+  "20": "80px"  # surface OK — rare
+  "24": "96px"  # surface OK — rare
+  # Compound tier — within a primitive's row/group, between icon + label,
+  # badge + text, label + control — any n × 4 is legal:
+  "1":  "4px"   # compound only — micro gap (icon adjacency)
+  "3":  "12px"  # compound only — button px-3 (sm/xs), Input px-3, table inner cells
+  "5":  "20px"  # compound only — chart legend gap
+  "7":  "28px"  # banned — odd 4-multiple, surface or compound (no use case)
+  "9":  "36px"  # banned — odd 4-multiple, surface or compound (no use case)
 
 components:
   button-default:  # primary action, ink-900 fill
@@ -434,20 +445,39 @@ Operational surfaces ~60% mono / 40% sans. Weight ceiling 500 (don't reach for 6
 
 ### Spacing System
 
-**4px grid only.** Every `gap`, `padding`, `margin`, `space-y/x`, `top/right/bottom/left` value is a multiple of 4px. Half-step Tailwind classes (`gap-0.5`, `gap-1.5`, `gap-2.5`, `gap-3.5`) and arbitrary values (`gap-[18px]`) are **banned**. Locked 2026-05-04.
+**Three-tier rule** (locked 2026-05-09 after audit found 53 surface-tier violations across the artboards). Half-step Tailwind classes (`gap-0.5`, `gap-1.5`, `gap-2.5`, `gap-3.5`) and arbitrary values (`gap-[18px]`) are **banned** at every tier.
 
-| Token (YAML key) | Value | Uses | Role |
+#### Tier 1 — Surface (8-multiples only)
+
+Page padding, section gaps, card padding, between-card gaps, empty-state heights, modal body padding, between-section vertical rhythm. Allowed pixel values: **8, 16, 24, 32, 40, 48, 64, 80, 96**. Tailwind classes that resolve to 8-multiples: `gap-2/4/6/8/10/12/16/20/24`, `p-2/4/6/8/10/12`, `py-2/4/6/8/10/12`, etc.
+
+**Banned at surface tier:** any odd 4-multiple — `gap-3` (12), `gap-5` (20), `gap-7` (28), `gap-9` (36), `p-3`, `p-5`, `p-7`, `py-3`, `py-5`, `py-7`. Spec-sheet panels that historically used `p-7` (CMP-002/003/004/006/008c) **normalize to `p-6`** (24px).
+
+#### Tier 2 — Compound (any 4-multiple)
+
+Within a primitive's row/group: between icon + label, badge + text, label + control, header chevron + close button, button-group adjacency, table inner cell padding. Any `n × 4` is legal here — `gap-1` (4), `gap-3` (12), `gap-5` (20). Examples: `Button` xs/sm `px-3`, `Input` sm `px-3`, `<Table>` inner cell `px-3`.
+
+**The semantic test:** is this gap *between sibling primitives in a panel* (surface) or *between elements within one primitive's local layout* (compound)? Two side-by-side `<Button>`s in an action row → compound. Two stacked `<Card>`s in a column → surface.
+
+#### Tier 3 — Primitive-internal (locked at the primitive)
+
+`<Card>` is `p-4`, `<CompactKpi>` is `p-4`, `<KpiTile>` is `p-4`, `<EmptyState>` is `py-12 px-6`, `<Dialog>` content is `p-4`, `<Table>` cells are `px-3` inner / `px-4` outer. **These are *the* rule for their consumers** — composed pages don't override them.
+
+#### Token roles
+
+| Token | Value | Tier | Uses |
 |---|---|---|---|
-| `spacing.1` | 4px | rare | Micro gap (icon adjacency) |
-| `spacing.2` | 8px | common | Badge gap, button icon gap, segmented item gap |
-| `spacing.3` | 12px | common | Button px-3 (sm/xs), Input px-3, inner table cells, compact toolbar py-3 |
-| **`spacing.4`** | **16px** | **dominant** | **Default. Card padding, table outer cells, page gutter, section gap, toolbar padding** |
-| `spacing.6` | 24px | common | Outer page margins at lg/xl/2xl breakpoints (`lg:p-6`) |
-| `spacing.8` | 32px | rare | Section spacing in spec sheets |
-| `spacing.12` | 48px | rare | Page-bottom rhythm |
-| `spacing.16` | 64px | very rare | Hero strip spacing |
+| `spacing.1` | 4px | compound | Micro gap (icon adjacency, internal grouping) |
+| `spacing.2` | 8px | surface OK | Badge gap, button icon gap, between dense siblings |
+| `spacing.3` | 12px | compound only | Button px-3 (sm/xs), Input px-3, inner table cells |
+| **`spacing.4`** | **16px** | **surface — dominant** | **Card padding, table outer cells, page gutter, section gap, between cards in a grid** |
+| `spacing.5` | 20px | compound only | Chart legend gap, hero internal rhythm |
+| `spacing.6` | 24px | surface OK | Outer page margins at lg/xl/2xl breakpoints (`lg:p-6`); spec-sheet panel padding |
+| `spacing.8` | 32px | surface OK | Between-section gap on spec-sheet artboards |
+| `spacing.12` | 48px | surface OK | Page-bottom rhythm |
+| `spacing.16` | 64px | surface OK | Hero strip spacing |
 
-**Rule:** Start at **16px** for any card padding, page gutter, section gap. Drop to 12px inside dense rows (button sm, input sm, table inner cells, compact toolbar). Use 24px only for outer page margins on large screens. Above 24px, justify with a specific use case — there are very few in this system.
+**Rule:** Start at **16px** (`gap-4` / `p-4`) for any surface-tier card padding, page gutter, section gap, between-card gap. Drop to compound-tier 12px (`px-3` / `gap-3`) only inside a primitive's local layout (button sm, input sm, table inner cells). Use 24px (`p-6`) for outer page margins on large screens or spec-sheet panel padding. Above 24px, justify with a specific use case — there are very few in this system.
 
 ### Grid & Container
 
@@ -558,14 +588,7 @@ The semantic test: are these *pages of the surface* (line tabs) or *filters/view
 - **Pagination** (`pagination.tsx`) — **renders as `<button type="button">`, not `<a>`** (no router in this app; visual = link styling, semantics = button). Same conversion applies to inline anchors in composed surfaces (modal subtitle refs, row-title links).
 - **TablePaginationFooter** (`table-pagination-footer.tsx`) — **single source of truth for table pagination chrome.** Composes count summary + rows-per-page Select + windowed page links. State (page + rowsPerPage) lives in parent; primitive is controlled. `buildPageWindow` helper exported. **Don't hand-roll** — extend the primitive.
 
-**Row-as-button pattern** (locked 2026-05-09 after WIG audit). When a table row drills into a detail surface (modal or page swap), the row is **not** `<tr role="button" tabIndex={0}>` — that's invalid ARIA (`<tr>` only legally carries `role="row"`). Instead:
-
-- `<tr>` keeps default semantics. `onClick` on the `<tr>` stays as a **mouse-only convenience** (no role, no tabIndex, no `aria-label`, no `onKeyDown`).
-- The row's **primary identifier cell** (model name, conversation title, key — pick the cell whose content names the row) wraps its content in a real `<button type="button">` carrying the row's `aria-label` and the focus ring.
-- Button onClick fires the same handler as the row onClick, with `e.stopPropagation()` so the two don't double-fire.
-- Button recipe: `flex items-center gap-2 min-w-0 w-full text-left bg-transparent p-0 outline-none rounded-xs focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2` (or `flex flex-col gap-1` when the primary cell is a stacked title + sub-id).
-
-**This pattern is currently inlined in 4 sites** (CMP-013/014/015/016). Extraction to a `<RowActionButton>` primitive is owed — see "Drift to Normalize" below. Until extracted, all 4 sites must use the exact recipe above; do not divergently restyle.
+- **RowActionButton** (`row-action-button.tsx`) — **the row-as-button pattern** (locked 2026-05-09 after WIG audit). `<tr role="button" tabIndex={0}>` is invalid ARIA (`<tr>` only legally carries `role="row"`); the row's **primary identifier cell** wraps content in a real `<button>` instead. The `<tr>` keeps default semantics with `onClick` as a mouse-only convenience; the button carries the `aria-label` + focus ring + `e.stopPropagation()` so the two don't double-fire. API: `<RowActionButton layout="row|stack|inline" onClick={...} aria-label="Inspect ...">{cell content}</RowActionButton>`. Layout variants: `row` for icon + text cells (CMP-013, CMP-016), `stack` for title + sub-id stacks (CMP-014), `inline` for single-text cells (CMP-015). Consumed by CMP-013/014/015/016. **Don't hand-roll the recipe** — extend the primitive (new layout variant) if a new shape is needed.
 
 **Three-tier body-cell ink density** (locked):
 
@@ -663,7 +686,7 @@ When one section is the focal action, accent it with `bg-blue-50` (and the icon 
 ### Do
 
 - **Bind every value to a token.** Color, spacing, radius, shadow, type — all flow palette → semantic → component. No raw hex/oklch/rgba outside `@theme`.
-- **Pick a 4px-multiple** for every `gap`, `padding`, `margin`, `space-y/x`. Half-step Tailwind classes are banned.
+- **Pick an 8px-multiple at surface tier** (page/section/card spacing, between-card gaps): values 8 / 16 / 24 / 32 / 40 / 48 / 64. Compound tier (within a primitive's row/group) allows any 4-multiple. Half-step classes are banned at every tier.
 - **Use ramp tokens** (`text-warning-700`, `bg-success-100`) — not legacy single-token semantics.
 - **Pair items with concentric radii**: 4px badge inside 6px card inside 12px modal.
 - **Right-align numeric columns** in tables. `tabular-nums` alone doesn't fix inter-row drift.
@@ -687,6 +710,7 @@ When one section is the focal action, accent it with `bg-blue-50` (and the icon 
 - **Don't reintroduce dark-mode raw values** — when activated, redefine semantic tokens in a `:root.dark` block, not by re-introducing oklch values inline.
 - **Don't hand-roll a recipe in 2+ sites.** Survey `src/components/ui/` first; if no primitive matches and you'll need the recipe twice, extract a primitive *before* writing it inline. If an audit finds the same bug in two files, extract before fixing — fixing two copies in place is the symptom of missing the primitive.
 - **Don't put `role="button"` on `<tr>`.** Use the row-as-button pattern in §7 Lists/Tables — `<button>` inside the primary cell, `<tr>` keeps default semantics with `onClick` as mouse-only convenience.
+- **Don't use odd 4-multiples (12, 20, 28, 36) for surface-tier spacing.** Surface tier is 8-multiples only — those odd values belong to compound tier (within a primitive's row/group), never to page/section/card rhythm. Specifically: no `p-7`, `gap-7`, `mb-7`, `gap-3` between-card gaps, `gap-5` between sections.
 
 ---
 
@@ -721,10 +745,7 @@ The product targets desktop-first operator workflows; no mobile-shipped state to
 
 ## Drift to Normalize *(our extension)*
 
-Two un-extracted patterns owe primitives (added 2026-05-09 after WIG audit):
-
-1. **`<RowActionButton>` — 4 sites.** Row-as-button pattern (see §7 Lists/Tables) is currently inlined in `CMP013Requests.tsx`, `CMP014Conversations.tsx`, `CMP015Security.tsx`, `CMP016Models.tsx`. Same recipe four times. Extract to `src/components/ui/row-action-button.tsx` with a `layout?: 'row' | 'stack'` prop and an `aria-label` required prop; convert all 4 sites. Until extracted, the recipe is locked — see §7.
-2. **`<EmptyState>` — 2 sites.** Page-level empty state ("No pending invitations" / "No integrations configured") is inlined in `CMP017Team.tsx` (`EmptyState`) and `CMP018Settings.tsx` (`IntegrationEmptyState`). Same shape: bordered-white card, centered icon-block + `<h3>` + body text + outline action button. Extract to `src/components/ui/empty-state.tsx`. (CMP-007's `CMP007ModalEmptyState.tsx` is a *modal-internal* empty-state specimen and is a different pattern; leave it.) The two inline copies were caught with the same `<h2>` → `<h3>` bug on the same day — that duplication is the extraction signal.
+Resolved 2026-05-09 — both `<RowActionButton>` (4 sites) and `<EmptyState>` (2 sites) extracted to `src/components/ui/`. See §7 Lists/Tables for the row-as-button primitive contract. CMP-007's `CMP007ModalEmptyState.tsx` is a separate modal-internal specimen and intentionally remains its own shape.
 
 If unbound hex appears outside `@theme`, bind to the closest ramp atom.
 
