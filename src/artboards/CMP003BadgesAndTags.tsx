@@ -34,7 +34,7 @@ export function CMP003BadgesAndTags() {
               code="CMP-003.1 — STATUS"
               hint="<Badge variant=… /> + <StatusDot />"
             />
-            <div className="flex flex-col rounded-sm gap-4 bg-white p-6 shadow-(--shadow-border)">
+            <div className="flex flex-col rounded-md gap-4 bg-white p-6 shadow-(--shadow-border)">
               <div className="flex flex-wrap items-center gap-2">
                 <Badge variant="success">
                   <StatusDot kind="success" />
@@ -80,7 +80,7 @@ export function CMP003BadgesAndTags() {
               code="CMP-003.2 — COUNTERS & CHIPS"
               hint="<Badge /> · <Tag onRemove /> · mono marks"
             />
-            <div className="flex flex-col rounded-sm gap-4 bg-white p-6 shadow-(--shadow-border)">
+            <div className="flex flex-col rounded-md gap-4 bg-white p-6 shadow-(--shadow-border)">
               {/* Counters / version pills / accent labels */}
               <div className="flex flex-wrap items-center gap-3">
                 <Badge variant="secondary" className="rounded-sm h-5 px-2 font-normal">
@@ -143,7 +143,7 @@ export function CMP003BadgesAndTags() {
             code="CMP-003.3 — DELTA TAG"
             hint="<DeltaTag delta=… note=… /> · directional pill + optional note"
           />
-          <div className="flex flex-col rounded-sm gap-4 bg-white p-6 shadow-(--shadow-border)">
+          <div className="flex flex-col rounded-md gap-4 bg-white p-6 shadow-(--shadow-border)">
             {/* Positive — pill alone, then with note */}
             <div className="flex flex-wrap items-center gap-6">
               <DeltaTag delta="+8.2%" />

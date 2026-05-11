@@ -231,7 +231,7 @@ export function CMP011DataTable() {
             hint=".v-tbl · header / row / selected / action"
           />
 
-          <div className="flex flex-col rounded-sm overflow-hidden bg-white shadow-(--shadow-border)">
+          <div className="flex flex-col rounded-md overflow-hidden bg-white shadow-(--shadow-border)">
             {/* Toolbar */}
             <div className="flex items-center justify-between gap-3 p-4">
               <div className="flex items-center gap-2">
@@ -438,7 +438,7 @@ const RISK_ROWS: {
 function RiskScoresCard() {
   const [scope, setScope] = useState('all');
   return (
-    <div className="flex flex-col rounded-sm overflow-hidden bg-white shadow-(--shadow-border)">
+    <div className="flex flex-col rounded-md overflow-hidden bg-white shadow-(--shadow-border)">
       {/* Header — title + subtitle on the left, scope dropdown on the right */}
       <div className="flex items-start justify-between gap-3 p-4">
         <div className="flex flex-col gap-1">

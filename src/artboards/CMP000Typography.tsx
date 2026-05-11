@@ -169,7 +169,7 @@ export function CMP000Typography() {
             code="CMP-000.1 — SCALE"
             hint="Tailwind class names · Geist-aligned values · 14/20 · 16/24 · 18/28 · 24/32 · 32/40 · 48"
           />
-          <div className="flex flex-col rounded-sm py-1 px-6 bg-white shadow-(--shadow-border)">
+          <div className="flex flex-col rounded-md py-1 px-6 bg-white shadow-(--shadow-border)">
             {SCALE.map((row, i) => (
               <div
                 key={row.label}
@@ -212,7 +212,7 @@ export function CMP000Typography() {
             code="CMP-000.2 — MONO VS SANS"
             hint="semantic split · machine voice / human voice"
           />
-          <div className="flex rounded-sm gap-4 bg-white shadow-(--shadow-border) p-6">
+          <div className="flex rounded-md gap-4 bg-white shadow-(--shadow-border) p-6">
             <div className="flex flex-col grow gap-2">
               <div className="font-mono text-ink-500 uppercase tracking-[0.1em] text-xs/4">
                 Mono — machine voice

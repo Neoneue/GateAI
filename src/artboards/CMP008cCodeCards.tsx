@@ -189,7 +189,7 @@ export function CMP008cCodeCards() {
 
 function HeroCard() {
   return (
-    <div className="flex items-center gap-8 p-6 rounded-sm bg-white shadow-(--shadow-border)">
+    <div className="flex items-center gap-8 p-6 rounded-md bg-white shadow-(--shadow-border)">
       <div className="flex flex-col grow shrink basis-0 gap-4">
         <div className="font-mono uppercase tracking-[0.1em] text-blue-700 text-xs/4 font-medium">
           QUICKSTART
@@ -254,7 +254,7 @@ const STEPS: StepItem[] = [
 
 function StepsCard() {
   return (
-    <div className="flex flex-col p-6 gap-4 rounded-sm bg-white shadow-(--shadow-border)">
+    <div className="flex flex-col p-6 gap-4 rounded-md bg-white shadow-(--shadow-border)">
       {STEPS.map((step) => (
         <div key={step.n} className="flex items-start gap-4">
           <div aria-hidden className="flex items-center justify-center shrink-0 size-6 rounded-full bg-blue-700">

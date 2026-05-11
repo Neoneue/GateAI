@@ -172,7 +172,7 @@ export function CMP007ModalEmptyState() {
               hint="centered icon · heading · subtext · CTA"
             />
             <Card className="p-6 rounded-sm">
-              <div className="flex flex-col items-center justify-center h-80 rounded-sm gap-4 bg-white shadow-(--shadow-border) p-6">
+              <div className="flex flex-col items-center justify-center h-80 rounded-md gap-4 bg-white shadow-(--shadow-border) p-6">
                 <div className="flex items-center justify-center rounded-sm bg-ink-50 border border-ink-200 size-14">
                   <KeyRound className="size-7 text-ink-900" strokeWidth={1.5} />
                 </div>

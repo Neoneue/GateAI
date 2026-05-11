@@ -231,7 +231,7 @@ function ConversationsTableSection() {
 
   return (
     <>
-    <div className="flex flex-col w-full rounded-sm overflow-hidden bg-white shadow-(--shadow-border)">
+    <div className="flex flex-col w-full rounded-md overflow-hidden bg-white shadow-(--shadow-border)">
       {/* Toolbar */}
       <div className="flex items-center gap-2 py-3 px-4">
         <div className="relative w-72 min-w-0 shrink-0">
@@ -444,6 +444,19 @@ function ConversationDetailBody({ row }: { row: ConversationRow }) {
   // the selection treatment (blue ring on the bubble, blue left-bar +
   // blue wash on the trace row). Click again to clear.
   const [activeRequestId, setActiveRequestId] = useState<string | null>(null);
+  // Track which panel originated the selection so we only scroll the
+  // counterpart panel into view (clicking a message in the Messages panel
+  // shouldn't scroll the Messages panel itself — it was already where the
+  // user clicked). `null` after a deselect or external mount.
+  const [selectionSource, setSelectionSource] = useState<'messages' | 'trace' | null>(null);
+  const selectFromMessages = (id: string | null) => {
+    setActiveRequestId(id);
+    setSelectionSource(id ? 'messages' : null);
+  };
+  const selectFromTrace = (id: string | null) => {
+    setActiveRequestId(id);
+    setSelectionSource(id ? 'trace' : null);
+  };
 
   return (
     <>
@@ -506,11 +519,13 @@ function ConversationDetailBody({ row }: { row: ConversationRow }) {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 flex-1 min-h-0 overflow-hidden">
           <ConversationMessagesPanel
             activeRequestId={activeRequestId}
-            onSelect={setActiveRequestId}
+            selectionSource={selectionSource}
+            onSelect={selectFromMessages}
           />
           <RequestTracePanel
             activeRequestId={activeRequestId}
-            onSelect={setActiveRequestId}
+            selectionSource={selectionSource}
+            onSelect={selectFromTrace}
           />
         </div>
       </DialogScrollBody>
@@ -651,9 +666,11 @@ const CONVERSATION_MESSAGES: {
 
 function ConversationMessagesPanel({
   activeRequestId,
+  selectionSource,
   onSelect,
 }: {
   activeRequestId: string | null;
+  selectionSource: 'messages' | 'trace' | null;
   onSelect: (requestId: string | null) => void;
 }) {
   // Count = assistant turns. Tool/user/system don't count as "turns" — a
@@ -661,15 +678,15 @@ function ConversationMessagesPanel({
   // (row.turns is assistant-only).
   const turnCount = CONVERSATION_MESSAGES.filter((m) => m.role === 'assistant').length;
 
-  // Auto-scroll the matching message into view when the active selection
-  // changes. `block: 'nearest'` is a no-op if the message is already
-  // visible, so this is safe to fire on every change. Behavior collapses
-  // to `auto` when the user prefers reduced motion — `scrollIntoView`'s
-  // smooth mode honors the media query in modern engines but we gate it
-  // explicitly so the contract is in the call site, not browser-implicit.
+  // Auto-scroll the matching message into view ONLY when the selection
+  // came from the counterpart (trace) panel. Selections that originated
+  // here are already in view — scrolling would jump away from where the
+  // user just clicked. `block: 'nearest'` is a no-op if the message is
+  // already visible, so this is safe to fire on every cross-panel change.
   const scrollRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (!activeRequestId || !scrollRef.current) return;
+    if (selectionSource === 'messages') return;
     const el = scrollRef.current.querySelector(
       `[data-request-id="${activeRequestId}"]`,
     );
@@ -677,7 +694,7 @@ function ConversationMessagesPanel({
       typeof window !== 'undefined' &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     el?.scrollIntoView({ block: 'nearest', behavior: reduceMotion ? 'auto' : 'smooth' });
-  }, [activeRequestId]);
+  }, [activeRequestId, selectionSource]);
 
   return (
     <div className="flex flex-col rounded-sm border border-ink-200 overflow-hidden h-full min-h-0">
@@ -789,19 +806,23 @@ const TRACE_NODE_ICON_TONE: Record<TraceStatus, string> = {
 
 function RequestTracePanel({
   activeRequestId,
+  selectionSource,
   onSelect,
 }: {
   activeRequestId: string | null;
+  selectionSource: 'messages' | 'trace' | null;
   onSelect: (requestId: string | null) => void;
 }) {
-  // Auto-scroll the matching trace event into view on selection change.
-  // Same pattern as ConversationMessagesPanel — `block: 'nearest'` keeps
-  // already-visible items put. Pairing the two effects gives bidirectional
-  // scroll-into-view: clicking a message reveals its trace event; clicking
-  // a trace event reveals its message bubble.
+  // Auto-scroll the matching trace event into view ONLY when the selection
+  // came from the counterpart (messages) panel. Selections that originated
+  // here are already in view. Pairing the two effects gives one-way
+  // counterpart scrolling: clicking a message reveals its trace event;
+  // clicking a trace event reveals its message bubble — but neither
+  // scrolls its own panel.
   const scrollRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (!activeRequestId || !scrollRef.current) return;
+    if (selectionSource === 'trace') return;
     const el = scrollRef.current.querySelector(
       `[data-request-id="${activeRequestId}"]`,
     );
@@ -809,7 +830,7 @@ function RequestTracePanel({
       typeof window !== 'undefined' &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     el?.scrollIntoView({ block: 'nearest', behavior: reduceMotion ? 'auto' : 'smooth' });
-  }, [activeRequestId]);
+  }, [activeRequestId, selectionSource]);
 
   return (
     <div className="flex flex-col rounded-sm border border-ink-200 overflow-hidden h-full min-h-0">

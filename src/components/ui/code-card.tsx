@@ -92,7 +92,7 @@ export function CodeCard({
         // flat default uses the everyday material tier (shadow-as-border);
         // raised promotes to the popup elevation token so all floating
         // surfaces (cards, selects, dialogs, tooltips) read as one family.
-        'flex flex-col overflow-hidden rounded-sm bg-white shadow-(--shadow-border)',
+        'flex flex-col overflow-hidden rounded-md bg-white shadow-(--shadow-border)',
         elevation === 'raised' && 'shadow-(--shadow-popup)',
         className,
       )}
@@ -278,7 +278,7 @@ export function TerminalCard({
     <div
       data-slot="terminal-card"
       className={cn(
-        'flex flex-col overflow-hidden rounded-sm bg-ink-800',
+        'flex flex-col overflow-hidden rounded-md bg-ink-800',
         className,
       )}
     >

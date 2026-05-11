@@ -179,7 +179,7 @@ const heroChartConfig = {
 
 function HeroMetricCard() {
   return (
-    <div className="flex flex-col gap-4 rounded-sm bg-white shadow-(--shadow-border) p-4">
+    <div className="flex flex-col gap-4 rounded-md bg-white shadow-(--shadow-border) p-4">
       <div className="flex items-start justify-between gap-6">
         <div className="flex flex-col gap-2 shrink-0">
           <span className="font-mono uppercase tracking-[0.1em] text-xs font-medium text-ink-500">
@@ -412,7 +412,7 @@ function RequestsTableSection() {
 
   return (
     <>
-    <div className="flex flex-col w-full rounded-sm overflow-hidden bg-white shadow-(--shadow-border)">
+    <div className="flex flex-col w-full rounded-md overflow-hidden bg-white shadow-(--shadow-border)">
         {/* Toolbar — shape lifted from CMP-011.1. No flex-wrap: the
             sortable-table convention is single-row, and the filter set
             fits in the gray well at this width. */}

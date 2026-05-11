@@ -247,7 +247,7 @@ function MembersPane() {
   });
 
   return (
-    <div className="flex flex-col w-full rounded-sm overflow-hidden bg-white shadow-(--shadow-border)">
+    <div className="flex flex-col w-full rounded-md overflow-hidden bg-white shadow-(--shadow-border)">
       {/* Toolbar — search + role filter. Filter pills follow the
           codified no-leading-icon rule for dense table toolbars. */}
       <div className="flex items-center gap-2 py-2 px-4">
@@ -471,7 +471,7 @@ function InvitationsPane({ onInvite }: { onInvite: () => void }) {
     );
   }
   return (
-    <div className="flex flex-col w-full rounded-sm overflow-hidden bg-white shadow-(--shadow-border)">
+    <div className="flex flex-col w-full rounded-md overflow-hidden bg-white shadow-(--shadow-border)">
       <Table className="table-fixed">
         <TableHeader className="[&_tr]:border-t-0">
           <TableRow className="hover:bg-transparent">
@@ -544,7 +544,7 @@ function RequestsPane() {
     );
   }
   return (
-    <div className="flex flex-col w-full rounded-sm overflow-hidden bg-white shadow-(--shadow-border)">
+    <div className="flex flex-col w-full rounded-md overflow-hidden bg-white shadow-(--shadow-border)">
       <Table className="table-fixed">
         <TableHeader className="[&_tr]:border-t-0">
           <TableRow className="hover:bg-transparent">
@@ -576,8 +576,8 @@ function RequestsPane() {
                 <RowActionsMenu
                   label={`Open actions for ${row.email}`}
                   items={[
-                    { id: 'approve', label: 'Approve' },
-                    { id: 'decline', label: 'Decline', destructive: true },
+                    { id: 'approve', label: 'Approve request' },
+                    { id: 'decline', label: 'Decline request', destructive: true },
                   ]}
                 />
               </TableCell>
@@ -773,7 +773,7 @@ function RowActionsMenu({
         <MenuPrimitive.Positioner side="bottom" align="end" sideOffset={4} className="isolate z-50">
           <MenuPrimitive.Popup
             className={cn(
-              'min-w-40 overflow-hidden rounded-sm bg-white text-ink-900 border border-ink-200 shadow-(--shadow-popup) py-1 outline-none',
+              'min-w-32 overflow-hidden rounded-sm bg-white text-ink-900 border border-ink-200 shadow-(--shadow-popup) py-1 outline-none',
               'duration-150 ease-out data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 motion-reduce:animate-none motion-reduce:duration-0',
             )}
           >

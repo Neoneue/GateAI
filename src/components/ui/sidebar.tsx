@@ -232,8 +232,8 @@ function SidebarExpanded({
                   onClick={item.pageId ? () => onNavigate?.(item.pageId!) : undefined}
                   className={
                     isActive
-                      ? 'flex items-center gap-3 px-2 py-2 rounded-sm border border-ink-200 bg-ink-100 text-ink-900 font-medium shadow-xs transition-transform duration-150 ease-out active:scale-[0.98] motion-reduce:transition-none motion-reduce:active:scale-100'
-                      : 'flex items-center gap-3 px-2 py-2 rounded-sm border border-transparent text-ink-700 hover:text-ink-900 hover:bg-ink-50 transition-[color,background-color,transform] duration-150 ease-out active:scale-[0.98] motion-reduce:transition-none motion-reduce:active:scale-100'
+                      ? 'flex items-center gap-3 px-2 py-2 rounded-sm border border-ink-200 bg-ink-100 text-ink-900 font-medium shadow-xs transition-transform duration-150 ease-out active:translate-y-px motion-reduce:transition-none motion-reduce:active:translate-y-0'
+                      : 'flex items-center gap-3 px-2 py-2 rounded-sm border border-transparent text-ink-700 hover:text-ink-900 hover:bg-ink-50 transition-[color,background-color,transform] duration-150 ease-out active:translate-y-px motion-reduce:transition-none motion-reduce:active:translate-y-0'
                   }
                 >
                   <Icon className="size-4 shrink-0" strokeWidth={1.75} />
@@ -287,8 +287,8 @@ function DefaultWorkspaceSwitcher() {
           Chad's workspace
         </span>
         <div className="shrink-0 flex items-center gap-2">
-          <span className="inline-flex items-center h-5 px-2 rounded-full bg-blue-50 text-blue-700 font-sans text-xs font-medium">
-            Pro
+          <span className="inline-flex items-center h-5 px-2 rounded-xs bg-blue-50 text-blue-700 font-sans text-xs font-medium">
+            Free
           </span>
           <ChevronsUpDown className="size-4 text-ink-500" strokeWidth={1.75} aria-hidden />
         </div>

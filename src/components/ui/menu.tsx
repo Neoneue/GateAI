@@ -36,7 +36,7 @@ function MenuContent({
         <MenuPrimitive.Popup
           data-slot="menu-content"
           className={cn(
-            'min-w-44 overflow-hidden rounded-sm bg-white text-ink-900 border border-ink-200 shadow-(--shadow-popup) p-1 outline-none',
+            'min-w-44 overflow-hidden rounded-sm bg-white text-ink-900 border border-ink-200 shadow-(--shadow-popup) p-1 outline-none origin-[var(--transform-origin)]',
             'duration-150 ease-out data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 motion-reduce:animate-none motion-reduce:duration-0',
             className,
           )}
@@ -61,7 +61,7 @@ function MenuItem({
       data-slot="menu-item"
       data-variant={variant}
       className={cn(
-        'relative flex cursor-pointer items-center gap-2 rounded-xs h-8 px-2 text-sm outline-none select-none',
+        'relative flex cursor-pointer items-center gap-2 rounded-xs h-8 px-2 text-sm outline-none select-none transition-colors duration-100 ease-out motion-reduce:transition-none',
         variant === 'destructive'
           ? 'text-danger-700 [&_svg]:text-danger-700 data-[highlighted]:bg-danger-50 data-[highlighted]:text-danger-700 focus-visible:bg-danger-50'
           : 'text-ink-900 [&_svg]:text-ink-500 data-[highlighted]:bg-ink-100 focus-visible:bg-ink-100',

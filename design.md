@@ -96,9 +96,18 @@ colors:
 
 typography:
   # Tailwind named scale only. Three sizes overridden in @theme to Geist's even-numbered
-  # heading scale (text-3xl: 32px, text-4xl: 40px, text-6xl: 64px — index.css:152–157).
-  # Arbitrary text-[Npx] is banned. font-medium minimum on sans labels — font-normal
-  # reads as ambient body, not structure.
+  # heading scale (text-3xl: 32px, text-4xl: 40px, text-6xl: 64px — index.css:156–161).
+  # Floor is text-xs (12px) — sub-12px sizes are out of scale by policy. Arbitrary
+  # text-[Npx] is banned. font-medium minimum on sans labels — font-normal reads as
+  # ambient body, not structure.
+  #
+  # Tracking tokens (index.css:172): `tracking-snug` (-0.01em) — single source for body /
+  # title sub-pixel tightening; retires ~30 sites of arbitrary `-tracking-[0.14px]` /
+  # `-tracking-[0.2px]` / `-tracking-[0.25px]` values that were all targeting roughly the
+  # same optical correction. Tailwind's built-in `tracking-tight` (-0.025em) is too
+  # aggressive for body / title use; `tracking-snug` slots between `normal` and `tight`.
+  # Headings using `-tracking-[1px]` (cross-file artboard h2 pattern) stay arbitrary —
+  # different optical tier.
 
   hero-numeric-lg:  # text-3xl/9 + sans tabular
     fontFamily: "Geist"
@@ -187,13 +196,22 @@ typography:
     fontFeature: "tnum"
 
 rounded:
-  # Driven by --radius (0.625rem = 10px) in @theme inline (index.css:213, 280–290).
-  # Modal radius locked to 12px regardless of base scaling.
+  # Driven by --radius (0.625rem = 10px) in @theme inline (index.css:228, 295–308).
+  # Three-tier material ladder (codified 2026-05-10, revised from prior two-tier):
+  #   Sub-element            rounded-xs (4px)  — Tabs trigger, Segmented item, SelectItem, Badge
+  #   Button / chrome / menu rounded-sm (6px)  — Button, Input, Select trigger, Menu popup, Toast
+  #   Card / surface         rounded-md (8px)  — Card, KpiRail, table containers (NEW tier)
+  #   Modal / dialog         rounded-xl (16px) — Dialog, AlertDialog (LOCKED — overrides
+  #                                              the derived `--radius * 1.6` value to
+  #                                              preserve a 2× tier ratio against cards)
+  # Concentric rule: item radius < container radius. Tabs trigger (4px) sits inside Tabs
+  # list (6px). Card (8px) sits on canvas with shadow-as-border. Modal (16px) wraps
+  # cards (8px) → ratio = 2.
   xs: "4px"  # sub-elements (tabs item, segmented, SelectItem, badge)
-  sm: "6px"  # everyday surfaces (Card, Input, Select trigger, Button)
-  md: "8px"  # intermediate
-  lg: "10px"  # base radius (10px)
-  xl: "12px"  # modal lock (Dialog, Sheet, AlertDialog)
+  sm: "6px"  # buttons / chrome / popovers (Button, Input, Select trigger, Menu popup, Toast)
+  md: "8px"  # cards / everyday surfaces (Card, KpiRail, table containers) — NEW tier (2026-05-10)
+  lg: "10px"  # base --radius
+  xl: "16px"  # modal LOCKED (Dialog, AlertDialog) — overridden in @theme inline (index.css:305)
   2xl: "18px"  # calc(--radius * 1.8)
   full: "9999px"
 
@@ -248,9 +266,9 @@ components:
   card:
     backgroundColor: "{colors.card}"
     textColor: "{colors.ink-900}"
-    rounded: "{rounded.sm}"
+    rounded: "{rounded.md}"  # 8px — card tier (was rounded.sm 6px; promoted 2026-05-10)
     padding: 16
-    elevation: "shadow-border"  # CardFooter: bg-ink-50 + border-t border-ink-200 + p-4
+    elevation: "shadow-border"  # CardFooter: white, no border, no wash (mirrors DialogFooter)
 
   badge-default:
     backgroundColor: "{colors.primary}"
@@ -278,16 +296,28 @@ components:
 
   dialog:
     backgroundColor: "{colors.background}"
-    rounded: "{rounded.xl}"  # 12px LOCKED
+    rounded: "{rounded.xl}"  # 16px LOCKED (was 12px; promoted 2026-05-10 to preserve 2× ratio vs cards)
     padding: 16
     elevation: "shadow-modal"  # overlay: bg-ink-900/40 + backdrop-blur-xs
   sheet: { backgroundColor: "{colors.background}", rounded: "{rounded.none}", elevation: "shadow-modal" }  # right-docked drawer
+  menu:  # shadcn-style wrapper over Base UI Menu — Menu / MenuTrigger / MenuContent / MenuItem / MenuLabel / MenuSeparator
+    backgroundColor: "{colors.popover}"
+    textColor: "{colors.ink-900}"
+    rounded: "{rounded.sm}"  # 6px — chrome/menu tier
+    padding: 4
+    elevation: "shadow-popup"  # item: rounded-xs h-8 px-2, destructive variant for Sign-out
 
   table-header:    { backgroundColor: "{colors.ink-50}", textColor: "{colors.ink-600}", typography: "{typography.body-sm}" }  # row hover: bg-ink-50
   pagination-link: { textColor: "{colors.ink-600}", typography: "{typography.data}" }  # rendered as <button>, not <a>
 
-  hero-numeric: { textColor: "{colors.ink-900}", typography: "{typography.hero-numeric-default}" }  # also: hero-numeric-lg variant
-  toast:        { backgroundColor: "{colors.background}", textColor: "{colors.ink-900}", rounded: 8, elevation: "shadow-popup" }
+  hero-numeric:      { textColor: "{colors.ink-900}", typography: "{typography.hero-numeric-default}" }  # also: hero-numeric-lg variant
+  kpi-rail:          { backgroundColor: "{colors.white}", rounded: "{rounded.md}", elevation: "shadow-border" }  # divider hairlines via `before:inset-y-4` pseudo on each child after the first
+  text-link:         { textColor: "{colors.ink-800}", rounded: "{rounded.xs}" }  # renders <button> by default; ink + permanent faint underline
+  icon-action-button:{ textColor: "{colors.ink-500}", rounded: "{rounded.xs}" }  # size-6 (24px) icon-only; after:-inset-2 expands hit target to 40×40
+  tabs-count:        { backgroundColor: "{colors.ink-100}", textColor: "{colors.ink-500}", rounded: "{rounded.xs}", height: 20 }  # mono count chip inside TabsTrigger
+  tool-result-code:  { textColor: "{colors.ink-900}" }  # font-mono text-sm -tracking-[0.14px] break-all — <code> element
+  settings-row:      { textColor: "{colors.ink-900}" }  # title/subtitle/control row; rhythm via border-t border-ink-200 between rows
+  toast:             { backgroundColor: "{colors.background}", textColor: "{colors.ink-900}", rounded: 8, elevation: "shadow-popup" }
   status-dot:   { rounded: "{rounded.full}" }  # tones: success-600, warning-600, destructive, blue-600, ink-500
   tag:          { backgroundColor: "{colors.ink-100}", textColor: "{colors.ink-900}", rounded: "{rounded.full}", height: 24, typography: "{typography.body-xs}" }
 
@@ -309,8 +339,8 @@ components:
 **Source:** this repository (`src/index.css` + `src/components/ui/*` + locked policy from CLAUDE.md and brand-guidelines.md v0.2)
 **Stack:** tailwind-shadcn (Tailwind v4 `@theme` + shadcn `base-nova` registry + Base UI primitives via `@base-ui/react`)
 **Extraction mode:** code-direct (read from the source files in this repo — these files ARE the contract; no transpile loss)
-**Confidence summary:** 14 sections strong, 0 partial, 1 TBD (wordmark + lockups not finalized)
-**Captured states:** light mode @ 1440×900 default; modal (Dialog), drawer (Sheet), toast, segmented selectors, tabs, pagination, table sortable + drill-in
+**Confidence summary:** 14 sections strong, 0 partial, 1 TBD (wordmark + lockups not finalized). Last surgical refactor: 2026-05-10 (three-tier material ladder, eight new primitives, chart-palette helper).
+**Captured states:** light mode @ 1440×900 default; modal (Dialog), drawer (Sheet), toast, segmented selectors, tabs (default + line + count chips), pagination, table sortable + drill-in, dropdown menu (Menu / UserMenu / workspace switcher), list ↔ detail swap with entrance animation (CMP-016)
 **Not yet captured (TBD):** wordmark + horizontal/stacked lockups (logomark only, finalized); dark mode (intentionally absent — `:root.dark` block omitted; `@custom-variant dark` declared for future activation)
 
 ---
@@ -334,7 +364,7 @@ components:
 
 Operator dashboard for an AI gateway. Read-heavy interaction (filter, sort, drill in, copy). Information density is high: three-tier table ink (500/800/900), right-aligned mono-tabular numerics, KPI rails with sparklines + delta tags, modals as drill-ins (not splash dialogs). Warm-paper canvas (`#ECECE7`) under white cards painted with shadow-as-border.
 
-**Key characteristics:** 5 OKLCH ramps × 11 steps · two-tier material ladder (6/12/4px) · five-voice typography · no dark mode · ink-900 primary, not blue · shadow-as-border, not solid borders.
+**Key characteristics:** 5 OKLCH ramps × 11 steps · three-tier material ladder (4/6/8/16px) · five-voice typography · no dark mode · ink-900 primary, not blue · shadow-as-border, not solid borders.
 
 ---
 
@@ -496,32 +526,36 @@ Three shadow tokens, all `color-mix(in oklch, var(--color-ink-800) X%, transpare
 
 | Tier | Token | Composition | Radius | Surfaces |
 |---|---|---|---|---|
-| Everyday | `--shadow-border` | 1px ring 6% + 1px lift 6% + 2px ambient 4% | `rounded-sm` (6px) | Card, KpiRail, table containers, hero card |
-| Hover | `--shadow-border-hover` | 1px ring 8% + 1px lift 8% + 2px ambient 6% | (same as everyday) | Hovered card variant |
-| Menu | `--shadow-popup` | 4px lift 8% + 1px ring 4% | `rounded-sm` (6px) | Select content, popovers, tooltips, dropdowns |
-| Modal | `--shadow-modal` | 16px lift 12% + 1px ring 6% | `rounded-xl` (12px LOCKED) | Dialog, AlertDialog, Sheet |
-| Sub-element | none | none | `rounded-xs` (4px) | Tabs trigger, Segmented item, SelectItem, Badge |
+| Sub-element | none | none | `rounded-xs` (4px) | Tabs trigger, Segmented item, SelectItem, Badge, MenuItem |
+| Menu / Chrome | `--shadow-popup` | 4px lift 8% + 1px ring 4% | `rounded-sm` (6px) | Select content, Menu popup, popovers, tooltips, Toast, Button, Input |
+| **Card / Surface** | **`--shadow-border`** | **1px ring 6% + 1px lift 6% + 2px ambient 4%** | **`rounded-md` (8px) — NEW tier** | **Card, KpiRail, table containers, hero card** |
+| Hover (card) | `--shadow-border-hover` | 1px ring 8% + 1px lift 8% + 2px ambient 6% | (same as card) | Hovered card variant |
+| Modal | `--shadow-modal` | 16px lift 12% + 1px ring 6% | `rounded-xl` (**16px LOCKED**) | Dialog, AlertDialog, Sheet (right-docked = `rounded-none` left edge) |
 
-**Rule:** shadow-first, never `border` class. **Concentric rule:** item radius < container radius (4px badge in 6px card in 12px modal). Don't override `rounded-xl` on modals — locked.
+**Three-tier material ladder (codified 2026-05-10).** The prior two-tier (6/12) collapsed cards and buttons onto the same radius (6px) and put modals one step up (12px). Migration to three-tier opens a discrete *card / surface* tier at 8px — Card, KpiRail, and table containers now read distinct from buttons / inputs / menus (6px). Modal radius bumps to 16px to preserve the 2× tier ratio against cards (`8 → 16`). Sub-element radius (4px) is unchanged. Token: `--radius-xl: 1rem` in `@theme inline` (`index.css:305`).
+
+**Rule:** shadow-first, never `border` class. **Concentric rule:** item radius < container radius (4px badge inside 8px card inside 16px modal). Don't override `rounded-xl` on modals — locked.
 
 ### Motion
 
-`transition-[colors,box-shadow] duration-150 ease-out motion-reduce:transition-none` everywhere — NOT `transition-all`. Button press: + `active:translate-y-px`. Sliding indicator (Tabs/Segmented/SegmentedPill): 200ms ease-out, transform + width animated. Sheet enter: 300ms slide from right. Dialog enter: 200ms fade + zoom-in-95. Toast: sonner default (200ms enter + 4s hold + 200ms exit).
+`transition-[colors,box-shadow] duration-150 ease-out motion-reduce:transition-none` everywhere — NOT `transition-all`. The `<Button>` primitive's transition expands to `transition-[colors,opacity,box-shadow,translate]` so `disabled:opacity-50` *fades* on dirty-flip across every form button instead of snapping. Press affordance: **`active:translate-y-px` (uniformly — `active:scale-[0.98]` was retired 2026-05-10 because the scale variant caused popover anchor-reposition flicker)**. Always gated with `motion-reduce:active:translate-y-0`. Sliding indicator (Tabs / Segmented / SegmentedPill): 200ms ease-out, transform + width animated. Sheet enter: 300ms slide from right. Dialog enter: 200ms fade + zoom-in-95 (`Menu` popup gets `origin-[var(--transform-origin)]` so it scales *from the trigger*, not from the popup's geometric center — Base UI publishes the variable on the Positioner). MenuItem highlight uses `transition-colors duration-100 ease-out` — keyboard arrow-through no longer snaps. Toast: sonner default (200ms enter + 4s hold + 200ms exit).
 
 ---
 
 ## 6. Shapes *(Google canonical §6)*
 
-Driven by `--radius` (0.625rem = 10px base). **Modal radius is a locked override** at 12px regardless of base scaling.
+Driven by `--radius` (0.625rem = 10px base) plus a **locked override** at `--radius-xl: 1rem` (16px) for modals. Revised 2026-05-10 from a two-tier ladder (6 / 12) to a **three-tier ladder** that opens a discrete card / surface tier.
 
-| Token | Value | Use |
-|---|---|---|
-| `rounded.xs` | 4px | Sub-elements: Tabs trigger, Segmented item, SelectItem, Badge |
-| **`rounded.sm`** | **6px** | **Default for everyday surfaces — Card, Input, Select trigger, Button, Tabs list, table containers** |
-| `rounded.md` | 8px | Intermediate (sonner toast) |
-| `rounded.lg` | 10px | Intermediate / base radius |
-| `rounded.xl` | **12px LOCKED** | Modals only — Dialog, AlertDialog, Sheet |
-| `rounded.full` | 9999 | Pills — StatusDot, Tag, Switch thumb |
+| Token | Value | Tier | Use |
+|---|---|---|---|
+| `rounded.xs` | 4px | Sub-element | Tabs trigger, Segmented item, SelectItem, Badge, MenuItem |
+| `rounded.sm` | 6px | Button / chrome / menu | Button, Input, Select trigger, Menu popup, Toast |
+| **`rounded.md`** | **8px** | **Card / surface (NEW)** | **Card, KpiRail, table containers, hero card** |
+| `rounded.lg` | 10px | Base | `--radius` (anchor — most derived tokens reference it) |
+| `rounded.xl` | **16px LOCKED** | Modal | Dialog, AlertDialog (Sheet flush at `rounded-none`) |
+| `rounded.full` | 9999 | Pills | StatusDot, Tag, Switch thumb, avatar monograms |
+
+**Concentric example:** a 4px Badge sits inside an 8px Card, which sits inside (when drilled into) a 16px Dialog. Ratios: 2× between every tier, deliberately. **Don't override `rounded-xl` on modals.**
 
 Iconography: `lucide-react` stroke `1.75`. Sizes: `size-3` (12px) / `size-3.5` / `size-4` (16px) / `size-5` (20px). In Buttons, set `data-icon="inline-start"` or `"inline-end"` for variant-aware padding trim.
 
@@ -529,7 +563,7 @@ Iconography: `lucide-react` stroke `1.75`. Sizes: `size-3` (12px) / `size-3.5` /
 
 ## 7. Components *(Google canonical §7)*
 
-The full primitive library is `src/components/ui/*.tsx` (35 primitives). Highlights below — every component block maps to a `components.*` entry in YAML. Composed pages (CMP-012/013/014/016) live in `src/artboards/` and are compositions of these primitives, not components themselves.
+The full primitive library is `src/components/ui/*.tsx` (44 primitives as of 2026-05-10). Highlights below — every component block maps to a `components.*` entry in YAML. Composed pages (CMP-012 / 013 / 014 / 015 / 016 / 017 / 018) live in `src/artboards/` and are compositions of these primitives, not components themselves.
 
 ### Buttons — `{components.button-default}` and variants
 
@@ -556,7 +590,8 @@ The full primitive library is `src/components/ui/*.tsx` (35 primitives). Highlig
 
 ### Cards & Containers
 
-- **Card** (`card.tsx`) — `rounded-sm bg-white py-4 text-sm text-ink-900 shadow-(--shadow-border)`. **Shadow-as-border, NOT solid 1px borders.** Composition: `<Card>` (gap-4 col) → `<CardHeader>` (px-4 grid) → `<CardTitle>` (text-base font-medium leading-snug) → `<CardDescription>` (text-sm/5 text-ink-500) → `<CardContent>` (px-4) → `<CardFooter>` (p-4, white, **no border, no wash** — structural separation comes from spacing alone, matching DialogFooter). When a `<CardFooter>` is present, Card auto-applies `pb-0` so the footer hugs the bottom edge. Compact: `data-[size=sm]` → `gap-3 py-3 px-3`.
+- **Card** (`card.tsx`) — `rounded-md bg-white py-4 text-sm text-ink-900 shadow-(--shadow-border)`. **Shadow-as-border, NOT solid 1px borders.** Radius is `rounded-md` (8px) — the new card / surface tier (2026-05-10); buttons and chrome stay at `rounded-sm` (6px) so cards read a discrete material step up. Composition: `<Card>` (gap-4 col) → `<CardHeader>` (px-4 grid) → `<CardTitle>` (text-base font-medium leading-snug) → `<CardDescription>` (text-sm/5 text-ink-500) → `<CardContent>` (px-4) → `<CardFooter>` (p-4, white, **no border, no wash** — structural separation comes from spacing alone, matching DialogFooter). When a `<CardFooter>` is present, Card auto-applies `pb-0` so the footer hugs the bottom edge. Compact: `data-[size=sm]` → `gap-3 py-3 px-3`.
+- **KpiRail** (`kpi-rail.tsx`, codified 2026-05-10) — bordered single-row container with inset divider hairlines between children. Replaces 4 sites of hand-rolled `before:inset-y-4` recipes across CMP-012 / 013 / 014 / 015 / 016. API: `<KpiRail columns={2|3|4|5|6}>{children}</KpiRail>`. Recipe: container `grid rounded-md bg-white shadow-(--shadow-border) overflow-hidden`; every child after the first wrapped in a divider div with `before:absolute before:left-0 before:inset-y-4 before:w-px before:bg-ink-200` — hairline doesn't reach the rounded corners. Tile shape (CompactKpi, custom mono tiles, plain divs) is the caller's call; only the shell + divider treatment is enforced.
 
   **Card padding is locked at 16px. Do NOT pass padding/gap classes (`px-N`, `py-N`, `p-N`, `gap-N`) on `<Card>`, `<CardHeader>`, `<CardContent>`, or `<CardFooter>` from composed pages.** If you find yourself reaching for `px-5`, `py-5`, `gap-5`, `-mx-5` etc. — stop. The primitive's defaults are the contract; reach back to the design system if a surface needs different rhythm. Legitimate overrides are layout-only: `min-w-0`, `col-span-N`, `w-[Npx]`, `flex-1`, `items-center`. Any primitive-padding override must be justified with a comment citing the variant it represents, and ideally promoted to a primitive variant (`size="sm"` / `size="lg"`) rather than inlined. Spec-sheet artboards (CMP-000 series) are exempt — they show specimens in isolation and may use `p-7` for breathing room.
 - **CodeCard** (`code-card.tsx`) — code-preview card with header strip + syntax-highlighted body. Uses `<CodeBlock>` driving `--color-syntax-*` tokens. Top-right copy affordance via `<CopyButton>`.
@@ -567,7 +602,7 @@ The full primitive library is `src/components/ui/*.tsx` (35 primitives). Highlig
 
 - **Tabs** (`tabs.tsx`) — sliding white indicator on active trigger (200ms ease-out, transform+width). Two variants: `default` (pill-on-well, `bg-muted rounded-sm h-8 p-1`, active trigger `bg-background rounded-xs`) and `line` (underline, transparent track, active trigger gets a 2px ink-900 underline). Vertical orientation supported on the default variant.
 - **Segmented** (`segmented.tsx`) — pill-style selector, same sliding-indicator idiom as Tabs default. `bg-muted rounded-sm overflow-clip`. Sizes: default `h-8`, sm `h-7`. Variants: `pill` (default) and `group` (adjacent borders, ink-900 fill on selected — rare).
-- **SegmentedPill** (`segmented-pill.tsx`) — view-scope toggles in toolbars. **Don't add as an extra row** — view-scope controls live in the existing toolbar.
+- **SegmentedPill** (`segmented-pill.tsx`) — view-scope toggles in toolbars. **Don't add as an extra row** — view-scope controls live in the existing toolbar. CMP-013 uses `<SegmentedPill size="sm">` (1H / 7D / 30D) anchored right via `ml-auto` so the toolbar splits cleanly into facets-left + time-scope-right.
 
 **Rule (Tabs vs Segmented — when to pick which):**
 - **`Tabs variant="line"`** = sibling sub-pages of the same surface. Each tab represents content that would map to its own URL path (`/team/members`, `/team/invitations`, `/settings/general`). Different content semantics, equal stature, primary navigation within the page. Used by CMP-017 Team and CMP-018 Settings. Matches Vercel's settings/team/billing/integrations sub-nav, Material 3, IBM Carbon.
@@ -607,9 +642,11 @@ The semantic test: are these *pages of the surface* (line tabs) or *filters/view
 
 ### Modal / Drawer
 
-- **Dialog** (`dialog.tsx`) — centered modal. **Modal tier:** `rounded-xl` (12px LOCKED) + `shadow-(--shadow-modal)`. Overlay: `bg-ink-900/40 backdrop-blur-xs`. Content: `bg-white rounded-xl border border-ink-200 shadow-(--shadow-modal) p-4 max-w-sm`. Header: title text-base font-medium / description text-sm text-ink-500. **DialogFooter carries `mt-2` in its base CVA** so the action zone sits ~24px below the last form field (compounded with a parent `gap-4`), not the same 16px sibling rhythm — clearer "now commit" gestalt without needing a divider. Don't pass `mt-N` overrides on `<DialogFooter>` from consumers; it's primitive-baked.
-- **AlertDialog** (`alert-dialog.tsx`) — same modal-tier surface; used for destructive confirmations.
+- **Dialog** (`dialog.tsx`) — centered modal. **Modal tier:** `rounded-xl` (**16px LOCKED**) + `shadow-(--shadow-modal)`. Overlay: `bg-ink-900/40 backdrop-blur-xs`. Content: `bg-white rounded-xl border border-ink-200 shadow-(--shadow-modal) p-4 max-w-sm`. Header: title text-base font-medium / description text-sm text-ink-500. **DialogFooter carries `mt-2` in its base CVA** so the action zone sits ~24px below the last form field (compounded with a parent `gap-4`), not the same 16px sibling rhythm — clearer "now commit" gestalt without needing a divider. Don't pass `mt-N` overrides on `<DialogFooter>` from consumers; it's primitive-baked.
+- **AlertDialog** (`alert-dialog.tsx`) — same modal-tier surface (rounded-xl / 16px); used for destructive confirmations.
 - **Sheet** (`sheet.tsx`) — right-docked drawer. Flush against viewport edge (`rounded-none`), only a left border + modal-tier shadow.
+- **Menu** (`menu.tsx`, codified 2026-05-10) — shadcn-style wrapper over Base UI Menu. Exports: `Menu` / `MenuTrigger` / `MenuContent` / `MenuItem` / `MenuLabel` / `MenuSeparator`. Recipe: content `min-w-44 rounded-sm bg-white border border-ink-200 shadow-(--shadow-popup) p-1 origin-[var(--transform-origin)]` (the transform-origin variable is published by Base UI's Positioner, so popups scale *from the trigger*, not the popup's geometric center — small detail, big feel). Item: `rounded-xs h-8 px-2 text-sm text-ink-900 [&_svg]:text-ink-500` with `transition-colors duration-100 ease-out` so keyboard arrow-through fades highlight states rather than snapping. `variant="destructive"` swaps colors to `text-danger-700 / data-[highlighted]:bg-danger-50` — used for Sign-out in `<UserMenu>`. Consumers: `<UserMenu>`, sidebar workspace switcher.
+- **UserMenu** (`user-menu.tsx`, codified 2026-05-10) — shared dropdown content (Chad Ponticas avatar + name + "Free plan" pill, separator, Upgrade to Pro / Account, separator, Sign out destructive). Accepts the trigger element as `children` (render-prop forwarded to `<MenuTrigger>`). `min-w-50` content. Consumed by the sidebar's 3-dot user-area button AND `DashboardChrome`'s top-right avatar (now an interactive `<button>`, was a static `<span>`). Single source of truth — both surfaces open the exact same menu.
 
 **Rule:** Sheet for **inspection** (drill into a row, persist while reading). Dialog for **confirmation** or **paired-panel cross-link inspection** (selection state shared via single `activeRequestId`, auto-scroll-into-view on counterpart).
 
@@ -633,6 +670,14 @@ The semantic test: are these *pages of the surface* (line tabs) or *filters/view
 - **CompactKpi** (`compact-kpi.tsx`) — eyebrow + `<HeroNumeric>` value + optional `<DeltaTag>`. Two variants: standalone (own card chrome) / `flat` (chrome stripped, used inside divided rows).
 - **Sparkline** (`sparkline.tsx`) — lightweight inline sparkline (5–14 points, ~24px). Lower visual weight than `<CompactSpark>` (h-9, recharts-based) used in dashboard hero cards. **KPI rail sparkline colors come from chart palette** (`--color-chart-1` blue, `--color-chart-3` green, `--color-chart-7` amber, `--color-ink-500` neutral) — NOT semantic ramps.
 - **MessageBlock** (`message-block.tsx`) — CMP-014 conversation bubble. **Bubble border-only, no fill** (earlier tone-tinted fills `bg-ink-100`/`bg-blue-50` read as chat-app aesthetic). Outline gets `border-blue-100` to separate model output from user/tool input. `warn` state: `bg-warning-50` + `border-warning-200` — **narrowed to data carriers**, does NOT wash the surrounding row or header.
+- **ToolResultCode** (`tool-result-code.tsx`, codified 2026-05-10) — inline `<code>` recipe for tool-result JSON blobs. `font-mono text-sm text-ink-900 -tracking-[0.14px] break-all`. Extracted from CMP-014 after the recipe was inlined 4× on consecutive tool-result message bodies — two-or-more sites = mandatory primitive. Semantic `<code>` element (these blobs ARE machine output).
+
+### Helpers, links & icon affordances
+
+- **TextLink** (`text-link.tsx`, codified 2026-05-10) — **inline link affordance, button-by-default.** Renders `<button type="button">` (correct for this codebase's no-router architecture); pass `as="a" href={...}` for a real anchor when navigation is needed. Locked visual recipe: `text-ink-800 underline decoration-ink-200 underline-offset-2 hover:decoration-ink-500 focus-visible:decoration-ink-500 focus-visible:ring-3 focus-visible:ring-ring/50 rounded-xs`. **No blue** — blue is reserved for info / completed / active-tab / focus. Don't hand-roll the recipe; the className convention block in this doc still exists as the underlying contract, but `<TextLink>` is the single canonical consumer-facing primitive.
+- **IconActionButton** (`icon-action-button.tsx`, codified 2026-05-10) — 24px (`size-6`) icon-only button with `after:-inset-2` pseudo-element expanding the hit target to 40×40 without inflating the visual footprint. Recipe: `rounded-xs text-ink-500 hover:text-ink-900 hover:bg-ink-100 focus-visible:ring-3 focus-visible:ring-ring/50 active:translate-y-px motion-reduce:active:translate-y-0`. `touch-manipulation` kills the 300ms tap delay. **`aria-label` is required** at the type level — icon-only buttons have no accessible name from text content. Extracted from CMP-012's `TopKeysCard` overflow `MoreHorizontal`; any second site would have silently drifted.
+- **TabsCount** (`tabs-count.tsx`, codified 2026-05-10) — mono count chip sitting inside a `<TabsTrigger>`. Recipe: `inline-flex items-center justify-center min-w-5 h-5 px-2 rounded-xs bg-ink-100 text-ink-500 font-mono text-xs font-medium tabular-nums`. Consumers: CMP-016 modality tabs (All types `(146)` / Text / Embeddings / Audio / Rerank), CMP-017 line-variant tab counts.
+- **SettingsRow** (`settings-row.tsx`, codified 2026-05-10) — title + subtitle on the left, control on the right. Lifted from CMP-018's local definition after the same shape appeared in `SecurityCard`'s passkey row with two minor variants. API exposes three modes: default (input-bearing, title renders as `<Label htmlFor={id}>`), `static` (title renders as heading-styled `<span>` — read-only state with a Badge), and `titleAs="h4"` (title as `<h4>` heading — used when the row sits inside a Card whose CardTitle is the section heading and this row needs a sub-heading semantically). Vertical alignment via `alignTop` (`items-start`). Rhythm: first row gets no top border; subsequent rows get `border-t border-ink-200`. Rendered as `flex justify-between gap-6 py-4`.
 
 ### Toast — `{components.toast}`
 
@@ -688,12 +733,14 @@ When one section is the focal action, accent it with `bg-blue-50` (and the icon 
 - **Bind every value to a token.** Color, spacing, radius, shadow, type — all flow palette → semantic → component. No raw hex/oklch/rgba outside `@theme`.
 - **Pick an 8px-multiple at surface tier** (page/section/card spacing, between-card gaps): values 8 / 16 / 24 / 32 / 40 / 48 / 64. Compound tier (within a primitive's row/group) allows any 4-multiple. Half-step classes are banned at every tier.
 - **Use ramp tokens** (`text-warning-700`, `bg-success-100`) — not legacy single-token semantics.
-- **Pair items with concentric radii**: 4px badge inside 6px card inside 12px modal.
+- **Pair items with concentric radii (three-tier ladder, 2× ratios):** 4px badge inside 6px button-tier inside 8px card-tier inside 16px modal-tier.
 - **Right-align numeric columns** in tables. `tabular-nums` alone doesn't fix inter-row drift.
 - **Use `font-medium` on sans labels** (minimum). `font-normal` reads as ambient body.
 - **Wrap hero summary numerics ≥24px in `<HeroNumeric>`.** Don't hand-roll the recipe.
 - **Render pagination/inline links as `<button>`**, not `<a>`. No router in this app.
-- **Use the chart palette by index**, not by entity. Brand-decoupled by default.
+- **Use the chart palette by index**, not by entity. Brand-decoupled by default. Import from `@/lib/chart-palette` (`CHART_PALETTE`, `chartSlot(n)`) — extracted 2026-05-10 from CMP-012's inline literal.
+- **Use `<TextLink>` for inline links**, `<IconActionButton>` for icon-only buttons, `<KpiRail>` for KPI rails, `<HeroNumeric>` for ≥24px hero numerics, `<MessageBlock>` for conversation bubbles, `<TabsCount>` for tab counts, `<ToolResultCode>` for tool-result JSON, `<SettingsRow>` for settings rows. **Don't hand-roll these recipes** — `src/components/ui/` is the canonical home.
+- **Press affordance is `active:translate-y-px`** uniformly (with `motion-reduce:active:translate-y-0` gate). The `active:scale-[0.98]` variant was retired 2026-05-10 across the entire codebase — it caused popover anchor-reposition flicker.
 
 ### Don't
 
@@ -711,6 +758,12 @@ When one section is the focal action, accent it with `bg-blue-50` (and the icon 
 - **Don't hand-roll a recipe in 2+ sites.** Survey `src/components/ui/` first; if no primitive matches and you'll need the recipe twice, extract a primitive *before* writing it inline. If an audit finds the same bug in two files, extract before fixing — fixing two copies in place is the symptom of missing the primitive.
 - **Don't put `role="button"` on `<tr>`.** Use the row-as-button pattern in §7 Lists/Tables — `<button>` inside the primary cell, `<tr>` keeps default semantics with `onClick` as mouse-only convenience.
 - **Don't use odd 4-multiples (12, 20, 28, 36) for surface-tier spacing.** Surface tier is 8-multiples only — those odd values belong to compound tier (within a primitive's row/group), never to page/section/card rhythm. Specifically: no `p-7`, `gap-7`, `mb-7`, `gap-3` between-card gaps, `gap-5` between sections.
+- **Don't put cards at `rounded-sm` (6px).** Cards live at the new 8px (`rounded-md`) surface tier as of 2026-05-10; 6px is the button / chrome / menu tier. Reaching for `rounded-sm` on a new card class is a tell that this doc was read at an old snapshot.
+- **Don't put modals at `rounded-xl: 12px`.** The token resolves to **16px** as of 2026-05-10 (`--radius-xl: 1rem` in `@theme inline`). Don't reintroduce the 12px override or hand-roll a `rounded-[12px]` modal.
+- **Don't use `active:scale-[0.98]` for press affordance.** Use `active:translate-y-px motion-reduce:active:translate-y-0` everywhere. Scale-press caused popover anchor-reposition flicker.
+- **Don't pass arbitrary `-tracking-[Npx]` for body / title sub-pixel tightening.** Use `tracking-snug` (`-0.01em`). Heading `-tracking-[1px]` stays arbitrary — different optical tier.
+- **Don't hand-roll the user dropdown or workspace switcher.** Both surfaces (sidebar 3-dot, top-bar avatar) open the shared `<UserMenu>`. Adding a third surface = new `<UserMenu>` consumer, not a new local menu.
+- **Don't open a `<MenuContent>` without `origin-[var(--transform-origin)]`.** The base `<MenuContent>` already includes it; if you reach for raw Base UI `Menu.Popup`, copy the variable so the popup scales from the trigger.
 
 ---
 
@@ -745,9 +798,13 @@ The product targets desktop-first operator workflows; no mobile-shipped state to
 
 ## Drift to Normalize *(our extension)*
 
-Resolved 2026-05-09 — both `<RowActionButton>` (4 sites) and `<EmptyState>` (2 sites) extracted to `src/components/ui/`. See §7 Lists/Tables for the row-as-button primitive contract. CMP-007's `CMP007ModalEmptyState.tsx` is a separate modal-internal specimen and intentionally remains its own shape.
+Resolved 2026-05-09 — `<RowActionButton>` (4 sites) and `<EmptyState>` (2 sites) extracted to `src/components/ui/`. See §7 Lists/Tables for the row-as-button primitive contract. CMP-007's `CMP007ModalEmptyState.tsx` is a separate modal-internal specimen and intentionally remains its own shape.
 
-If unbound hex appears outside `@theme`, bind to the closest ramp atom.
+Resolved 2026-05-10 — second extract-before-handrolling pass shipped **eight** new primitives in `src/components/ui/`: `<KpiRail>` (4 sites), `<TextLink>` (CMP-013), `<IconActionButton>` (CMP-012), `<TabsCount>` (CMP-016 / 017), `<ToolResultCode>` (CMP-014, 4× consumers), `<SettingsRow>` (lifted from CMP-018 local definition), `<Menu>` (shadcn-style wrapper over Base UI), `<UserMenu>` (sidebar + DashboardChrome avatar share one menu). Plus one shared helper at `src/lib/chart-palette.ts` (`CHART_PALETTE` array + `chartSlot(n)`) extracted from CMP-012's inline literal. Same pass swept 34 artboard sites of hand-rolled `rounded-sm bg-white shadow-(--shadow-border)` → `rounded-md` (new card tier) and migrated ~30 `-tracking-[Npx]` values to the new `tracking-snug` token.
+
+**Open drift:**
+- CMP-018's `<ArtboardHeader description="...">` still mentions "Line-variant Tabs (General / Logging / Integration)" even though the Tabs were removed — prose cleanup pending.
+- If unbound hex appears outside `@theme`, bind to the closest ramp atom.
 
 ## Open Questions *(our extension)*
 
@@ -781,10 +838,13 @@ Tokens cite `src/index.css:LINE` inline. Components cite `src/components/ui/<fil
 
 | Code | File | Pattern |
 |---|---|---|
-| CMP-012 | `src/artboards/CMP012ComposedDashboard.tsx` | KPI rail (consolidated row), Quick Actions (focal accent), dashboard chrome with traffic lights |
-| CMP-013 | `src/artboards/CMP013Requests.tsx` | Hero card with `<HeroNumeric size="lg">`, request firehose table, Dialog drill-in with cross-link |
-| CMP-014 | `src/artboards/CMP014Conversations.tsx` | KPI rail, conversations table, Dialog detail with `<MessageBlock>` flat-list thread |
-| CMP-016 | `src/artboards/CMP016Models.tsx` | Models registry, 3×2 Quick Start integration cards, First-party + Marketplace `<SelectGroup>`s |
+| CMP-012 | `src/artboards/CMP012ComposedDashboard.tsx` | `<KpiRail>` (consolidated row), Quick Actions (focal accent w/ `bg-blue-50`), dashboard chrome with traffic lights. Chart palette imported from `@/lib/chart-palette`. No Export button or "· Last 7d" subtitle (dropped 2026-05-10). |
+| CMP-013 | `src/artboards/CMP013Requests.tsx` | Hero card with `<HeroNumeric size="lg">`, request firehose table, Dialog drill-in with cross-link. Time-range as `<SegmentedPill size="sm">` (1H / 7D / 30D) anchored right — replaces the prior Select dropdown; toolbar splits facets-left + time-scope-right. |
+| CMP-014 | `src/artboards/CMP014Conversations.tsx` | `<KpiRail>`, conversations table, Dialog detail with `<MessageBlock>` flat-list thread. Cross-link selection state via `selectionSource: 'messages' \| 'trace' \| null` — each panel skips its own scroll-into-view when it originated the selection (counterpart still scrolls). Tool-result blobs use `<ToolResultCode>`. |
+| CMP-015 | `src/artboards/CMP015Security.tsx` | Alert banner (`role="alert"` + `aria-live="assertive"` + `aria-atomic="true"`) + ramp-token coloring (`bg-danger-600 / text-danger-700`, not `bg-destructive`). Meter uses `aria-labelledby` (was duplicate count readout). `ApiKeyRiskScoresCard` consumes `<Card>` (was hand-rolled). Zero-value Events render at `text-ink-400`. No "Export report" / "New policy" buttons in the page header. Row-drill is a placeholder. |
+| CMP-016 | `src/artboards/CMP016Models.tsx` | Modality migrated from `<SelectTrigger>` to `<Tabs variant="line">` with `<TabsCount>` chips (All types / Text / Embeddings / Audio / Rerank); table card moved INSIDE the Tabs wrapper to inherit `gap-4` rhythm. Empty-state branch for zero results consumes `<EmptyState>`. List ↔ detail swap uses `animate-in fade-in-0 slide-in-from-right-2 / slide-in-from-left-2` (wrapped in `flex flex-col gap-6` to preserve DashboardChrome inner-gap inheritance). Model handle wrapped in `<CopyButton size="inline-xs">`. `ProviderMark` renders neutral fallback chip instead of `null`. Detail-eyebrow VendorAvatar `aria-hidden`. |
+| CMP-017 | `src/artboards/CMP017Team.tsx` | Members + invitations + access requests + invite form. Empty branches in invitations / requests panes consume `<EmptyState>`. RowActionsMenu `min-w-32` (was `min-w-40`). Action labels: "Approve request" / "Decline request" (was "Approve" / "Decline"). Invite-dialog labels reverted to `text-ink-600` to match the canonical CMP-004 form-label convention. |
+| CMP-018 | `src/artboards/CMP018Settings.tsx` | **Collapsed to single-pane (2026-05-10)** — Tabs (General / Logging / Integration) removed; `<ProfileCard>` and `<SecurityCard>` render directly under `<PageHeader>`. `LoggingCard` and `IntegrationEmptyState` no longer in the page. `SettingsRow` primitive lifted from the local definition for cross-card reuse. Note: `description` text in the artboard's `<ArtboardHeader>` still references the removed Tabs — stale prose, separate cleanup. |
 
 ---
 

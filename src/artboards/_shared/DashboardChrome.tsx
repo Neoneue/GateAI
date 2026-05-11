@@ -49,7 +49,7 @@ export function DashboardChrome({
   children,
 }: DashboardChromeProps) {
   return (
-    <div className="flex flex-col w-full h-[900px] overflow-hidden rounded-sm bg-white shadow-(--shadow-border)">
+    <div className="flex flex-col w-full h-[900px] overflow-hidden rounded-md bg-white shadow-(--shadow-border)">
       <ScreenHead urlSlug={urlSlug} eyebrow={screenEyebrow} />
       <div className="flex flex-row flex-1 min-h-0">
         <Sidebar
@@ -191,7 +191,7 @@ function DashTopBar({
       </div>
       <div className="flex items-center gap-1">
         <Button variant="outline" size="sm">
-          Docs
+          Documentation
         </Button>
         {/* Skill: surfaces.md — promote to Button `icon-sm` so the hit
             target jumps from 24px to 32px without colliding with the

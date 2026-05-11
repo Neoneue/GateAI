@@ -463,7 +463,7 @@ const STATUS_BADGE: Record<RequestStatus, {
 // dashboard's two surfaces read as the same depth tier.
 export function RecentRequestsCard() {
   return (
-    <div className="flex flex-col w-full rounded-sm overflow-hidden bg-white shadow-(--shadow-border)">
+    <div className="flex flex-col w-full rounded-md overflow-hidden bg-white shadow-(--shadow-border)">
       <div className="flex items-center justify-between py-3 px-4">
         <h3 className="font-sans text-base/5 font-medium tracking-snug text-ink-900 m-0">
           Recent Requests
@@ -563,7 +563,7 @@ function QuickActionsRow() {
   const dividerCls =
     'relative before:absolute before:left-0 before:inset-y-4 before:w-px before:bg-ink-200';
   return (
-    <div className="rounded-sm bg-white shadow-(--shadow-border) overflow-hidden">
+    <div className="rounded-md bg-white shadow-(--shadow-border) overflow-hidden">
       <div className="flex items-center py-3 px-4 border-b border-ink-200">
         <h3 className="font-sans text-base/5 font-medium tracking-snug text-ink-900 m-0">
           Quick Actions
@@ -595,7 +595,7 @@ function QuickActionItem({ icon: Icon, title, subtitle, accent }: QuickAction) {
   return (
     <button
       type="button"
-      className={`relative w-full flex items-center gap-3 p-4 text-left outline-none touch-manipulation transition-[background-color,transform,box-shadow] duration-150 ease-out focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:ring-inset active:scale-[0.98] motion-reduce:transition-none motion-reduce:active:scale-100 ${sectionCls}`}
+      className={`relative w-full flex items-center gap-3 p-4 text-left outline-none touch-manipulation transition-[background-color,transform,box-shadow] duration-150 ease-out focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:ring-inset active:translate-y-px motion-reduce:transition-none motion-reduce:active:translate-y-0 ${sectionCls}`}
     >
       <span
         className={`shrink-0 size-8 inline-flex items-center justify-center rounded-xs ${chipCls}`}

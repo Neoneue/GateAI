@@ -208,7 +208,7 @@ function PaletteCard({
     <div className="flex flex-col gap-3 bg-ink-50">
       <SectionHeader code={palette.code} hint={palette.description} />
       <div
-        className="flex flex-col rounded-sm gap-4 bg-white p-6 shadow-(--shadow-border)"
+        className="flex flex-col rounded-md gap-4 bg-white p-6 shadow-(--shadow-border)"
       >
         <div className="flex items-baseline justify-between">
           <div>
@@ -274,7 +274,7 @@ function SingleToneCard({
   return (
     <div className="flex flex-col gap-3 bg-ink-50">
       <SectionHeader code={code} hint={description} />
-      <div className="flex flex-col rounded-sm gap-4 bg-white p-6 shadow-(--shadow-border)">
+      <div className="flex flex-col rounded-md gap-4 bg-white p-6 shadow-(--shadow-border)">
         <div className="flex items-baseline justify-between">
           <div>
             <h3 className="font-sans font-medium text-ink-900 text-base m-0">{name}</h3>

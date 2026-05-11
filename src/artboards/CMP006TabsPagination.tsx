@@ -49,7 +49,7 @@ export function CMP006TabsPagination() {
               code="CMP-006.1 — UNDERLINE TABS"
               hint="page-level navigation"
             />
-            <div className="flex flex-col rounded-sm bg-white shadow-(--shadow-border)">
+            <div className="flex flex-col rounded-md bg-white shadow-(--shadow-border)">
               <Tabs value={tab} onValueChange={setTab}>
                 <TabsList variant="line">
                   <TabsTrigger value="overview">Overview</TabsTrigger>
@@ -83,7 +83,7 @@ export function CMP006TabsPagination() {
               code="CMP-006.2 — SEGMENTED · PAGINATION"
               hint="<SegmentedPill> · <ToggleGroup> · <Pagination>"
             />
-            <div className="flex flex-col rounded-sm gap-4 bg-white shadow-(--shadow-border) p-6">
+            <div className="flex flex-col rounded-md gap-4 bg-white shadow-(--shadow-border) p-6">
               {/* Three segmented groups */}
               <div className="flex items-center flex-wrap gap-4">
                 <SegmentedPill

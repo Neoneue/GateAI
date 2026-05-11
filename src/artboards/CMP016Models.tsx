@@ -116,12 +116,22 @@ export function CMP016Models({
             onNavigate={onNavigate}
           >
             {selectedModel ? (
-              <ModelDetailPage
-                model={selectedModel}
-                onBack={() => setSelectedModel(null)}
-              />
+              <div
+                key={`detail-${selectedModel.id}`}
+                className="flex flex-col gap-6 animate-in fade-in-0 slide-in-from-right-2 duration-200 ease-out motion-reduce:animate-none motion-reduce:duration-0"
+              >
+                <ModelDetailPage
+                  model={selectedModel}
+                  onBack={() => setSelectedModel(null)}
+                />
+              </div>
             ) : (
-              <ModelsSurface onSelect={setSelectedModel} />
+              <div
+                key="list"
+                className="flex flex-col gap-6 animate-in fade-in-0 slide-in-from-left-2 duration-200 ease-out motion-reduce:animate-none motion-reduce:duration-0"
+              >
+                <ModelsSurface onSelect={setSelectedModel} />
+              </div>
             )}
           </DashboardChrome>
         </div>
@@ -730,9 +740,8 @@ function ModelsSurface({ onSelect }: { onSelect: (model: Model) => void }) {
             <TabsCount>{modalityCounts.rerank}</TabsCount>
           </TabsTrigger>
         </TabsList>
-      </Tabs>
 
-      <div className="flex flex-col w-full rounded-sm overflow-hidden bg-white shadow-(--shadow-border)">
+      <div className="flex flex-col w-full rounded-md overflow-hidden bg-white shadow-(--shadow-border)">
         <Toolbar
           search={search}
           onSearchChange={(v) => {
@@ -793,6 +802,7 @@ function ModelsSurface({ onSelect }: { onSelect: (model: Model) => void }) {
           </>
         )}
       </div>
+      </Tabs>
 
       <p className="font-mono text-xs text-ink-500 tracking-snug m-0">
         Pass{' '}
@@ -1330,7 +1340,7 @@ function PlatformPanel() {
             // No-op in the showcase; real impl wires to per-platform docs.
             onClick={() => undefined}
             aria-label={`Open ${p.name} integration guide`}
-            className="group flex items-start justify-between gap-3 bg-white rounded-sm shadow-(--shadow-border) p-4 text-left transition-colors duration-150 ease-out motion-reduce:transition-none hover:bg-ink-50 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+            className="group flex items-start justify-between gap-3 bg-white rounded-md shadow-(--shadow-border) p-4 text-left transition-colors duration-150 ease-out motion-reduce:transition-none hover:bg-ink-50 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
           >
             <div className="flex flex-col gap-1 min-w-0">
               <span className="font-sans text-sm font-medium text-ink-900">{p.name}</span>
@@ -1396,7 +1406,7 @@ function ModelKpiTile({ label, value }: { label: string; value: string }) {
 
 function ProvidersTable({ model }: { model: Model }) {
   return (
-    <div className="flex flex-col w-full rounded-sm overflow-hidden bg-white shadow-(--shadow-border)">
+    <div className="flex flex-col w-full rounded-md overflow-hidden bg-white shadow-(--shadow-border)">
       <Table>
         <TableHeader className="[&_tr]:border-t-0">
           <TableRow className="hover:bg-transparent">

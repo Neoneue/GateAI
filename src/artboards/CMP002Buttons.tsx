@@ -36,7 +36,7 @@ export function CMP002Buttons() {
             code="CMP-002.1 — VARIANTS"
             hint="<Button variant=… /> · default · outline · secondary · ghost · destructive · link"
           />
-          <div className="flex flex-wrap items-center rounded-sm gap-4 bg-white p-6 shadow-(--shadow-border)">
+          <div className="flex flex-wrap items-center rounded-md gap-4 bg-white p-6 shadow-(--shadow-border)">
             <Button variant="default">
               <Plus data-icon="inline-start" />
               Create key
@@ -61,7 +61,7 @@ export function CMP002Buttons() {
             code="CMP-002.2 — SIZES"
             hint="<Button size=… /> · xs · sm · default · lg"
           />
-          <div className="flex flex-wrap items-center rounded-sm gap-4 bg-white p-6 shadow-(--shadow-border)">
+          <div className="flex flex-wrap items-center rounded-md gap-4 bg-white p-6 shadow-(--shadow-border)">
             <Button size="xs">Tiny</Button>
             <Button size="sm">Small</Button>
             <Button size="default">Default</Button>
@@ -77,7 +77,7 @@ export function CMP002Buttons() {
               code="CMP-002.3 — STATES"
               hint="default · hover · active · focus · loading · disabled"
             />
-            <div className="flex flex-col rounded-sm gap-4 bg-white p-6 shadow-(--shadow-border)" role="group" aria-label="Button state specimens">
+            <div className="flex flex-col rounded-md gap-4 bg-white p-6 shadow-(--shadow-border)" role="group" aria-label="Button state specimens">
               <Button className="w-full" tabIndex={-1} aria-disabled="true">Default</Button>
               <Button className="w-full bg-primary/85" tabIndex={-1} aria-disabled="true">Hover</Button>
               <Button className="w-full translate-y-px" tabIndex={-1} aria-disabled="true">Active</Button>
@@ -102,7 +102,7 @@ export function CMP002Buttons() {
               code="CMP-002.4 — ICON"
               hint="data-icon=inline-start · icon-only · button-group"
             />
-            <div className="flex flex-col rounded-sm gap-4 bg-white p-6 shadow-(--shadow-border)">
+            <div className="flex flex-col rounded-md gap-4 bg-white p-6 shadow-(--shadow-border)">
               <div className="flex flex-wrap gap-2">
                 <Button variant="secondary" size="sm">
                   <Download data-icon="inline-start" />
@@ -141,7 +141,7 @@ export function CMP002Buttons() {
               code="CMP-002.5 — GROUP"
               hint="<ToggleGroup> · <SegmentedPill>"
             />
-            <div className="flex flex-col rounded-sm gap-4 bg-white p-6 shadow-(--shadow-border) items-start">
+            <div className="flex flex-col rounded-md gap-4 bg-white p-6 shadow-(--shadow-border) items-start">
               {/* Bordered group: Day · Week · Month · Year */}
               <ToggleGroup
                 value={period}

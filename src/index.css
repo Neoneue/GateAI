@@ -135,7 +135,8 @@
      Each tier pairs lift + 1px ring; both colors mixed from --color-ink-800
      so the shadow family tracks the ink ramp.
        Menu (selects, popovers)    → 6px radius (rounded-sm) + --shadow-popup
-       Modal (dialogs, drill-ins)  → 12px radius (rounded-xl) + --shadow-modal */
+       Card / surface              → 8px radius (rounded-md) + --shadow-border
+       Modal (dialogs, drill-ins)  → 16px radius (rounded-xl) + --shadow-modal */
   --shadow-popup:
     0 4px 12px -2px color-mix(in oklch, var(--color-ink-800) 8%, transparent),
     0 0 0 1px color-mix(in oklch, var(--color-ink-800) 4%, transparent);
@@ -146,12 +147,10 @@
   /* Typescale overrides — align Tailwind's named sizes to Vercel Geist's
      heading scale (even-numbered, larger increments at the top). Sizes not
      listed (xs/sm/base/lg/xl/2xl/5xl/7xl) already match Geist values.
-       text-2xs: 10 (sub-chrome eyebrows / labels — one step below text-xs)
+     Floor is text-xs (12px) — sub-12px sizes are out of scale by policy.
        text-3xl: 30 → 32   (Geist heading-32)
        text-4xl: 36 → 40   (Geist heading-40)
        text-6xl: 60 → 64   (Geist heading-64) */
-  --text-2xs: 0.625rem;
-  --text-2xs--line-height: 1rem;
   --text-3xl: 2rem;
   --text-3xl--line-height: 2.5rem;
   --text-4xl: 2.5rem;
@@ -295,10 +294,13 @@ body {
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
-  /* Geist material tiers — modal radius locked to 12px regardless of base
-     scaling. Everyday surfaces use rounded-sm (6px); modal/dialog uses
-     rounded-xl (12px). Keeping the full scale below for escape hatches. */
-  --radius-xl: 0.75rem;
+  /* Geist material tiers — three steps:
+       Button / chrome  → rounded-sm (6px)
+       Card / surface   → rounded-md (8px)  ← derived: var(--radius) * 0.8
+       Modal / dialog   → rounded-xl (16px) — overridden below to lock the
+                          tier gap from cards (8px → 16px = 2× ratio).
+     Sub-elements inside a tier sit one step below (rounded-xs / 4px). */
+  --radius-xl: 1rem;
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);

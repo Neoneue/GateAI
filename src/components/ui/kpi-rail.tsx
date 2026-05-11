@@ -11,7 +11,7 @@ import { cn } from '@/lib/utils';
  * parallel implementations of the same shell.
  *
  * Recipe:
- *   container  rounded-sm bg-white shadow-(--shadow-border) overflow-hidden
+ *   container  rounded-md bg-white shadow-(--shadow-border) overflow-hidden
  *              grid grid-cols-{columns}
  *   divider    on every child after the first — a wrapper <div> with a
  *              `before:` pseudo-element drawing a 1px hairline at
@@ -55,7 +55,7 @@ export function KpiRail({
   return (
     <div
       className={cn(
-        'grid rounded-sm bg-white shadow-(--shadow-border) overflow-hidden',
+        'grid rounded-md bg-white shadow-(--shadow-border) overflow-hidden',
         COLUMN_CLS[columns],
         className,
       )}

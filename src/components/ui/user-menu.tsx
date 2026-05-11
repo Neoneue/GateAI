@@ -40,15 +40,15 @@ function UserMenu({
             <span className="font-sans text-sm font-medium text-ink-900 truncate leading-tight">
               Chad Ponticas
             </span>
-            <span className="inline-flex items-center h-5 px-2 rounded-full bg-blue-50 text-blue-700 font-sans text-xs font-medium self-start">
-              Pro plan
+            <span className="inline-flex items-center h-5 px-2 rounded-xs bg-blue-50 text-blue-700 font-sans text-xs font-medium self-start">
+              Free plan
             </span>
           </div>
         </MenuLabel>
         <MenuSeparator />
         <MenuItem>
           <Sparkles strokeWidth={1.75} aria-hidden />
-          Upgrade
+          Upgrade to Pro
         </MenuItem>
         <MenuItem onClick={() => onNavigate?.('cmp-018')}>
           <UserRound strokeWidth={1.75} aria-hidden />

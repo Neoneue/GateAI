@@ -59,7 +59,7 @@ export function CMP004FormFields() {
               code="CMP-004.1 — TEXT INPUTS"
               hint="<Input /> · <Textarea /> · <Select />"
             />
-            <div className="flex flex-col rounded-sm gap-4 bg-white shadow-(--shadow-border) p-6">
+            <div className="flex flex-col rounded-md gap-4 bg-white shadow-(--shadow-border) p-6">
               {/* Key name (required) */}
               <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between">
@@ -154,7 +154,7 @@ export function CMP004FormFields() {
               code="CMP-004.2 — CHECKBOX · RADIO · SWITCH"
               hint="<Checkbox /> · <RadioGroup /> · <Switch />"
             />
-            <div className="flex flex-col rounded-sm gap-4 bg-white shadow-(--shadow-border) p-6">
+            <div className="flex flex-col rounded-md gap-4 bg-white shadow-(--shadow-border) p-6">
               {/* Scopes — checkboxes */}
               <div role="group" aria-labelledby="scopes-label" className="flex flex-col gap-3">
                 <Label id="scopes-label" className="text-ink-800 font-medium text-sm">Scopes</Label>
