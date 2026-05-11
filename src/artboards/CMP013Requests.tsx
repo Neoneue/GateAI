@@ -18,8 +18,10 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { KpiRail as KpiRailShell } from '@/components/ui/kpi-rail';
 import { RowActionButton } from '@/components/ui/row-action-button';
 import { TablePaginationFooter } from '@/components/ui/table-pagination-footer';
+import { ToolResultCode } from '@/components/ui/tool-result-code';
 import {
   Select,
   SelectContent,
@@ -28,6 +30,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { StatusDot } from '@/components/ui/status-dot';
+import { TextLink } from '@/components/ui/text-link';
 import {
   Table,
   TableBody,
@@ -59,29 +62,12 @@ import { DashboardChrome } from './_shared/DashboardChrome';
 /* ─────────────────────────────────────────────────────────────────────────
  * CMP-013 — Requests (Observability)
  *
- * Live request firehose surface. Same production frame as CMP-012 (gray
- * well, white cards, 64px icon sidebar) but the right pane is the dense
- * observability list: hero metric + full-width sparkline → filter bar →
- * sortable request log → pagination footer.
- *
  * Chrome strategy: chrome subcomponents (DashboardSurface, ScreenHead,
  * DashSidebar, DashTopBar) are **copied** from CMP-012 rather than imported.
  * The two artboards share a frame today but the active-nav state is
  * intrinsically per-page; importing would couple them and force one to
  * become the source of truth for the other's nav. Copy keeps each surface
  * free to evolve independently.
- *
- * Color palette: only ink-* / blue-* / semantic vars. Status pill colors
- * (green / red / amber for 200 / 4xx / 5xx) ride success / destructive /
- * warning at low alpha — same approach as CMP-003.
- *
- * Column alignment: numerics (In, Out, Latency, Cost) right-aligned with
- * `font-mono tabular-nums`. Right-edge anchoring stacks the ones-place at
- * a fixed x across rows so magnitudes compare at a glance — the standard
- * tabular convention. `tabular-nums` alone only fixes intra-row digit
- * width; right-align fixes inter-row drift when `4,051` sits above
- * `52,810`. Latency cell reserves a fixed leading icon slot on every row
- * so the slow-row TriangleAlert doesn't shift the digit column.
  * ───────────────────────────────────────────────────────────────────────── */
 
 export function CMP013Requests({
@@ -103,26 +89,24 @@ export function CMP013Requests({
           parts="1 surface"
         />
 
-        <div className="flex flex-col gap-4">
-          <SectionHeader
-            code="CMP-013.1 — REQUESTS SURFACE"
-            hint="v-shell · gray well · hero metric · filter bar · request log"
-          />
+        <SectionHeader
+          code="CMP-013.1 — REQUESTS SURFACE"
+          hint="v-shell · gray well · hero metric · filter bar · request log"
+        />
 
-          <DashboardChrome
-            urlSlug="requests"
-            screenEyebrow="REQUESTS"
-            breadcrumbCurrent="Requests"
-            activeNavId="requests"
-            sidebarExpanded={innerSidebarExpanded}
-            onToggleSidebar={onToggleInnerSidebar ?? (() => {})}
-            onNavigate={onNavigate}
-          >
-            <PageHeader />
-            <HeroMetricCard />
-            <RequestsTableSection />
-          </DashboardChrome>
-        </div>
+        <DashboardChrome
+          urlSlug="requests"
+          screenEyebrow="REQUESTS"
+          breadcrumbCurrent="Requests"
+          activeNavId="requests"
+          sidebarExpanded={innerSidebarExpanded}
+          onToggleSidebar={onToggleInnerSidebar ?? (() => {})}
+          onNavigate={onNavigate}
+        >
+          <PageHeader />
+          <HeroMetricCard />
+          <RequestsTableSection />
+        </DashboardChrome>
       </div>
     </div>
   );
@@ -135,14 +119,14 @@ function PageHeader() {
     <div className="flex items-start justify-between gap-6">
       <div className="flex flex-col gap-2 max-w-1/2">
         {/* h2 — see CMP012 PageHeader note. */}
-        <h2 className="font-sans font-medium text-ink-900 text-3xl/9 -tracking-[1px] text-balance m-0">
+        <h2 className="font-sans font-medium text-ink-900 text-3xl/9 tracking-tight text-balance m-0">
           Requests
         </h2>
         <p className="font-sans text-ink-500 text-base tracking-tight text-pretty m-0">
           Every generation routed through the gateway. Click any row to inspect prompts, security scans and the audit anchor.
         </p>
       </div>
-      <div className="flex items-center gap-3 shrink-0">
+      <div className="flex items-center gap-4 shrink-0">
         <Button variant="outline" size="default">
           <Download data-icon="inline-start" aria-hidden />
           Export CSV
@@ -197,9 +181,9 @@ function HeroMetricCard() {
     <div className="flex flex-col gap-4 rounded-sm bg-white shadow-(--shadow-border) p-4">
       <div className="flex items-start justify-between gap-6">
         <div className="flex flex-col gap-2 shrink-0">
-          <h3 className="font-mono uppercase tracking-[0.1em] text-xs font-medium text-ink-500 m-0">
+          <span className="font-mono uppercase tracking-[0.1em] text-xs font-medium text-ink-500">
             REQUESTS / 1H
-          </h3>
+          </span>
           <div className="flex items-baseline gap-3">
             <HeroNumeric size="lg">
               {HERO_TOTAL.toLocaleString()}
@@ -322,17 +306,17 @@ function BreakdownRow({
 }) {
   const dotColor =
     tone === 'success' ? 'bg-success-600'
-    : tone === 'danger' ? 'bg-destructive'
+    : tone === 'danger' ? 'bg-danger-600'
     : 'bg-warning-600';
   // Returns three grid cells (no wrapper element). Parent is a 3-col grid
   // so dots and values align across rows. `justify-self-end` right-aligns
   // text-flow cells within their tracks.
   return (
     <>
-      <span className="font-sans text-xs font-medium text-ink-500 -tracking-[0.12px] justify-self-end">
+      <span className="font-sans text-xs font-medium text-ink-500 tracking-tight justify-self-end">
         {label}
       </span>
-      <span className={`size-1.5 rounded-full ${dotColor}`} aria-hidden />
+      <span className={`size-2 rounded-full ${dotColor}`} aria-hidden />
       <span className="font-mono text-xs font-medium tabular-nums text-ink-900 justify-self-end">
         {value}
       </span>
@@ -411,8 +395,9 @@ const STATUS_BADGE: Record<RequestStatus, {
 };
 
 // Synthetic total — held at module scope so the pagination math reconciles
-// with the hero metric narrative (8,241 requests in the trailing hour).
-const REQUESTS_TOTAL = 8241;
+// with the hero metric narrative. Bound to HERO_TOTAL so the headline and
+// the pagination count stay in sync automatically if HERO_INCREMENTS shifts.
+const REQUESTS_TOTAL = HERO_TOTAL;
 
 function RequestsTableSection() {
   const [range, setRange] = useState('1h');
@@ -432,7 +417,7 @@ function RequestsTableSection() {
         {/* Toolbar — shape lifted from CMP-011.1. No flex-wrap: the
             sortable-table convention is single-row, and the filter set
             fits in the gray well at this width. */}
-        <div className="flex items-center gap-2 py-3 px-4">
+        <div className="flex items-center gap-2 p-4">
           <div className="relative w-72 min-w-0 shrink-0">
             <Search
               className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-ink-500"
@@ -565,7 +550,7 @@ function RequestsTableSection() {
                   className="cursor-pointer transition-colors duration-150 ease-out motion-reduce:transition-none hover:bg-ink-50"
                   onClick={() => setSelectedRow(row)}
                 >
-                  <TableCell className="whitespace-nowrap font-mono tabular-nums -tracking-[0.14px] text-ink-500">
+                  <TableCell className="whitespace-nowrap font-mono tabular-nums tracking-tight text-ink-500">
                     {row.time}
                   </TableCell>
                   <TableCell className="whitespace-nowrap">
@@ -576,24 +561,27 @@ function RequestsTableSection() {
                   </TableCell>
                   <TableCell className="max-w-[260px]">
                     <RowActionButton
-                      onClick={() => setSelectedRow(row)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedRow(row);
+                      }}
                       aria-label={`Inspect ${row.code} request to ${row.model} at ${row.time}`}
                     >
                       <VendorAvatar vendor={row.vendor} />
                       <span
-                        className="font-mono text-sm text-ink-900 -tracking-[0.2px] truncate"
+                        className="font-mono text-sm text-ink-900 tracking-tight truncate"
                         title={row.model}
                       >
                         {row.model}
                       </span>
                     </RowActionButton>
                   </TableCell>
-                  <TableCell className="max-w-[200px] font-mono tabular-nums -tracking-[0.14px] text-ink-800">
+                  <TableCell className="max-w-[200px] font-mono tabular-nums tracking-tight text-ink-800">
                     <span className="block truncate" title={row.conversation}>
                       {row.conversation}
                     </span>
                   </TableCell>
-                  <TableCell className="max-w-[140px] font-mono text-ink-800 -tracking-[0.14px]">
+                  <TableCell className="max-w-[140px] font-mono text-ink-800 tracking-tight">
                     <span className="block truncate" title={row.keyId}>
                       {row.keyId}
                     </span>
@@ -601,7 +589,7 @@ function RequestsTableSection() {
                   <TableCell className={numericCls}>{row.inTokens}</TableCell>
                   <TableCell className={numericCls}>{row.outTokens}</TableCell>
                   <TableCell className="text-right whitespace-nowrap font-mono tabular-nums">
-                    <span className="inline-flex items-center justify-end gap-1.5">
+                    <span className="inline-flex items-center justify-end gap-1">
                       {isSlow ? (
                         <TriangleAlert
                           className="size-3 shrink-0 text-warning-600"
@@ -699,15 +687,11 @@ function RequestDetailBody({ row }: { row: RequestRow }) {
               {row.code}
             </Badge>
           </div>
-          <p className="font-mono text-xs text-ink-500 -tracking-[0.01em] text-pretty m-0">
+          <p className="font-mono text-xs text-ink-500 tracking-tight text-pretty m-0">
             Apr 22, 2026 · {row.time} UTC · part of conversation{' '}
-            <button
-              type="button"
-              aria-label={`Open conversation ${row.conversation}`}
-              className="text-ink-800 bg-transparent p-0 outline-none rounded-xs underline decoration-ink-200 underline-offset-2 hover:decoration-ink-500 focus-visible:decoration-ink-500 focus-visible:ring-3 focus-visible:ring-ring/50"
-            >
+            <TextLink aria-label={`Open conversation ${row.conversation}`}>
               {row.conversation}
-            </button>
+            </TextLink>
           </p>
         </div>
       </DialogScrollHeader>
@@ -733,13 +717,13 @@ function RequestDetailBody({ row }: { row: RequestRow }) {
           </TabsContent>
 
           <TabsContent value="details">
-            <div className="rounded-sm border border-ink-200 overflow-hidden">
+            <div className="rounded-xs border border-ink-200 overflow-hidden">
               <DetailRow
                 label="Model"
                 value={
                   <div className="flex items-center gap-2">
                     <VendorAvatar vendor={row.vendor} />
-                    <span className="font-mono text-sm text-ink-900 -tracking-[0.2px]">
+                    <span className="font-mono text-sm text-ink-900 tracking-tight">
                       {row.model}
                     </span>
                   </div>
@@ -748,12 +732,12 @@ function RequestDetailBody({ row }: { row: RequestRow }) {
               <DetailRow label="Provider" value={<span className="font-sans text-sm text-ink-900">{provider}</span>} />
               <DetailRow
                 label="API Key"
-                value={<span className="font-mono text-sm text-ink-900 -tracking-[0.14px]">{row.keyId}</span>}
+                value={<span className="font-mono text-sm text-ink-900 tracking-tight">{row.keyId}</span>}
               />
               <DetailRow
                 label="Endpoint"
                 value={
-                  <span className="font-mono text-sm text-ink-900 -tracking-[0.14px]">
+                  <span className="font-mono text-sm text-ink-900 tracking-tight">
                     <span className="text-ink-500">POST</span> /v1/messages
                   </span>
                 }
@@ -814,23 +798,13 @@ function RequestDetailBody({ row }: { row: RequestRow }) {
 }
 
 function KpiRail({ row }: { row: RequestRow }) {
-  // Inset divider — hairline doesn't reach top/bottom edges, reads
-  // lighter than a `divide-x`. Matches CMP-012's main KPI rail.
-  const dividerCls =
-    'relative before:absolute before:left-0 before:inset-y-4 before:w-px before:bg-ink-200';
   return (
-    <div className="grid grid-cols-4 rounded-sm bg-white shadow-(--shadow-border) overflow-hidden">
+    <KpiRailShell columns={4}>
       <KpiTile label="Latency" value={row.latency} />
-      <div className={dividerCls}>
-        <KpiTile label="Cost" value={row.cost} />
-      </div>
-      <div className={dividerCls}>
-        <KpiTile label="Tokens In" value={row.inTokens} />
-      </div>
-      <div className={dividerCls}>
-        <KpiTile label="Tokens Out" value={row.outTokens} />
-      </div>
-    </div>
+      <KpiTile label="Cost" value={row.cost} />
+      <KpiTile label="Tokens In" value={row.inTokens} />
+      <KpiTile label="Tokens Out" value={row.outTokens} />
+    </KpiRailShell>
   );
 }
 
@@ -886,9 +860,9 @@ const SAMPLE_MESSAGES: {
     role: 'tool',
     tool: 'lookup_transfer',
     body: (
-      <code className="font-mono text-sm text-ink-900 -tracking-[0.14px] break-all">
+      <ToolResultCode>
         {'{"id":"0x4a3e","amount":"€2,840.12","status":"flagged","reason":"PEP_MATCH"}'}
-      </code>
+      </ToolResultCode>
     ),
   },
   {
@@ -963,7 +937,7 @@ function SecurityCheckRow({
   status: 'pass';
 }) {
   return (
-    <div className="flex items-start justify-between gap-3 rounded-sm border border-ink-200 p-4">
+    <div className="flex items-start justify-between gap-3 rounded-xs border border-ink-200 p-4">
       <div className="flex flex-col gap-1 min-w-0">
         <span className="font-sans text-sm font-medium text-ink-900">{title}</span>
         <span className="font-sans text-xs text-ink-500 text-pretty">{description}</span>

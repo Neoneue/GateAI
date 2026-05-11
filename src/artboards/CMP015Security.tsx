@@ -11,6 +11,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { CompactKpi, CompactSpark } from '@/components/ui/compact-kpi';
+import { KpiRail as KpiRailShell } from '@/components/ui/kpi-rail';
 import { RowActionButton } from '@/components/ui/row-action-button';
 import { SegmentedPill } from '@/components/ui/segmented-pill';
 import { Sparkline } from '@/components/ui/sparkline';
@@ -128,13 +129,8 @@ function PageHeader() {
 /* ─── KPI rail (4-up sparkline cards) ────────────────────────────────────── */
 
 function KpiRail() {
-  // Same divider pattern as CMP-012's KpiRail — `before:` pseudo-element
-  // hairlines at `inset-y-4` so the rule stays inset from rounded corners
-  // and the spark's lower edge.
-  const dividerCls =
-    'relative before:absolute before:left-0 before:inset-y-4 before:w-px before:bg-ink-200';
   return (
-    <div className="grid grid-cols-4 rounded-sm bg-white shadow-(--shadow-border) overflow-hidden">
+    <KpiRailShell columns={4}>
       <CompactKpi
         flat
         title="Requests scanned"
@@ -146,8 +142,7 @@ function KpiRail() {
           />
         }
       />
-      <div className={dividerCls}>
-        <CompactKpi
+      <CompactKpi
           flat
           title="Threats detected"
           value="47"
@@ -159,9 +154,7 @@ function KpiRail() {
             />
           }
         />
-      </div>
-      <div className={dividerCls}>
-        <CompactKpi
+      <CompactKpi
           flat
           title="Detection accuracy"
           value="99.8%"
@@ -173,9 +166,7 @@ function KpiRail() {
             />
           }
         />
-      </div>
-      <div className={dividerCls}>
-        <CompactKpi
+      <CompactKpi
           flat
           title="Avg scan latency"
           value={"18 ms"}
@@ -189,8 +180,7 @@ function KpiRail() {
             />
           }
         />
-      </div>
-    </div>
+    </KpiRailShell>
   );
 }
 
@@ -198,17 +188,22 @@ function KpiRail() {
 
 function CriticalRiskBanner() {
   return (
-    <div role="status" className="rounded-sm bg-danger-50 border border-danger-200 p-4">
+    <div
+      role="alert"
+      aria-live="assertive"
+      aria-atomic="true"
+      className="rounded-sm bg-danger-50 border border-danger-200 p-4"
+    >
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-3 min-w-0 max-w-2/3">
           <span
-            className="inline-flex items-center justify-center size-8 shrink-0 rounded-full bg-destructive text-white"
+            className="inline-flex items-center justify-center size-8 shrink-0 rounded-full bg-danger-600 text-white"
             aria-hidden="true"
           >
             <TriangleAlert className="size-4" strokeWidth={2} />
           </span>
           <p className="font-sans text-sm text-ink-900 -tracking-[0.14px] text-pretty m-0">
-            <span className="font-medium text-destructive">Critical risk</span>
+            <span className="font-medium text-danger-700">Critical risk</span>
             <span className="text-ink-500"> · </span>
             <span className="font-mono">sk-cg-…7a3</span> exceeded detection threshold (14&nbsp;events&nbsp;/&nbsp;hr). All requests receiving enhanced scanning, rate-limited to 1&nbsp;req&nbsp;/&nbsp;10s.
           </p>
@@ -282,12 +277,13 @@ function AttackCategoriesCard() {
       <CardContent className="flex flex-col gap-2">
         {ATTACK_CATEGORIES.map((cat) => {
           const pct = (cat.count / max) * 100;
+          const labelId = `cmp015-attack-${cat.label.replace(/\s+/g, '-').toLowerCase()}`;
           return (
             <div
               key={cat.label}
               className="flex items-center gap-3"
             >
-              <span className="w-48 shrink-0 font-sans text-sm text-ink-900 truncate" title={cat.label}>
+              <span id={labelId} className="w-48 shrink-0 font-sans text-sm text-ink-900 truncate" title={cat.label}>
                 {cat.label}
               </span>
               <div
@@ -295,7 +291,7 @@ function AttackCategoriesCard() {
                 aria-valuenow={cat.count}
                 aria-valuemin={0}
                 aria-valuemax={max}
-                aria-label={`${cat.label}: ${cat.count} detections`}
+                aria-labelledby={labelId}
                 className="flex-1 h-1.5 rounded-full bg-ink-100 overflow-hidden"
               >
                 <div
@@ -346,32 +342,32 @@ const TIER_BADGE: Record<RiskTier, {
 
 function ApiKeyRiskScoresCard() {
   return (
-    <div className="flex flex-col min-w-0 rounded-sm overflow-hidden bg-white shadow-(--shadow-border)">
-      <div className="flex items-start justify-between gap-3 p-4">
-        <div className="flex flex-col gap-1 min-w-0">
-          <h3 className="font-sans text-base font-medium -tracking-[0.25px] text-ink-900 m-0">
-            API key risk scores
-          </h3>
-          <p className="font-sans text-sm/5 tracking-tight text-ink-500 m-0">
-            Decays on 1 h half-life · elevated keys get enhanced scanning
-          </p>
-        </div>
-        <Select defaultValue="all">
-          <SelectTrigger
-            size="sm"
-            aria-label="Key filter"
-            className="border-ink-200 bg-white text-ink-900 font-normal"
-          >
-            <SelectValue placeholder="All keys" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All keys</SelectItem>
-            <SelectItem value="critical">Critical</SelectItem>
-            <SelectItem value="elevated">Elevated</SelectItem>
-            <SelectItem value="normal">Normal</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+    <Card className="min-w-0">
+      <CardHeader>
+        <CardTitle className="font-sans text-base font-medium -tracking-[0.25px] text-ink-900">
+          API key risk scores
+        </CardTitle>
+        <CardDescription>
+          Decays on 1 h half-life · elevated keys get enhanced scanning
+        </CardDescription>
+        <CardAction>
+          <Select defaultValue="all">
+            <SelectTrigger
+              size="sm"
+              aria-label="Key filter"
+              className="border-ink-200 bg-white text-ink-900 font-normal"
+            >
+              <SelectValue placeholder="All keys" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All keys</SelectItem>
+              <SelectItem value="critical">Critical</SelectItem>
+              <SelectItem value="elevated">Elevated</SelectItem>
+              <SelectItem value="normal">Normal</SelectItem>
+            </SelectContent>
+          </Select>
+        </CardAction>
+      </CardHeader>
 
       <Table className="w-full table-fixed">
           <TableHeader>
@@ -408,10 +404,10 @@ function ApiKeyRiskScoresCard() {
                       {row.tierLabel}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-right whitespace-nowrap font-mono tabular-nums text-ink-800">
+                  <TableCell className={`text-right whitespace-nowrap font-mono tabular-nums ${row.score === 0 ? 'text-ink-400' : 'text-ink-800'}`}>
                     {row.score}
                   </TableCell>
-                  <TableCell className="text-right whitespace-nowrap font-mono tabular-nums text-ink-800">
+                  <TableCell className={`text-right whitespace-nowrap font-mono tabular-nums ${row.events === 0 ? 'text-ink-400' : 'text-ink-800'}`}>
                     {row.events}
                   </TableCell>
                   <TableCell className="text-right">
@@ -426,7 +422,7 @@ function ApiKeyRiskScoresCard() {
             })}
           </TableBody>
         </Table>
-    </div>
+    </Card>
   );
 }
 

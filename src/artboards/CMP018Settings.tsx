@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { EmptyState } from '@/components/ui/empty-state';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { SettingsRow } from '@/components/ui/settings-row';
 import {
   Select,
   SelectContent,
@@ -273,29 +274,37 @@ function SecurityCard() {
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
-        {/* Passkey row — title + subtitle on the left, action on the right.
-            Same "row with a control on the right" composition the Logging
-            rows use; not abstracted into a primitive at this scale. */}
-        <div className="flex items-start justify-between gap-6">
-          <div className="flex flex-col gap-1 min-w-0">
-            <h4 className="font-sans text-sm font-medium text-ink-900 m-0">
-              Passkey
-            </h4>
-            <p className="font-sans text-sm text-ink-500 text-pretty m-0">
-              Sign in with Touch ID, Windows Hello, or a hardware key.
-            </p>
-          </div>
-          <Button variant="default" size="sm" className="shrink-0">
-            <KeyRound data-icon="inline-start" aria-hidden />
-            Add a passkey
-          </Button>
-        </div>
+        {/* Passkey row — title + subtitle + action. Same shape as the
+            Logging tab's SettingsRows; migrated to the shared primitive
+            with `titleAs="h4"` to nest semantically under the CardTitle
+            ("Authentication") and `alignTop` to preserve the original
+            top-aligned layout when the subtitle wraps. */}
+        <SettingsRow
+          first
+          static
+          titleAs="h4"
+          alignTop
+          title="Passkey"
+          subtitle="Sign in with Touch ID, Windows Hello, or a hardware key."
+          control={
+            <Button variant="default" size="sm" className="shrink-0">
+              <KeyRound data-icon="inline-start" aria-hidden />
+              Add a passkey
+            </Button>
+          }
+        />
 
         {/* Registered passkeys subsection — sub-eyebrow + empty body.
             Eyebrow uses the same mono-uppercase recipe as section
             headers in the spec sheets, sized smaller because this is a
-            sub-tier inside a card, not a top-level grouping. */}
-        <div className="flex flex-col gap-2 pt-4 border-t border-ink-200">
+            sub-tier inside a card, not a top-level grouping. CardContent's
+            `gap-4` already separates this group from the Passkey row above;
+            adding a border-t + pt-4 layered two rhythms (whitespace +
+            hairline) for the same visual job. */}
+        <div className="flex flex-col gap-2">
+          {/* EXTRACT: <Eyebrow> — same mono-uppercase recipe appears
+              in CMP-016 detail page and SectionHeader. Defer to a
+              shared primitive when a third surface adds it inline. */}
           <span className="font-mono text-xs uppercase tracking-[0.1em] font-medium text-ink-500">
             Registered passkeys
           </span>
@@ -349,8 +358,12 @@ function LoggingCard() {
           title="Audit fingerprints"
           subtitle="Attach cryptographic fingerprints to every log entry for tamper detection."
           control={
-            <Badge variant="success">
-              <StatusDot kind="success" />
+            // Steady-state "on" reads as info, not success. `success` is
+            // for completed actions / wins ("Saved", "Verified") — using
+            // it for a persistent enabled-toggle inflates the affordance
+            // and competes with the page's actual success moments.
+            <Badge variant="info">
+              <StatusDot kind="info" />
               Enabled
             </Badge>
           }
@@ -414,61 +427,9 @@ const LOG_LEVEL_LABEL: Record<string, string> = {
   error: 'Error',
 };
 
-/* SettingsRow — local helper, NOT a primitive. Lives in this file to keep
- * the Logging composition legible without inflating the design-system
- * surface. If a third surface needs the same shape, lift to
- * `components/ui/`.
- *
- * Two modes:
- *   - default (input-bearing): title renders as `<Label htmlFor={id}>`
- *     associating the click target with the control; pass `id` matching
- *     the inner control's id.
- *   - `static` (no real control): title renders as a heading-styled span
- *     because there's nothing for `<Label htmlFor>` to point at. Used by
- *     rows where the right-side affordance is a Badge or other read-only
- *     state, not a focusable input.
- */
-function SettingsRow({
-  id,
-  title,
-  subtitle,
-  control,
-  first = false,
-  static: isStatic = false,
-}: {
-  id?: string;
-  title: string;
-  subtitle: string;
-  control: React.ReactNode;
-  first?: boolean;
-  static?: boolean;
-}) {
-  return (
-    <div
-      className={
-        first
-          ? 'flex items-center justify-between gap-6 py-4'
-          : 'flex items-center justify-between gap-6 py-4 border-t border-ink-200'
-      }
-    >
-      <div className="flex flex-col gap-1 min-w-0">
-        {isStatic ? (
-          <span className="font-sans text-ink-900 font-medium text-sm leading-none">
-            {title}
-          </span>
-        ) : (
-          <Label htmlFor={id} className="text-ink-900 font-medium text-sm">
-            {title}
-          </Label>
-        )}
-        <p className="font-sans text-sm text-ink-500 text-pretty m-0">
-          {subtitle}
-        </p>
-      </div>
-      <div className="shrink-0">{control}</div>
-    </div>
-  );
-}
+/* SettingsRow — extracted to `@/components/ui/settings-row` (2026-05-10).
+ * Logging consumers below + SecurityCard's passkey row above all import
+ * from the primitive. Do not re-inline the recipe here. */
 
 /* ─── Integration · empty state ───────────────────────────────────────── */
 

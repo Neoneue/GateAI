@@ -5,9 +5,11 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { CompactKpi, CompactSpark } from '@/components/ui/compact-kpi';
 import { Input } from '@/components/ui/input';
+import { KpiRail as KpiRailShell } from '@/components/ui/kpi-rail';
 import { MessageBlock, type MessageRole } from '@/components/ui/message-block';
 import { RowActionButton } from '@/components/ui/row-action-button';
 import { TablePaginationFooter } from '@/components/ui/table-pagination-footer';
+import { ToolResultCode } from '@/components/ui/tool-result-code';
 import {
   Dialog,
   DialogScrollBody,
@@ -119,10 +121,8 @@ function PageHeader() {
 /* ─── KPI Rail (4 cards — Spend / 24h omitted per request) ────────────── */
 
 function KpiRail() {
-  const dividerCls =
-    'relative before:absolute before:left-0 before:inset-y-4 before:w-px before:bg-ink-200';
   return (
-    <div className="grid grid-cols-4 rounded-sm bg-white shadow-(--shadow-border) overflow-hidden">
+    <KpiRailShell columns={4}>
       <CompactKpi
         flat
         title="Active Now"
@@ -135,51 +135,45 @@ function KpiRail() {
           />
         }
       />
-      <div className={dividerCls}>
-        <CompactKpi
-          flat
-          title="Conversations"
-          value="18,210"
-          delta="+6.4%"
-          spark={
-            <CompactSpark
-              colorVar="var(--color-chart-7)"
-              data={[1740, 2120, 1680, 2040, 2380, 1820, 2240, 1960, 2230]}
-            />
-          }
-        />
-      </div>
-      <div className={dividerCls}>
-        <CompactKpi
-          flat
-          title="Avg Turns"
-          value="14.2"
-          delta="+1.8"
-          spark={
-            <CompactSpark
-              colorVar="var(--color-chart-3)"
-              data={[13.4, 14.8, 13.1, 14.2, 14.9, 13.6, 14.5, 13.9, 14.2]}
-            />
-          }
-        />
-      </div>
-      <div className={dividerCls}>
-        <CompactKpi
-          flat
-          title="Avg Cost / Conv"
-          value="$0.082"
-          delta="-3.1%"
-          deltaInverted
-          spark={
-            <CompactSpark
-              colorVar="var(--color-chart-1)"
-              data={[0.087, 0.082, 0.090, 0.083, 0.085, 0.080, 0.084, 0.079, 0.082]}
-              endDot
-            />
-          }
-        />
-      </div>
-    </div>
+      <CompactKpi
+        flat
+        title="Conversations"
+        value="18,210"
+        delta="+6.4%"
+        spark={
+          <CompactSpark
+            colorVar="var(--color-chart-7)"
+            data={[1740, 2120, 1680, 2040, 2380, 1820, 2240, 1960, 2230]}
+          />
+        }
+      />
+      <CompactKpi
+        flat
+        title="Avg Turns"
+        value="14.2"
+        delta="+1.8"
+        spark={
+          <CompactSpark
+            colorVar="var(--color-chart-3)"
+            data={[13.4, 14.8, 13.1, 14.2, 14.9, 13.6, 14.5, 13.9, 14.2]}
+          />
+        }
+      />
+      <CompactKpi
+        flat
+        title="Avg Cost / Conv"
+        value="$0.082"
+        delta="-3.1%"
+        deltaInverted
+        spark={
+          <CompactSpark
+            colorVar="var(--color-chart-1)"
+            data={[0.087, 0.082, 0.090, 0.083, 0.085, 0.080, 0.084, 0.079, 0.082]}
+            endDot
+          />
+        }
+      />
+    </KpiRailShell>
   );
 }
 
@@ -486,15 +480,14 @@ function ConversationDetailBody({ row }: { row: ConversationRow }) {
           <span className="font-mono text-xs text-ink-500 -tracking-[0.01em]">
             {row.initiator}
           </span>
-          <div className="ml-auto flex items-center gap-2">
-            <CopyButton
-              mode="label"
-              size="sm"
-              text="Copy ID"
-              value={row.conversationId}
-              label="conversation ID"
-            />
-          </div>
+          <CopyButton
+            mode="label"
+            size="sm"
+            text="Copy ID"
+            value={row.conversationId}
+            label="conversation ID"
+            className="ml-auto"
+          />
         </div>
       </DialogScrollHeader>
 
@@ -531,7 +524,7 @@ function ConversationDetailBody({ row }: { row: ConversationRow }) {
         <span className="font-mono text-xs text-ink-500 -tracking-[0.01em]">
           Click a message or trace step — they’re linked.
         </span>
-        <span className="font-mono text-xs text-ink-400 -tracking-[0.01em]">
+        <span className="font-mono text-xs text-ink-500 -tracking-[0.01em]">
           Key <span className="text-ink-800">prod-web</span>{' '}
           · started <span className="text-ink-800">{row.updated}</span>
         </span>
@@ -541,26 +534,14 @@ function ConversationDetailBody({ row }: { row: ConversationRow }) {
 }
 
 function ConversationKpiRail({ row }: { row: ConversationRow }) {
-  // Inset divider — hairline doesn't reach top/bottom edges. Matches the
-  // KpiRail patterns in CMP-012 and CMP-013.
-  const dividerCls =
-    'relative before:absolute before:left-0 before:inset-y-4 before:w-px before:bg-ink-200';
   return (
-    <div className="grid grid-cols-5 rounded-sm bg-white shadow-(--shadow-border) overflow-hidden">
+    <KpiRailShell columns={5}>
       <ConversationKpiTile label="Requests" value={String(row.reqs)} />
-      <div className={dividerCls}>
-        <ConversationKpiTile label="Turns" value={String(row.turns)} />
-      </div>
-      <div className={dividerCls}>
-        <ConversationKpiTile label="Tokens" value={row.tokens} />
-      </div>
-      <div className={dividerCls}>
-        <ConversationKpiTile label="Cost" value={row.cost} />
-      </div>
-      <div className={dividerCls}>
-        <ConversationKpiTile label="Duration" value={row.duration} />
-      </div>
-    </div>
+      <ConversationKpiTile label="Turns" value={String(row.turns)} />
+      <ConversationKpiTile label="Tokens" value={row.tokens} />
+      <ConversationKpiTile label="Cost" value={row.cost} />
+      <ConversationKpiTile label="Duration" value={row.duration} />
+    </KpiRailShell>
   );
 }
 
@@ -616,9 +597,9 @@ const CONVERSATION_MESSAGES: {
     time: '14:24:38',
     requestId: 'req_70a48a',
     body: (
-      <code className="font-mono text-sm text-ink-900 -tracking-[0.14px] break-all">
+      <ToolResultCode>
         {'{"id":"0x4a3e","amount":"€2,840.12","status":"flagged","reason":"PEP_MATCH","recipient":"acc_88e2f"}'}
-      </code>
+      </ToolResultCode>
     ),
   },
   {
@@ -633,9 +614,9 @@ const CONVERSATION_MESSAGES: {
     time: '14:25:11',
     requestId: 'req_3a5fb8',
     body: (
-      <code className="font-mono text-sm text-ink-900 -tracking-[0.14px] break-all">
+      <ToolResultCode>
         {'{"hit":"ofac_pep","entity":"sanctioned_official_IT","confidence":0.96}'}
-      </code>
+      </ToolResultCode>
     ),
   },
   {
@@ -650,9 +631,9 @@ const CONVERSATION_MESSAGES: {
     time: '14:26:14',
     requestId: 'req_da46b8',
     body: (
-      <code className="font-mono text-sm text-ink-900 -tracking-[0.14px] break-all">
+      <ToolResultCode>
         {'{"queue":"compliance-eu-tier2","ticket":"DSP-2026-0418","sla":"4h"}'}
-      </code>
+      </ToolResultCode>
     ),
   },
   {
@@ -661,9 +642,9 @@ const CONVERSATION_MESSAGES: {
     time: '14:27:31',
     requestId: 'req_4c91a2',
     body: (
-      <code className="font-mono text-sm text-ink-900 -tracking-[0.14px] break-all">
+      <ToolResultCode>
         {'{"event_id":"e_7a3f9c2b","anchor":"0x7f3a91c4","block":18472911}'}
-      </code>
+      </ToolResultCode>
     ),
   },
 ];
@@ -1007,9 +988,9 @@ function TraceItem({
         </div>
 
         {/* Row 3 — per-step economics. `tokens-in → tokens-out · latency ·
-            cost`. Latency turns warning-700 on slow rows. Cost stays
-            ink-700 (slightly heavier than the surrounding ink-500 metadata
-            since it's the most-referenced figure). */}
+            cost`. Latency turns warning-700 on slow rows. Cost renders at
+            ink-800 per the three-tier table ink policy — same body-data
+            weight as the other carriers in the row. */}
         <div className="flex items-center gap-2 min-w-0 text-ink-500">
           <span className="inline-flex items-center gap-1 font-mono text-xs tabular-nums -tracking-[0.01em]">
             {event.inTokens}

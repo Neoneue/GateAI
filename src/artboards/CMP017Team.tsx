@@ -43,6 +43,7 @@ import {
   TabsList,
   TabsTrigger,
 } from '@/components/ui/tabs';
+import { TabsCount } from '@/components/ui/tabs-count';
 import { TablePaginationFooter } from '@/components/ui/table-pagination-footer';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
@@ -180,16 +181,7 @@ function TeamTabsTrigger({
   return (
     <TabsTrigger value={value}>
       <span>{label}</span>
-      <span
-        // Mono tabular count chip — `Badge` would be too heavy here
-        // (status connotation); a bare ink-100 well at xs reads as
-        // sub-element chrome instead. Counter is de-emphasized vs the
-        // tab label (ink-500, not the ink-600 middle tone) so the
-        // active label stays the primary affordance.
-        className="inline-flex items-center justify-center min-w-5 h-5 px-1.5 rounded-xs bg-ink-100 text-ink-500 font-mono text-xs font-medium tabular-nums"
-      >
-        {count}
-      </span>
+      <TabsCount>{count}</TabsCount>
     </TabsTrigger>
   );
 }
@@ -208,11 +200,15 @@ const ROLE_LABEL: Record<MemberRole, string> = {
 
 const STATUS_BADGE: Record<
   MemberStatus,
-  { variant: 'success' | 'info' | 'warning'; dot: 'success' | 'info' | 'warning'; label: string }
+  { variant: 'success' | 'info' | 'neutral'; dot: 'success' | 'info' | 'neutral'; label: string }
 > = {
   active:    { variant: 'success', dot: 'success', label: 'active' },
   invited:   { variant: 'info',    dot: 'info',    label: 'invited' },
-  suspended: { variant: 'warning', dot: 'warning', label: 'suspended' },
+  // "Suspended" reads as a grayed-out steady state — the user account
+  // exists but is paused. Warning was the wrong register (transient
+  // alert, action-required); neutral matches the dimmed-but-present
+  // semantic without competing with active/invited for visual weight.
+  suspended: { variant: 'neutral', dot: 'neutral', label: 'suspended' },
 };
 
 type MemberRow = {
@@ -254,10 +250,10 @@ function MembersPane() {
     <div className="flex flex-col w-full rounded-sm overflow-hidden bg-white shadow-(--shadow-border)">
       {/* Toolbar — search + role filter. Filter pills follow the
           codified no-leading-icon rule for dense table toolbars. */}
-      <div className="flex items-center gap-2 py-3 px-4">
+      <div className="flex items-center gap-2 py-2 px-4">
         <div className="relative w-72 min-w-0 shrink-0">
           <Search
-            className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-ink-500"
+            className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-ink-500"
             strokeWidth={1.75}
             aria-hidden
           />
@@ -270,6 +266,12 @@ function MembersPane() {
             aria-label="Search members"
             autoComplete="off"
             spellCheck={false}
+            // `pl-8` consumes the leading-icon convention — the absolutely
+            // positioned Search glyph above sits at left-3 (12px) at
+            // size-4, so the text needs 32px (8 * 4px) of left padding
+            // to clear it. Not a primitive override worth lifting at
+            // current scale; this composition is repeated in CMP-013,
+            // CMP-014, CMP-016 with the same recipe.
             className="pl-8 placeholder:text-ink-500"
           />
         </div>
@@ -348,23 +350,23 @@ function MemberRowView({ row }: { row: MemberRow }) {
             <div className="flex items-center gap-2 min-w-0">
               <span
                 title={row.name}
-                className="font-sans text-sm font-medium text-ink-900 -tracking-[0.14px] truncate"
+                className="font-sans text-sm font-medium text-ink-900 tracking-snug truncate"
               >
                 {row.name}
               </span>
               {row.isYou ? (
-                <span className="shrink-0 inline-flex items-center h-5 px-1.5 rounded-xs bg-ink-100 text-ink-500 font-mono text-xs font-medium tabular-nums">
+                <span className="shrink-0 inline-flex items-center h-5 px-2 rounded-xs bg-ink-100 text-ink-500 font-mono text-xs font-medium tabular-nums">
                   You
                 </span>
               ) : null}
             </div>
-            <span className="font-mono text-xs text-ink-500 -tracking-[0.01em] truncate" title={row.email}>
+            <span className="font-mono text-xs text-ink-500 tracking-snug truncate" title={row.email}>
               {row.email}
             </span>
           </div>
         </div>
       </TableCell>
-      <TableCell className="whitespace-nowrap font-mono text-sm text-ink-500 tabular-nums -tracking-[0.14px]">
+      <TableCell className="whitespace-nowrap font-mono text-sm text-ink-500 tabular-nums tracking-snug">
         {row.joined}
       </TableCell>
       <TableCell>
@@ -484,19 +486,19 @@ function InvitationsPane({ onInvite }: { onInvite: () => void }) {
         <TableBody>
           {INVITATION_ROWS.map((row) => (
             <TableRow key={row.id}>
-              <TableCell className="font-mono text-sm text-ink-900 -tracking-[0.14px]">
+              <TableCell className="font-mono text-sm text-ink-900 tracking-snug">
                 <span className="block truncate" title={row.email}>{row.email}</span>
               </TableCell>
-              <TableCell className="font-sans text-sm text-ink-800 -tracking-[0.14px]">
+              <TableCell className="font-sans text-sm text-ink-800 tracking-snug">
                 <span className="block truncate" title={row.invitedBy}>{row.invitedBy}</span>
               </TableCell>
-              <TableCell className="whitespace-nowrap font-mono text-sm text-ink-500 tabular-nums -tracking-[0.14px]">
+              <TableCell className="whitespace-nowrap font-mono text-sm text-ink-500 tabular-nums tracking-snug">
                 {row.sent}
               </TableCell>
               <TableCell>
                 <Badge variant="neutral">{ROLE_LABEL[row.role]}</Badge>
               </TableCell>
-              <TableCell className="whitespace-nowrap font-mono text-sm text-ink-500 tabular-nums -tracking-[0.14px]">
+              <TableCell className="whitespace-nowrap font-mono text-sm text-ink-500 tabular-nums tracking-snug">
                 {row.expires}
               </TableCell>
               <TableCell className="text-right whitespace-nowrap pl-0 pr-2">
@@ -556,16 +558,16 @@ function RequestsPane() {
         <TableBody>
           {REQUEST_ROWS.map((row) => (
             <TableRow key={row.id}>
-              <TableCell className="font-mono text-sm text-ink-900 -tracking-[0.14px]">
+              <TableCell className="font-mono text-sm text-ink-900 tracking-snug">
                 <span className="block truncate" title={row.email}>{row.email}</span>
               </TableCell>
-              <TableCell className="whitespace-nowrap font-mono text-sm text-ink-500 tabular-nums -tracking-[0.14px]">
+              <TableCell className="whitespace-nowrap font-mono text-sm text-ink-500 tabular-nums tracking-snug">
                 {row.requested}
               </TableCell>
               <TableCell>
                 <Badge variant="neutral">{ROLE_LABEL[row.role]}</Badge>
               </TableCell>
-              <TableCell className="font-sans text-sm text-ink-800 -tracking-[0.14px]">
+              <TableCell className="font-sans text-sm text-ink-800 tracking-snug">
                 <span className="block truncate" title={row.reason}>
                   {row.reason}
                 </span>
@@ -643,7 +645,7 @@ function InviteMemberDialog({
           </DialogHeader>
 
           <div className="flex flex-col gap-2">
-            <Label htmlFor="invite-emails" className="text-ink-600 font-medium text-sm">
+            <Label htmlFor="invite-emails" className="text-ink-700 font-medium text-sm">
               Emails
             </Label>
             <Textarea
@@ -664,7 +666,7 @@ function InviteMemberDialog({
           </div>
 
           <div className="flex flex-col gap-2">
-            <Label htmlFor="invite-role" className="text-ink-600 font-medium text-sm">
+            <Label htmlFor="invite-role" className="text-ink-700 font-medium text-sm">
               Role
             </Label>
             <Select value={role} onValueChange={(v) => setRole(v as MemberRole)}>
@@ -722,7 +724,7 @@ function InviteMemberDialog({
 
 function RoleItemBody({ label, description }: { label: string; description: string }) {
   return (
-    <span className="flex flex-col gap-0.5 text-left">
+    <span className="flex flex-col gap-1 text-left">
       <span className="font-sans text-sm font-medium text-ink-900">{label}</span>
       <span className="font-sans text-xs text-ink-500 text-pretty">{description}</span>
     </span>
@@ -787,7 +789,7 @@ function RowActionsMenu({
                     item.destructive
                       ? 'text-destructive data-[highlighted]:text-destructive'
                       : 'text-ink-900',
-                    '[&_svg]:size-3.5 [&_svg]:shrink-0',
+                    '[&_svg]:size-4 [&_svg]:shrink-0',
                   )}
                 >
                   {Icon ? <Icon strokeWidth={1.75} aria-hidden /> : null}

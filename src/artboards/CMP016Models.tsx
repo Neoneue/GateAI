@@ -12,6 +12,8 @@ import {
   Zap,
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { EmptyState } from '@/components/ui/empty-state';
 import { Input } from '@/components/ui/input';
 import {
   Select,
@@ -31,11 +33,18 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import {
+  Tabs,
+  TabsList,
+  TabsTrigger,
+} from '@/components/ui/tabs';
+import { TabsCount } from '@/components/ui/tabs-count';
 import { RowActionButton } from '@/components/ui/row-action-button';
 import { TablePaginationFooter } from '@/components/ui/table-pagination-footer';
 import { CodeBlock, CodeCard, CodeCardCopyButton, CodeCardHeader, CodeCardTabs, linesToString, type CodeLine, type CodeToken } from '@/components/ui/code-card';
 import { CopyButton } from '@/components/ui/copy-button';
 import { HeroNumeric } from '@/components/ui/hero-numeric';
+import { KpiRail as KpiRailShell } from '@/components/ui/kpi-rail';
 import { cn } from '@/lib/utils';
 import {
   MARKETPLACE_META,
@@ -667,17 +676,64 @@ function ModelsSurface({ onSelect }: { onSelect: (model: Model) => void }) {
     return set.size;
   }, []);
 
+  const modalityCounts = useMemo(() => {
+    const counts: Record<Modality, number> = { text: 0, embeddings: 0, audio: 0, rerank: 0 };
+    for (const m of MODELS) counts[m.modality]++;
+    return counts;
+  }, []);
+
+  const isEmpty = filtered.length === 0;
+
+  const clearFilters = () => {
+    setSearch('');
+    setModality('all');
+    setVendor('all');
+    setProvider('all');
+    resetToFirstPage();
+  };
+
   return (
     <>
       <PageHeader modelCount={MODELS.length} providerCount={totalProviders} />
 
+      {/* Modality tabs — promoted out of the filter-pill row so each
+          modality is a visible peer scope. Underline `line` variant
+          matches the Settings / Team tab register elsewhere in the
+          shell. Count chip uses the shared <TabsCount> primitive. */}
+      <Tabs
+        value={modality}
+        onValueChange={(v) => {
+          setModality(v as 'all' | Modality);
+          resetToFirstPage();
+        }}
+        className="gap-4"
+      >
+        <TabsList variant="line" className="px-0 -mt-2">
+          <TabsTrigger value="all">
+            All types
+            <TabsCount>{MODELS.length}</TabsCount>
+          </TabsTrigger>
+          <TabsTrigger value="text">
+            Text
+            <TabsCount>{modalityCounts.text}</TabsCount>
+          </TabsTrigger>
+          <TabsTrigger value="embeddings">
+            Embeddings
+            <TabsCount>{modalityCounts.embeddings}</TabsCount>
+          </TabsTrigger>
+          <TabsTrigger value="audio">
+            Audio
+            <TabsCount>{modalityCounts.audio}</TabsCount>
+          </TabsTrigger>
+          <TabsTrigger value="rerank">
+            Rerank
+            <TabsCount>{modalityCounts.rerank}</TabsCount>
+          </TabsTrigger>
+        </TabsList>
+      </Tabs>
+
       <div className="flex flex-col w-full rounded-sm overflow-hidden bg-white shadow-(--shadow-border)">
         <Toolbar
-          modality={modality}
-          onModalityChange={(m) => {
-            setModality(m);
-            resetToFirstPage();
-          }}
           search={search}
           onSearchChange={(v) => {
             setSearch(v);
@@ -700,27 +756,51 @@ function ModelsSurface({ onSelect }: { onSelect: (model: Model) => void }) {
           }}
         />
 
-        <ModelsTable
-          rows={filtered}
-          onSelect={onSelect}
-        />
+        {isEmpty ? (
+          // Empty-state branch — the toolbar stays visible above so the
+          // user can recover by changing a filter; the table + pagination
+          // footer collapse to a centered EmptyState with a "Clear filters"
+          // recovery action that resets every input.
+          <EmptyState
+            className="border-t border-ink-200 rounded-none shadow-none"
+            title="No models match these filters."
+            body="Try a broader search, a different modality, or clear the filter pills to see every routable model."
+            action={
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={clearFilters}
+                className="border-ink-200 bg-white text-ink-900"
+              >
+                Clear filters
+              </Button>
+            }
+          />
+        ) : (
+          <>
+            <ModelsTable
+              rows={filtered}
+              onSelect={onSelect}
+            />
 
-        <TablePaginationFooter
-          total={filtered.length}
-          page={page}
-          rowsPerPage={rowsPerPage}
-          onPageChange={setPage}
-          onRowsPerPageChange={setRowsPerPage}
-        />
+            <TablePaginationFooter
+              total={filtered.length}
+              page={page}
+              rowsPerPage={rowsPerPage}
+              onPageChange={setPage}
+              onRowsPerPageChange={setRowsPerPage}
+            />
+          </>
+        )}
       </div>
 
-      <p className="font-mono text-xs text-ink-500 -tracking-[0.01em] m-0">
+      <p className="font-mono text-xs text-ink-500 tracking-snug m-0">
         Pass{' '}
-        <code className="font-mono text-ink-800 bg-ink-100 rounded-xs px-1.5 py-0.5 -tracking-[0.14px]">
+        <code className="font-mono text-ink-800 bg-ink-100 rounded-xs px-1.5 py-0.5 tracking-snug">
           claude-haiku-4-5
         </code>{' '}
         to use the preferred provider, or{' '}
-        <code className="font-mono text-ink-800 bg-ink-100 rounded-xs px-1.5 py-0.5 -tracking-[0.14px]">
+        <code className="font-mono text-ink-800 bg-ink-100 rounded-xs px-1.5 py-0.5 tracking-snug">
           bedrock/claude-haiku-4-5
         </code>{' '}
         to pin a specific one.
@@ -751,8 +831,6 @@ function PageHeader({ modelCount, providerCount }: { modelCount: number; provide
 /* ─── Toolbar ────────────────────────────────────────────────────────────── */
 
 function Toolbar({
-  modality,
-  onModalityChange,
   search,
   onSearchChange,
   vendor,
@@ -762,8 +840,6 @@ function Toolbar({
   sort,
   onSortChange,
 }: {
-  modality: 'all' | Modality;
-  onModalityChange: (m: 'all' | Modality) => void;
   search: string;
   onSearchChange: (v: string) => void;
   vendor: string;
@@ -773,19 +849,11 @@ function Toolbar({
   sort: string;
   onSortChange: (v: string) => void;
 }) {
-  const modalityItems: { value: 'all' | Modality; label: string }[] = [
-    { value: 'all',        label: 'All types'  },
-    { value: 'text',       label: 'Text'       },
-    { value: 'embeddings', label: 'Embeddings' },
-    { value: 'audio',      label: 'Audio'      },
-    { value: 'rerank',     label: 'Rerank'     },
-  ];
-
   return (
-    <div className="flex items-center gap-2 py-3 px-4">
+    <div className="flex items-center gap-2 py-2 px-4">
       <div className="relative w-72 min-w-0 shrink-0">
         <Search
-          className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-ink-500"
+          className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-ink-500"
           strokeWidth={1.75}
           aria-hidden="true"
         />
@@ -802,22 +870,6 @@ function Toolbar({
           onChange={(e) => onSearchChange(e.target.value)}
         />
       </div>
-
-      <Select
-        value={modality}
-        onValueChange={(v) => onModalityChange(v as 'all' | Modality)}
-      >
-        <SelectTrigger size="sm" aria-label="Filter by modality">
-          <SelectValue />
-        </SelectTrigger>
-        <SelectContent>
-          {modalityItems.map((it) => (
-            <SelectItem key={it.value} value={it.value}>
-              {it.label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
 
       <Select value={vendor} onValueChange={onVendorChange}>
         <SelectTrigger size="sm" aria-label="Filter by vendor">
@@ -936,13 +988,25 @@ function ModelsTable({
                 </RowActionButton>
               </TableCell>
               <TableCell className="whitespace-nowrap">
-                <code
-                  className="font-mono text-xs text-ink-800 bg-ink-100 rounded-xs px-1.5 py-0.5 -tracking-[0.14px] select-text"
+                {/* Handle + CopyButton paired — matches the detail-page recipe
+                    so the row's handle is one click away from the clipboard
+                    without opening the model. Both targets stopPropagation
+                    so the row's onClick drill-in doesn't double-fire. */}
+                <span
+                  className="inline-flex items-center gap-1 align-middle"
                   onClick={(e) => e.stopPropagation()}
                   onMouseDown={(e) => e.stopPropagation()}
                 >
-                  {model.defaultHandle}
-                </code>
+                  <code className="font-mono text-xs text-ink-800 bg-ink-100 rounded-xs px-1.5 py-0.5 tracking-snug select-text">
+                    {model.defaultHandle}
+                  </code>
+                  <CopyButton
+                    size="inline-xs"
+                    value={model.defaultHandle}
+                    label="model handle"
+                    ariaLabel={`Copy ${model.defaultHandle}`}
+                  />
+                </span>
               </TableCell>
               <TableCell className="text-right whitespace-nowrap font-mono tabular-nums text-sm text-ink-800">
                 {context}
@@ -978,21 +1042,30 @@ function CapabilityStrip({ capabilities }: { capabilities: Capability[] }) {
     return <span className="text-ink-400 font-mono text-xs">—</span>;
   }
   // Render in canonical order so cross-row scanning lands on the same icon
-  // in the same x-slot (Vision is always leftmost when present).
+  // in the same x-slot (Vision is always leftmost when present). Each icon
+  // carries `aria-label` for SR identification AND a native `title` so
+  // sighted-mouse users get the capability name on hover — without
+  // introducing a Tooltip primitive (the showcase doesn't ship one yet
+  // and a single-purpose addition would be a primitive proliferation).
   const ordered = CAPABILITY_ORDER.filter((c) => capabilities.includes(c));
   return (
-    <div className="flex items-center gap-1.5">
+    <div className="flex items-center gap-1">
       {ordered.map((c) => {
         const meta = CAPABILITY_META[c];
         const Icon = meta.icon;
         return (
-          <Icon
+          <span
             key={c}
-            className="size-3.5 text-ink-500 shrink-0"
-            strokeWidth={1.75}
-            aria-label={meta.label}
-            role="img"
-          />
+            title={meta.label}
+            className="inline-flex shrink-0"
+          >
+            <Icon
+              className="size-4 text-ink-500 shrink-0"
+              strokeWidth={1.75}
+              aria-label={meta.label}
+              role="img"
+            />
+          </span>
         );
       })}
     </div>
@@ -1026,7 +1099,7 @@ function ProviderStack({ offerings }: { offerings: ProviderOffering[] }) {
   ].join(', ');
   const ariaLabel = `Available from ${totalProviders} providers: ${allNames}`;
   return (
-    <div role="img" aria-label={ariaLabel} className="flex items-center gap-1.5">
+    <div role="img" aria-label={ariaLabel} className="flex items-center gap-1">
       <div className="flex items-center">
         {visible.map((v, i) => (
           <span
@@ -1095,20 +1168,27 @@ function ModelDetailPage({ model, onBack }: { model: Model; onBack: () => void }
         </button>
       </div>
 
-      {/* Hero — vendor eyebrow / H1 / handle / capabilities / description. */}
+      {/* Hero — vendor eyebrow / H2 / handle / capabilities / description. */}
       <div className="flex flex-col gap-4">
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2">
-            <VendorAvatar vendor={model.vendor} />
+            {/* `decorative` suppresses the avatar's sr-only label so the
+                adjacent visible text ("Anthropic") doesn't double-announce
+                as "Anthropic logo, Anthropic" — semantics are carried by
+                the eyebrow text alone. */}
+            <VendorAvatar vendor={model.vendor} decorative />
             <span className="font-mono text-xs uppercase tracking-[0.1em] font-medium text-ink-500">
               {vendorMeta.label}
             </span>
           </div>
 
-          {/* Demoted to <h2> — the artboard's ArtboardHeader already renders
-              the page-level <h1> ("Models"). Visual scale (text-3xl/9 = 32px)
-              is preserved so the model name still anchors the hero. */}
-          <h2 className="font-sans text-3xl/9 -tracking-[1px] font-medium text-ink-900 m-0">
+          {/* Scaled down from text-3xl/9 (32px) → text-xl (20px). The
+              page-level h1 ("Models") on ArtboardHeader and the
+              breadcrumb already carry the model name, so a third
+              32px appearance over-anchors identity. The vendor avatar +
+              eyebrow + handle chip below still make the model legible
+              at a glance. */}
+          <h2 className="font-sans text-xl font-medium text-ink-900 m-0">
             {model.name}
           </h2>
 
@@ -1200,7 +1280,7 @@ function ModelDetailPage({ model, onBack }: { model: Model; onBack: () => void }
           </h3>
           <p className="font-sans text-sm text-ink-500 text-pretty m-0">
             Paste this model ID into the model field of any OpenAI-compatible client. Point your client&rsquo;s base URL at{' '}
-            <span className="inline-flex items-center gap-0.5 align-middle">
+            <span className="inline-flex items-center gap-1 align-middle">
               <code className="font-mono text-ink-800 bg-ink-100 rounded-xs px-1">
                 https://gateway.constellationgate.ai/v1
               </code>
@@ -1252,12 +1332,12 @@ function PlatformPanel() {
             aria-label={`Open ${p.name} integration guide`}
             className="group flex items-start justify-between gap-3 bg-white rounded-sm shadow-(--shadow-border) p-4 text-left transition-colors duration-150 ease-out motion-reduce:transition-none hover:bg-ink-50 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
           >
-            <div className="flex flex-col gap-0.5 min-w-0">
+            <div className="flex flex-col gap-1 min-w-0">
               <span className="font-sans text-sm font-medium text-ink-900">{p.name}</span>
               <span className="font-sans text-xs text-ink-500 text-pretty">{p.note}</span>
             </div>
             <SquareArrowOutUpRight
-              className="size-3.5 text-ink-500 shrink-0 mt-0.5 transition-colors duration-150 ease-out motion-reduce:transition-none group-hover:text-ink-800"
+              className="size-4 text-ink-500 shrink-0 mt-1 transition-colors duration-150 ease-out motion-reduce:transition-none group-hover:text-ink-800"
               strokeWidth={1.75}
               aria-hidden="true"
             />
@@ -1268,35 +1348,27 @@ function PlatformPanel() {
 }
 
 function ModelKpiRail({ model, head }: { model: Model; head: ProviderOffering }) {
-  const dividerCls =
-    'relative before:absolute before:left-0 before:inset-y-4 before:w-px before:bg-ink-200';
   return (
-    <div className="grid grid-cols-4 rounded-sm bg-white shadow-(--shadow-border) overflow-hidden">
+    <KpiRailShell columns={4}>
       <ModelKpiTile label="Context" value={formatContext(head.contextK, model.modality)} />
-      <div className={dividerCls}>
-        <ModelKpiTile
-          label="Max output"
-          value={
-            head.maxOutputK === 0
-              ? '—'
-              : `${head.maxOutputK}K`
-          }
-        />
-      </div>
-      <div className={dividerCls}>
-        <ModelKpiTile label="Input" value={formatPrice(head.inputPricePerM, model.modality)} />
-      </div>
-      <div className={dividerCls}>
-        <ModelKpiTile
-          label="Output"
-          value={
-            head.outputPricePerM === 0
-              ? '—'
-              : formatPrice(head.outputPricePerM, model.modality)
-          }
-        />
-      </div>
-    </div>
+      <ModelKpiTile
+        label="Max output"
+        value={
+          head.maxOutputK === 0
+            ? '—'
+            : `${head.maxOutputK}K`
+        }
+      />
+      <ModelKpiTile label="Input" value={formatPrice(head.inputPricePerM, model.modality)} />
+      <ModelKpiTile
+        label="Output"
+        value={
+          head.outputPricePerM === 0
+            ? '—'
+            : formatPrice(head.outputPricePerM, model.modality)
+        }
+      />
+    </KpiRailShell>
   );
 }
 
@@ -1389,7 +1461,19 @@ function ProviderMark({ provider }: { provider: ProviderId }) {
   if (provider in MARKETPLACE_META) {
     return <MarketplaceAvatar provider={provider as MarketplaceProvider} decorative />;
   }
-  return null;
+  // Fallback for providers that aren't yet mapped in either meta table.
+  // Renders an ink-400 placeholder dot so the row keeps its leading-glyph
+  // slot (cross-row scanning lands on the same x position) and the
+  // PROVIDER_LABELS text still anchors identification.
+  return (
+    <span
+      aria-hidden
+      className="inline-flex items-center justify-center size-4 shrink-0 rounded-full bg-ink-100 text-ink-400"
+      title={PROVIDER_LABELS[provider]}
+    >
+      <span className="size-1.5 rounded-full bg-ink-400" />
+    </span>
+  );
 }
 
 function ProviderNumeric({ value }: { value: string }) {

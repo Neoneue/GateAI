@@ -35,6 +35,8 @@ import {
 } from '@/components/ui/chart';
 import { CompactKpi, CompactSpark } from '@/components/ui/compact-kpi';
 import { HeroNumeric } from '@/components/ui/hero-numeric';
+import { IconActionButton } from '@/components/ui/icon-action-button';
+import { KpiRail as KpiRailShell } from '@/components/ui/kpi-rail';
 import { SegmentedPill } from '@/components/ui/segmented-pill';
 import {
   Table,
@@ -45,10 +47,10 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import {
-  VENDOR_META,
   VendorAvatar,
   type Vendor,
 } from '@/components/icons/vendor-meta';
+import { CHART_PALETTE } from '@/lib/chart-palette';
 import { ArtboardHeader, SectionHeader } from './_shared/ArtboardHeader';
 import { DashboardChrome } from './_shared/DashboardChrome';
 
@@ -150,15 +152,8 @@ function PageHeader() {
 /* ─── KPI rail (3-up sparkline cards) ────────────────────────────────────── */
 
 function KpiRail() {
-  // Single bordered row with equal fourths. Dividers between sections are
-  // `before:` pseudo-elements at `inset-y-4` so the hairline doesn't reach
-  // the rounded corners or the spark's lower edge — reads lighter than a
-  // full-height `divide-x` and signals "section break inside one container"
-  // instead of "spreadsheet column."
-  const dividerCls =
-    'relative before:absolute before:left-0 before:inset-y-4 before:w-px before:bg-ink-200';
   return (
-    <div className="grid grid-cols-4 rounded-sm bg-white shadow-(--shadow-border) overflow-hidden">
+    <KpiRailShell columns={4}>
       <CompactKpi
         flat
         title="Total Requests"
@@ -171,51 +166,45 @@ function KpiRail() {
           />
         }
       />
-      <div className={dividerCls}>
-        <CompactKpi
-          flat
-          title="Total Cost"
-          value="$1,247.82"
-          delta="+12.6%"
-          spark={
-            <CompactSpark
-              colorVar="var(--color-chart-1)"
-              data={[8, 10, 12, 16, 18, 20, 25, 22, 24]}
-            />
-          }
-        />
-      </div>
-      <div className={dividerCls}>
-        <CompactKpi
-          flat
-          title="Avg Latency"
-          value="1.24 s"
-          delta="-3.2%"
-          deltaInverted
-          spark={
-            <CompactSpark
-              colorVar="var(--color-chart-7)"
-              data={[18, 16, 17, 15, 14, 13, 12, 11, 10]}
-              endDot
-            />
-          }
-        />
-      </div>
-      <div className={dividerCls}>
-        <CompactKpi
-          flat
-          title="Total Tokens"
-          value="18.4 M"
-          delta="+8.7%"
-          spark={
-            <CompactSpark
-              colorVar="var(--color-chart-3)"
-              data={[10, 11, 13, 14, 16, 15, 17, 18, 18]}
-            />
-          }
-        />
-      </div>
-    </div>
+      <CompactKpi
+        flat
+        title="Total Cost"
+        value="$1,247.82"
+        delta="+12.6%"
+        spark={
+          <CompactSpark
+            colorVar="var(--color-chart-1)"
+            data={[8, 10, 12, 16, 18, 20, 25, 22, 24]}
+          />
+        }
+      />
+      <CompactKpi
+        flat
+        title="Avg Latency"
+        value="1.24 s"
+        delta="-3.2%"
+        deltaInverted
+        spark={
+          <CompactSpark
+            colorVar="var(--color-chart-7)"
+            data={[18, 16, 17, 15, 14, 13, 12, 11, 10]}
+            endDot
+          />
+        }
+      />
+      <CompactKpi
+        flat
+        title="Total Tokens"
+        value="18.4 M"
+        delta="+8.7%"
+        spark={
+          <CompactSpark
+            colorVar="var(--color-chart-3)"
+            data={[10, 11, 13, 14, 16, 15, 17, 18, 18]}
+          />
+        }
+      />
+    </KpiRailShell>
   );
 }
 
@@ -268,20 +257,9 @@ const MODEL_LEGEND: readonly ModelSeries[] = [
   { key: 'gemini',  label: 'Gemini 3 Pro',      vendor: 'google',    slot: 4 },  // purple
 ] as const;
 
-const CHART_PALETTE = [
-  'var(--color-chart-1)',
-  'var(--color-chart-2)',
-  'var(--color-chart-3)',
-  'var(--color-chart-4)',
-  'var(--color-chart-5)',
-  'var(--color-chart-6)',
-  'var(--color-chart-7)',
-  'var(--color-chart-8)',
-] as const;
-
 function seriesColor(series: ModelSeries, index: number): string {
-  if (series.slot) return CHART_PALETTE[(series.slot - 1) % CHART_PALETTE.length];
-  return CHART_PALETTE[index % CHART_PALETTE.length];
+  if (series.slot) return CHART_PALETTE[(series.slot - 1) % CHART_PALETTE.length]!;
+  return CHART_PALETTE[index % CHART_PALETTE.length]!;
 }
 
 const volumeChartConfig: ChartConfig = Object.fromEntries(
@@ -306,7 +284,7 @@ export function RequestVolumeCard() {
   return (
     <Card className="col-span-2 min-w-0">
       <CardHeader>
-        <CardTitle className="font-sans text-base font-medium -tracking-[0.25px] text-ink-900">
+        <CardTitle className="font-sans text-base font-medium tracking-snug text-ink-900">
           Request Volume
         </CardTitle>
         <CardDescription>Grouped by model · Last 7d</CardDescription>
@@ -325,7 +303,7 @@ export function RequestVolumeCard() {
             <div key={m.key} className="flex items-center gap-2">
               <span
                 aria-hidden
-                className="size-2 rounded-xs shrink-0"
+                className="size-3 rounded-xs shrink-0"
                 style={{ backgroundColor: seriesColor(m, i) }}
               />
               <span className="font-sans text-xs text-ink-900">{m.label}</span>
@@ -417,20 +395,14 @@ export function TopKeysCard() {
   return (
     <Card className="min-w-0 gap-2">
       <CardHeader>
-        <CardTitle className="font-sans text-base/5 font-medium -tracking-[0.25px] text-ink-900">
+        <CardTitle className="font-sans text-base/5 font-medium tracking-snug text-ink-900">
           Top Keys
         </CardTitle>
         <CardDescription>By spend · Last 7d</CardDescription>
         <CardAction>
-          {/* Skill: surfaces.md — pseudo-element extends 24px button to a
-              proper hit area; skill: performance.md — explicit transition. */}
-          <button
-            type="button"
-            aria-label="More options for Top Keys"
-            className="relative inline-flex items-center justify-center size-6 rounded-xs text-ink-500 outline-none touch-manipulation transition-[color,background-color,transform,box-shadow] duration-150 ease-out hover:text-ink-900 hover:bg-ink-100 focus-visible:ring-3 focus-visible:ring-ring/50 active:translate-y-px motion-reduce:transition-none motion-reduce:active:translate-y-0 after:absolute after:-inset-2 after:content-['']"
-          >
+          <IconActionButton aria-label="More options for Top Keys">
             <MoreHorizontal className="size-4" strokeWidth={1.75} aria-hidden />
-          </button>
+          </IconActionButton>
         </CardAction>
       </CardHeader>
 
@@ -441,12 +413,12 @@ export function TopKeysCard() {
           {TOP_KEYS.map((k) => (
             <div key={k.label} className="flex items-center justify-between gap-3 min-w-0">
               <span
-                className="font-sans text-sm -tracking-[0.14px] text-ink-900 truncate min-w-0 flex-1"
+                className="font-sans text-sm tracking-snug text-ink-900 truncate min-w-0 flex-1"
                 title={k.label}
               >
                 {k.label}
               </span>
-              <span className="font-mono text-sm tabular-nums -tracking-[0.14px] text-ink-900 shrink-0">
+              <span className="font-mono text-sm tabular-nums tracking-snug text-ink-900 shrink-0">
                 {k.cost}
               </span>
             </div>
@@ -498,7 +470,7 @@ export function RecentRequestsCard() {
   return (
     <div className="flex flex-col w-full rounded-sm overflow-hidden bg-white shadow-(--shadow-border)">
       <div className="flex items-center justify-between py-3 px-4">
-        <h3 className="font-sans text-base/5 font-medium -tracking-[0.25px] text-ink-900 m-0">
+        <h3 className="font-sans text-base/5 font-medium tracking-snug text-ink-900 m-0">
           Recent Requests
         </h3>
         <Button variant="ghost" size="sm" className="text-ink-500 hover:text-ink-900 -mr-2">
@@ -529,14 +501,14 @@ export function RecentRequestsCard() {
               : 'text-right whitespace-nowrap font-mono tabular-nums text-ink-800';
             return (
               <TableRow key={`${row.time}-${i}`} className="hover:bg-transparent">
-                <TableCell className="whitespace-nowrap font-mono tabular-nums -tracking-[0.14px] text-ink-500">
+                <TableCell className="whitespace-nowrap font-mono tabular-nums tracking-snug text-ink-500">
                   {row.time}
                 </TableCell>
                 <TableCell className="max-w-[260px]">
                   <div className="flex items-center gap-2 min-w-0">
                     <VendorAvatar vendor={row.vendor} />
                     <span
-                      className="font-mono text-sm text-ink-900 -tracking-[0.2px] truncate"
+                      className="font-mono text-sm text-ink-900 tracking-snug truncate"
                       title={row.model}
                     >
                       {row.model}
@@ -598,7 +570,7 @@ function QuickActionsRow() {
   return (
     <div className="rounded-sm bg-white shadow-(--shadow-border) overflow-hidden">
       <div className="flex items-center py-3 px-4 border-b border-ink-200">
-        <h3 className="font-sans text-base/5 font-medium -tracking-[0.25px] text-ink-900 m-0">
+        <h3 className="font-sans text-base/5 font-medium tracking-snug text-ink-900 m-0">
           Quick Actions
         </h3>
       </div>
