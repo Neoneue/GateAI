@@ -2,8 +2,10 @@ import { useState } from 'react';
 import { KeyRound } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Eyebrow } from '@/components/ui/eyebrow';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { PageTitle } from '@/components/ui/page-title';
 import { SettingsRow } from '@/components/ui/settings-row';
 import { ArtboardHeader, SectionHeader } from './_shared/ArtboardHeader';
 import { DashboardChrome } from './_shared/DashboardChrome';
@@ -87,9 +89,7 @@ function PageHeader() {
   return (
     <div className="flex items-start justify-between gap-6">
       <div className="flex flex-col gap-2 max-w-1/2">
-        <h2 className="font-sans font-medium text-ink-900 text-3xl/9 -tracking-[1px] text-balance m-0">
-          Settings
-        </h2>
+        <PageTitle>Settings</PageTitle>
         <p className="font-sans text-ink-500 text-base tracking-tight text-pretty m-0">
           Profile, security, logging, and integrations.
         </p>
@@ -270,15 +270,7 @@ function SecurityCard() {
             border-t + pt-4 here would double-up two rhythms (whitespace
             + hairline) for the same visual job. */}
         <div className="flex flex-col gap-2">
-          {/* EXTRACT: <Eyebrow> — the literal recipe
-              `font-mono text-xs uppercase tracking-[0.1em] font-medium text-ink-500`
-              is duplicated in CMP-013, CMP-014, CMP-016, CMP-018, and
-              sidebar.tsx (5+ sites). Extraction is owed and deferred
-              from per-file polish scope — touching 4 sibling artboards
-              + a primitive is a dedicated normalize pass. */}
-          <span className="font-mono text-xs uppercase tracking-[0.1em] font-medium text-ink-500">
-            Registered passkeys
-          </span>
+          <Eyebrow>Registered passkeys</Eyebrow>
           <p className="font-sans text-sm text-ink-500 m-0">
             No passkeys registered yet.
           </p>

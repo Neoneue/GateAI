@@ -1,3 +1,4 @@
+import { Eyebrow } from '@/components/ui/eyebrow';
 import { ArtboardHeader, SectionHeader } from './_shared/ArtboardHeader';
 import { VENDOR_META, PROVIDER_ORDER } from '@/components/icons/vendor-meta';
 
@@ -219,9 +220,9 @@ function PaletteCard({
               {palette.description}
             </div>
           </div>
-          <div className="font-mono text-xs font-medium text-ink-500 uppercase tracking-[0.1em]">
+          <Eyebrow as="div">
             {palette.meta}
-          </div>
+          </Eyebrow>
         </div>
         <div
           className="grid gap-px rounded-sm overflow-hidden border border-ink-200"
@@ -280,7 +281,7 @@ function SingleToneCard({
             <h3 className="font-sans font-medium text-ink-900 text-base m-0">{name}</h3>
             <div className="font-sans text-sm text-ink-500 mt-1">{description}</div>
           </div>
-          <div className="font-mono text-xs font-medium text-ink-500 uppercase tracking-[0.1em]">{meta}</div>
+          <Eyebrow as="div">{meta}</Eyebrow>
         </div>
         <div
           className="grid gap-px rounded-sm overflow-hidden border border-ink-200"

@@ -43,8 +43,11 @@ import { RowActionButton } from '@/components/ui/row-action-button';
 import { TablePaginationFooter } from '@/components/ui/table-pagination-footer';
 import { CodeBlock, CodeCard, CodeCardCopyButton, CodeCardHeader, CodeCardTabs, linesToString, type CodeLine, type CodeToken } from '@/components/ui/code-card';
 import { CopyButton } from '@/components/ui/copy-button';
+import { Eyebrow } from '@/components/ui/eyebrow';
 import { HeroNumeric } from '@/components/ui/hero-numeric';
+import { InlineCode } from '@/components/ui/inline-code';
 import { KpiRail as KpiRailShell } from '@/components/ui/kpi-rail';
+import { PageTitle } from '@/components/ui/page-title';
 import { cn } from '@/lib/utils';
 import {
   MARKETPLACE_META,
@@ -806,13 +809,9 @@ function ModelsSurface({ onSelect }: { onSelect: (model: Model) => void }) {
 
       <p className="font-mono text-xs text-ink-500 tracking-snug m-0">
         Pass{' '}
-        <code className="font-mono text-ink-800 bg-ink-100 rounded-xs px-1.5 py-0.5 tracking-snug">
-          claude-haiku-4-5
-        </code>{' '}
+        <InlineCode size="sm">claude-haiku-4-5</InlineCode>{' '}
         to use the preferred provider, or{' '}
-        <code className="font-mono text-ink-800 bg-ink-100 rounded-xs px-1.5 py-0.5 tracking-snug">
-          bedrock/claude-haiku-4-5
-        </code>{' '}
+        <InlineCode size="sm">bedrock/claude-haiku-4-5</InlineCode>{' '}
         to pin a specific one.
       </p>
     </>
@@ -824,9 +823,7 @@ function ModelsSurface({ onSelect }: { onSelect: (model: Model) => void }) {
 function PageHeader({ modelCount, providerCount }: { modelCount: number; providerCount: number }) {
   return (
     <div className="flex flex-col gap-2 max-w-1/2">
-      <h2 className="font-sans font-medium text-ink-900 text-3xl/9 -tracking-[1px] text-balance m-0">
-        Models
-      </h2>
+      <PageTitle>Models</PageTitle>
       <p className="font-sans text-ink-500 text-base tracking-tight text-pretty m-0">
         Route to{' '}
         <span className="text-ink-800 tabular-nums">{modelCount}</span>{' '}
@@ -1007,9 +1004,9 @@ function ModelsTable({
                   onClick={(e) => e.stopPropagation()}
                   onMouseDown={(e) => e.stopPropagation()}
                 >
-                  <code className="font-mono text-xs text-ink-800 bg-ink-100 rounded-xs px-1.5 py-0.5 tracking-snug select-text">
+                  <InlineCode size="sm" className="select-text">
                     {model.defaultHandle}
-                  </code>
+                  </InlineCode>
                   <CopyButton
                     size="inline-xs"
                     value={model.defaultHandle}
@@ -1187,9 +1184,7 @@ function ModelDetailPage({ model, onBack }: { model: Model; onBack: () => void }
                 as "Anthropic logo, Anthropic" — semantics are carried by
                 the eyebrow text alone. */}
             <VendorAvatar vendor={model.vendor} decorative />
-            <span className="font-mono text-xs uppercase tracking-[0.1em] font-medium text-ink-500">
-              {vendorMeta.label}
-            </span>
+            <Eyebrow>{vendorMeta.label}</Eyebrow>
           </div>
 
           {/* Scaled down from text-3xl/9 (32px) → text-xl (20px). The
@@ -1203,9 +1198,7 @@ function ModelDetailPage({ model, onBack }: { model: Model; onBack: () => void }
           </h2>
 
           <div className="flex items-center gap-2 flex-wrap">
-            <code className="font-mono text-sm text-ink-900 bg-ink-100 rounded-xs px-1.5 py-0.5">
-              {model.defaultHandle}
-            </code>
+            <InlineCode className="text-ink-900">{model.defaultHandle}</InlineCode>
             <CopyButton
               size="inline-xs"
               value={model.defaultHandle}
@@ -1291,9 +1284,7 @@ function ModelDetailPage({ model, onBack }: { model: Model; onBack: () => void }
           <p className="font-sans text-sm text-ink-500 text-pretty m-0">
             Paste this model ID into the model field of any OpenAI-compatible client. Point your client&rsquo;s base URL at{' '}
             <span className="inline-flex items-center gap-1 align-middle">
-              <code className="font-mono text-ink-800 bg-ink-100 rounded-xs px-1">
-                https://gateway.constellationgate.ai/v1
-              </code>
+              <InlineCode size="sm">https://gateway.constellationgate.ai/v1</InlineCode>
               <CopyButton size="inline-xs" value="https://gateway.constellationgate.ai/v1" label="base URL" />
             </span>{' '}
             and authenticate with your Constellation Gate API key.
@@ -1389,9 +1380,7 @@ function ModelKpiTile({ label, value }: { label: string; value: string }) {
   const isMissing = value === '—';
   return (
     <div className="flex flex-col gap-1 p-4">
-      <span className="font-mono text-xs uppercase tracking-[0.1em] font-medium text-ink-500">
-        {label}
-      </span>
+      <Eyebrow>{label}</Eyebrow>
       {isMissing ? (
         <HeroNumeric className="text-ink-400">
           <span aria-hidden="true">—</span>

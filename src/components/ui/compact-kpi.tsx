@@ -4,6 +4,7 @@ import {
   ChartContainer,
   type ChartConfig,
 } from '@/components/ui/chart';
+import { Eyebrow } from '@/components/ui/eyebrow';
 import { HeroNumeric } from '@/components/ui/hero-numeric';
 
 /* ─────────────────────────────────────────────────────────────────────────
@@ -78,7 +79,7 @@ export function CompactKpi({
     : 'flex flex-col rounded-md gap-2 bg-white shadow-(--shadow-border) p-4';
   return (
     <div className={containerCls}>
-      <div className="font-mono font-medium uppercase tracking-[0.1em] text-ink-500 text-xs">{title}</div>
+      <Eyebrow as="div">{title}</Eyebrow>
       <div className="flex items-baseline gap-2">
         <HeroNumeric>{value}</HeroNumeric>
         {delta ? (

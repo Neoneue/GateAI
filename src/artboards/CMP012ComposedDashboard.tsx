@@ -36,6 +36,7 @@ import { CompactKpi, CompactSpark } from '@/components/ui/compact-kpi';
 import { HeroNumeric } from '@/components/ui/hero-numeric';
 import { IconActionButton } from '@/components/ui/icon-action-button';
 import { KpiRail as KpiRailShell } from '@/components/ui/kpi-rail';
+import { PageTitle } from '@/components/ui/page-title';
 import { SegmentedPill } from '@/components/ui/segmented-pill';
 import {
   Table,
@@ -127,9 +128,7 @@ function PageHeader() {
             outer h1; this is the in-surface page title and reads as h2
             in the document outline so RecentRequestsCard h3 doesn't
             create a level skip. */}
-        <h2 className="font-sans font-medium text-ink-900 text-3xl/9 -tracking-[1px] text-balance m-0">
-          Overview
-        </h2>
+        <PageTitle>Overview</PageTitle>
         <p className="font-sans text-ink-500 text-base tracking-tight text-pretty m-0">
           Traffic, spend and latency across every model on the gateway.
         </p>

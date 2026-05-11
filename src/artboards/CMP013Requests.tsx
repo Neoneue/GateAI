@@ -18,6 +18,7 @@ import {
   DialogTitleBlock,
 } from '@/components/ui/dialog';
 import { DetailList, DetailRow } from '@/components/ui/detail-list';
+import { Eyebrow } from '@/components/ui/eyebrow';
 import { Input } from '@/components/ui/input';
 import { KpiRail as KpiRailShell } from '@/components/ui/kpi-rail';
 import { RowActionButton } from '@/components/ui/row-action-button';
@@ -58,6 +59,7 @@ import { VENDOR_META, VendorAvatar, type Vendor } from '@/components/icons/vendo
 import { DeltaTag } from '@/components/ui/compact-kpi';
 import { HeroNumeric } from '@/components/ui/hero-numeric';
 import { MessageBlock, type MessageRole } from '@/components/ui/message-block';
+import { PageTitle } from '@/components/ui/page-title';
 import { ArtboardHeader, SectionHeader } from './_shared/ArtboardHeader';
 import { DashboardChrome } from './_shared/DashboardChrome';
 
@@ -121,9 +123,7 @@ function PageHeader() {
     <div className="flex items-start justify-between gap-6">
       <div className="flex flex-col gap-2 max-w-1/2">
         {/* h2 — see CMP012 PageHeader note. */}
-        <h2 className="font-sans font-medium text-ink-900 text-3xl/9 tracking-tight text-balance m-0">
-          Requests
-        </h2>
+        <PageTitle>Requests</PageTitle>
         <p className="font-sans text-ink-500 text-base tracking-tight text-pretty m-0">
           Every generation routed through the gateway. Click any row to inspect prompts, security scans and the audit anchor.
         </p>
@@ -800,9 +800,7 @@ function KpiTile({ label, value }: { label: string; value: string }) {
   // each tile is just label + value at the locked 16px card-padding rule.
   return (
     <div className="flex flex-col gap-1 p-4">
-      <span className="font-mono text-xs uppercase tracking-[0.1em] font-medium text-ink-500">
-        {label}
-      </span>
+      <Eyebrow>{label}</Eyebrow>
       <span className="font-mono text-lg font-medium tabular-nums -tracking-[0.5px] text-ink-900">
         {value}
       </span>

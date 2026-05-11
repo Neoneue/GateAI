@@ -21,6 +21,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { PageTitle } from '@/components/ui/page-title';
 import {
   Select,
   SelectContent,
@@ -150,9 +151,7 @@ function PageHeader({ onInvite }: { onInvite: () => void }) {
   return (
     <div className="flex items-start justify-between gap-6">
       <div className="flex flex-col gap-2 max-w-1/2">
-        <h2 className="font-sans font-medium text-ink-900 text-3xl/9 -tracking-[1px] text-balance m-0">
-          Team
-        </h2>
+        <PageTitle>Team</PageTitle>
         <p className="font-sans text-ink-500 text-base tracking-tight text-pretty m-0">
           Manage roles, invite teammates, and remove access from Chad Ponticas&rsquo;s workspace.
         </p>

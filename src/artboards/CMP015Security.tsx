@@ -21,8 +21,10 @@ import {
   DialogTitleBlock,
 } from '@/components/ui/dialog';
 import { DetailList, DetailRow } from '@/components/ui/detail-list';
+import { SectionHeading } from '@/components/ui/section-heading';
 import { Input } from '@/components/ui/input';
 import { KpiRail as KpiRailShell } from '@/components/ui/kpi-rail';
+import { PageTitle } from '@/components/ui/page-title';
 import { RowActionButton } from '@/components/ui/row-action-button';
 import { SegmentedPill } from '@/components/ui/segmented-pill';
 import { Sparkline } from '@/components/ui/sparkline';
@@ -118,9 +120,7 @@ function PageHeader() {
         {/* h2 — see CMP012 PageHeader note. ArtboardHeader emits the outer
             h1; the in-surface page title reads as h2 in the document
             outline so child cards can use h3 without level skips. */}
-        <h2 className="font-sans font-medium text-ink-900 text-3xl/9 -tracking-[1px] text-balance m-0">
-          Threats
-        </h2>
+        <PageTitle>Threats</PageTitle>
         <p className="font-sans text-ink-500 text-base tracking-tight text-pretty m-0">
           Real-time threat detection and policy enforcement across every request routed through the gateway.
         </p>
@@ -825,7 +825,7 @@ function ThreatEventDetailBody({ row, index }: { row: EventRow; index: number })
               "Evidence" frames the content; per-block "User"/"Assistant"
               labels are extra noise at single-event-detail scale. */}
           <section className="flex flex-col gap-3">
-            <h3 className="font-sans text-sm font-medium text-ink-900 m-0">Evidence</h3>
+            <SectionHeading>Evidence</SectionHeading>
             <div className="flex flex-col gap-3">
               <div className="rounded-sm border border-ink-200 px-3 py-2 text-sm text-ink-900 text-pretty">
                 {detail.samplePrompt}
@@ -842,7 +842,7 @@ function ThreatEventDetailBody({ row, index }: { row: EventRow; index: number })
               migrated to the Context section below as a ContextRow so it
               joins the metadata block instead of orphan-bannering here. */}
           <section className="flex flex-col gap-3">
-            <h3 className="font-sans text-sm font-medium text-ink-900 m-0">Detection</h3>
+            <SectionHeading>Detection</SectionHeading>
             <div className="rounded-xs border border-ink-200 overflow-hidden">
               {detail.detectors.map((d) => (
                 <DetectorRow key={d.name} name={d.name} verdict={d.verdict} score={d.score} />
@@ -855,7 +855,7 @@ function ThreatEventDetailBody({ row, index }: { row: EventRow; index: number })
               Policy intentionally dropped — redundant with Type + Detection
               breakdown, and not actionable from this modal. */}
           <section className="flex flex-col gap-3">
-            <h3 className="font-sans text-sm font-medium text-ink-900 m-0">Context</h3>
+            <SectionHeading>Context</SectionHeading>
             <DetailList>
               <DetailRow
                 label="API key"

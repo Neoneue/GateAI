@@ -19,6 +19,8 @@ import {
   DialogScrollSummary,
   DialogTitleBlock,
 } from '@/components/ui/dialog';
+import { Eyebrow } from '@/components/ui/eyebrow';
+import { PageTitle } from '@/components/ui/page-title';
 import { StatusDot } from '@/components/ui/status-dot';
 import {
   Select,
@@ -101,9 +103,7 @@ function PageHeader() {
     <div className="flex items-start justify-between gap-6">
       <div className="flex flex-col gap-2 max-w-1/2">
         {/* h2 — see CMP012 PageHeader note. */}
-        <h2 className="font-sans font-medium text-ink-900 text-3xl/9 -tracking-[1px] text-balance m-0">
-          Conversations
-        </h2>
+        <PageTitle>Conversations</PageTitle>
         <p className="font-sans text-ink-500 text-base tracking-tight text-pretty m-0">
           A conversation is a chain of requests that share session context — agent runs, multi-turn chats, tool-calling loops. Click any row to see its message thread.
         </p>
@@ -559,9 +559,9 @@ function ConversationKpiTile({ label, value }: { label: string; value: string })
   // Padding `p-4` matches the 16px card-padding rule (CompactKpi / ModelKpiTile).
   return (
     <div className="flex flex-col gap-1 p-4">
-      <span className="font-mono text-xs uppercase tracking-[0.1em] font-medium text-ink-500">
+      <Eyebrow>
         {label}
-      </span>
+      </Eyebrow>
       <span className="font-mono text-lg font-medium tabular-nums -tracking-[0.5px] text-ink-900">
         {value}
       </span>
@@ -695,9 +695,9 @@ function ConversationMessagesPanel({
           Matches the framing pattern in the trace panel. `flex-none` so
           it doesn't shrink when the body scrolls. */}
       <div className="flex-none flex items-center justify-between px-4 py-3 bg-ink-50 border-b border-ink-200">
-        <span id="conv-messages-eyebrow" className="font-mono text-xs uppercase tracking-[0.1em] font-medium text-ink-500">
+        <Eyebrow id="conv-messages-eyebrow">
           Messages
-        </span>
+        </Eyebrow>
         <span className="font-mono text-xs text-ink-500 tabular-nums -tracking-[0.01em]">
           {turnCount} {turnCount === 1 ? 'turn' : 'turns'}
         </span>
@@ -831,9 +831,9 @@ function RequestTracePanel({
           Matches the framing pattern in the messages panel. `flex-none`
           so it doesn't shrink when the body scrolls. */}
       <div className="flex-none flex items-center justify-between px-4 py-3 bg-ink-50 border-b border-ink-200">
-        <span id="conv-trace-eyebrow" className="font-mono text-xs uppercase tracking-[0.1em] font-medium text-ink-500">
+        <Eyebrow id="conv-trace-eyebrow">
           Request Trace
-        </span>
+        </Eyebrow>
         <span className="font-mono text-xs text-ink-500 tabular-nums -tracking-[0.01em]">
           {SAMPLE_TRACE.length} requests
         </span>

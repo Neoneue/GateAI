@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { CopyButton } from '@/components/ui/copy-button';
 import { DetailList, DetailRow } from '@/components/ui/detail-list';
+import { SectionHeading } from '@/components/ui/section-heading';
 import {
   DialogScrollBody,
   DialogScrollFooter,
@@ -261,7 +262,7 @@ function GenerationDetailsModal() {
       <DialogScrollBody>
         <div className="flex flex-col gap-6">
           <section className="flex flex-col gap-3">
-            <h3 className="font-sans text-sm font-medium text-ink-900 m-0">Details</h3>
+            <SectionHeading>Details</SectionHeading>
             <DetailList>
               <DetailRow
                 label="Model"
@@ -305,7 +306,7 @@ function GenerationDetailsModal() {
           </section>
 
           <section className="flex flex-col gap-3">
-            <h3 className="font-sans text-sm font-medium text-ink-900 m-0">Security scan</h3>
+            <SectionHeading>Security scan</SectionHeading>
             <DetailList>
               <DetailRow
                 label="Overall"

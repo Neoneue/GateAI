@@ -7,6 +7,7 @@ import {
   MenuSeparator,
   MenuTrigger,
 } from '@/components/ui/menu';
+import { Eyebrow } from '@/components/ui/eyebrow';
 import { Separator } from '@/components/ui/separator';
 import { UserMenu } from '@/components/ui/user-menu';
 import { BrandMark } from '@/components/icons/brand-mark';
@@ -217,9 +218,9 @@ function SidebarExpanded({
         {sections.map((section, i) => (
           <div key={section.label ?? `top-${i}`} className="flex flex-col gap-1">
             {section.label ? (
-              <div className="px-2 pt-1 pb-1 font-mono text-xs uppercase tracking-[0.1em] font-medium text-ink-500">
+              <Eyebrow as="div" className="px-2 pt-1 pb-1">
                 {section.label}
-              </div>
+              </Eyebrow>
             ) : null}
             {section.items.map((item) => {
               const Icon = item.icon;
@@ -260,9 +261,7 @@ function DefaultBrand() {
     <>
       <BrandMark className="size-8 shrink-0 text-blue-700" />
       <div className="flex flex-col leading-tight min-w-0">
-        <span className="font-mono text-xs uppercase tracking-[0.1em] font-medium text-ink-500">
-          Constellation
-        </span>
+        <Eyebrow>Constellation</Eyebrow>
         <span className="font-sans text-base font-medium text-ink-900">
           Gate <span className="text-blue-700">AI</span>
         </span>
