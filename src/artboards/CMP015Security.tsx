@@ -625,7 +625,7 @@ function EventsTableSection() {
 
   return (
     <>
-    <div className="flex flex-col w-full rounded-md overflow-hidden bg-white shadow-(--shadow-border)">
+    <Card density="flush">
       {/* Toolbar — Search + 3 filter pills, count summary right-aligned.
           Same shape as CMP-013's RequestsTableSection. No leading category
           icons on the filter pills (project rule for dense toolbars). */}
@@ -746,7 +746,7 @@ function EventsTableSection() {
         onPageChange={setPage}
         onRowsPerPageChange={setRowsPerPage}
       />
-    </div>
+    </Card>
     <ThreatEventDetailDialog
       selection={selectedRow}
       onOpenChange={(open) => {

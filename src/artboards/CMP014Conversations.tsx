@@ -3,6 +3,7 @@ import { Activity, ArrowRight, Download, Search, TriangleAlert, Wrench } from 'l
 import { CopyButton } from '@/components/ui/copy-button';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import { CompactKpi, CompactSpark } from '@/components/ui/compact-kpi';
 import { Input } from '@/components/ui/input';
 import { KpiRail as KpiRailShell } from '@/components/ui/kpi-rail';
@@ -230,9 +231,9 @@ function ConversationsTableSection() {
 
   return (
     <>
-    <div className="flex flex-col w-full rounded-md overflow-hidden bg-white shadow-(--shadow-border)">
+    <Card density="flush">
       {/* Toolbar */}
-      <div className="flex items-center gap-2 py-3 px-4">
+      <div className="flex items-center gap-2 p-4">
         <div className="relative w-72 min-w-0 shrink-0">
           <Search
             className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-ink-500"
@@ -379,7 +380,7 @@ function ConversationsTableSection() {
         onPageChange={setPage}
         onRowsPerPageChange={setRowsPerPage}
       />
-    </div>
+    </Card>
     <ConversationDetailDialog
       row={selectedRow}
       onOpenChange={(open) => {

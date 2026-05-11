@@ -251,7 +251,7 @@ function MembersPane() {
           (density="flush"); paddings cascade from the toolbar's own
           px-4/py-3 plus Card's edge-flush contract. Filter pills follow
           the codified no-leading-icon rule for dense table toolbars. */}
-      <div className="flex items-center gap-2 px-4 py-3">
+      <div className="flex items-center gap-2 p-4">
         <div className="relative w-72 min-w-0 shrink-0">
           <Search
             className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-ink-500"

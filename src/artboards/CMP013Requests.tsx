@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import {
   Dialog,
   DialogScrollBody,
@@ -409,7 +410,7 @@ function RequestsTableSection() {
 
   return (
     <>
-    <div className="flex flex-col w-full rounded-md overflow-hidden bg-white shadow-(--shadow-border)">
+    <Card density="flush">
         {/* Toolbar — shape lifted from CMP-011.1. No flex-wrap: the
             sortable-table convention is single-row, and the filter set
             fits in the gray well at this width. */}
@@ -602,7 +603,7 @@ function RequestsTableSection() {
           onPageChange={setPage}
           onRowsPerPageChange={setRowsPerPage}
         />
-    </div>
+    </Card>
     <RequestDetailDialog
       row={selectedRow}
       onOpenChange={(open) => {

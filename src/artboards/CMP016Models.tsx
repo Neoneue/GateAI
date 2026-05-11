@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import { EmptyState } from '@/components/ui/empty-state';
 import { Input } from '@/components/ui/input';
 import {
@@ -745,7 +746,7 @@ function ModelsSurface({ onSelect }: { onSelect: (model: Model) => void }) {
           </TabsTrigger>
         </TabsList>
 
-      <div className="flex flex-col w-full rounded-md overflow-hidden bg-white shadow-(--shadow-border)">
+      <Card density="flush">
         <Toolbar
           search={search}
           onSearchChange={(v) => {
@@ -805,7 +806,7 @@ function ModelsSurface({ onSelect }: { onSelect: (model: Model) => void }) {
             />
           </>
         )}
-      </div>
+      </Card>
       </Tabs>
 
       <p className="font-mono text-xs text-ink-500 tracking-snug m-0">
@@ -858,7 +859,7 @@ function Toolbar({
   onSortChange: (v: string) => void;
 }) {
   return (
-    <div className="flex items-center gap-2 py-2 px-4">
+    <div className="flex items-center gap-2 p-4">
       <div className="relative w-72 min-w-0 shrink-0">
         <Search
           className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-ink-500"
@@ -1394,9 +1395,9 @@ function ModelKpiTile({ label, value }: { label: string; value: string }) {
 
 function ProvidersTable({ model }: { model: Model }) {
   return (
-    <div className="flex flex-col w-full rounded-md overflow-hidden bg-white shadow-(--shadow-border)">
+    <Card density="flush">
       <Table>
-        <TableHeader className="[&_tr]:border-t-0">
+        <TableHeader>
           <TableRow className="hover:bg-transparent">
             <TableHead className="whitespace-nowrap">Provider</TableHead>
             <TableHead className="text-right whitespace-nowrap">Context</TableHead>
@@ -1448,7 +1449,7 @@ function ProvidersTable({ model }: { model: Model }) {
           ))}
         </TableBody>
       </Table>
-    </div>
+    </Card>
   );
 }
 
