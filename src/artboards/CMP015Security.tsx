@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Download, Plus, TriangleAlert } from 'lucide-react';
+import { TriangleAlert } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -111,16 +111,6 @@ function PageHeader() {
         <p className="font-sans text-ink-500 text-base tracking-tight text-pretty m-0">
           Real-time threat detection and policy enforcement across every request routed through the gateway.
         </p>
-      </div>
-      <div className="flex items-center gap-3 shrink-0">
-        <Button variant="outline" size="default">
-          <Download data-icon="inline-start" aria-hidden="true" />
-          Export report
-        </Button>
-        <Button variant="default" size="default">
-          <Plus data-icon="inline-start" aria-hidden="true" />
-          New policy
-        </Button>
       </div>
     </div>
   );

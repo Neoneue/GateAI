@@ -20,6 +20,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { KpiRail as KpiRailShell } from '@/components/ui/kpi-rail';
 import { RowActionButton } from '@/components/ui/row-action-button';
+import { SegmentedPill } from '@/components/ui/segmented-pill';
 import { TablePaginationFooter } from '@/components/ui/table-pagination-footer';
 import { ToolResultCode } from '@/components/ui/tool-result-code';
 import {
@@ -339,11 +340,9 @@ function BreakdownRow({
  * through the rows-per-page / page-nav strip — matches the reference. */
 
 const RANGE_OPTIONS = [
-  { value: '5m',  label: 'Last 5 min'    },
-  { value: '30m', label: 'Last 30 min'   },
-  { value: '1h',  label: 'Last hour'     },
-  { value: '24h', label: 'Last 24 hours' },
-  { value: '7d',  label: 'Last 7 days'   },
+  { value: '1h',  label: '1H'  },
+  { value: '7d',  label: '7D'  },
+  { value: '30d', label: '30D' },
 ];
 
 /* ─── Requests log table ─────────────────────────────────────────────────── */
@@ -436,23 +435,6 @@ function RequestsTableSection() {
             />
           </div>
 
-          <Select value={range} onValueChange={setRange}>
-            <SelectTrigger
-              size="sm"
-              aria-label="Time range"
-              className="border-ink-200 bg-white text-ink-900 font-normal"
-            >
-              <SelectValue placeholder="Time range" />
-            </SelectTrigger>
-            <SelectContent>
-              {RANGE_OPTIONS.map((opt) => (
-                <SelectItem key={opt.value} value={opt.value}>
-                  {opt.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
           <Select value={model} onValueChange={setModel}>
             <SelectTrigger
               size="sm"
@@ -505,6 +487,13 @@ function RequestsTableSection() {
             </SelectContent>
           </Select>
 
+          <SegmentedPill
+            className="ml-auto"
+            size="sm"
+            options={RANGE_OPTIONS}
+            value={range}
+            onValueChange={setRange}
+          />
         </div>
 
         {/* Table */}

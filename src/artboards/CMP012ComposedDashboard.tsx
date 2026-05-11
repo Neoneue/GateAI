@@ -2,7 +2,6 @@ import { useState } from 'react';
 import {
   BookOpen,
   ChevronRight,
-  Download,
   MoreHorizontal,
   Plus,
   RefreshCw,
@@ -136,10 +135,6 @@ function PageHeader() {
         </p>
       </div>
       <div className="flex items-center gap-3">
-        <Button variant="outline" size="default">
-          <Download data-icon="inline-start" aria-hidden />
-          Export
-        </Button>
         <Button variant="default" size="default">
           <Plus data-icon="inline-start" aria-hidden />
           Create Key
@@ -287,7 +282,7 @@ export function RequestVolumeCard() {
         <CardTitle className="font-sans text-base font-medium tracking-snug text-ink-900">
           Request Volume
         </CardTitle>
-        <CardDescription>Grouped by model · Last 7d</CardDescription>
+        <CardDescription>Grouped by model</CardDescription>
         <CardAction>
           <SegmentedPill
             options={RANGE_OPTIONS}

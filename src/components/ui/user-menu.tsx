@@ -28,14 +28,22 @@ function UserMenu({
   return (
     <Menu>
       <MenuTrigger render={children} />
-      <MenuContent side={side} align={align} sideOffset={sideOffset}>
-        <MenuLabel>
-          <span className="font-sans text-sm font-medium text-ink-900 truncate leading-tight">
-            Chad
+      <MenuContent side={side} align={align} sideOffset={sideOffset} className="min-w-50">
+        <MenuLabel className="flex-row items-center gap-3">
+          <span
+            className="size-7 shrink-0 inline-flex items-center justify-center rounded-full bg-blue-700 text-white font-mono text-xs font-medium"
+            aria-hidden
+          >
+            CP
           </span>
-          <span className="inline-flex items-center h-5 px-2 rounded-full bg-blue-50 text-blue-700 font-sans text-xs font-medium self-start">
-            Pro plan
-          </span>
+          <div className="flex flex-col gap-1 min-w-0">
+            <span className="font-sans text-sm font-medium text-ink-900 truncate leading-tight">
+              Chad Ponticas
+            </span>
+            <span className="inline-flex items-center h-5 px-2 rounded-full bg-blue-50 text-blue-700 font-sans text-xs font-medium self-start">
+              Pro plan
+            </span>
+          </div>
         </MenuLabel>
         <MenuSeparator />
         <MenuItem>

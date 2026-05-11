@@ -1,27 +1,10 @@
 import { useState } from 'react';
-import { KeyRound, Layers } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+import { KeyRound } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { EmptyState } from '@/components/ui/empty-state';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { SettingsRow } from '@/components/ui/settings-row';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { StatusDot } from '@/components/ui/status-dot';
-import { Switch } from '@/components/ui/switch';
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from '@/components/ui/tabs';
 import { ArtboardHeader, SectionHeader } from './_shared/ArtboardHeader';
 import { DashboardChrome } from './_shared/DashboardChrome';
 
@@ -87,29 +70,13 @@ export function CMP018Settings({
 /* ─── Page surface — header + tabs container ───────────────────────────── */
 
 function SettingsSurface() {
-  const [tab, setTab] = useState<'general' | 'logging' | 'integration'>('general');
-
   return (
     <>
       <PageHeader />
-      <Tabs value={tab} onValueChange={(v) => setTab(v as typeof tab)} className="gap-4">
-        <TabsList variant="line" className="px-0 -mt-2">
-          <TabsTrigger value="general">General</TabsTrigger>
-          <TabsTrigger value="logging">Logging</TabsTrigger>
-          <TabsTrigger value="integration">Integration</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="general" className="flex flex-col gap-4">
-          <ProfileCard />
-          <SecurityCard />
-        </TabsContent>
-        <TabsContent value="logging">
-          <LoggingCard />
-        </TabsContent>
-        <TabsContent value="integration">
-          <IntegrationEmptyState />
-        </TabsContent>
-      </Tabs>
+      <div className="flex flex-col gap-4">
+        <ProfileCard />
+        <SecurityCard />
+      </div>
     </>
   );
 }
@@ -321,145 +288,6 @@ function SecurityCard() {
   );
 }
 
-/* ─── Logging configuration ───────────────────────────────────────────── */
-
-function LoggingCard() {
-  const [logBodies, setLogBodies] = useState(true);
-  const [retention, setRetention] = useState('90');
-  const [logLevel, setLogLevel] = useState('info');
-
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="font-sans text-base font-medium text-ink-900">
-          Logging configuration
-        </CardTitle>
-        <CardDescription className="font-sans text-sm text-ink-500">
-          Controls what gateway data is captured and how long it&rsquo;s retained.
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="flex flex-col">
-        {/* Each row = title + subtitle on the left, control on the right.
-            Dividers between rows so the rhythm reads as a list of
-            independent settings (not a paragraph of correlated copy).
-            First row passes `first` to omit its top divider — the
-            CardHeader above already supplies enough breathing room;
-            subsequent rows render `border-t border-ink-200`. */}
-        <SettingsRow
-          id="setting-log-bodies"
-          title="Log request & response bodies"
-          subtitle="Store full payloads for debugging. May increase storage costs."
-          control={
-            <Switch
-              id="setting-log-bodies"
-              checked={logBodies}
-              onCheckedChange={setLogBodies}
-            />
-          }
-          first
-        />
-        <SettingsRow
-          static
-          title="Audit fingerprints"
-          subtitle="Attach cryptographic fingerprints to every log entry for tamper detection."
-          control={
-            // Steady-state "on" reads as info, not success. `success` is
-            // for completed actions / wins ("Saved", "Verified") — using
-            // it for a persistent enabled-toggle inflates the affordance
-            // and competes with the page's actual success moments.
-            <Badge variant="info">
-              <StatusDot kind="info" />
-              Enabled
-            </Badge>
-          }
-        />
-        <SettingsRow
-          id="setting-retention"
-          title="Retention period"
-          subtitle="How long log entries are stored before automatic deletion."
-          control={
-            <Select value={retention} onValueChange={setRetention}>
-              <SelectTrigger
-                id="setting-retention"
-                size="default"
-                className="w-32 border-ink-200 bg-white text-ink-900"
-              >
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="7">7 days</SelectItem>
-                <SelectItem value="30">30 days</SelectItem>
-                <SelectItem value="90">90 days</SelectItem>
-                <SelectItem value="180">180 days</SelectItem>
-                <SelectItem value="365">365 days</SelectItem>
-              </SelectContent>
-            </Select>
-          }
-        />
-        <SettingsRow
-          id="setting-log-level"
-          title="Log level"
-          subtitle="Minimum severity for gateway log capture."
-          control={
-            <Select value={logLevel} onValueChange={setLogLevel}>
-              <SelectTrigger
-                id="setting-log-level"
-                size="default"
-                className="w-32 border-ink-200 bg-white text-ink-900"
-              >
-                <SelectValue>
-                  {(value) => LOG_LEVEL_LABEL[value as string] ?? String(value)}
-                </SelectValue>
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="debug">Debug</SelectItem>
-                <SelectItem value="info">Info</SelectItem>
-                <SelectItem value="warn">Warn</SelectItem>
-                <SelectItem value="error">Error</SelectItem>
-              </SelectContent>
-            </Select>
-          }
-        />
-      </CardContent>
-    </Card>
-  );
-}
-
-const LOG_LEVEL_LABEL: Record<string, string> = {
-  debug: 'Debug',
-  info: 'Info',
-  warn: 'Warn',
-  error: 'Error',
-};
-
 /* SettingsRow — extracted to `@/components/ui/settings-row` (2026-05-10).
- * Logging consumers below + SecurityCard's passkey row above all import
- * from the primitive. Do not re-inline the recipe here. */
-
-/* ─── Integration · empty state ───────────────────────────────────────── */
-
-function IntegrationEmptyState() {
-  return (
-    <EmptyState
-      className="py-20"
-      icon={
-        // Sub-element inside the EmptyState surface — material ladder
-        // rule: sub-elements use `rounded-xs` (4px), not the everyday
-        // `rounded-sm` (6px) reserved for container surfaces.
-        <span
-          aria-hidden
-          className="inline-flex items-center justify-center size-12 rounded-xs bg-ink-100 text-ink-500"
-        >
-          <Layers className="size-6" strokeWidth={1.5} />
-        </span>
-      }
-      title="No integrations configured"
-      body="Forward gateway events to Slack, PagerDuty, Datadog, and other destinations. Integrations are scoped to this workspace."
-      action={
-        <Button variant="outline" size="sm">
-          Browse integrations
-        </Button>
-      }
-    />
-  );
-}
+ * SecurityCard's passkey row imports from the primitive. Do not re-inline
+ * the recipe here. */
