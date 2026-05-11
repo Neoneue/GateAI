@@ -48,6 +48,7 @@ import { HeroNumeric } from '@/components/ui/hero-numeric';
 import { InlineCode } from '@/components/ui/inline-code';
 import { KpiRail as KpiRailShell } from '@/components/ui/kpi-rail';
 import { PageTitle } from '@/components/ui/page-title';
+import { TextLink } from '@/components/ui/text-link';
 import { cn } from '@/lib/utils';
 import {
   MARKETPLACE_META,
@@ -1164,15 +1165,14 @@ function ModelDetailPage({ model, onBack }: { model: Model; onBack: () => void }
     <div className="flex flex-col gap-8 pb-8">
       {/* Top utility bar — back affordance only for now. */}
       <div className="flex items-center justify-between gap-4">
-        <button
-          type="button"
+        <TextLink
           onClick={onBack}
           aria-label="Back to Models"
-          className="inline-flex items-center gap-1 rounded-xs font-sans text-sm text-ink-800 underline decoration-ink-200 underline-offset-2 hover:decoration-ink-500 focus-visible:decoration-ink-500 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50 transition-colors duration-150 ease-out motion-reduce:transition-none"
+          className="inline-flex items-center gap-1 font-sans text-sm transition-colors duration-150 ease-out motion-reduce:transition-none"
         >
           <ChevronLeft className="size-4 shrink-0" strokeWidth={1.75} aria-hidden="true" />
           Models
-        </button>
+        </TextLink>
       </div>
 
       {/* Hero — vendor eyebrow / H2 / handle / capabilities / description. */}
@@ -1237,12 +1237,11 @@ function ModelDetailPage({ model, onBack }: { model: Model; onBack: () => void }
           >
             {model.description}
           </p>
-          <button
-            type="button"
+          <TextLink
             onClick={() => setShowFullDesc((v) => !v)}
             aria-expanded={showFullDesc}
             aria-controls="model-description"
-            className="group inline-flex items-center gap-1 w-fit rounded-xs font-sans text-sm text-ink-800 underline decoration-ink-200 underline-offset-2 hover:decoration-ink-500 hover:text-ink-900 focus-visible:decoration-ink-500 focus-visible:text-ink-900 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+            className="group inline-flex items-center gap-1 w-fit font-sans text-sm hover:text-ink-900 focus-visible:text-ink-900"
           >
             {showFullDesc ? 'Show less' : 'Show more'}
             <ChevronDown
@@ -1253,7 +1252,7 @@ function ModelDetailPage({ model, onBack }: { model: Model; onBack: () => void }
               strokeWidth={1.75}
               aria-hidden="true"
             />
-          </button>
+          </TextLink>
         </div>
       </div>
 

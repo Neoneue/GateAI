@@ -25,7 +25,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { StatusDot } from '@/components/ui/status-dot';
 import {
   ChartContainer,
   ChartTooltip,
@@ -511,7 +510,6 @@ export function RecentRequestsCard() {
                 </TableCell>
                 <TableCell className="whitespace-nowrap">
                   <Badge variant={badge.variant}>
-                    <StatusDot kind={badge.dot} />
                     {row.code}
                   </Badge>
                 </TableCell>

@@ -15,6 +15,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { SegmentedPill } from '@/components/ui/segmented-pill';
+import { TextLink } from '@/components/ui/text-link';
 import { ArtboardHeader, SectionHeader } from './_shared/ArtboardHeader';
 
 /**
@@ -149,22 +150,20 @@ export function CMP005FilterBar() {
                 </Tag>
               ))}
               {chips.length > 0 && (
-                <button
-                  type="button"
+                <TextLink
                   onClick={() => setChips([])}
-                  className="ml-1 font-sans text-xs text-ink-900 underline decoration-ink-200 underline-offset-2 hover:decoration-ink-500 focus-visible:decoration-ink-500 outline-none rounded-xs focus-visible:ring-3 focus-visible:ring-ring/50"
+                  className="ml-1 font-sans text-xs"
                 >
                   Clear all
-                </button>
+                </TextLink>
               )}
               {chips.length === 0 && (
-                <button
-                  type="button"
+                <TextLink
                   onClick={() => setChips(['env: production', 'status: active'])}
-                  className="ml-1 font-sans text-xs text-ink-900 underline decoration-ink-200 underline-offset-2 hover:decoration-ink-500 focus-visible:decoration-ink-500 outline-none rounded-xs focus-visible:ring-3 focus-visible:ring-ring/50"
+                  className="ml-1 font-sans text-xs"
                 >
                   Reset filters
-                </button>
+                </TextLink>
               )}
             </div>
 

@@ -306,10 +306,6 @@ function BreakdownRow({
   value: string;
   tone: 'success' | 'danger' | 'warning';
 }) {
-  const dotColor =
-    tone === 'success' ? 'bg-success-600'
-    : tone === 'danger' ? 'bg-danger-600'
-    : 'bg-warning-600';
   // Returns three grid cells (no wrapper element). Parent is a 3-col grid
   // so dots and values align across rows. `justify-self-end` right-aligns
   // text-flow cells within their tracks.
@@ -318,7 +314,7 @@ function BreakdownRow({
       <span className="font-sans text-xs font-medium text-ink-500 tracking-tight justify-self-end">
         {label}
       </span>
-      <span className={`size-2 rounded-full ${dotColor}`} aria-hidden />
+      <StatusDot kind={tone} size="md" />
       <span className="font-mono text-xs font-medium tabular-nums text-ink-900 justify-self-end">
         {value}
       </span>
@@ -545,7 +541,6 @@ function RequestsTableSection() {
                   </TableCell>
                   <TableCell className="whitespace-nowrap">
                     <Badge variant={badge.variant}>
-                      <StatusDot kind={badge.dot} />
                       {row.code}
                     </Badge>
                   </TableCell>
@@ -666,7 +661,6 @@ function RequestDetailBody({ row }: { row: RequestRow }) {
           titleAriaLabel={`Request ${requestId}`}
           badge={
             <Badge variant={badge.variant}>
-              <StatusDot kind={badge.dot} />
               {row.code}
             </Badge>
           }
@@ -733,7 +727,6 @@ function RequestDetailBody({ row }: { row: RequestRow }) {
                 label="Cache"
                 value={
                   <Badge variant="info">
-                    <StatusDot kind="info" />
                     miss
                   </Badge>
                 }
@@ -913,7 +906,6 @@ function SecurityCheckRow({
         <span className="font-sans text-xs text-ink-500 text-pretty">{description}</span>
       </div>
       <Badge variant="success">
-        <StatusDot kind="success" />
         {status}
       </Badge>
     </div>

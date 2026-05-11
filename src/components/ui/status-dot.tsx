@@ -10,8 +10,15 @@ const statusColors = {
 
 export type StatusDotKind = keyof typeof statusColors;
 
+const SIZE_CLASSES = {
+  sm: 'size-1.5', // 6px — default; pairs with Badge h-5 chrome
+  md: 'size-2',   // 8px — standalone, breakdown rows, list legends
+} as const;
+
 export interface StatusDotProps {
   kind: StatusDotKind;
+  /** Dot size. Default `sm` (6px, in-badge). `md` (8px) for standalone rows. */
+  size?: keyof typeof SIZE_CLASSES;
   className?: string;
 }
 
@@ -20,13 +27,14 @@ export interface StatusDotProps {
  * Use as a child with `data-icon="inline-start"` so the badge applies
  * the right padding adjustment.
  */
-export function StatusDot({ kind, className }: StatusDotProps) {
+export function StatusDot({ kind, size = 'sm', className }: StatusDotProps) {
   return (
     <span
       data-icon="inline-start"
       aria-hidden
       className={cn(
-        'size-1.5 shrink-0 rounded-full',
+        SIZE_CLASSES[size],
+        'shrink-0 rounded-full',
         statusColors[kind],
         className,
       )}

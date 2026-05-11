@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Check, Bell, X, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { TextLink } from '@/components/ui/text-link';
 import { ArtboardHeader, SectionHeader } from './_shared/ArtboardHeader';
 
 interface ToastSpec {
@@ -41,12 +42,9 @@ const INITIAL_TOASTS: ToastSpec[] = [
       <>
         <span className="text-sm font-medium text-ink-800">Failed to verify</span>
         <span className="text-sm text-ink-800">block #48,291.</span>
-        <button
-          type="button"
-          className="text-sm font-medium text-ink-800 underline decoration-ink-200 underline-offset-2 hover:decoration-ink-500 focus-visible:decoration-ink-500 outline-none rounded-xs focus-visible:ring-3 focus-visible:ring-ring/50"
-        >
+        <TextLink className="text-sm font-medium">
           Retry?
-        </button>
+        </TextLink>
       </>
     ),
   },

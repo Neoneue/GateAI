@@ -23,7 +23,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { StatusDot } from '@/components/ui/status-dot';
 import { VendorAvatar } from '@/components/icons/vendor-meta';
 import { ArtboardHeader, SectionHeader } from './_shared/ArtboardHeader';
 
@@ -283,7 +282,6 @@ function GenerationDetailsModal() {
                 label="Status"
                 value={
                   <Badge variant="success">
-                    <StatusDot kind="success" />
                     <span className="font-mono tabular-nums">200 OK</span>
                   </Badge>
                 }
@@ -312,7 +310,6 @@ function GenerationDetailsModal() {
                 label="Overall"
                 value={
                   <Badge variant="success">
-                    <StatusDot kind="success" />
                     pass
                   </Badge>
                 }

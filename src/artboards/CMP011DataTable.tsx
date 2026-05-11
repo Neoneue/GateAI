@@ -13,7 +13,6 @@ import {
 } from '@/components/ui/select';
 import { Sparkline } from '@/components/ui/sparkline';
 import { TablePaginationFooter } from '@/components/ui/table-pagination-footer';
-import { StatusDot } from '@/components/ui/status-dot';
 import {
   Table,
   TableBody,
@@ -486,7 +485,6 @@ function RiskScoresCard() {
                 </TableCell>
                 <TableCell className="whitespace-nowrap">
                   <Badge variant={meta.variant}>
-                    <StatusDot kind={meta.dot} />
                     {meta.label}
                   </Badge>
                 </TableCell>

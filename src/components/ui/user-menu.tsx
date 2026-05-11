@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { LogOut, Sparkles, UserRound } from 'lucide-react';
 
+import { Badge } from '@/components/ui/badge';
 import {
   Menu,
   MenuContent,
@@ -40,9 +41,7 @@ function UserMenu({
             <span className="font-sans text-sm font-medium text-ink-900 truncate leading-tight">
               Chad Ponticas
             </span>
-            <span className="inline-flex items-center h-5 px-2 rounded-xs bg-blue-50 text-blue-700 font-sans text-xs font-medium self-start">
-              Free plan
-            </span>
+            <Badge variant="info" className="self-start">Free plan</Badge>
           </div>
         </MenuLabel>
         <MenuSeparator />

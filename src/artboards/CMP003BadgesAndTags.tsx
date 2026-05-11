@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { DeltaTag } from '@/components/ui/compact-kpi';
 import { Tag } from '@/components/ui/tag';
-import { StatusDot } from '@/components/ui/status-dot';
+import { TextLink } from '@/components/ui/text-link';
 import { ArtboardHeader, SectionHeader } from './_shared/ArtboardHeader';
 
 /**
@@ -32,44 +32,20 @@ export function CMP003BadgesAndTags() {
           <div className="flex flex-col grow gap-4 basis-0 bg-ink-50">
             <SectionHeader
               code="CMP-003.1 — STATUS"
-              hint="<Badge variant=… /> + <StatusDot />"
+              hint="<Badge variant=… /> — text-only; tone IS the indicator"
             />
             <div className="flex flex-col rounded-md gap-4 bg-white p-6 shadow-(--shadow-border)">
               <div className="flex flex-wrap items-center gap-2">
-                <Badge variant="success">
-                  <StatusDot kind="success" />
-                  active
-                </Badge>
-                <Badge variant="warning">
-                  <StatusDot kind="warning" />
-                  rotating
-                </Badge>
-                <Badge variant="destructive">
-                  <StatusDot kind="danger" />
-                  revoked
-                </Badge>
-                <Badge variant="neutral">
-                  <StatusDot kind="neutral" />
-                  dormant
-                </Badge>
+                <Badge variant="success">active</Badge>
+                <Badge variant="warning">rotating</Badge>
+                <Badge variant="destructive">revoked</Badge>
+                <Badge variant="neutral">dormant</Badge>
               </div>
               <div className="flex flex-wrap items-center gap-2">
-                <Badge variant="success">
-                  <StatusDot kind="success" />
-                  running
-                </Badge>
-                <Badge variant="warning">
-                  <StatusDot kind="warning" />
-                  degraded
-                </Badge>
-                <Badge variant="destructive">
-                  <StatusDot kind="danger" />
-                  failed
-                </Badge>
-                <Badge variant="neutral">
-                  <StatusDot kind="neutral" />
-                  idle
-                </Badge>
+                <Badge variant="success">running</Badge>
+                <Badge variant="warning">degraded</Badge>
+                <Badge variant="destructive">failed</Badge>
+                <Badge variant="neutral">idle</Badge>
               </div>
             </div>
           </div>
@@ -111,13 +87,12 @@ export function CMP003BadgesAndTags() {
                   </Tag>
                 ))}
                 {tags.length === 0 && (
-                  <button
-                    type="button"
+                  <TextLink
                     onClick={() => setTags(['production', 'error', 'last 7d'])}
-                    className="font-mono text-xs uppercase tracking-[0.1em] text-ink-800 underline decoration-ink-200 underline-offset-2 hover:decoration-ink-500 focus-visible:decoration-ink-500 outline-none rounded-xs focus-visible:ring-3 focus-visible:ring-ring/50"
+                    className="font-mono text-xs uppercase tracking-[0.1em]"
                   >
                     Reset tags
-                  </button>
+                  </TextLink>
                 )}
               </div>
 

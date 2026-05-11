@@ -21,7 +21,6 @@ import {
 } from '@/components/ui/dialog';
 import { Eyebrow } from '@/components/ui/eyebrow';
 import { PageTitle } from '@/components/ui/page-title';
-import { StatusDot } from '@/components/ui/status-dot';
 import {
   Select,
   SelectContent,
@@ -477,7 +476,6 @@ function ConversationDetailBody({ row }: { row: ConversationRow }) {
             identity instead of colliding with the close button. */}
         <div className="flex items-center gap-3 flex-wrap">
           <Badge variant={badge.variant}>
-            <StatusDot kind={badge.dot} />
             {badge.label}
           </Badge>
           <span className="font-mono text-sm font-medium text-ink-900 -tracking-[0.2px]">

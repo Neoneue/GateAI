@@ -36,7 +36,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { StatusDot } from '@/components/ui/status-dot';
 import {
   Table,
   TableBody,
@@ -408,7 +407,6 @@ function ApiKeyRiskScoresCard() {
                   </TableCell>
                   <TableCell className="whitespace-nowrap">
                     <Badge variant={badge.variant}>
-                      <StatusDot kind={badge.dot} />
                       {row.tierLabel}
                     </Badge>
                   </TableCell>
@@ -920,7 +918,6 @@ function DetectorRow({
     <div className="grid grid-cols-[1fr_auto_auto] gap-4 items-center py-3 px-4 border-b border-ink-200 last:border-b-0">
       <span className="font-mono text-sm text-ink-900 tracking-snug">{name}</span>
       <Badge variant={flag ? 'destructive' : 'success'}>
-        <StatusDot kind={flag ? 'danger' : 'success'} />
         {flag ? 'Flag' : 'Pass'}
       </Badge>
       <span className="font-mono text-sm tabular-nums text-ink-800 tracking-snug min-w-12 text-right">

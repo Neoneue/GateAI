@@ -29,7 +29,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { StatusDot } from '@/components/ui/status-dot';
 import {
   Table,
   TableBody,
@@ -353,11 +352,7 @@ function MemberRowView({ row }: { row: MemberRow }) {
               >
                 {row.name}
               </span>
-              {row.isYou ? (
-                <span className="shrink-0 inline-flex items-center h-5 px-2 rounded-xs bg-ink-100 text-ink-500 font-mono text-xs font-medium tabular-nums">
-                  You
-                </span>
-              ) : null}
+              {row.isYou ? <Badge variant="neutral">You</Badge> : null}
             </div>
             <span className="font-mono text-xs text-ink-500 tracking-snug truncate" title={row.email}>
               {row.email}
@@ -407,7 +402,6 @@ function MemberRowView({ row }: { row: MemberRow }) {
       </TableCell>
       <TableCell className="whitespace-nowrap">
         <Badge variant={badge.variant}>
-          <StatusDot kind={badge.dot} />
           {badge.label}
         </Badge>
       </TableCell>

@@ -7,6 +7,7 @@ import {
   MenuSeparator,
   MenuTrigger,
 } from '@/components/ui/menu';
+import { Badge } from '@/components/ui/badge';
 import { Eyebrow } from '@/components/ui/eyebrow';
 import { Separator } from '@/components/ui/separator';
 import { UserMenu } from '@/components/ui/user-menu';
@@ -286,9 +287,7 @@ function DefaultWorkspaceSwitcher() {
           Chad's workspace
         </span>
         <div className="shrink-0 flex items-center gap-2">
-          <span className="inline-flex items-center h-5 px-2 rounded-xs bg-blue-50 text-blue-700 font-sans text-xs font-medium">
-            Free
-          </span>
+          <Badge variant="info">Free</Badge>
           <ChevronsUpDown className="size-4 text-ink-500" strokeWidth={1.75} aria-hidden />
         </div>
       </MenuTrigger>
