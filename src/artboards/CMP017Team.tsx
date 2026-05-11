@@ -645,7 +645,7 @@ function InviteMemberDialog({
           </DialogHeader>
 
           <div className="flex flex-col gap-2">
-            <Label htmlFor="invite-emails" className="text-ink-700 font-medium text-sm">
+            <Label htmlFor="invite-emails" className="text-ink-600 font-medium text-sm">
               Emails
             </Label>
             <Textarea
@@ -666,7 +666,7 @@ function InviteMemberDialog({
           </div>
 
           <div className="flex flex-col gap-2">
-            <Label htmlFor="invite-role" className="text-ink-700 font-medium text-sm">
+            <Label htmlFor="invite-role" className="text-ink-600 font-medium text-sm">
               Role
             </Label>
             <Select value={role} onValueChange={(v) => setRole(v as MemberRole)}>
@@ -702,7 +702,7 @@ function InviteMemberDialog({
           <DialogFooter>
             <DialogClose
               render={
-                <Button type="button" variant="outline" className="border-ink-200 bg-white text-ink-900" />
+                <Button type="button" variant="outline" />
               }
             >
               Cancel

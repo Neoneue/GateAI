@@ -30,15 +30,16 @@ import { DashboardChrome } from './_shared/DashboardChrome';
  *
  * Profile / security / logging / integration configuration surface. Same
  * production-frame chrome as CMP-012 / CMP-013 / CMP-014 / CMP-017.
- * Line-variant Tabs (General / Logging / Integration) per the screenshot
- * inspirations — Settings is a settled-state surface where each tab is a
- * peer scope, not a workflow funnel, so the pill variant's "switch context"
- * affordance reads better than the underline funnel.
+ * Line-variant Tabs (General / Logging / Integration) — Settings is a
+ * settled-state surface where each tab is a peer scope, not a workflow
+ * funnel, so the line variant's "context switch" affordance reads better
+ * than the pill funnel.
  *
- * No SettingsRow primitive: only three rows in Logging share the
- * "title + subtitle + control" pattern, which is below the abstraction
- * threshold. Inline `flex justify-between` + `<Label>` + descriptive `<p>`
- * keeps the recipe legible at the call site.
+ * Composition: title + subtitle + control rows flow through the shared
+ * `<SettingsRow>` primitive at `@/components/ui/settings-row` — both the
+ * Logging tab's four rows and SecurityCard's passkey row consume it.
+ * Do not re-inline the recipe; extend the primitive (new variant, new
+ * prop) when behavior diverges.
  * ───────────────────────────────────────────────────────────────────────── */
 
 export function CMP018Settings({
@@ -164,9 +165,9 @@ function ProfileCard() {
             the codified pattern: sans, ink-600, font-medium, text-sm
             (NOT mono uppercase). The form lives inside CardContent and
             the Save button in CardFooter associates via `form` attribute
-            — this lets Enter from any input submit while keeping the
-            CardFooter primitive's chrome (border-t + ink-50 wash) and
-            the Card's auto `pb-0` when a footer slot is present. */}
+            — this lets Enter from any input submit. Card.tsx applies
+            `pb-0` automatically when a CardFooter slot is present, so
+            the footer's own `p-4` carries the action-zone padding. */}
         <form
           id="settings-profile-form"
           onSubmit={(e) => {
@@ -296,15 +297,18 @@ function SecurityCard() {
 
         {/* Registered passkeys subsection — sub-eyebrow + empty body.
             Eyebrow uses the same mono-uppercase recipe as section
-            headers in the spec sheets, sized smaller because this is a
-            sub-tier inside a card, not a top-level grouping. CardContent's
-            `gap-4` already separates this group from the Passkey row above;
-            adding a border-t + pt-4 layered two rhythms (whitespace +
-            hairline) for the same visual job. */}
+            headers across the spec sheets. The wrapping `<CardContent
+            className="flex flex-col gap-4">` (L276) supplies the 16px
+            rhythm between the Passkey row and this group; adding a
+            border-t + pt-4 here would double-up two rhythms (whitespace
+            + hairline) for the same visual job. */}
         <div className="flex flex-col gap-2">
-          {/* EXTRACT: <Eyebrow> — same mono-uppercase recipe appears
-              in CMP-016 detail page and SectionHeader. Defer to a
-              shared primitive when a third surface adds it inline. */}
+          {/* EXTRACT: <Eyebrow> — the literal recipe
+              `font-mono text-xs uppercase tracking-[0.1em] font-medium text-ink-500`
+              is duplicated in CMP-013, CMP-014, CMP-016, CMP-018, and
+              sidebar.tsx (5+ sites). Extraction is owed and deferred
+              from per-file polish scope — touching 4 sibling artboards
+              + a primitive is a dedicated normalize pass. */}
           <span className="font-mono text-xs uppercase tracking-[0.1em] font-medium text-ink-500">
             Registered passkeys
           </span>
@@ -338,8 +342,9 @@ function LoggingCard() {
         {/* Each row = title + subtitle on the left, control on the right.
             Dividers between rows so the rhythm reads as a list of
             independent settings (not a paragraph of correlated copy).
-            First row has its own top divider via the card header
-            border-spacing; subsequent rows use border-t. */}
+            First row passes `first` to omit its top divider — the
+            CardHeader above already supplies enough breathing room;
+            subsequent rows render `border-t border-ink-200`. */}
         <SettingsRow
           id="setting-log-bodies"
           title="Log request & response bodies"
@@ -438,9 +443,12 @@ function IntegrationEmptyState() {
     <EmptyState
       className="py-20"
       icon={
+        // Sub-element inside the EmptyState surface — material ladder
+        // rule: sub-elements use `rounded-xs` (4px), not the everyday
+        // `rounded-sm` (6px) reserved for container surfaces.
         <span
           aria-hidden
-          className="inline-flex items-center justify-center size-12 rounded-sm bg-ink-100 text-ink-500"
+          className="inline-flex items-center justify-center size-12 rounded-xs bg-ink-100 text-ink-500"
         >
           <Layers className="size-6" strokeWidth={1.5} />
         </span>
@@ -448,7 +456,7 @@ function IntegrationEmptyState() {
       title="No integrations configured"
       body="Forward gateway events to Slack, PagerDuty, Datadog, and other destinations. Integrations are scoped to this workspace."
       action={
-        <Button variant="outline" size="sm" className="border-ink-200 bg-white text-ink-900">
+        <Button variant="outline" size="sm">
           Browse integrations
         </Button>
       }

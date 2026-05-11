@@ -109,7 +109,7 @@ function PageHeader() {
         </p>
       </div>
       <div className="flex items-center gap-2 shrink-0">
-        <Button variant="outline" size="default" className="border-ink-200 bg-white text-ink-900">
+        <Button variant="outline" size="default">
           <Download data-icon="inline-start" aria-hidden />
           Export
         </Button>

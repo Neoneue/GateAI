@@ -1,6 +1,14 @@
 import * as React from 'react';
-import { ChevronsUpDown, MoreHorizontal } from 'lucide-react';
+import { Check, ChevronsUpDown, MoreHorizontal, Plus } from 'lucide-react';
+import {
+  Menu,
+  MenuContent,
+  MenuItem,
+  MenuSeparator,
+  MenuTrigger,
+} from '@/components/ui/menu';
 import { Separator } from '@/components/ui/separator';
+import { UserMenu } from '@/components/ui/user-menu';
 import { BrandMark } from '@/components/icons/brand-mark';
 import { cn } from '@/lib/utils';
 
@@ -239,7 +247,7 @@ function SidebarExpanded({
 
       {/* Bottom user area */}
       <div className="flex items-center justify-between gap-2 px-3 py-3 border-t border-ink-200 shrink-0">
-        {userArea ?? <DefaultUserArea />}
+        {userArea ?? <DefaultUserArea onNavigate={onNavigate} />}
       </div>
     </div>
   );
@@ -265,25 +273,50 @@ function DefaultBrand() {
 
 function DefaultWorkspaceSwitcher() {
   return (
-    <button
-      type="button"
-      aria-label="Switch workspace"
-      className="flex items-center justify-between gap-2 w-full p-2 rounded-sm border border-ink-200 bg-white hover:bg-ink-50 transition-[background-color,transform] duration-150 ease-out active:scale-[0.98] motion-reduce:transition-none motion-reduce:active:scale-100"
-    >
-      <span className="font-sans text-sm font-medium text-ink-900 truncate min-w-0">
-        Chad's project
-      </span>
-      <div className="shrink-0 flex items-center gap-1.5">
-        <span className="inline-flex items-center h-5 px-2 rounded-full bg-blue-50 text-blue-700 font-sans text-xs font-medium">
-          Pro
+    <Menu>
+      <MenuTrigger
+        render={
+          <button
+            type="button"
+            aria-label="Switch workspace"
+            className="flex items-center justify-between gap-2 w-full p-2 rounded-sm border border-ink-200 bg-white outline-none hover:bg-ink-50 aria-expanded:bg-ink-50 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 transition-[colors,box-shadow,translate] duration-150 ease-out active:translate-y-px motion-reduce:transition-none motion-reduce:active:translate-y-0"
+          />
+        }
+      >
+        <span className="font-sans text-sm font-medium text-ink-900 truncate min-w-0">
+          Chad's workspace
         </span>
-        <ChevronsUpDown className="size-4 text-ink-500" strokeWidth={1.75} aria-hidden />
-      </div>
-    </button>
+        <div className="shrink-0 flex items-center gap-2">
+          <span className="inline-flex items-center h-5 px-2 rounded-full bg-blue-50 text-blue-700 font-sans text-xs font-medium">
+            Pro
+          </span>
+          <ChevronsUpDown className="size-4 text-ink-500" strokeWidth={1.75} aria-hidden />
+        </div>
+      </MenuTrigger>
+      <MenuContent
+        side="bottom"
+        align="start"
+        sideOffset={8}
+        className="w-[var(--anchor-width)] p-2"
+      >
+        <MenuItem className="bg-ink-100 data-[highlighted]:bg-ink-100">
+          <span className="flex-1 text-left truncate min-w-0">Chad's workspace</span>
+          <Check strokeWidth={1.75} aria-hidden />
+        </MenuItem>
+        <MenuItem>
+          <span className="flex-1 text-left truncate min-w-0">OpenClaw org</span>
+        </MenuItem>
+        <MenuSeparator />
+        <MenuItem>
+          <span className="flex-1 text-left">Create new org</span>
+          <Plus strokeWidth={1.75} aria-hidden />
+        </MenuItem>
+      </MenuContent>
+    </Menu>
   );
 }
 
-function DefaultUserArea() {
+function DefaultUserArea({ onNavigate }: { onNavigate?: (pageId: string) => void }) {
   return (
     <>
       <div className="flex items-center gap-2 min-w-0">
@@ -300,13 +333,15 @@ function DefaultUserArea() {
           </span>
         </span>
       </div>
-      <button
-        type="button"
-        aria-label="User menu"
-        className="relative shrink-0 size-7 inline-flex items-center justify-center rounded-sm text-ink-500 hover:text-ink-900 hover:bg-ink-100 transition-[color,background-color,transform] duration-150 ease-out active:translate-y-px motion-reduce:transition-none motion-reduce:active:translate-y-0 after:absolute after:-inset-1.5 after:content-['']"
-      >
-        <MoreHorizontal className="size-4" strokeWidth={1.75} />
-      </button>
+      <UserMenu onNavigate={onNavigate} side="right" align="end" sideOffset={12}>
+        <button
+          type="button"
+          aria-label="User menu"
+          className="relative shrink-0 size-7 inline-flex items-center justify-center rounded-sm text-ink-500 hover:text-ink-900 hover:bg-ink-100 transition-[color,background-color,transform] duration-150 ease-out active:translate-y-px motion-reduce:transition-none motion-reduce:active:translate-y-0 after:absolute after:-inset-2 after:content-['']"
+        >
+          <MoreHorizontal className="size-4" strokeWidth={1.75} />
+        </button>
+      </UserMenu>
     </>
   );
 }

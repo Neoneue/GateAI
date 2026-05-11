@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sidebar } from '@/components/ui/sidebar';
+import { UserMenu } from '@/components/ui/user-menu';
 import { cn } from '@/lib/utils';
 import { SIDEBAR_SECTIONS } from './nav-sections';
 
@@ -62,6 +63,7 @@ export function DashboardChrome({
             sidebarExpanded={sidebarExpanded}
             onToggleSidebar={onToggleSidebar}
             breadcrumbCurrent={breadcrumbCurrent}
+            onNavigate={onNavigate}
           />
           {/* Content pane scrolls internally; production frame stays
               fixed at 900px so every composed page has identical
@@ -105,10 +107,12 @@ function DashTopBar({
   sidebarExpanded,
   onToggleSidebar,
   breadcrumbCurrent,
+  onNavigate,
 }: {
   sidebarExpanded: boolean;
   onToggleSidebar: () => void;
   breadcrumbCurrent: string;
+  onNavigate?: (pageId: string) => void;
 }) {
   return (
     <div className="flex items-center justify-between h-[49px] px-6 bg-white border-b border-ink-200 shrink-0">
@@ -186,7 +190,7 @@ function DashTopBar({
         </nav>
       </div>
       <div className="flex items-center gap-1">
-        <Button variant="outline" size="sm" className="border-ink-200 bg-white text-ink-900">
+        <Button variant="outline" size="sm">
           Docs
         </Button>
         {/* Skill: surfaces.md — promote to Button `icon-sm` so the hit
@@ -200,13 +204,15 @@ function DashTopBar({
         >
           <Bell className="size-4" strokeWidth={1.75} />
         </Button>
-        <span
-          role="img"
-          aria-label="Chad Ponticas"
-          className="inline-flex items-center justify-center size-6 ml-2 rounded-full bg-blue-700 text-white font-sans text-xs font-medium"
-        >
-          <span aria-hidden>CP</span>
-        </span>
+        <UserMenu onNavigate={onNavigate} side="bottom" align="end" sideOffset={8}>
+          <button
+            type="button"
+            aria-label="User menu"
+            className="inline-flex items-center justify-center size-6 ml-2 rounded-full bg-blue-700 text-white font-sans text-xs font-medium outline-none focus-visible:ring-3 focus-visible:ring-ring/50 transition-[transform,box-shadow] duration-150 ease-out active:translate-y-px motion-reduce:transition-none motion-reduce:active:translate-y-0"
+          >
+            <span aria-hidden>CP</span>
+          </button>
+        </UserMenu>
       </div>
     </div>
   );

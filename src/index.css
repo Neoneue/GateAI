@@ -146,9 +146,12 @@
   /* Typescale overrides — align Tailwind's named sizes to Vercel Geist's
      heading scale (even-numbered, larger increments at the top). Sizes not
      listed (xs/sm/base/lg/xl/2xl/5xl/7xl) already match Geist values.
+       text-2xs: 10 (sub-chrome eyebrows / labels — one step below text-xs)
        text-3xl: 30 → 32   (Geist heading-32)
        text-4xl: 36 → 40   (Geist heading-40)
        text-6xl: 60 → 64   (Geist heading-64) */
+  --text-2xs: 0.625rem;
+  --text-2xs--line-height: 1rem;
   --text-3xl: 2rem;
   --text-3xl--line-height: 2.5rem;
   --text-4xl: 2.5rem;
