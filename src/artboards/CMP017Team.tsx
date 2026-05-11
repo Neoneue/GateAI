@@ -581,7 +581,7 @@ function RequestsPane() {
           ))}
         </TableBody>
       </Table>
-    </div>
+    </Card>
   );
 }
 
