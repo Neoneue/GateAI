@@ -12,7 +12,15 @@ const badgeVariants = cva(
   // tighten the icon side via the `has-data-[icon=*]` overrides — the
   // chevron / dot / triangle has built-in whitespace inside its bounding
   // box that wants less padding than crisp text edges.
-  "group/badge inline-flex h-5 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-xs border border-transparent px-2.5 font-mono text-xs font-medium tabular-nums whitespace-nowrap transition-[colors,box-shadow] duration-150 ease-out focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&>svg]:pointer-events-none [&>svg]:size-3!",
+  //
+  // `first-letter:uppercase` (codified 2026-05-11): sentence-case the
+  // first letter of every badge regardless of what the consumer passes.
+  // Callers can write `<Badge>blocked</Badge>` and the chip renders
+  // "Blocked" — drift across status-pill capitalization (one consumer
+  // writes "blocked", another writes "Pass") fixed at the primitive,
+  // never the consumer. Digits and existing uppercase letters are
+  // unaffected; status codes like "200 OK" stay as-is.
+  "group/badge inline-flex h-5 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-xs border border-transparent px-2.5 font-mono text-xs font-medium tabular-nums whitespace-nowrap first-letter:uppercase transition-[colors,box-shadow] duration-150 ease-out focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&>svg]:pointer-events-none [&>svg]:size-3!",
   {
     variants: {
       variant: {
