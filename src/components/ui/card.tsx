@@ -5,18 +5,30 @@ import { cn } from "@/lib/utils"
 function Card({
   className,
   size = "default",
+  density = "default",
   ...props
-}: React.ComponentProps<"div"> & { size?: "default" | "sm" }) {
+}: React.ComponentProps<"div"> & {
+  size?: "default" | "sm"
+  /**
+   * Internal density. `default` = py-4 + gap-4 (canonical card). `flush`
+   * = py-0 + gap-0, for cards hosting full-bleed content like tables
+   * (toolbar + Table + pagination siblings butt edges; Table's own
+   * border-t handles section breaks). Use `flush` whenever a `<Table>`
+   * is a direct child of `<Card>`.
+   */
+  density?: "default" | "flush"
+}) {
   return (
     <div
       data-slot="card"
       data-size={size}
+      data-density={density}
       className={cn(
         // Skill: surfaces.md — `--shadow-border` provides a layered ring
         // (1px ink-800/6%) plus subtle ambient lift in one token, replacing
         // the old hard `border + shadow-xs` combo. Adapts to any background
         // without re-tinting the edge.
-        "group/card flex flex-col gap-4 overflow-hidden rounded-md bg-white py-4 text-sm text-ink-900 shadow-(--shadow-border) has-data-[slot=card-footer]:pb-0 has-[>img:first-child]:pt-0 data-[size=sm]:gap-3 data-[size=sm]:py-3 data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-md *:[img:last-child]:rounded-b-md",
+        "group/card flex flex-col overflow-hidden rounded-md bg-white text-sm text-ink-900 shadow-(--shadow-border) has-data-[slot=card-footer]:pb-0 has-[>img:first-child]:pt-0 data-[density=default]:gap-4 data-[density=default]:py-4 data-[density=flush]:gap-0 data-[density=flush]:py-0 data-[size=sm]:data-[density=default]:gap-3 data-[size=sm]:data-[density=default]:py-3 data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-md *:[img:last-child]:rounded-b-md",
         className
       )}
       {...props}

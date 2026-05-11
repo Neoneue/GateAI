@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import { EmptyState } from '@/components/ui/empty-state';
 import {
   Dialog,
@@ -245,10 +246,12 @@ function MembersPane() {
   });
 
   return (
-    <div className="flex flex-col w-full rounded-md overflow-hidden bg-white shadow-(--shadow-border)">
-      {/* Toolbar — search + role filter. Filter pills follow the
-          codified no-leading-icon rule for dense table toolbars. */}
-      <div className="flex items-center gap-2 py-2 px-4">
+    <Card density="flush">
+      {/* Toolbar — search + role filter. Sits as direct child of Card
+          (density="flush"); paddings cascade from the toolbar's own
+          px-4/py-3 plus Card's edge-flush contract. Filter pills follow
+          the codified no-leading-icon rule for dense table toolbars. */}
+      <div className="flex items-center gap-2 px-4 py-3">
         <div className="relative w-72 min-w-0 shrink-0">
           <Search
             className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-ink-500"
@@ -295,7 +298,7 @@ function MembersPane() {
       </div>
 
       <Table className="table-fixed">
-        <TableHeader className="[&_tr]:border-t-0">
+        <TableHeader>
           <TableRow className="hover:bg-transparent">
             {/* `table-fixed` + percentage widths on the header row is the
                 load-bearing pattern: with auto layout the browser hands
@@ -311,7 +314,7 @@ function MembersPane() {
             <TableHead className="w-[19%]">Joined</TableHead>
             <TableHead className="w-[19%]">Role</TableHead>
             <TableHead className="w-[19%]">Status</TableHead>
-            <TableHead className="w-[5%] text-right pl-0 pr-2">Actions</TableHead>
+            <TableHead className="w-[5%] text-right pl-0 pr-4">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -328,7 +331,7 @@ function MembersPane() {
         onPageChange={setPage}
         onRowsPerPageChange={setRowsPerPage}
       />
-    </div>
+    </Card>
   );
 }
 
@@ -405,7 +408,7 @@ function MemberRowView({ row }: { row: MemberRow }) {
           {badge.label}
         </Badge>
       </TableCell>
-      <TableCell className="text-right whitespace-nowrap pl-0 pr-2">
+      <TableCell className="text-right whitespace-nowrap pl-0 pr-4">
         <RowActionsMenu
           label={`Open actions for ${row.name}`}
           items={
@@ -464,16 +467,16 @@ function InvitationsPane({ onInvite }: { onInvite: () => void }) {
     );
   }
   return (
-    <div className="flex flex-col w-full rounded-md overflow-hidden bg-white shadow-(--shadow-border)">
+    <Card density="flush">
       <Table className="table-fixed">
-        <TableHeader className="[&_tr]:border-t-0">
+        <TableHeader>
           <TableRow className="hover:bg-transparent">
             <TableHead className="w-[26%]">Email</TableHead>
             <TableHead className="w-[26%]">Invited by</TableHead>
             <TableHead className="w-[15%]">Sent</TableHead>
             <TableHead className="w-[13%]">Role</TableHead>
             <TableHead className="w-[15%]">Expires</TableHead>
-            <TableHead className="w-[5%] text-right pl-0 pr-2">Actions</TableHead>
+            <TableHead className="w-[5%] text-right pl-0 pr-4">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -494,7 +497,7 @@ function InvitationsPane({ onInvite }: { onInvite: () => void }) {
               <TableCell className="whitespace-nowrap font-mono text-sm text-ink-500 tabular-nums tracking-snug">
                 {row.expires}
               </TableCell>
-              <TableCell className="text-right whitespace-nowrap pl-0 pr-2">
+              <TableCell className="text-right whitespace-nowrap pl-0 pr-4">
                 <RowActionsMenu
                   label={`Open actions for ${row.email}`}
                   items={[
@@ -508,7 +511,7 @@ function InvitationsPane({ onInvite }: { onInvite: () => void }) {
           ))}
         </TableBody>
       </Table>
-    </div>
+    </Card>
   );
 }
 
@@ -537,15 +540,15 @@ function RequestsPane() {
     );
   }
   return (
-    <div className="flex flex-col w-full rounded-md overflow-hidden bg-white shadow-(--shadow-border)">
+    <Card density="flush">
       <Table className="table-fixed">
-        <TableHeader className="[&_tr]:border-t-0">
+        <TableHeader>
           <TableRow className="hover:bg-transparent">
             <TableHead className="w-[28%]">Email</TableHead>
             <TableHead className="w-[15%]">Requested</TableHead>
             <TableHead className="w-[13%]">Role</TableHead>
             <TableHead className="w-[39%]">Reason</TableHead>
-            <TableHead className="w-[5%] text-right pl-0 pr-2">Actions</TableHead>
+            <TableHead className="w-[5%] text-right pl-0 pr-4">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -565,7 +568,7 @@ function RequestsPane() {
                   {row.reason}
                 </span>
               </TableCell>
-              <TableCell className="text-right whitespace-nowrap pl-0 pr-2">
+              <TableCell className="text-right whitespace-nowrap pl-0 pr-4">
                 <RowActionsMenu
                   label={`Open actions for ${row.email}`}
                   items={[
