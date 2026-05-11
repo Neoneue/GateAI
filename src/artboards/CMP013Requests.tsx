@@ -15,8 +15,9 @@ import {
   DialogScrollFooter,
   DialogScrollHeader,
   DialogScrollSummary,
-  DialogTitle,
+  DialogTitleBlock,
 } from '@/components/ui/dialog';
+import { DetailList, DetailRow } from '@/components/ui/detail-list';
 import { Input } from '@/components/ui/input';
 import { KpiRail as KpiRailShell } from '@/components/ui/kpi-rail';
 import { RowActionButton } from '@/components/ui/row-action-button';
@@ -655,34 +656,31 @@ function RequestDetailBody({ row }: { row: RequestRow }) {
   const [activeTab, setActiveTab] = useState('messages');
   return (
     <>
-      {/* Top section — eyebrow + DialogTitle + status badge + provenance.
-          `pr-12` on the title block clears the absolute DialogClose X. */}
+      {/* Top section — canonical title block primitive (eyebrow + title +
+          status badge + meta line). All type sizes / spacing live in
+          DialogTitleBlock, so this surface stays in lock-step with every
+          other modal header. */}
       <DialogScrollHeader>
-        <div className="flex flex-col gap-1 pr-12">
-          <span className="font-mono text-xs uppercase tracking-[0.1em] font-medium text-ink-500">
-            Request
-          </span>
-          <div className="flex items-center gap-2">
-            {/* DialogTitle override — keep the default `font-heading` recipe
-                replaced with the request-id mono treatment. */}
-            <DialogTitle
-              aria-label={`Request ${requestId}`}
-              className="font-mono text-lg leading-none font-medium text-ink-900 m-0"
-            >
-              {requestId}
-            </DialogTitle>
+        <DialogTitleBlock
+          titleFont="mono"
+          titleAriaLabel={`Request ${requestId}`}
+          badge={
             <Badge variant={badge.variant}>
               <StatusDot kind={badge.dot} />
               {row.code}
             </Badge>
-          </div>
-          <p className="font-mono text-xs text-ink-500 tracking-tight text-pretty m-0">
-            Apr 22, 2026 · {row.time} UTC · part of conversation{' '}
-            <TextLink aria-label={`Open conversation ${row.conversation}`}>
-              {row.conversation}
-            </TextLink>
-          </p>
-        </div>
+          }
+          meta={
+            <span className="font-mono tracking-snug">
+              Apr 22, 2026 · {row.time} UTC · part of conversation{' '}
+              <TextLink aria-label={`Open conversation ${row.conversation}`}>
+                {row.conversation}
+              </TextLink>
+            </span>
+          }
+        >
+          {requestId}
+        </DialogTitleBlock>
       </DialogScrollHeader>
 
       {/* Persistent KPI rail — sits below the header, above the tabs. */}
@@ -706,7 +704,7 @@ function RequestDetailBody({ row }: { row: RequestRow }) {
           </TabsContent>
 
           <TabsContent value="details">
-            <div className="rounded-xs border border-ink-200 overflow-hidden">
+            <DetailList>
               <DetailRow
                 label="Model"
                 value={
@@ -740,7 +738,7 @@ function RequestDetailBody({ row }: { row: RequestRow }) {
                   </Badge>
                 }
               />
-            </div>
+            </DetailList>
           </TabsContent>
 
           {/* Audit tab — runtime guardrail checks (did this request pass
@@ -808,21 +806,6 @@ function KpiTile({ label, value }: { label: string; value: string }) {
       <span className="font-mono text-lg font-medium tabular-nums -tracking-[0.5px] text-ink-900">
         {value}
       </span>
-    </div>
-  );
-}
-
-function DetailRow({ label, value }: { label: string; value: React.ReactNode }) {
-  // 4-col grid mirrors the modal's KPI rail above (cols 2–4 carry the value).
-  // Horizontal padding moves from row-level to cell-level (`pl-4` on label,
-  // `pr-4` on value) so column tracks line up with the rail above.
-  // Label is `font-medium text-ink-500` per the locked three-tier ink policy
-  // — the font-medium weight (not ink-600 darkness) carries the field-label
-  // signal so it reads as a label rather than ambient body text.
-  return (
-    <div className="grid grid-cols-4 gap-4 items-center py-3 border-b border-ink-200 last:border-b-0">
-      <span className="font-sans text-sm font-medium text-ink-500 pl-4">{label}</span>
-      <div className="col-span-3 pr-4">{value}</div>
     </div>
   );
 }

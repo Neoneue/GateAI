@@ -17,7 +17,7 @@ import {
   DialogScrollFooter,
   DialogScrollHeader,
   DialogScrollSummary,
-  DialogTitle,
+  DialogTitleBlock,
 } from '@/components/ui/dialog';
 import { StatusDot } from '@/components/ui/status-dot';
 import {
@@ -466,22 +466,15 @@ function ConversationDetailBody({ row }: { row: ConversationRow }) {
           DialogClose X; the identity row + quote run flush to the modal's
           right padding so action buttons align with the KPI rail edge. */}
       <DialogScrollHeader>
-        <div className="flex flex-col gap-1 pr-12">
-          <span className="font-mono text-xs uppercase tracking-[0.1em] font-medium text-ink-500">
-            Conversation
-          </span>
-          <DialogTitle
-            aria-label={`Conversation ${row.title}`}
-            className="font-sans text-lg/6 font-medium text-ink-900 m-0"
-          >
-            Messages + request trace
-          </DialogTitle>
-        </div>
+        <DialogTitleBlock titleAriaLabel={`Conversation ${row.title}`}>
+          Messages + request trace
+        </DialogTitleBlock>
 
         {/* Identity row — status + cnv_id + initiator on the left, action
-            buttons (Copy ID / Audit anchor) on the right. Wraps on narrow
-            viewports so the actions drop below the identity instead of
-            colliding with the close button. */}
+            buttons (Copy ID / Audit anchor) on the right. Sits as a sibling
+            of the title block; the parent header's gap-3 provides rhythm.
+            Wraps on narrow viewports so the actions drop below the
+            identity instead of colliding with the close button. */}
         <div className="flex items-center gap-3 flex-wrap">
           <Badge variant={badge.variant}>
             <StatusDot kind={badge.dot} />

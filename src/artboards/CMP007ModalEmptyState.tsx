@@ -1,9 +1,18 @@
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { KeyRound, Plus, Copy, X } from 'lucide-react';
+import { ExternalLink, KeyRound, Plus, Copy } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { CopyButton } from '@/components/ui/copy-button';
+import { DetailList, DetailRow } from '@/components/ui/detail-list';
+import {
+  DialogScrollBody,
+  DialogScrollFooter,
+  DialogScrollHeader,
+  DialogStaticContent,
+  DialogTitleBlock,
+} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -54,8 +63,25 @@ export function CMP007ModalEmptyState() {
                   title="Revoke prod-backend?"
                   subtitle="This key was last used 2 minutes ago."
                   onClose={() => setConfirmName('')}
+                  footer={
+                    <>
+                      <Button variant="ghost" onClick={() => setConfirmName('')}>Cancel</Button>
+                      <Button
+                        variant="destructive"
+                        disabled={confirmName !== 'prod-backend'}
+                        onClick={() => {
+                          toast.success('Key revoked', {
+                            description: 'prod-backend will fail auth immediately.',
+                          });
+                          setConfirmName('');
+                        }}
+                      >
+                        Revoke key
+                      </Button>
+                    </>
+                  }
                 >
-                  <p className="text-sm text-ink-900">
+                  <p className="text-sm text-ink-900 m-0">
                     Apps using this key will fail authentication immediately. Type the key name to confirm.
                   </p>
                   <Input
@@ -64,26 +90,25 @@ export function CMP007ModalEmptyState() {
                     onChange={(e) => setConfirmName(e.target.value)}
                     aria-label="Type key name to confirm"
                   />
-                  <ModalFooter>
-                    <Button variant="ghost" onClick={() => setConfirmName('')}>Cancel</Button>
-                    <Button
-                      variant="destructive"
-                      disabled={confirmName !== 'prod-backend'}
-                      onClick={() => {
-                        toast.success('Key revoked', {
-                          description: 'prod-backend will fail auth immediately.',
-                        });
-                        setConfirmName('');
-                      }}
-                    >
-                      Revoke key
-                    </Button>
-                  </ModalFooter>
                 </ModalSpecimen>
 
                 <ModalSpecimen
                   title="Create API key"
                   onClose={resetCreate}
+                  footer={
+                    <>
+                      <Button variant="ghost" onClick={resetCreate}>Cancel</Button>
+                      <Button
+                        disabled={!keyName.trim()}
+                        onClick={() => {
+                          toast.success('Key created', { description: keyName });
+                          resetCreate();
+                        }}
+                      >
+                        Create key
+                      </Button>
+                    </>
+                  }
                 >
                   <div className="flex flex-col gap-2">
                     <Label htmlFor="cmp007-name" className="text-xs text-ink-600">
@@ -125,18 +150,6 @@ export function CMP007ModalEmptyState() {
                       </Select>
                     </div>
                   </div>
-                  <ModalFooter>
-                    <Button variant="ghost" onClick={resetCreate}>Cancel</Button>
-                    <Button
-                      disabled={!keyName.trim()}
-                      onClick={() => {
-                        toast.success('Key created', { description: keyName });
-                        resetCreate();
-                      }}
-                    >
-                      Create key
-                    </Button>
-                  </ModalFooter>
                 </ModalSpecimen>
 
                 <ModalSpecimen
@@ -144,11 +157,9 @@ export function CMP007ModalEmptyState() {
                   subtitle="Copy now — this is the only time the secret is shown."
                   className="col-span-2"
                   onClose={() => toast('Closed payload')}
+                  footer={<Button onClick={() => toast.success('Done')}>Done</Button>}
                 >
                   <SecretRow secret={FAKE_SECRET} />
-                  <ModalFooter>
-                    <Button onClick={() => toast.success('Done')}>Done</Button>
-                  </ModalFooter>
                 </ModalSpecimen>
               </div>
             </Card>
@@ -201,177 +212,135 @@ function ModalSpecimen({
   title,
   subtitle,
   children,
+  footer,
   className,
   onClose,
 }: {
   title: string;
   subtitle?: string;
   children: React.ReactNode;
+  footer?: React.ReactNode;
   className?: string;
   onClose: () => void;
 }) {
   return (
-    <div
-      className={
-        'flex flex-col rounded-xl bg-white border border-ink-200 shadow-(--shadow-modal) overflow-clip ' +
-        (className ?? '')
-      }
-    >
-      <div className="flex items-start justify-between pt-4 pr-3 pb-2 pl-4">
-        <div className="flex flex-col">
-          <div className="text-base font-medium -tracking-[0.01em] text-ink-900">
-            {title}
-          </div>
-          {subtitle && <div className="text-xs text-ink-500 mt-1">{subtitle}</div>}
-        </div>
-        <Button
-          variant="ghost"
-          size="icon-xs"
-          aria-label="Close"
-          onClick={onClose}
-          className="text-ink-500 hover:text-ink-700"
-        >
-          <X />
-        </Button>
-      </div>
-      <div className="flex flex-col gap-4 pt-2 pb-4 px-4">{children}</div>
-    </div>
-  );
-}
-
-function ModalFooter({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="flex items-center justify-end gap-2 pt-2 -mx-4 -mb-4 pb-4 px-4">
-      {children}
-    </div>
+    <DialogStaticContent className={className} onClose={onClose}>
+      <DialogScrollHeader>
+        <DialogTitleBlock mode="static" meta={subtitle}>
+          {title}
+        </DialogTitleBlock>
+      </DialogScrollHeader>
+      <DialogScrollBody>
+        <div className="flex flex-col gap-4">{children}</div>
+      </DialogScrollBody>
+      {footer ? <DialogScrollFooter>{footer}</DialogScrollFooter> : null}
+    </DialogStaticContent>
   );
 }
 
 function GenerationDetailsModal() {
+  const requestId = 'req-7f3a9c2b4e1d';
   return (
-    <div
-      className="flex flex-col w-[640px] rounded-xl bg-white border border-ink-200 shadow-(--shadow-modal) overflow-clip"
+    <DialogStaticContent
+      className="w-[640px]"
+      onClose={() => toast('Closed generation details')}
     >
-      {/* Header */}
-      <div className="flex items-start justify-between gap-3 px-4 pt-4 pb-4 border-b border-ink-200">
-        <div className="flex flex-col gap-1">
-          <div className="text-base font-medium -tracking-[0.01em] text-ink-900">
-            Generation details
-          </div>
-          <div className="font-mono tabular-nums text-xs text-ink-500">
-            Apr 22, 2026 14:28:04 UTC
-          </div>
-        </div>
-        <Button
-          variant="ghost"
-          size="icon-xs"
-          aria-label="Close"
-          onClick={() => toast('Closed generation details')}
-          className="text-ink-500 hover:text-ink-700"
-          type="button"
+      <DialogScrollHeader>
+        <DialogTitleBlock
+          mode="static"
+          meta={
+            <span className="font-mono tabular-nums tracking-snug">
+              Apr 22, 2026 14:28:04 UTC · {requestId}
+            </span>
+          }
         >
-          <X />
-        </Button>
-      </div>
+          Generation details
+        </DialogTitleBlock>
+      </DialogScrollHeader>
 
-      {/* Body */}
-      <div className="flex flex-col p-4 gap-4">
-        {/* Primary metadata */}
-        <DetailGrid>
-          <DetailRow label="Model">
-            <span className="inline-flex items-center gap-2">
-              <VendorAvatar vendor="anthropic" />
-              <span className="font-mono text-sm text-ink-900 -tracking-[0.2px]">
-                anthropic/claude-sonnet-4.8
-              </span>
-            </span>
-          </DetailRow>
-          <DetailRow label="Provider">
-            <span className="text-sm text-ink-900">AWS Bedrock (us-east-1)</span>
-          </DetailRow>
-          <DetailRow label="Status">
-            <Badge variant="success">
-              <StatusDot kind="success" />
-              <span className="font-mono tabular-nums">200 OK</span>
-            </Badge>
-          </DetailRow>
-          <DetailRow label="First token latency">
-            <span className="font-mono tabular-nums text-sm text-ink-900">0.42 s</span>
-          </DetailRow>
-          <DetailRow label="Throughput">
-            <span className="font-mono tabular-nums text-sm text-ink-900">
-              87.3 tokens/sec
-            </span>
-          </DetailRow>
-          <DetailRow label="Tokens">
-            <span className="font-mono tabular-nums text-sm text-ink-900">
-              2,847 prompt
-              <span className="text-ink-500"> · </span>
-              1,204 completion
-            </span>
-          </DetailRow>
-          <DetailRow label="Cost">
-            <span className="font-mono tabular-nums text-sm text-ink-900">$0.0284</span>
-          </DetailRow>
-          <DetailRow label="Request ID">
-            <span className="font-mono tabular-nums text-sm text-ink-900">
-              req-7f3a9c2b4e1d
-            </span>
-          </DetailRow>
-        </DetailGrid>
+      <DialogScrollBody>
+        <div className="flex flex-col gap-6">
+          <section className="flex flex-col gap-3">
+            <h3 className="font-sans text-sm font-medium text-ink-900 m-0">Details</h3>
+            <DetailList>
+              <DetailRow
+                label="Model"
+                value={
+                  <span className="inline-flex items-center gap-2">
+                    <VendorAvatar vendor="anthropic" />
+                    <span className="font-mono text-sm text-ink-900 tracking-snug">
+                      anthropic/claude-sonnet-4.8
+                    </span>
+                  </span>
+                }
+              />
+              <DetailRow
+                label="Provider"
+                value={<span className="font-sans text-sm text-ink-900">AWS Bedrock (us-east-1)</span>}
+              />
+              <DetailRow
+                label="Status"
+                value={
+                  <Badge variant="success">
+                    <StatusDot kind="success" />
+                    <span className="font-mono tabular-nums">200 OK</span>
+                  </Badge>
+                }
+              />
+              <DetailRow
+                label="Tokens"
+                value={
+                  <span className="font-mono tabular-nums text-sm text-ink-900">
+                    2,847 prompt
+                    <span className="text-ink-500"> · </span>
+                    1,204 completion
+                  </span>
+                }
+              />
+              <DetailRow
+                label="Cost"
+                value={<span className="font-mono tabular-nums text-sm text-ink-900">$0.0284</span>}
+              />
+            </DetailList>
+          </section>
 
-        {/* Eyebrow */}
-        <div className="font-mono font-medium uppercase tracking-[0.1em] text-xs text-ink-500 mt-2 mb-0">
-          Security scan
+          <section className="flex flex-col gap-3">
+            <h3 className="font-sans text-sm font-medium text-ink-900 m-0">Security scan</h3>
+            <DetailList>
+              <DetailRow
+                label="Overall"
+                value={
+                  <Badge variant="success">
+                    <StatusDot kind="success" />
+                    pass
+                  </Badge>
+                }
+              />
+              <DetailRow
+                label="Injection scan"
+                value={<Badge variant="success">clean</Badge>}
+              />
+              <DetailRow
+                label="PII scan"
+                value={<Badge variant="success">clean</Badge>}
+              />
+              <DetailRow
+                label="Policy"
+                value={<span className="font-sans text-sm text-ink-900">Default workspace policy</span>}
+              />
+            </DetailList>
+          </section>
         </div>
+      </DialogScrollBody>
 
-        {/* Security scan */}
-        <DetailGrid>
-          <DetailRow label="Overall">
-            <Badge variant="success">
-              <StatusDot kind="success" />
-              pass
-            </Badge>
-          </DetailRow>
-          <DetailRow label="Injection scan">
-            <Badge variant="success">clean</Badge>
-          </DetailRow>
-          <DetailRow label="PII scan">
-            <Badge variant="success">clean</Badge>
-          </DetailRow>
-          <DetailRow label="Policy">
-            <span className="text-sm text-ink-900">Default workspace policy</span>
-          </DetailRow>
-        </DetailGrid>
-      </div>
-    </div>
-  );
-}
-
-function DetailGrid({ children }: { children: React.ReactNode }) {
-  return (
-    <dl className="grid grid-cols-[36%_1fr] rounded-sm border border-ink-200 overflow-clip divide-y divide-ink-200">
-      {children}
-    </dl>
-  );
-}
-
-function DetailRow({
-  label,
-  children,
-}: {
-  label: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="contents group/row">
-      <dt className="px-3 py-3 text-sm text-ink-500 border-r border-ink-200 bg-white">
-        {label}
-      </dt>
-      <dd className="px-3 py-3 text-sm text-ink-900 bg-white flex items-center min-w-0">
-        {children}
-      </dd>
-    </div>
+      <DialogScrollFooter>
+        <CopyButton mode="label" size="sm" text="Copy ID" value={requestId} label="request ID" />
+        <Button variant="default" size="sm" onClick={() => toast('Opening request')}>
+          Open request
+          <ExternalLink data-icon="inline-end" aria-hidden />
+        </Button>
+      </DialogScrollFooter>
+    </DialogStaticContent>
   );
 }
 
